@@ -89,8 +89,8 @@ void generate_file(std::ostream& ofile, registry_t& registry) {
     "#include \"rtti/mmethod/common.hpp\"\n\n"
 
     "using ::rtti::rtti_node;\n"
-    "using ::rtti::mmethod::detail::pole_t;\n"
-    "using ::rtti::mmethod::detail::invoker_t;\n\n"
+    "using ::rtti::invoker_t;\n"
+    "using ::rtti::mmethod::detail::pole_t;\n\n"
 
     "#define __DO_CAT(a,b) a##b\n"
     "#define __CAT(a,b) __DO_CAT(a,b)\n"

@@ -23,7 +23,7 @@ void do_compile(std::istream& ifile, std::ostream& ofile)
   for(std::string line; std::getline(ifile, line); )
   {
     /// parse error line
-    static const boost::regex re ( R"(.*\[with T = rtti::mmethod::mmethod_(\w+)<((\w+::)*)(\w+),\s*(\d+)ul\s*,\s*(\d+)ul\s*,\s*(.*)>\].*)" );
+    static const boost::regex re { R"(.*\[with T = rtti::mmethod::mmethod_(\w+)<((\w+::)*)(\w+),\s*(\d+)ul\s*,\s*(\d+)ul\s*,\s*(.*)>\].*)" };
     boost::smatch result;
     if( !boost::regex_match(line, result, re) )
       continue;
@@ -33,8 +33,8 @@ void do_compile(std::istream& ifile, std::ostream& ofile)
     , nspace    = result[2]
     , name      = result[4]
     , hashes    = result[7];
-    size_t vsize = boost::lexical_cast<std::size_t>(result[5]);
-    size_t fullarity = boost::lexical_cast<std::size_t>(result[6]);
+    std::size_t vsize = boost::lexical_cast<std::size_t>(result[5]);
+    std::size_t fullarity = boost::lexical_cast<std::size_t>(result[6]);
 
     std::string key = "::" + nspace + name;
 

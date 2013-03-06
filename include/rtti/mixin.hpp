@@ -1,9 +1,9 @@
 #ifndef RTTI_MIXIN_HPP
 #define RTTI_MIXIN_HPP
 
-#include "rtti/holder.hpp"
-#include "rtti/getter.hpp"
-#include "rtti/hash.hpp"
+#include "rtti/hash/hash.hpp"
+#include "rtti/holder/holder.hpp"
+#include "rtti/holder/getter.hpp"
 
 #include <type_traits>
 #include <boost/mpl/if.hpp>
@@ -13,17 +13,23 @@ namespace rtti {
 
 namespace flags {
 enum {
-  DECLARE_MASK  = 1 << 0
-, ABSTRACT_MASK = 1 << 1
-, FINAL_MASK    = 1 << 2
-, STATIC_MASK   = 1 << 3
+  DECLARE  = 1 << 0
+, ABSTRACT = 1 << 1
+, FINAL    = 1 << 2
+, STATIC   = 1 << 3
 };
 } // namespace flags
 
 namespace detail {
 
 template<bool> struct mixin_node {};
-template<> struct mixin_node<true> { rtti::rtti_node const* rtti_node_pointer; };
+template<> struct mixin_node<true> {
+  rtti::rtti_node const rtti_node_value;
+
+protected:
+  constexpr mixin_node()
+  : rtti_node_value() {}
+};
 
 template<bool, typename Derived, typename Super, std::size_t Hash>
 struct mixin_helper {
@@ -31,7 +37,7 @@ struct mixin_helper {
     static_max = RTTI_GETTER::traits<Super>::static_max
   , hash = Hash
   };
-  using base = typename RTTI_GETTER::traits<Super>::base;
+  using root = typename RTTI_GETTER::traits<Super>::root;
 };
 template<typename D, typename S, std::size_t Max>
 struct mixin_helper<true, D, S, Max> {
@@ -39,11 +45,10 @@ struct mixin_helper<true, D, S, Max> {
     static_max = Max
   , hash = 0
   };
-  using base = D;
+  using root = D;
 };
 
 } // namespace detail
-
 
 template<
   typename Derived
@@ -52,7 +57,7 @@ template<
 , std::size_t Hash
 >
 struct mixin
-: private detail::mixin_node<Flags & flags::DECLARE_MASK> {
+: private detail::mixin_node<Flags & flags::DECLARE> {
 
   friend class RTTI_GETTER;
   friend mixin rtti_get_mixin(Derived const volatile&) {
@@ -64,17 +69,17 @@ private:
   // structure used by RTTI_GETTER
   struct rtti_traits {
   private:
-    typedef detail::mixin_helper<Flags & rtti::flags::DECLARE_MASK, Derived, Super, Hash> helper;
+    typedef detail::mixin_helper<Flags & rtti::flags::DECLARE, Derived, Super, Hash> helper;
 
   public:
     typedef Derived const volatile self;
     typedef Super const volatile super;
-    typedef typename helper::base const volatile base;
+    typedef typename helper::root const volatile root;
 
     enum {
-      abstract_= Flags & rtti::flags::ABSTRACT_MASK
-    , final_   = Flags & rtti::flags::FINAL_MASK
-    , static_  = Flags & rtti::flags::STATIC_MASK
+      abstract_= Flags & rtti::flags::ABSTRACT
+    , final_   = Flags & rtti::flags::FINAL
+    , static_  = Flags & rtti::flags::STATIC
 
     , static_max = helper::static_max
     , hash = helper::hash
@@ -83,7 +88,7 @@ private:
 
 protected:
   mixin() noexcept {
-    const_cast<rtti_node const*&>( RTTI_GETTER::get_node_pointer(static_cast<Derived&>(*this)) ) = rtti::static_node<Derived>();
+    const_cast<rtti_node&>( RTTI_GETTER::get_node_value(static_cast<Derived&>(*this)) ) = *rtti::static_node<Derived>();
   }
   ~mixin() noexcept {}
 };
@@ -93,10 +98,10 @@ protected:
 //@{
 //! \brief Enum flags for some optimizations
 #define RTTI_FLAGS( declare, abstract, final, static ) \
-  ( (declare ? ::rtti::flags::DECLARE_MASK : 0) \
-  | (abstract? ::rtti::flags::ABSTRACT_MASK: 0) \
-  | (final   ? ::rtti::flags::FINAL_MASK   : 0) \
-  | (static  ? ::rtti::flags::STATIC_MASK  : 0) )
+  ( (declare ? ::rtti::flags::DECLARE : 0) \
+  | (abstract? ::rtti::flags::ABSTRACT: 0) \
+  | (final   ? ::rtti::flags::FINAL   : 0) \
+  | (static  ? ::rtti::flags::STATIC  : 0) )
 
 // ***** externally used macros ***** //
 //! \brief Abstract base case
@@ -156,4 +161,4 @@ protected:
 
 #endif
 
-#include "rtti/getter.ipp"
+#include "rtti/holder/getter.ipp"

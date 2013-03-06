@@ -1,2 +1,5 @@
-add_subdirectory(visitor)
 add_subdirectory(mmethod)
+add_subdirectory(dynamic)
+add_subdirectory(holder)
+add_subdirectory(shared)
+add_subdirectory(hash)

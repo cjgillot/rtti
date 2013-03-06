@@ -4,7 +4,7 @@
 #include "archive.hpp"
 #include "hierarchy.hpp"
 #include "overloads.hpp"
-#include "rtti/hash.hpp"
+#include "rtti/hash/hash.hpp"
 
 static void print_dyn_id(std::ostream& ofile, klass_t const* k, std::size_t i) {
   if(RTTI_HASH_IS_ID(k->hash)) {
@@ -12,7 +12,7 @@ static void print_dyn_id(std::ostream& ofile, klass_t const* k, std::size_t i) {
   }
   else {
     // runtime access id
-    ofile << "MMETHOD::overload<detail::mpl::mplpack_c<0";
+    ofile << "MMETHOD::overload<rtti::mpl::mplpack_c<0";
     for(const klass_t* k2 : k->sig->array())
       ofile << ", " << k2->hash << "ul";
     assert( k == k->sig->array()[i] );
@@ -23,7 +23,7 @@ static void print_dyn_id(std::ostream& ofile, klass_t const* k, std::size_t i) {
 static void print_rank(std::ostream& ofile, klass_t const* k, std::size_t arity, bool runtime) {
   if(arity == 1 && runtime) {
     // special case : input invoker directly
-    ofile << "(std::uintptr_t)MMETHOD::overload<detail::mpl::mplpack_c<0";
+    ofile << "(std::uintptr_t)MMETHOD::overload<rtti::mpl::mplpack_c<0";
     for(const klass_t* k2 : k->sig->array())
       ofile << ", " << k2->hash << "ul";
     ofile << ">>::address";
@@ -60,7 +60,7 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
   );
 
   /// declare smallarray
-  ofile << "#ifdef MMETHOD_USE_SMALLARRAY" << std::endl;
+  ofile << "#if MMETHOD_USE_SMALLARRAY" << std::endl;
   ofile << "static pole_t _impl_smallarray" << i << "[] = {" << std::endl;
   // add hashes base first -> forward iterators
   { // static hashes
@@ -87,7 +87,7 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
 
   if(arity == 1 && statics.size())
   { // static hashes
-    ofile << "#ifdef MMETHOD_USE_SMALLARRAY" << std::endl;
+    ofile << "#if MMETHOD_USE_SMALLARRAY" << std::endl;
     for(const klass_t* k : statics)
     {
       ofile << "\t_impl_smallarray" << i << "[" << k->hash << "].value = ";
@@ -97,7 +97,7 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
     ofile << "#endif" << std::endl << std::endl;
   }
 
-  ofile << "#ifdef MMETHOD_USE_SMALLARRAY" << std::endl;
+  ofile << "#if MMETHOD_USE_SMALLARRAY" << std::endl;
   ofile << "\ta.create<" << dynamics.size() << ">();\n";
   ofile << "#else" << std::endl;
   ofile << "\ta.create<" << dynamics.size() + statics.size() << ">();\n";
@@ -146,7 +146,7 @@ void print_initializer(
   for(std::size_t i : decl.argpos) {
     ofile <<
         "template<> template<> detail::poles_map_type mmethod_register_base<MMETHOD>::poles<" << i << ">::array {\n"
-        "#ifdef MMETHOD_USE_SMALLARRAY\n"
+        "#if MMETHOD_USE_SMALLARRAY\n"
         "\tTAG(__protectns)::_impl_smallarray" << i << "\n"
         "#endif\n"
         "};"

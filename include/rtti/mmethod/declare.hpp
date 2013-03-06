@@ -2,9 +2,10 @@
 #define RTTI_MMETHOD_DECLARE_HPP
 
 #include "rtti/mmethod/common.hpp"
-
-#include "rtti/mmethod/basic.hpp"
 #include "rtti/mmethod/dispatch.hpp"
+
+#include "rtti/shared/basic.hpp"
+#include "rtti/shared/tags.hpp"
 
 namespace rtti {
 namespace mmethod {
@@ -72,5 +73,7 @@ struct __MMETHOD_TAG(name)              \
   template<typename> struct overload;   \
 }; \
 static __MMETHOD_TAG(name) name /* ; */
+
+#include "rtti/mmethod/declare.tpp"
 
 #endif

@@ -2,17 +2,19 @@
 #define RTTI_MMETHOD_COMMON_HPP
 
 #include "rtti/mmethod/poles.hpp"
+#include "rtti/shared/basic.hpp"
 
 namespace rtti {
-namespace mmethod {
 
-namespace detail { namespace mpl {
+namespace mpl {
 
 template<std::size_t... SEQ> struct mplpack_c;
 
-}} // namespace detail::mpl
+} // namespace mpl
 
-void ATTRIBUTE_NORETURN _rtti_bad_dispatch();
+namespace mmethod {
+
+using rtti::_rtti_bad_dispatch;
 
 template<typename Tag>
 struct mmethod_register_base {
@@ -22,8 +24,7 @@ struct mmethod_register_base {
   };
 
   static void do_initialize();
-  static detail::invoker_t fetch(std::uintptr_t spec);
-  static detail::invoker_t const* const invoker_table;
+  static detail::invoker_table_type invoker_table;
 
 };
 

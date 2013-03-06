@@ -10,15 +10,15 @@ public:
 
 struct bar
 : foo
-, STATIC_RTTI(bar, foo, 5) {};
+, STATIC_RTTI(bar, foo, 6) {};
 
 struct baz
 : foo
 , IMPLEMENT_RTTI(baz, foo) {};
 
-template<typename T> using v_ = rtti::mmethod::tags::virtual_<T>;
+template<typename T> using v_ = rtti::tags::virtual_<T>;
 
-DECLARE_MMETHOD(vf1, void, (v_<foo>*));
+DECLARE_MMETHOD(vf1, void, (v_<foo>*, int));
 DECLARE_MMETHOD(vf2, void, (v_<foo>*, v_<foo>&));
 
 void test(foo*, std::size_t);
@@ -62,9 +62,13 @@ double time(F&& fnc, char const* s) {
   return t1;
 }
 
+static void u() {}
+
 void test(foo* f, std::size_t N) {
   f->func();
-  vf1(f);
+  vf1(f, 0);
+
+//   vf2.insert< rtti::mmethod::detail::mpl::mplpack_c<0,0,0> >( u );
   vf2(f, *f);
 
   double t1, t2;
@@ -72,9 +76,19 @@ void test(foo* f, std::size_t N) {
 
   t1 = time([=](){ loop_virt(f, N); }, "virtual");
 
-  t2 = time([=](){ loop_mm1(f,  N); }, "mmethod1");
+  t2 = time([=](){ loop_mm1 (f, N); }, "mmethod1");
   std::printf("ratio : %f\n", t2 / t1);
 
-  t2 = time([=](){ loop_mm2(f,f,N); }, "mmethod2");
+  t2 = time([=](){ loop_mm2 (f, f, N); }, "mmethod2");
   std::printf("ratio : %f\n", (t2 / t1) / 2.);
+}
+
+#include <atomic>
+
+void test2(foo* f, std::size_t N) {
+  volatile int i = 0;
+  std::atomic<int> volatile j { 0 };
+
+  for(std::size_t k = 0; k < N; ++k) (int)i;
+  for(std::size_t k = 0; k < N; ++k) (int)j;
 }

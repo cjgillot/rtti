@@ -21,16 +21,17 @@ extern inline void erase_if(string& s, Pred p)
   );
 }
 
-void output_preabule(arch_declaration& decl, strr name, strr nspace, size_t vsize, size_t fullarity, strr tags)
+void output_preabule(arch_declaration& decl, strr name, strr nspace,
+                     std::size_t vsize, std::size_t fullarity, strr tags)
 {
-  static const boost::regex re ( R"(\s*(\d+)ul\s*)" );
+  static const boost::regex re { R"(\s*(\d+)ul\s*)" };
   boost::smatch result;
   boost::regex_match(tags, result, re);
 
   std::size_t tagging = boost::lexical_cast<std::size_t>( result[1] );
 
   boost::char_separator<char> sep { ":" };
-  boost::tokenizer<decltype(sep)> tok ( nspace, sep );
+  boost::tokenizer<decltype(sep)> tok { nspace, sep };
 
   decl.name = name;
   decl.nspath.assign( tok.begin(), tok.end() );
@@ -44,9 +45,9 @@ void output_preabule(arch_declaration& decl, strr name, strr nspace, size_t vsiz
 
 void output_overload(arch_declaration& decl, string& hashes)
 {
-  boost::erase_all(hashes, "rtti::mmethod::detail::mpl::mplpack");
-  boost::erase_all(hashes, "rtti::mmethod::mmethod_hpath_end");
-  boost::erase_all(hashes, "rtti::mmethod::mmethod_hpath");
+  boost::erase_all(hashes, "rtti::mpl::mplpack");
+  boost::erase_all(hashes, "rtti::hash::path_end");
+  boost::erase_all(hashes, "rtti::hash::path_node");
 
   typedef boost::algorithm::split_iterator<string::const_iterator> split_it;
 

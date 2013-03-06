@@ -1,6 +1,6 @@
 #include <vector>
 
-#include "rtti/hash.hpp"
+#include "rtti/hash/hash.hpp"
 
 #include "hierarchy.hpp"
 #include "overloads.hpp"

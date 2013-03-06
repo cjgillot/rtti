@@ -1,64 +1,54 @@
 #ifndef RTTI_MMETHOD_DISPATCH_HPP
 #define RTTI_MMETHOD_DISPATCH_HPP
 
-#include "rtti/mmethod/basic.hpp"
 #include "rtti/mmethod/poles.hpp"
 
-#include "rtti/getter.hpp"
+#include "rtti/shared/basic.hpp"
+#include "rtti/holder/getter.hpp"
 
 namespace rtti { namespace mmethod { namespace detail {
 
 namespace {
 
-/// fetch_poles<>::eval(spec,_,args) loops over args and blits pole-data into [spec]
+/// fetch_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data
 /// equivalent pseudo-code :
 /// \code
 /// i = 0
 /// for each arg,
 ///   if arg is virtual
-///     spec[i] = arg->pole->data
-///     ++i
+///     i += arg->pole->data
 /// \endcode
-/// The spec array is then used for dispatch computation
-template<std::size_t I, std::size_t J, typename Tag, typename... Types>
-struct fetch_poles;
-template<std::size_t I, std::size_t J, typename Tag, typename First, typename... Types>
-struct fetch_poles<I, J, Tag, tags::virtual_<First>, Types...> {
-  template<typename First2, typename... Types2>
-  static std::uintptr_t eval(First2&& arg, Types2&&... args) {
-    std::uintptr_t rh = detail::fetch_pole(
-      Tag::template poles<J>::array,
-      ::rtti::get_node(arg)
-    );
-    return rh + fetch_poles<I+1, J+1, Tag, Types...>::eval(std::forward<Types2>(args)...);
+template<typename Tag, std::size_t BTS>
+struct fetch_poles {
+  template<std::size_t J, typename First2, typename... Types2>
+  static std::uintptr_t ATTRIBUTE_PURE eval(First2&& arg, Types2&&... args) {
+    std::uintptr_t rh = 0;
+
+    if( BTS & 1 ) {
+      auto& map = Tag::template poles<J>::array;
+      rh = map.fetch_pole( ::rtti::get_node(arg) );
+    }
+
+    using next = fetch_poles<Tag, BTS/2>;
+    return rh + next::template eval<J+1>(std::forward<Types2>(args)...);
   }
 };
-template<std::size_t I, std::size_t J, typename Tag, typename First, typename... Types>
-struct fetch_poles<I, J, Tag, tags::static_<First>, Types...> {
-  template<typename First2, typename... Types2>
-  static std::uintptr_t eval(First2&&, Types2&&... args) {
-    return fetch_poles<I, J+1, Tag, Types...>::eval(std::forward<Types2>(args)...);
-  }
-};
-template<std::size_t I, std::size_t J, typename Tag>
-struct fetch_poles<I, J, Tag> {
-  static std::uintptr_t eval()
+template<typename Tag>
+struct fetch_poles<Tag, 0> {
+  template<std::size_t J, typename... Types>
+  static std::uintptr_t ATTRIBUTE_CONST eval(Types&&...)
   { return 0; }
 };
 
-template<std::size_t Arity, typename Tag, typename... Types>
+template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
-  template<typename... Types2>
-  static invoker_t eval(Types2&&... args) {
-    std::uintptr_t spec = fetch_poles<0, 0, Tag, Types...>::eval( std::forward<Types2>(args)...);
-    return Tag::invoker_table[ spec/2 ];
+  static invoker_t ATTRIBUTE_PURE eval(std::uintptr_t spec) {
+    return Tag::invoker_table[ spec >> 1 ];
   }
 };
-template<typename Tag, typename... Types>
-struct fetch_invoker<1, Tag, Types...> {
-  template<typename... Types2>
-  static invoker_t eval(Types2&&... args) {
-    std::uintptr_t spec = fetch_poles<0, 0, Tag, Types...>::eval(std::forward<Types2>(args)...);
+template<typename Tag, std::size_t BTS>
+struct fetch_invoker<1, Tag, BTS> {
+  static invoker_t ATTRIBUTE_PURE eval(std::uintptr_t spec) {
     return (invoker_t)spec;
   }
 };
@@ -78,11 +68,21 @@ struct dispatch {
   }
 
   template<typename... Types2>
-  Ret call(Types2&&... args) const {
-    // actual work
+  invoker_t fetch(Types2&&... args) const {
     enum { arity = Tag::vsize };
+    constexpr std::size_t btset = Tag::traits::type_bitset;
 
-    invoker_t f = fetch_invoker<arity, Tag, Types...>::eval(std::forward<Types2>(args)...);
+    using fpoles = fetch_poles<Tag, btset>;
+    std::uintptr_t spec = fpoles::template eval<0>( std::forward<Types2>(args)... );
+
+    using finvoker = fetch_invoker<arity, Tag, btset>;
+    return finvoker::eval(spec);
+  }
+
+  template<typename... Types2>
+  Ret call(Types2&&... args) const {
+    invoker_t f = this->fetch( std::forward<Types2>(args)... );
+
     typedef typename Tag::trampoline::func_t func_t;
     return reinterpret_cast<func_t>(f)(args...);
   }

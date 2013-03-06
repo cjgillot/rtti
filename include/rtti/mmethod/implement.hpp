@@ -3,8 +3,10 @@
 
 #include "rtti/mmethod/print.hpp"
 #include "rtti/mmethod/regbase.hpp"
-#include "rtti/mmethod/mplpack.hpp"
-#include "rtti/mmethod/trampoline.hpp"
+
+#include "rtti/shared/mpl.hpp"
+#include "rtti/shared/mplpack.hpp"
+#include "rtti/shared/trampoline.hpp"
 
 #include <boost/mpl/bind.hpp>
 
@@ -52,17 +54,19 @@ protected:
   struct get_node {
   private:
     using arg_t = typename args::template get<I>::type;
-    using klass_t = typename ::rtti::mmethod::type_traits::remove_all<arg_t>::type;
+    using klass_t = typename rtti::mpl::remove_all<arg_t>::type;
     using virtual_t = typename Tag::traits::type_tags::template get<I>::type;
     using dispatch_t = typename boost::mpl::if_<
       virtual_t
     , ::rtti::detail::get_holder<klass_t>
-    , ::rtti::mmethod::detail::invalid_node
+    , ::rtti::detail::invalid_node
     >::type::type;
 
   public:
     constexpr static rtti_node const* value = &dispatch_t::node;
   };
+
+  typedef make_implement_helper impl_maker;
 
   // constructor to force some instanciations
   make_implement_helper() noexcept
@@ -75,7 +79,7 @@ private:
   , boost::mpl::if_<
       _2
     , boost::mpl::bind<tags::make_hierarchy, _1>
-    , rtti::mmethod::mmethod_hpath<0, rtti::mmethod::mmethod_hpath_end>
+    , rtti::hash::path_node<0, rtti::hash::path_end>
     >
   >::type type_hiers;
 
@@ -98,7 +102,7 @@ struct make_hashes_helper {
     typename Tag::traits::type_tags
   , boost::mpl::if_<
       _2
-    , boost::mpl::bind<detail::hash, _1>
+    , boost::mpl::bind<hash::detail::hash, _1>
     , boost::mpl::size_t<0>
     >
   >::type hashes_t;
@@ -114,10 +118,10 @@ struct make_hashes
 
 } // namespace detail
 
-template<typename Tag, typename Over, typename Sig>
+template<typename Tag, typename Hashes, typename Sig>
 struct mmethod_implementation
-: detail::make_implement<Tag, Over, Sig> {
-  typedef detail::make_implement<Tag, Over, Sig> impl_maker;
+: detail::make_implement<Tag, typename Tag::template overload<Hashes>, Sig> {
+  typedef typename mmethod_implementation::impl_maker impl_maker;
 
 protected:
   mmethod_implementation() noexcept {
@@ -136,21 +140,21 @@ protected:
 #define IMPLEMENTATION_MMETHOD(tag, ret, sig)                   \
 template<>                                                      \
 struct tag::overload<__MMETHOD_HDECL_(tag, ret, sig)>           \
-: public ::rtti::mmethod::mmethod_implementation<tag, tag::overload<__MMETHOD_HDECL_(tag, ret, sig)>, ret sig> {        \
+: public ::rtti::mmethod::mmethod_implementation<tag, __MMETHOD_HDECL_(tag, ret, sig), ret sig> {        \
   template<size_t I> struct poles {                             \
     static ::rtti::rtti_node const* node;                       \
   };                                                            \
   static ret call sig;                                          \
-  static const ::rtti::mmethod::invoker_t address;              \
+  static const ::rtti::invoker_t address;                       \
   overload() {}                                                 \
 };                                                              \
 template<std::size_t I>                                         \
 ::rtti::rtti_node const* tag::overload<                         \
   __MMETHOD_HDECL_(tag, ret, sig)>::poles<I>::node              \
     = impl_maker::get_node<I>::value;                           \
-::rtti::mmethod::invoker_t const                                \
+::rtti::invoker_t const                                         \
   tag::overload<__MMETHOD_HDECL_(tag, ret, sig)>::address       \
-    = (::rtti::mmethod::invoker_t)&trampoline::call;            \
+    = (::rtti::invoker_t)&trampoline::call;            \
 ret tag::overload<__MMETHOD_HDECL_(tag, ret, sig)>              \
   ::call sig /* definition here */
 
