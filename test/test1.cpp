@@ -46,8 +46,10 @@ static void u() {}
 void test(foo* f, std::size_t N) {
   f->func();
 
+  vf1.insert<baz*, int>( [](...){} );
+
   vf1(f, 0);
-  vf2(f, *f);
+  vf2(f, std::move(*f));
 
   double t1, t2;
   std::printf("Calling functions %u times :\n", N); std::fflush(stdout);

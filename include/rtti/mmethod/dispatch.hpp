@@ -56,7 +56,7 @@ struct fetch_invoker<1, Tag, BTS> {
 } // namespace <>
 
 /// main dispatch function
-template<typename Tag, typename Ret, typename... Types>
+template<typename Tag, typename Ret>
 struct dispatch {
   dispatch() {
     struct initializer_t {
@@ -84,7 +84,7 @@ struct dispatch {
     invoker_t f = this->fetch( std::forward<Types2>(args)... );
 
     typedef typename Tag::traits::trampoline::func_t* func_t;
-    return reinterpret_cast<func_t>(f)(args...);
+    return reinterpret_cast<func_t>(f)( std::forward<Types2>(args)...);
   }
 };
 

@@ -15,7 +15,7 @@ protected:
   struct traits;
 
 private:
-  typedef detail::dispatch<Tag, Ret, typename tags::rewrap<Args>::type...> dispatch_type;
+  typedef detail::dispatch<Tag,Ret> dispatch_type;
 
   // grant access
   friend dispatch_type;
@@ -26,8 +26,9 @@ private:
   dispatch_type m_dispatch;
 
 protected:
-  inline Ret operator()(typename tags::unwrap<Args>::arg_type... args) const
-  { return (Ret) m_dispatch.call(args...); }
+  template<typename... Args2>
+  inline Ret operator()(Args2&& ...args) const
+  { return (Ret) m_dispatch.call( std::forward<Args2>(args)... ); }
 
   template<typename... K, typename F>
   inline void insert(F&& f)

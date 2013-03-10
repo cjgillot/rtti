@@ -11,6 +11,19 @@
 
 #include "rtti/hash/path.hpp"
 
+namespace boost {
+
+template <typename T>
+struct call_traits<T&&>
+{
+   typedef T&& value_type;
+   typedef T&& reference;
+   typedef const T&& const_reference;
+   typedef T&& param_type;  // hh removed const
+};
+
+} // namespace boost
+
 // tag templates -> mark dispatch-guilty types (virtual) and the others
 namespace rtti { namespace tags {
 

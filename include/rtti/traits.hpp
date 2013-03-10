@@ -2,7 +2,7 @@
 #define RTTI_TRAITS_HPP
 
 #include <type_traits>
-#include <boost/call_traits.hpp>
+#include <boost/type_traits/has_dereference.hpp>
 #include <boost/type_traits/is_virtual_base_of.hpp>
 
 namespace rtti {
@@ -75,7 +75,7 @@ struct class_traits {
   static bool valid(reference_type v) { return true; }
 
   template<typename U>
-  static U& cast(reference_type v)
+  static U cast(reference_type v)
   { return unsafe_casting<U>::eval(v); }
 
   template<typename U>
@@ -89,8 +89,8 @@ struct fundamental_traits {
   typedef typename std::remove_cv<T>::type raw_type;
   typedef void class_type;
 
-  template<typename U>
-  static U cast(typename boost::call_traits<T>::param_type v)
+  template<typename U, typename V>
+  static U cast(V&& v)
   { return v; }
 
   template<typename U>
@@ -116,14 +116,64 @@ public:
   static bool valid(T const& v) { return bool(v); }
 };
 
-} // namespace
-
 template<typename T>
-struct pointer_traits
+struct pointer_traits_basecase
 : std::conditional<
     std::is_class<T>::value
   , traits_detail::class_traits<T>
   , traits_detail::fundamental_traits<T>
+>::type
+{
+  std::true_type operator*() const;
+};
+
+template<typename CV, typename T>
+struct wrap_cv_forward
+: T {
+  template<typename U>
+  struct rebind {
+  private:
+    typedef typename T::template rebind<U>::other O;
+  public:
+    typedef typename copy_cv<CV, O>::type other;
+  };
+};
+
+} // namespace
+
+template<typename T>
+struct pointer_traits
+: traits_detail::pointer_traits_basecase<T>
+{};
+
+template<typename T>
+struct pointer_traits<T const>
+: std::conditional<
+    boost::has_dereference< pointer_traits<T> >::value
+  , traits_detail::pointer_traits_basecase<T const>
+  , traits_detail::wrap_cv_forward<void const, pointer_traits<T> >
+>::type
+{};
+
+template<typename T>
+struct pointer_traits<T volatile>
+: std::conditional<
+    boost::has_dereference< pointer_traits<T> >::value
+  , traits_detail::pointer_traits_basecase<T volatile>
+  , traits_detail::wrap_cv_forward<void volatile, pointer_traits<T> >
+>::type
+{};
+
+template<typename T>
+struct pointer_traits<T const volatile>
+: std::conditional<
+    boost::has_dereference< pointer_traits<T const> >::value
+  , typename std::conditional<
+      boost::has_dereference< pointer_traits<T volatile> >::value
+    , traits_detail::pointer_traits_basecase<T const volatile>
+    , traits_detail::wrap_cv_forward<void const, pointer_traits<T volatile> >
+  >::type
+  , traits_detail::wrap_cv_forward<void volatile, pointer_traits<T const> >
 >::type
 {};
 
@@ -140,15 +190,6 @@ struct pointer_traits<T*>
   template<typename U>
   struct rebind {
     typedef U* other;
-  };
-};
-
-template<typename T>
-struct pointer_traits<T* const>
-: traits_detail::smart_ptr_traits<T*> {
-  template<typename U>
-  struct rebind {
-    typedef U* const other;
   };
 };
 

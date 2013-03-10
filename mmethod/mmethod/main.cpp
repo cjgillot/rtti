@@ -1,19 +1,21 @@
+#include "archive.hpp"
+
 #include <fstream>
 
 #include <vector>
 #include <unordered_map>
 
-#include "archive.hpp"
-
 #include <boost/program_options.hpp>
 
-typedef std::unordered_map<std::string, arch_declaration> registry_t;
-
-static void process_file (std::istream& ifile, registry_t& registry);
-static void generate_file(std::ostream& ofile, registry_t& registry);
-
-using std::string; using std::vector;
+using std::istream; using std::ostream;
+using std::string;  using std::vector;
 namespace po = boost::program_options;
+
+typedef std::unordered_map<string, arch_declaration> registry_t;
+
+static void process_file (istream& ifile, registry_t& registry);
+static void archive_file (ostream& ofile, registry_t& registry);
+static void generate_file(ostream& ofile, registry_t& registry);
 
 int main(int argc, char* argv[])
 {
@@ -22,7 +24,8 @@ int main(int argc, char* argv[])
   // Declare the supported options.
   po::options_description desc("Options");
   desc.add_options()
-    ("help",      "Display this information")
+    ("help,h",    "Display this information")
+    ("link,l",    "Archive the inputs as one output file")
     ("output,o",  po::value<       string >(&o_file)->default_value("a.cc"), "Output file")
     ("input",     po::value<vector<string>>(&i_file)                       ,  "Input file")
   ;
@@ -44,21 +47,25 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  std::unordered_map<std::string, arch_declaration> registry;
+  std::unordered_map<string, arch_declaration> registry;
 
-  for(std::string const& s: i_file) {
+  for(string const& s: i_file) {
     std::ifstream ifile { s, std::ios_base::in|std::ios_base::binary };
     process_file(ifile, registry);
   }
 
-  std::ofstream ofile { o_file, std::ios_base::out };
-  generate_file(ofile, registry);
+  std::ofstream ofile { o_file, std::ios_base::out|std::ios_base::binary };
+
+  if( vm.count("link") )
+    archive_file(ofile, registry);
+  else
+    generate_file(ofile, registry);
+
+  return 0;
 }
 
-void process_declaration(std::ostream& ofile, arch_declaration const& decl);
-void process_file(std::istream& ifile, registry_t& registry) {
-  for(;;)
-  try {
+void process_file(istream& ifile, registry_t& registry) {
+  for(;;) {
     iarchive_t arch ( ifile, arch_flags );
 
     std::size_t sz; arch >> sz;
@@ -71,19 +78,26 @@ void process_file(std::istream& ifile, registry_t& registry) {
       auto it = registry.find(key);
       if(it != registry.end()) {
         auto& overlist = it->second.overloads;
-        overlist.splice(overlist.begin(), decl.overloads);
+        overlist.splice( overlist.begin(), decl.overloads );
       }
       else {
-        registry.insert({ key, std::move(decl) });
+        registry.emplace( key, std::move(decl) );
       }
     }
   }
-  catch(boost::archive::archive_exception&) {
-    break;
+}
+
+void archive_file(ostream& ofile, registry_t& registry) {
+  oarchive_t arch ( ofile, arch_flags );
+  std::size_t sz = registry.size();
+  arch << sz;
+  for(auto& p : registry) {
+    arch << p.first << p.second;
   }
 }
 
-void generate_file(std::ostream& ofile, registry_t& registry) {
+void process_declaration(std::ostream& ofile, arch_declaration const& decl);
+void generate_file(ostream& ofile, registry_t& registry) {
   static const char includes [] =
     "#define MMETHOD_IN_MMETHOD\n"
     "#include \"rtti/mmethod/common.hpp\"\n\n"

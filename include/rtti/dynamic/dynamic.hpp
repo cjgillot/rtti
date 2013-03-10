@@ -116,15 +116,15 @@ struct save_poles_unary<Tag, 0> {
 
 } // namespace <>
 
-template<typename Tag, typename Ret, typename... Types>
+template<typename Tag, typename Ret>
 template<typename... K, typename F>
-void dispatch<Tag,Ret,Types...>::insert(F&& f) {
+void dispatch<Tag,Ret>::insert(F&& f) {
   constexpr std::size_t arity = Tag::traits::vsize;
   constexpr std::size_t btset = Tag::traits::type_bitset;
 
   typedef typename Tag::traits::trampoline::func_t sig_t;
   typedef std::function<sig_t> func_t;
-  functor_t inv = new func_t{ std::forward<F>(f) };
+  functor_t inv = new func_t{ Tag::traits::trampoline::template functor<Ret,K...>(f) };
 
   if(arity == 1) {
     using spoles = save_poles_unary<Tag, btset>;
@@ -183,9 +183,9 @@ struct rem_poles_unary<Tag, 0> {
 
 } // namespace <>
 
-template<typename Tag, typename Ret, typename... Types>
+template<typename Tag, typename Ret>
 template<typename... K>
-void dispatch<Tag,Ret,Types...>::retract() {
+void dispatch<Tag,Ret>::retract() {
   constexpr std::size_t arity = Tag::traits::vsize;
   constexpr std::size_t btset = Tag::traits::type_bitset;
 
