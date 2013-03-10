@@ -1,6 +1,6 @@
 #if 0
 
-#include "rtti/mmethod/array_map.hpp"
+#include "rtti/hash/array_map.hpp"
 #include "rtti/holder.hpp" // for rtti_node
 
 #include "util/assert.hpp"

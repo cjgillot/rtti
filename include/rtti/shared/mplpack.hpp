@@ -46,6 +46,8 @@ struct mplpack {
   struct as_pack_c {
     typedef mplpack_c<0, std::size_t(Elts::value)...> type;
   };
+
+  constexpr static std::size_t length = sizeof...(Elts);
 };
 
 template<typename... Elts1>

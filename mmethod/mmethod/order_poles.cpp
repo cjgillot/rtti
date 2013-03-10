@@ -83,7 +83,7 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
   ofile << "#endif" << std::endl;
 
   ofile << "static void _impl_assignarray" << i << "() {\n";
-  ofile << "\tdetail::poles_map_type& a = mmethod_register_base<MMETHOD>::poles<" << i << ">::array;\n" << std::endl;
+  ofile << "\tdetail::poles_map_type& a = register_base<MMETHOD>::poles<" << i << ">::array;\n" << std::endl;
 
   if(arity == 1 && statics.size())
   { // static hashes
@@ -102,7 +102,7 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
   ofile << "#else" << std::endl;
   ofile << "\ta.create<" << dynamics.size() + statics.size() << ">();\n";
   if( statics[0]->hash != 0 )
-    ofile << "\ta.insert( rtti_type(0), );\n";
+    ofile << "\ta.insert( rtti_type(0), " << statics[0]->hash << " );\n";
   print_insert(ofile, i, statics, arity);
   ofile << "#endif" << std::endl;
   print_insert(ofile, i, dynamics, arity);
@@ -129,7 +129,7 @@ void print_poles(
 , arch_declaration const& decl
 , pole_table_t& pole_table
 ) {
-  std::size_t const arity = pole_table.size();
+  std::size_t const arity = decl.vsize;
 
   for(std::size_t i : decl.argpos) {
     auto& t = pole_table[i];
@@ -145,7 +145,7 @@ void print_initializer(
 ) {
   for(std::size_t i : decl.argpos) {
     ofile <<
-        "template<> template<> detail::poles_map_type mmethod_register_base<MMETHOD>::poles<" << i << ">::array {\n"
+        "template<> template<> detail::poles_map_type register_base<MMETHOD>::poles<" << i << ">::array {\n"
         "#if MMETHOD_USE_SMALLARRAY\n"
         "\tTAG(__protectns)::_impl_smallarray" << i << "\n"
         "#endif\n"
@@ -155,12 +155,12 @@ void print_initializer(
   ofile << std::endl;
 
   if(decl.vsize > 1) {
-    ofile << "template<> invoker_t const* const mmethod_register_base<MMETHOD>::invoker_table = "
+    ofile << "template<> invoker_t const* const register_base<MMETHOD>::invoker_table = "
           << "TAG(__protectns)::_impl_invoker_table - TAG(__protectns)::MIN_HASH_VALUE;"
           << std::endl << std::endl;
   }
 
-  ofile << "template<> void mmethod_register_base<MMETHOD>::do_initialize() {" << std::endl;
+  ofile << "template<> void register_base<MMETHOD>::do_initialize() {" << std::endl;
 
   if(decl.vsize > 1)
     ofile << "\tTAG(__protectns)::_impl_inittable();" << std::endl;

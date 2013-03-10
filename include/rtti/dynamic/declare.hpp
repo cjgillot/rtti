@@ -1,17 +1,17 @@
-#ifndef RTTI_MMETHOD_DECLARE_HPP
-#define RTTI_MMETHOD_DECLARE_HPP
+#ifndef RTTI_DMETHOD_DECLARE_HPP
+#define RTTI_DMETHOD_DECLARE_HPP
 
-#include "rtti/mmethod/common.hpp"
-#include "rtti/mmethod/dispatch.hpp"
+#include "rtti/dynamic/common.hpp"
+#include "rtti/dynamic/dispatch.hpp"
 
-#define MMETHOD_NSPACE mmethod
+#define MMETHOD_NSPACE dmethod
 #include "rtti/templates/declare.hpp"
 #undef MMETHOD_NSPACE
 
-namespace rtti { namespace mmethod {
+namespace rtti { namespace dmethod {
 
 template<typename Tag, typename Sig>
-struct mmethod_register
+struct dmethod_register
 : register_base<Tag>
 , detail::make_declare<Tag, Sig> {
 private:
@@ -19,6 +19,8 @@ private:
 
 public:
   using decl_maker::operator();
+  using decl_maker::insert;
+  using decl_maker::retract;
 };
 
 }} // namespace rtti::mmethod
@@ -27,13 +29,13 @@ public:
 
 #define DECLARE_MMETHOD(name, ret, sig) \
 struct __MMETHOD_TAG(name)              \
-: rtti::mmethod::mmethod_register<      \
+: rtti::dmethod::dmethod_register<      \
   __MMETHOD_TAG(name)                   \
 , ret sig   > {                         \
   template<typename> struct overload;   \
 }; \
 static __MMETHOD_TAG(name) name /* ; */
 
-#include "rtti/mmethod/declare.tpp"
+#include "rtti/dynamic/declare.tpp"
 
 #endif

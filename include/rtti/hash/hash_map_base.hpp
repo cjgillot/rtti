@@ -31,6 +31,7 @@ struct bucket_t {
   { return value & 1; }
 
   inline void set(key_type k, value_type v);
+  inline void reset();
 };
 
 class hash_map;
@@ -72,7 +73,8 @@ public:
   //@{
   void create(std::size_t logsz);
   void insert(key_type key, value_type value);
-  void insert_at(iterator it, key_type key, value_type value); // unsafe
+  void insert_at(iterator it, key_type key, value_type value);
+  void erase(iterator it);
 
 private:
   void insert_need_resize(key_type key, value_type value);

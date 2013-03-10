@@ -7,6 +7,8 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/has_dereference.hpp>
 
+#include <boost/call_traits.hpp>
+
 #include "rtti/hash/path.hpp"
 
 // tag templates -> mark dispatch-guilty types (virtual) and the others
@@ -17,59 +19,40 @@ template<typename T> struct  static_ { typedef T type; };
 
 // get tag-free type
 //@{
-  // base cases
+template<typename T>
+struct unwrap_once {
+  typedef T type;
+  typedef boost::mpl::false_ has_virtual;
+  constexpr static std::size_t hash = 0;
+};
+template<typename T>
+struct unwrap_once<virtual_<T>> {
+  typedef T type;
+  typedef boost::mpl::true_  has_virtual;
+  constexpr static std::size_t hash = rtti::hash::detail::hash::apply<type>::value;
+};
+template<typename T>
+struct unwrap_once<static_<T>> {
+  typedef T type;
+  typedef boost::mpl::false_ has_virtual;
+  constexpr static std::size_t hash = 0;
+};
+
 template<typename T>
 struct unwrap {
-  typedef T type;
-  typedef boost::mpl::false_ has_virtual;
-};
-template<typename T>
-struct unwrap<virtual_<T>> {
-  typedef T type;
-  typedef boost::mpl::true_ has_virtual;
-};
-template<typename T>
-struct unwrap<static_<T>> {
-  typedef T type;
-  typedef boost::mpl::false_ has_virtual;
-};
+private:
+  typedef rtti::pointer_traits<T> traits;
+  typedef typename traits::raw_type deref_t;
 
-  // pointer/reference cases
-template<typename T>
-struct unwrap<T*> {
-  typedef typename unwrap<T>::type* type;
-  typedef typename unwrap<T>::has_virtual has_virtual;
-};
-template<typename T>
-struct unwrap<T&> {
-  typedef typename unwrap<T>::type& type;
-  typedef typename unwrap<T>::has_virtual has_virtual;
-};
-template<typename T>
-struct unwrap<T&&> {
-  typedef typename unwrap<T>::type&& type;
-  typedef typename unwrap<T>::has_virtual has_virtual;
-};
-  // no array
+  typedef unwrap_once<deref_t> unwrapped;
 
-  // cv-qualifiers
-template<typename T>
-struct unwrap<T const> {
-  typedef typename unwrap<T>::type const type;
-  typedef typename unwrap<T>::has_virtual has_virtual;
+public:
+  typedef typename unwrapped::type raw_type;
+  typedef typename traits::template rebind<raw_type>::other type;
+  typedef typename boost::call_traits<type>::param_type arg_type;
+  typedef typename unwrapped::has_virtual has_virtual;
+  constexpr static std::size_t hash = unwrapped::hash;
 };
-template<typename T>
-struct unwrap<T volatile> {
-  typedef typename unwrap<T>::type volatile type;
-  typedef typename unwrap<T>::has_virtual has_virtual;
-};
-template<typename T>
-struct unwrap<T const volatile> {
-  typedef typename unwrap<T>::type const volatile type;
-  typedef typename unwrap<T>::has_virtual has_virtual;
-};
-
-//@}
 
 template<typename T>
 struct rewrap
@@ -78,6 +61,7 @@ struct rewrap
   , virtual_<typename unwrap<T>::type>
   , static_ <typename unwrap<T>::type>
 > {};
+//@}
 
 // mpl predicate
 struct is_virtual {

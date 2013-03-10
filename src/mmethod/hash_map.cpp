@@ -14,7 +14,7 @@ using rtti::hash::detail::hash_map;
 
 /// bucket_t implementation
 //@{
-// inline void bucket_t::reset() { value = 1; }
+inline void bucket_t::reset() { value = 1; }
 inline void bucket_t::set(rtti_type k, std::uintptr_t v) {
   key = k;
   value = v;
@@ -30,11 +30,11 @@ void hash_map::flush(hash_map const& m) noexcept {
   m_base.import(m.m_base);
 }
 
-inline void hash_map::insert_at(iterator it, key_type key, value_type value) {
+void hash_map::insert_at(iterator it, key_type key, value_type value) {
   return m_base.insert_at(it, key, value);
 }
 
-void hash_map::insert(rtti_type key, std::uintptr_t value) noexcept {
+void hash_map::insert(rtti_type key, std::uintptr_t value) {
 #if MMETHOD_USE_SMALLARRAY
   if( key < m_smallcount ) {
     m_smallarray[key].set(key, value);
@@ -42,7 +42,18 @@ void hash_map::insert(rtti_type key, std::uintptr_t value) noexcept {
   }
 #endif
 
-  return m_base.insert(key, value);
+  m_base.insert(key, value);
+}
+
+void hash_map::erase(iterator it) {
+#if MMETHOD_USE_SMALLARRAY
+  if( m_smallarray <= it && it < m_smallarray + m_smallcount ) {
+    it->reset();
+    return;
+  }
+#endif
+
+  m_base.erase(it);
 }
 //@}
 
@@ -71,19 +82,4 @@ hash_map::do_fetch_pole(
   }
 
   return zero()->value;
-}
-
-void hash_map::save_pole(std::size_t key, value_type value) const {
-  iterator it = find(key);
-
-  if( !it->empty() ) {
-    it->value = value;
-    return;
-  }
-
-#if MMETHOD_USE_THREAD
-  util::stw_lock::lock_guard guard { m_mutex };
-#endif
-
-  const_cast<hash_map*>(this)->insert_at( it, key, value );
 }

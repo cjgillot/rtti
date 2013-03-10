@@ -1,25 +1,4 @@
-#include "rtti.hpp"
-#include "rtti/mmethod/register.hpp"
-
-struct foo
-: DECLARE_RTTI(foo, 100) {
-public:
-  virtual void func();
-  virtual ~foo();
-};
-
-struct bar
-: foo
-, STATIC_RTTI(bar, foo, 6) {};
-
-struct baz
-: foo
-, IMPLEMENT_RTTI(baz, foo) {};
-
-template<typename T> using v_ = rtti::tags::virtual_<T>;
-
-DECLARE_MMETHOD(vf1, void, (v_<foo>*, int));
-DECLARE_MMETHOD(vf2, void, (v_<foo>*, v_<foo>&));
+#include "head.hpp"
 
 void test(foo*, std::size_t);
 
@@ -66,9 +45,8 @@ static void u() {}
 
 void test(foo* f, std::size_t N) {
   f->func();
-  vf1(f, 0);
 
-//   vf2.insert< rtti::mmethod::detail::mpl::mplpack_c<0,0,0> >( u );
+  vf1(f, 0);
   vf2(f, *f);
 
   double t1, t2;
@@ -80,7 +58,7 @@ void test(foo* f, std::size_t N) {
   std::printf("ratio : %f\n", t2 / t1);
 
   t2 = time([=](){ loop_mm2 (f, f, N); }, "mmethod2");
-  std::printf("ratio : %f\n", (t2 / t1) / 2.);
+  std::printf("ratio : %f\n", t2 / t1);
 }
 
 #include <atomic>

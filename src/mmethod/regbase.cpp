@@ -7,13 +7,14 @@
 
 using namespace rtti::detail;
 
-const rtti::rtti_node invalid_node::node = {
+const rtti::rtti_node
+invalid_node::node = {
   rtti_type( std::numeric_limits<std::uintptr_t>::max() ),
   nullptr
 };
 
 void rtti::_rtti_bad_dispatch() {
-#if __EXCEPTIONS__
+#if __EXCEPTIONS
   throw bad_dispatch();
 #else
   std::abort();

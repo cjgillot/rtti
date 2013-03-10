@@ -7,6 +7,7 @@
 #include "util/attribute.hpp"
 
 #include "rtti/rttifwd.hpp"
+#include "rtti/traits.hpp"
 
 namespace rtti {
 namespace detail {
@@ -46,50 +47,37 @@ type_hash() noexcept
 template<class T>
 inline constexpr rtti_node const* ATTRIBUTE_PURE
 ATTRIBUTE_PURE
-static_node() noexcept
-{ return detail::rtti_getter::static_node<T>(); }
+static_node() noexcept {
+  typedef rtti::pointer_traits<T> traits;
+  return detail::rtti_getter::static_node<typename traits::class_type>();
+}
 
 //! \brief Get static id
 template<class T>
 inline constexpr rtti_type
 ATTRIBUTE_CONST
 static_id() noexcept
-{ return static_node<T>()->id; }
-
-//! \brief Get object node
-template<class T>
-inline rtti_node const*
-ATTRIBUTE_CONST
-get_node(T&& x) noexcept
-{ return &detail::rtti_getter::get_node_value(std::forward<T>(x)); }
+{ return rtti::static_node<T>()->id; }
 
 //! \brief Get pointer node
-template<class T>
+template<class U>
 inline rtti_node const*
-ATTRIBUTE_CONST
-ATTRIBUTE_NONNULL(1)
-get_node(T* x)
+ATTRIBUTE_PURE
+get_node(U&& x)
 {
+  typedef rtti::pointer_traits<U&&> traits;
 #if __EXCEPTIONS__
-  if(!x) throw std::bad_typeid();
+  if(! traits::valid(x)) throw std::bad_typeid();
 #endif
-  return get_node(*x);
+  return &RTTI_GETTER::get_node_value( traits::get( std::forward<U>(x) ) );
 }
 
 //! \brief Get object id
-template<class T>
-static inline rtti_type
-ATTRIBUTE_CONST
-get_id(T&& x) throw()
-{ return get_node(std::forward<T>(x))->id; }
-
-//! \brief Get pointer id
-template<class T>
-static inline rtti_type
-ATTRIBUTE_CONST
-ATTRIBUTE_NONNULL(1)
-get_id(T* x)
-{ return get_node(x)->id; }
+template<class U>
+inline rtti_type
+ATTRIBUTE_PURE
+get_id(U&& x) throw()
+{ return rtti::get_node( std::forward<U>(x) )->id; }
 
 } // namespace rtti
 

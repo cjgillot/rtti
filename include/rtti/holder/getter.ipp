@@ -4,7 +4,8 @@
 #include "rtti/holder/getter.hpp"
 #include "rtti/holder/holder.hpp"
 
-#include <boost/type_traits/remove_pointer.hpp>
+#include "rtti/traits.hpp"
+#include "rtti/shared/mpl.hpp"
 
 namespace rtti {
 namespace detail {
@@ -12,7 +13,7 @@ namespace detail {
 template<class T>
 constexpr rtti_node const*
 rtti_getter::static_node() {
-  typedef typename std::remove_pointer<T>::type T2;
+  typedef typename mpl::remove_all<T>::type T2;
   typedef typename get_holder<T2>::type h;
   return h::get_node();
 }

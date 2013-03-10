@@ -1,4 +1,4 @@
-#include "rtti.hpp"
+#include "head.hpp"
 
 #include "rtti/mmethod/register.hpp"
 #include "rtti/mmethod/implement.hpp"
@@ -6,36 +6,13 @@
 
 #include <cstdio>
 
-struct foo
-: DECLARE_RTTI(foo, 100) {
-public:
-  virtual void func();
-  virtual ~foo();
-};
+IMPLEMENT_MMETHOD(vf1, void, (foo*,int)) {}
+IMPLEMENT_MMETHOD(vf1, void, (baz*,int)) {}
+IMPLEMENT_MMETHOD(vf1, void, (bar*,int)) {}
 
-struct bar
-: foo
-, STATIC_RTTI(bar, foo, 6) {};
-
-struct baz
-: bar
-, IMPLEMENT_RTTI(baz, bar) {};
-
-template<typename T>
-using v_ = rtti::tags::virtual_<T>;
-DECLARE_MMETHOD(vf1, void, (v_<foo>*));
-
-IMPLEMENT_MMETHOD(vf1, void, (foo*)) {}
-IMPLEMENT_MMETHOD(vf1, void, (baz*)) {}
-IMPLEMENT_MMETHOD(vf1, void, (bar*)) {}
-
-template<typename T>
-using v_ = rtti::tags::virtual_<T>;
-DECLARE_MMETHOD(vf2, void, (v_<foo>*, v_<foo>&));
-
-IMPLEMENT_MMETHOD(vf2, void, (foo*, foo&)) { /*printf("lapin"); */}
-IMPLEMENT_MMETHOD(vf2, void, (baz*, bar&)) { /*printf("canard");*/}
-IMPLEMENT_MMETHOD(vf2, void, (baz*, baz&)) { /*printf("choux"); */}
+IMPLEMENT_MMETHOD(vf2, void, (foo*, foo&)) {}
+IMPLEMENT_MMETHOD(vf2, void, (baz*, bar&)) {}
+IMPLEMENT_MMETHOD(vf2, void, (baz*, baz&)) {}
 
 foo::~foo() {}
 
@@ -49,7 +26,7 @@ void loop_virt(foo* f, size_t N) {
 
 void loop_mm1 (foo* f, size_t N) {
   do
-    vf1(f);
+    vf1(f,0);
   while(--N);
 }
 

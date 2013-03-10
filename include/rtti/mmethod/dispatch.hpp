@@ -68,8 +68,8 @@ struct dispatch {
   }
 
   template<typename... Types2>
-  invoker_t fetch(Types2&&... args) const {
-    enum { arity = Tag::vsize };
+  invoker_t ATTRIBUTE_PURE fetch(Types2&&... args) const {
+    constexpr std::size_t arity = Tag::traits::vsize;
     constexpr std::size_t btset = Tag::traits::type_bitset;
 
     using fpoles = fetch_poles<Tag, btset>;
@@ -83,7 +83,7 @@ struct dispatch {
   Ret call(Types2&&... args) const {
     invoker_t f = this->fetch( std::forward<Types2>(args)... );
 
-    typedef typename Tag::trampoline::func_t func_t;
+    typedef typename Tag::traits::trampoline::func_t* func_t;
     return reinterpret_cast<func_t>(f)(args...);
   }
 };

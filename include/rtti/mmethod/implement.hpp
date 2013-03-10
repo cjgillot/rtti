@@ -4,15 +4,8 @@
 #include "rtti/mmethod/print.hpp"
 #include "rtti/mmethod/regbase.hpp"
 
-#include "rtti/shared/mpl.hpp"
-#include "rtti/shared/mplpack.hpp"
-#include "rtti/shared/trampoline.hpp"
-
-#include <boost/mpl/bind.hpp>
-
 namespace rtti {
 namespace mmethod {
-
 namespace detail {
 
 template<typename Over>
@@ -38,85 +31,21 @@ private:
   }
 };
 
-template<typename Tag, typename Over, typename Ret, typename... Args>
-struct make_implement_helper {
-private:
-  enum {
-    vsize = Tag::vsize
-  };
+}}} // namespace rtti::mmethod::detail
 
-  typedef mpl::mplpack<Args...> args;
+#define MMETHOD_IMPLEMENT_CTOR_CODE()   \
+  force_instantiation<Over>::template make<sizeof...(Args)>();\
+  typename Tag::traits t; (void)t; \
+  RTTI_PRINT( typename impl_maker::decl );
 
-protected:
-  typedef typename Tag::trampoline::template apply<Over, Ret, Args...> trampoline;
+#define MMETHOD_NSPACE mmethod
+#include "rtti/templates/implement.hpp"
+#undef MMETHOD_NSPACE
 
-  template<std::size_t I>
-  struct get_node {
-  private:
-    using arg_t = typename args::template get<I>::type;
-    using klass_t = typename rtti::mpl::remove_all<arg_t>::type;
-    using virtual_t = typename Tag::traits::type_tags::template get<I>::type;
-    using dispatch_t = typename boost::mpl::if_<
-      virtual_t
-    , ::rtti::detail::get_holder<klass_t>
-    , ::rtti::detail::invalid_node
-    >::type::type;
+#undef MMETHOD_IMPLEMENT_CTOR_CODE
 
-  public:
-    constexpr static rtti_node const* value = &dispatch_t::node;
-  };
-
-  typedef make_implement_helper impl_maker;
-
-  // constructor to force some instanciations
-  make_implement_helper() noexcept
-  { force_instantiation<Over>::template make<sizeof...(Args)>(); }
-
-#ifdef RTTI_MMETHOD_DO_PRINT
-private:
-  typedef typename args::template transform2<
-    typename Tag::traits::type_tags
-  , boost::mpl::if_<
-      _2
-    , boost::mpl::bind<tags::make_hierarchy, _1>
-    , rtti::hash::path_node<0, rtti::hash::path_end>
-    >
-  >::type type_hiers;
-
-public:
-  typedef mmethod_implement<Tag, vsize, sizeof...(Args), type_hiers> decl;
-#endif
-};
-
-template<typename Tag, typename Over, typename Ret, typename... Args>
-make_implement_helper<Tag, Over, Ret, Args...> make_implement_help(Ret(*f)(Args...));
-
-template<typename Tag, typename Over, typename Sig>
-struct make_implement
-: decltype( make_implement_help<Tag, Over>( std::declval<Sig*>() ) ) {};
-
-template<typename Tag, typename Ret, typename... Args>
-struct make_hashes_helper {
-  typedef mpl::mplpack<Args...> args;
-  typedef typename args::template transform2<
-    typename Tag::traits::type_tags
-  , boost::mpl::if_<
-      _2
-    , boost::mpl::bind<hash::detail::hash, _1>
-    , boost::mpl::size_t<0>
-    >
-  >::type hashes_t;
-  typedef typename hashes_t::as_pack_c::type hashes;
-};
-
-template<typename Tag, typename Ret, typename... Args>
-make_hashes_helper<Tag, Ret, Args...> make_hashes_help(Ret(*f)(Args...));
-
-template<typename Tag, typename Sig>
-struct make_hashes
-: decltype( make_hashes_help<Tag>( std::declval<Sig*>() ) ) {};
-
-} // namespace detail
+namespace rtti {
+namespace mmethod {
 
 template<typename Tag, typename Hashes, typename Sig>
 struct mmethod_implementation
@@ -125,12 +54,6 @@ struct mmethod_implementation
 
 protected:
   mmethod_implementation() noexcept {
-    /// output implementation
-    // this line prints mmethod_declare<>
-    // must be before RTTI_PRINT( typename impl_maker::decl )
-    typename Tag::traits t; (void)t;
-    // print mmethod_implement<>
-    RTTI_PRINT( typename impl_maker::decl );
   }
 };
 

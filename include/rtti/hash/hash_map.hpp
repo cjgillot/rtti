@@ -53,10 +53,10 @@ public:
   /// find(), thread-safe
   //@{
   inline std::uintptr_t ATTRIBUTE_PURE fetch_pole(const ::rtti::detail::rtti_node* rt) const noexcept;
+  inline iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
 
 private:
   inline iterator ATTRIBUTE_PURE zero() const noexcept;
-  inline iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
   std::uintptr_t  ATTRIBUTE_PURE do_fetch_pole(const rtti_node*, hash_map::iterator) const noexcept;
   //@}
 
@@ -64,17 +64,15 @@ public:
   /// use by generated code, thread-unsafe
   //@{
   template<std::size_t N> void create(); // unsafe
-  void insert(key_type key, value_type value) noexcept; // unsafe
-
-private:
+  void insert(key_type key, value_type value); // unsafe
   void insert_at(iterator it, key_type key, value_type value); // unsafe
-  //@}
 
-public:
-  void save_pole(std::size_t key, value_type value) const;
+  void erase(iterator it);
+  //@}
 
 private:
 #if MMETHOD_USE_SMALLARRAY
+  static_assert( false, "SmallArray not supported yet" );
   std::size_t const m_smallcount;
   bucket_t* const m_smallarray;
 #endif
