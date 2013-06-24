@@ -134,7 +134,7 @@ constexpr std::size_t max_distance = std::numeric_limits<std::size_t>::max();
 static std::size_t ATTRIBUTE_PURE hdistance(rtti_type type, rtti_node const* hier) {
   std::size_t ret = 0;
 
-  while(hier->id > type) {
+  while(hier->id != type) {
     ++ret;
     hier = hier->base;
   }
