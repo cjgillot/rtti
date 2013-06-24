@@ -92,7 +92,7 @@ struct save_poles {
 template<typename Tag>
 struct save_poles<Tag, 0> {
   template<std::size_t, typename... P>
-  static void eval(P&& ...args) {}
+  static void eval(P&& .../*args*/) {}
 };
 
 template<typename Tag, std::size_t BTS>
@@ -111,7 +111,7 @@ struct save_poles_unary {
 template<typename Tag>
 struct save_poles_unary<Tag, 0> {
   template<std::size_t, typename... P>
-  static void eval(P&& ...args) {}
+  static void eval(P&& .../*args*/) {}
 };
 
 } // namespace <>

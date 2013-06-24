@@ -50,7 +50,7 @@ struct fetch_poles {
 template<typename Tag>
 struct fetch_poles<Tag, 0> {
   template<std::size_t J, typename... Types>
-  static void eval(Types&&... args) {}
+  static void eval(Types&&... /*args*/) {}
 };
 
 template<std::size_t Arity, typename Tag, std::size_t BTS>

@@ -6,7 +6,6 @@
 
 namespace rtti {
 namespace MMETHOD_NSPACE {
-
 namespace detail {
 
 template<typename Tag, typename Over, typename Ret, typename... Args>

@@ -31,7 +31,7 @@ protected:
   : rtti_node_value() {}
 };
 
-template<bool, typename Derived, typename Super, std::size_t Hash>
+template<bool Declare, typename Derived, typename Super, std::size_t Hash>
 struct mixin_helper {
   enum {
     static_max = RTTI_GETTER::traits<Super>::static_max
@@ -75,15 +75,13 @@ private:
     typedef Derived const volatile self;
     typedef Super const volatile super;
     typedef typename helper::root const volatile root;
+    
+    static const bool abstract_ = Flags & rtti::flags::ABSTRACT;
+    static const bool static_   = Flags & rtti::flags::STATIC;
+    static const bool final_    = Flags & rtti::flags::FINAL;
 
-    enum {
-      abstract_= Flags & rtti::flags::ABSTRACT
-    , final_   = Flags & rtti::flags::FINAL
-    , static_  = Flags & rtti::flags::STATIC
-
-    , static_max = helper::static_max
-    , hash = helper::hash
-    };
+    static const rtti_type static_max = helper::static_max;
+    static const rtti_type hash       = helper::hash;
   };
 
 protected:

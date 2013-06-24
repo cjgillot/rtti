@@ -48,8 +48,8 @@ template<class T, class U>
 inline bool ATTRIBUTE_PURE
 is_exactly_a(const U &x) {
   static_assert( boost::is_same<
-    typename RTTI_GETTER::traits<T>::base
-  , typename RTTI_GETTER::traits<U>::base
+    typename RTTI_GETTER::traits<T>::root
+  , typename RTTI_GETTER::traits<U>::root
   >::value,
     "is_exactly_a<> should be called"
     "inside an unique hierarchy"
@@ -148,8 +148,8 @@ inline bool ATTRIBUTE_PURE
 is_a(const U &x)
 {
   STATIC_ASSERT(( boost::is_same<
-    typename RTTI_GETTER::traits<T>::base
-  , typename RTTI_GETTER::traits<U>::base
+    typename RTTI_GETTER::traits<T>::root
+  , typename RTTI_GETTER::traits<U>::root
   >::value &&
     "is_a should be called"
     "inside an unique hierarchy"
