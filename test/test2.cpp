@@ -1,8 +1,8 @@
 #include "head.hpp"
 
-#include "rtti/dynamic/register.hpp"
-#include "rtti/dynamic/implement.hpp"
-#include "rtti/dynamic/declare.tpp"
+#include "rtti/mmethod/register.hpp"
+#include "rtti/mmethod/implement.hpp"
+#include "rtti/mmethod/declare.tpp"
 
 #include <cstdio>
 

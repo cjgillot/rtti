@@ -2,7 +2,7 @@
 #define HEAD_HPP
 
 #include "rtti.hpp"
-#include "rtti/dynamic/register.hpp"
+#include "rtti/mmethod/register.hpp"
 
 #include <memory>
 
