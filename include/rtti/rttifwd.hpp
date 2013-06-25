@@ -22,6 +22,9 @@ struct rtti_node {
   const rtti_node* base;
 };
 
+//! \brief Useful typedef
+typedef ::rtti::detail::rtti_node const* rtti_hierarchy;
+
 //! \brief Friend structure for in-class rtti access
 struct rtti_getter;
 
@@ -29,6 +32,7 @@ struct rtti_getter;
 
 using detail::rtti_type;
 using detail::rtti_node;
+using detail::rtti_hierarchy;
 
 } // namespace rtti
 
