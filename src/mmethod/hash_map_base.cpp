@@ -122,7 +122,7 @@ void hash_map_base::erase(iterator it) {
 
 /// hash_map_base resize()
 //@{
-void hash_map_base::insert_need_resize(key_type key, std::uintptr_t value) {
+void hash_map_base::insert_need_resize(key_type key, value_type value) {
   std::size_t old_size = 1 << m_logsz;
 
   hash_map_base repl;

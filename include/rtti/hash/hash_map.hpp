@@ -26,7 +26,7 @@
 namespace rtti {
 namespace hash {
 namespace detail {
-  
+
 typedef const ::rtti::detail::rtti_node* rtti_hierarchy;
 
 class hash_map {

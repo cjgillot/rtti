@@ -15,7 +15,7 @@ using rtti::hash::detail::hash_map;
 /// bucket_t implementation
 //@{
 inline void bucket_t::reset() { value = 1; }
-inline void bucket_t::set(rtti_type k, std::uintptr_t v) {
+inline void bucket_t::set(rtti_type k, value_type v) {
   key = k;
   value = v;
   ASSERT( !empty() );
@@ -34,27 +34,8 @@ void hash_map::insert_at(iterator it, key_type key, value_type value) {
   return m_base.insert_at(it, key, value);
 }
 
-void hash_map::insert(rtti_type key, std::uintptr_t value) {
-#if MMETHOD_USE_SMALLARRAY
-  if( key < m_smallcount ) {
-    m_smallarray[key].set(key, value);
-    return;
-  }
-#endif
-
-  m_base.insert(key, value);
-}
-
-void hash_map::erase(iterator it) {
-#if MMETHOD_USE_SMALLARRAY
-  if( m_smallarray <= it && it < m_smallarray + m_smallcount ) {
-    it->reset();
-    return;
-  }
-#endif
-
-  m_base.erase(it);
-}
+void hash_map::insert(key_type key, value_type value) { m_base.insert(key, value); }
+void hash_map::erase(iterator it)                     { m_base.erase(it); }
 //@}
 
 std::uintptr_t
