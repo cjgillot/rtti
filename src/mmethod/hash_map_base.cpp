@@ -30,7 +30,7 @@ inline void bucket_t::set(rtti_type k, value_type v) {
 //@{
 hash_map_base::~hash_map_base() {}
 
-void hash_map_base::move(hash_map_base& o) noexcept {
+void hash_map_base::move(hash_map_base&& o) noexcept {
   ASSERT( this != &o );
 
   m_mask = o.m_mask;
@@ -39,7 +39,7 @@ void hash_map_base::move(hash_map_base& o) noexcept {
   m_array= std::move(o.m_array);
 }
 
-void hash_map_base::flush(hash_map_base const& o) noexcept {
+void hash_map_base::flush(hash_map_base const& o) {
   ASSERT( this != &o );
 
   m_array.reset();
@@ -89,7 +89,7 @@ hash_map_base::do_find(rtti_type key) const noexcept {
 // [it] has been returned by [find(key, value)]
 void hash_map_base::insert_at(iterator it, key_type key, value_type value) {
   if( it->empty() && it != BADBUCKET )
-    return it->set(key, value);
+    return const_cast<bucket_t*>(it)->set(key, value);
 
   insert(key, value);
 }
@@ -107,7 +107,8 @@ void hash_map_base::insert(key_type key, value_type value) {
   insert_need_resize(key, value);
 }
 
-void hash_map_base::erase(iterator it) {
+void hash_map_base::erase(iterator iter) {
+  bucket_t* it = const_cast<bucket_t*>(iter);
   it->reset();
   ++it;
 
@@ -128,7 +129,7 @@ void hash_map_base::insert_need_resize(key_type key, value_type value) {
   hash_map_base repl;
   repl.flush(*this);
   repl.insert(key, value);
-  move(repl);
+  move( std::move(repl) );
 }
 //@}
 

@@ -37,7 +37,8 @@ struct bucket_t {
 class hash_map;
 class hash_map_base {
 public:
-  typedef bucket_t* iterator;
+  typedef bucket_t const* iterator;
+
   friend class hash_map;
 
 public:
@@ -50,15 +51,15 @@ private:
   hash_map_base& operator=(hash_map_base const&) = delete;
   hash_map_base& operator=(hash_map_base&&) = delete;
 
-protected:
+public:
   /// hash function, thread-safe
   inline index_type ATTRIBUTE_PURE hash(key_type a) const noexcept;
 
 public:
   /// find block -> all these are thread-safe
   //@{
-  inline iterator ATTRIBUTE_PURE zero() const noexcept;
-  inline iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
+  iterator ATTRIBUTE_PURE zero() const noexcept;
+  iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
 
 private:
   iterator ATTRIBUTE_PURE do_find(key_type key) const noexcept;
@@ -72,11 +73,11 @@ public:
   void insert_at(iterator it, key_type key, value_type value);
   void erase(iterator it);
 
-  void flush(hash_map_base const&) noexcept;
+  void flush(hash_map_base const&);
 
 private:
   void insert_need_resize(key_type key, value_type value);
-  void move(hash_map_base&) noexcept;
+  void move(hash_map_base&&) noexcept;
   //@}
 
 private:
