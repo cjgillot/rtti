@@ -16,18 +16,15 @@ using rtti::dmethod::detail::invoker_entry;
 using rtti::dmethod::detail::poles_map_type;
 using rtti::dmethod::detail::invoker_table_type;
 
-using hash_key_type = rtti::hash::detail::key_type;
-constexpr hash_key_type zero_hash_key { 0 };
-
 // pole stuff
 //@{
 void
 rtti::dmethod::detail::init_pole(poles_map_type& map) {
   map.mem.create<1>();
-  map.mem.insert( zero_hash_key, 0 );
+  map.mem.insert( rtti_type(0), 0u );
 
   map.poles.create<1>();
-  map.poles.insert( zero_hash_key, 0 );
+  map.poles.insert( rtti_type(0), 0u );
 
   ASSERT( map.smallint == 0 );
 }
@@ -35,10 +32,10 @@ rtti::dmethod::detail::init_pole(poles_map_type& map) {
 void
 rtti::dmethod::detail::init_pole_unary(poles_map_type& map) {
   map.mem.create<1>();
-  map.mem.insert( zero_hash_key, (std::uintptr_t)nullptr );
+  map.mem.insert( rtti_type(0), (std::uintptr_t)nullptr );
 
   map.poles.create<1>();
-  map.poles.insert( zero_hash_key, (std::uintptr_t)nullptr );
+  map.poles.insert( rtti_type(0), (std::uintptr_t)nullptr );
 
   ASSERT( map.smallint == 0 );
 }
@@ -80,7 +77,8 @@ rtti::dmethod::detail::insert_pole_unary(
     // existing pole, nothing to do
     return;
 
-  map.poles.insert_at( it, hier->id, (std::uintptr_t)inv );
+  std::uintptr_t ret = reinterpret_cast<std::uintptr_t>(inv);
+  map.poles.insert_at( it, hier->id, ret );
   map.mem.flush( map.poles );
 }
 
@@ -110,7 +108,8 @@ rtti::dmethod::detail::retract_pole_unary(
   poles_map_type& map
 , rtti_node const* hier
 ) {
-  return (functor_t)retract_pole(map, hier);
+  std::uintptr_t ret = retract_pole(map, hier);
+  return reinterpret_cast<functor_t>(ret);
 }
 //@}
 
