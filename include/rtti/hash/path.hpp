@@ -40,7 +40,7 @@ struct hash {
 template<typename T>
 struct make_path {
   typedef typename mpl::remove_all<T>::type RawT;
-  typedef RTTI_GETTER::traits<RawT> Traits;
+  typedef rtti::detail::rtti_getter::traits<RawT> Traits;
   typedef path_node<
     detail::hash::template apply<T>::value
   , typename make_path<typename Traits::super>::type

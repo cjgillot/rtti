@@ -5,8 +5,8 @@
 
 #include "util/strong_typedef.hpp"
 
-#define RTTI_GETTER \
-  ::rtti::detail::rtti_getter
+// #define RTTI_GETTER \
+//   ::rtti::detail::rtti_getter
 
 namespace rtti {
 namespace detail {

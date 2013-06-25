@@ -21,8 +21,8 @@ rtti_getter::static_node() {
 template<class T>
 inline rtti_node const&
 rtti_getter::get_node_value(T&& x) noexcept {
-  typedef RTTI_GETTER::traits<T> traits;
-  typedef typename RTTI_GETTER::mixin<typename traits::root>::type root_mixin;
+  typedef traits<T> trts;
+  typedef typename mixin<typename trts::root>::type root_mixin;
   return static_cast<root_mixin const&&>(x).rtti_node_value;
 }
 

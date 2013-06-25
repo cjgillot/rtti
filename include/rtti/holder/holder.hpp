@@ -46,12 +46,13 @@ private:
   static_assert( std::is_const<T>::value && std::is_volatile<T>::value
   , "rtti::detail::holder_::holder<> must not be accessed directly" );
 
-  typedef typename RTTI_GETTER::traits<T>::super super;
+  typedef rtti_getter::traits<T> trts;
+  typedef typename trts::super super;
   typedef typename get_holder<super>::type sholder;
 
 public:
   static constexpr rtti_node node = {
-    rtti_type( rtti_getter::traits<T>::hash )
+    rtti_type( trts::hash )
   , sholder::get_node()
   };
 

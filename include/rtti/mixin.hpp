@@ -33,11 +33,15 @@ protected:
 
 template<bool Declare, typename Derived, typename Super, std::size_t Hash>
 struct mixin_helper {
+private:
+  using Traits = rtti_getter::traits<Super>;
+  
+public:
   enum {
-    static_max = RTTI_GETTER::traits<Super>::static_max
+    static_max = Traits::static_max
   , hash = Hash
   };
-  using root = typename RTTI_GETTER::traits<Super>::root;
+  using root = typename Traits::root;
 };
 template<typename D, typename S, std::size_t Max>
 struct mixin_helper<true, D, S, Max> {
@@ -59,7 +63,7 @@ template<
 struct mixin
 : private detail::mixin_node<Flags & flags::DECLARE> {
 
-  friend class RTTI_GETTER;
+  friend class detail::rtti_getter;
   friend mixin rtti_get_mixin(Derived const volatile&) {
     // dummy body -> avoid gcc non-template-friend warning
     return std::declval<mixin>();
@@ -86,7 +90,7 @@ private:
 
 protected:
   mixin() noexcept {
-    const_cast<rtti_node&>( RTTI_GETTER::get_node_value(static_cast<Derived&>(*this)) ) = *rtti::static_node<Derived>();
+    const_cast<rtti_node&>( detail::rtti_getter::get_node_value(static_cast<Derived&>(*this)) ) = *rtti::static_node<Derived>();
   }
   ~mixin() noexcept {}
 };

@@ -69,7 +69,7 @@ get_node(U&& x)
 #if __EXCEPTIONS__
   if(! traits::valid(x)) throw std::bad_typeid();
 #endif
-  return &RTTI_GETTER::get_node_value( traits::get( std::forward<U>(x) ) );
+  return &detail::rtti_getter::get_node_value( traits::get( std::forward<U>(x) ) );
 }
 
 //! \brief Get object id

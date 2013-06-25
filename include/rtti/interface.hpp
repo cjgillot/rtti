@@ -1,6 +1,8 @@
 #ifndef RTTI_INTERFACE_HPP
 #define RTTI_INTERFACE_HPP
 
+#include <type_traits>
+
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_pointer.hpp>
@@ -47,9 +49,11 @@ rtti_compare( rtti_type a, rtti_type b )
 template<class T, class U>
 inline bool ATTRIBUTE_PURE
 is_exactly_a(const U &x) {
-  static_assert( boost::is_same<
-    typename RTTI_GETTER::traits<T>::root
-  , typename RTTI_GETTER::traits<U>::root
+  using Traits = detail::rtti_getter::traits<T>;
+
+  static_assert( std::is_same<
+    typename Traits::root
+  , typename Traits::root
   >::value,
     "is_exactly_a<> should be called"
     "inside an unique hierarchy"
@@ -63,8 +67,8 @@ template<class T, class U>
 inline bool ATTRIBUTE_PURE ATTRIBUTE_NONNULL(1)
 is_exactly_a(const U* x) {
   // reject pointer-to-pointer
-  static_assert( ! boost::is_pointer<U>::value, "is_exactly_a<> called with pointer to pointer" );
-  typedef typename boost::remove_pointer<T>::type T2;
+  static_assert( ! std::is_pointer<U>::value, "is_exactly_a<> called with pointer to pointer" );
+  typedef typename std::remove_pointer<T>::type T2;
 
   // retry without pointer
   return rtti::is_exactly_a<T2, U>( *x );
@@ -148,8 +152,8 @@ inline bool ATTRIBUTE_PURE
 is_a(const U &x)
 {
   STATIC_ASSERT(( boost::is_same<
-    typename RTTI_GETTER::traits<T>::root
-  , typename RTTI_GETTER::traits<U>::root
+    typename detail::rtti_getter::traits<T>::root
+  , typename detail::rtti_getter::traits<U>::root
   >::value &&
     "is_a should be called"
     "inside an unique hierarchy"
@@ -159,7 +163,7 @@ is_a(const U &x)
   typedef typename boost::remove_reference<T>::type T2;
   typedef typename boost::remove_pointer <T2>::type T3;
   typedef typename boost::mpl::if_c<
-    RTTI_GETTER::traits<T3>::final_
+    detail::rtti_getter::traits<T3>::final_
   , detail::is_a_final<const T3, const U>
   , detail::is_a_impl<const T3, const U>
   >::type impl_t;
