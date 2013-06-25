@@ -28,7 +28,7 @@ template<> struct mixin_node<true> {
 
 protected:
   constexpr mixin_node()
-  : rtti_node_value() {}
+  : rtti_node_value(rtti_node_value) {}
 };
 
 template<bool Declare, typename Derived, typename Super, std::size_t Hash>
@@ -37,18 +37,14 @@ private:
   using Traits = rtti_getter::traits<Super>;
   
 public:
-  enum {
-    static_max = Traits::static_max
-  , hash = Hash
-  };
+  constexpr static rtti_type static_max = Traits::static_max;
+  constexpr static rtti_type hash       { Hash };
   using root = typename Traits::root;
 };
 template<typename D, typename S, std::size_t Max>
 struct mixin_helper<true, D, S, Max> {
-  enum {
-    static_max = Max
-  , hash = 0
-  };
+  constexpr static rtti_type static_max { Max };
+  constexpr static rtti_type hash       { 0 };
   using root = D;
 };
 
@@ -84,8 +80,8 @@ private:
     static const bool static_   = Flags & rtti::flags::STATIC;
     static const bool final_    = Flags & rtti::flags::FINAL;
 
-    static const rtti_type static_max = helper::static_max;
-    static const rtti_type hash       = helper::hash;
+    constexpr static rtti_type static_max = helper::static_max;
+    constexpr static rtti_type hash       = helper::hash;
   };
 
 protected:

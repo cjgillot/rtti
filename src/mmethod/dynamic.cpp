@@ -16,15 +16,18 @@ using rtti::dmethod::detail::invoker_entry;
 using rtti::dmethod::detail::poles_map_type;
 using rtti::dmethod::detail::invoker_table_type;
 
+using hash_key_type = rtti::hash::detail::key_type;
+constexpr hash_key_type zero_hash_key { 0 };
+
 // pole stuff
 //@{
 void
 rtti::dmethod::detail::init_pole(poles_map_type& map) {
   map.mem.create<1>();
-  map.mem.insert( 0, 0 );
+  map.mem.insert( zero_hash_key, 0 );
 
   map.poles.create<1>();
-  map.poles.insert( 0, 0 );
+  map.poles.insert( zero_hash_key, 0 );
 
   ASSERT( map.smallint == 0 );
 }
@@ -32,10 +35,10 @@ rtti::dmethod::detail::init_pole(poles_map_type& map) {
 void
 rtti::dmethod::detail::init_pole_unary(poles_map_type& map) {
   map.mem.create<1>();
-  map.mem.insert( 0, (std::uintptr_t)nullptr );
+  map.mem.insert( zero_hash_key, (std::uintptr_t)nullptr );
 
   map.poles.create<1>();
-  map.poles.insert( 0, (std::uintptr_t)nullptr );
+  map.poles.insert( zero_hash_key, (std::uintptr_t)nullptr );
 
   ASSERT( map.smallint == 0 );
 }

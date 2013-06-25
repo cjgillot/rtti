@@ -12,7 +12,8 @@ namespace rtti {
 namespace detail {
 
 //! \brief RTTI id type
-typedef std::uintptr_t rtti_type;
+UTIL_STRONG_TYPEDEF(std::uintptr_t, rtti_type);
+// typedef std::uintptr_t rtti_type;
 
 //! \brief RTTI node type
 //! POD class holding a hierarchy bottom-up
