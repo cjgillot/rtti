@@ -26,71 +26,16 @@ inline void hash_map::create() {
   m_base.create(logsz);
 }
 
-#ifndef MMETHOD_IN_MMETHOD
-// use by fetch_pole
-
-inline index_type ATTRIBUTE_PURE
-hash_map_base::hash(key_type a) const noexcept
-{ return index_type{ std::uintptr_t(a) & m_mask }; }
-
-inline hash_map_base::iterator ATTRIBUTE_PURE hash_map_base::zero() const noexcept { return &m_array[0]; }
-inline hash_map     ::iterator ATTRIBUTE_PURE hash_map     ::zero() const noexcept { return m_base.zero(); }
-
-inline hash_map_base::iterator ATTRIBUTE_PURE hash_map_base::find(key_type key) const noexcept {
-  bucket_t* bucket = &m_array[ hash(key) ];
-
-  if(LIKELY( bucket->key == key ))
-    return bucket;
-
-  return do_find(key);
-}
-inline hash_map     ::iterator ATTRIBUTE_PURE hash_map     ::find(key_type key) const noexcept {
-  return m_base.find(key);
-}
-
-inline std::uintptr_t
-ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
-hash_map::fetch_pole(
-  const ::rtti::detail::rtti_node* rt
-) const noexcept {
-  const rtti_type id0 = rt->id;
-#if MMETHOD_USE_THREAD
-  util::stw_lock::fetch_guard guard { m_mutex };
-#endif
-
-  iterator it0;
-
-#if MMETHOD_USE_INLINE_FIND
-  {
-    it0 = &m_base.m_array[ m_base.hash(id0) ];
-
-#if MMETHOD_USE_INLINE_DO_FIND
-    do {
-      if(LIKELY( it0->key == id0 ))
-        return it0->value;
-
-      ++it0;
-    }
-    while(UNLIKELY( !it0->empty() ));
-#else  // MMETHOD_USE_INLINE_DO_FIND
-    if(LIKELY( it0->key == id0 ))
-      return it0->value;
-
-    it0 = m_base.do_find(id0);
-#endif // MMETHOD_USE_INLINE_DO_FIND
-  }
-#else  // MMETHOD_USE_INLINE_FIND
-  t0 = find(id0);
-#endif // MMETHOD_USE_INLINE_FIND
-
-  if(LIKELY( !it0->empty() ))
-    return it0->value;
-
-  return do_fetch_pole(rt, it0);
-}
-
-#endif
+inline hash_map::iterator ATTRIBUTE_PURE hash_map::zero()             const noexcept { return m_base.zero();    }
+inline hash_map::iterator ATTRIBUTE_PURE hash_map::find(key_type key) const noexcept { return m_base.find(key); }
 
 }}} // namespace rtti::mmethod::detail
+
+#ifndef MMETHOD_IN_MMETHOD
+
+#include "hash_map_base.ipp"
+#include "fetch_pole.hpp"
+
+#endif
 
 #endif

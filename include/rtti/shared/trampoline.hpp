@@ -10,7 +10,7 @@ namespace detail {
 template<typename TAG, typename Ret, typename... Types>
 struct trampoline {
   typedef Ret return_type;
-  typedef Ret func_t(typename tags::unwrap<Types>::arg_type...);
+  typedef Ret sig_t(typename tags::unwrap<Types>::arg_type...);
 
   template<typename Over, typename Ret2, typename... Types2>
   struct apply {
@@ -20,7 +20,7 @@ struct trampoline {
   };
 
   template<typename Ret2, typename... Types2, typename Func>
-  static std::function<func_t> functor(Func&& f) {
+  static std::function<sig_t> functor(Func&& f) {
     return [f](typename tags::unwrap<Types>::arg_type... args) -> Ret
     { return f( rtti::pointer_traits<Types>::template cast<Types2>(args)... ); };
   }

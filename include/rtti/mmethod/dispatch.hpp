@@ -26,7 +26,7 @@ struct fetch_poles {
 
     if( BTS & 1 ) {
       auto& map = Tag::template poles<J>::array;
-      rh = map.fetch_pole( ::rtti::get_node(arg) );
+      rh = fetch_pole( map, ::rtti::get_node(arg) );
     }
 
     using next = fetch_poles<Tag, BTS/2>;
@@ -83,7 +83,7 @@ struct dispatch {
   Ret call(Types2&&... args) const {
     invoker_t f = this->fetch( std::forward<Types2>(args)... );
 
-    typedef typename Tag::traits::trampoline::func_t* func_t;
+    typedef typename Tag::traits::trampoline::sig_t* func_t;
     return reinterpret_cast<func_t>(f)( std::forward<Types2>(args)...);
   }
 };
