@@ -3,9 +3,7 @@
 
 #include "rtti/rttifwd.hpp"
 
-#define MMETHOD_USE_SMALLARRAY 0
 #define MMETHOD_USE_THREAD 0
-#define MMETHOD_USE_INLINE_FIND 1
 #define MMETHOD_USE_INLINE_DO_FIND 1
 
 #include "rtti/hash/hash_map_base.hpp"
@@ -27,8 +25,11 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-typedef const ::rtti::detail::rtti_node* rtti_hierarchy;
+/// exported function
+std::uintptr_t ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
+fetch_pole(hash_map const& map, rtti_hierarchy rt) noexcept;
 
+/// state class
 class hash_map {
 public:
   typedef hash_map_base::iterator iterator;
@@ -44,17 +45,20 @@ private:
   hash_map& operator=(hash_map&&) = delete;
 
 public:
-  void flush(hash_map const&) noexcept;
-
+  void flush(hash_map const&);
+  
 public:
   /// find(), thread-safe
   //@{
-  inline std::uintptr_t ATTRIBUTE_PURE fetch_pole(rtti_hierarchy rt) const noexcept;
-  inline iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
+  iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
+  iterator ATTRIBUTE_PURE zero() const noexcept;
+  //@}
 
 private:
-  inline iterator ATTRIBUTE_PURE zero() const noexcept;
-  std::uintptr_t  ATTRIBUTE_PURE do_fetch_pole(rtti_hierarchy, hash_map::iterator) const noexcept;
+  /// fetch_pole()
+  //@{
+  friend std::uintptr_t ATTRIBUTE_PURE fetch_pole(hash_map const&, rtti_hierarchy rt) noexcept;
+  inline bucket_t* array() const noexcept { return m_base.m_array.get(); }
   //@}
 
 public:

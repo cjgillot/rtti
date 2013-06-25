@@ -14,7 +14,7 @@ functor_t ATTRIBUTE_PURE lookup(
   std::size_t arity
 , invoker_table_type& table
 , std::uintptr_t* spec
-, rtti_node const** hiers
+, rtti_hierarchy* hiers
 ) noexcept;
 
 namespace {
@@ -30,7 +30,7 @@ namespace {
 template<typename Tag, std::size_t BTS>
 struct fetch_poles {
   template<std::size_t J, typename First, typename... Types>
-  static void eval(std::uintptr_t* m, rtti_node const** h, First&& arg0, Types&&... args) {
+  static void eval(std::uintptr_t* m, rtti_hierarchy* h, First&& arg0, Types&&... args) {
     if( BTS & 1 ) {
       detail::poles_map_type& map = Tag::template poles<J>::array;
 
@@ -39,7 +39,7 @@ struct fetch_poles {
 #endif
 
       *h = ::rtti::get_node(arg0);
-      *m = map.mem.fetch_pole(*h);
+      *m = fetch_pole(map.mem, *h);
       ++h; ++m;
     }
 
@@ -55,13 +55,13 @@ struct fetch_poles<Tag, 0> {
 
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
-  static functor_t ATTRIBUTE_PURE eval(std::uintptr_t* spec, rtti_node const** hiers) {
+  static functor_t ATTRIBUTE_PURE eval(std::uintptr_t* spec, rtti_hierarchy* hiers) {
     return lookup( Arity, Tag::invoker_table, spec, hiers );
   }
 };
 template<typename Tag, std::size_t BTS>
 struct fetch_invoker<1, Tag, BTS> {
-  static functor_t ATTRIBUTE_PURE eval(std::uintptr_t* spec, rtti_node const**) {
+  static functor_t ATTRIBUTE_PURE eval(std::uintptr_t* spec, rtti_hierarchy*) {
     return (functor_t)spec[0];
   }
 };
@@ -86,7 +86,7 @@ struct dispatch {
     constexpr std::size_t btset = Tag::traits::type_bitset;
 
     std::uintptr_t spec [ arity ];
-    rtti_node const* hiers [ arity ];
+    rtti_hierarchy hiers [ arity ];
 
     using fpoles = fetch_poles<Tag, btset>;
     fpoles::template eval<0>( spec, hiers, std::forward<Types2>(args)... );
@@ -102,7 +102,7 @@ struct dispatch {
     if(!f)
       _rtti_bad_dispatch();
 
-    typedef typename Tag::traits::trampoline::func_t sig_t;
+    typedef typename Tag::traits::trampoline::sig_t sig_t;
     typedef std::function<sig_t> func_t;
     return (*static_cast<func_t*>(f))( std::forward<Types2>(args)... );
   }
