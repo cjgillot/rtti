@@ -6,6 +6,8 @@
 #include "overloads.hpp"
 #include "rtti/hash/hash.hpp"
 
+#define USE_SMALLARRAY 0
+
 static void print_dyn_id(std::ostream& ofile, klass_t const* k, std::size_t i) {
   if(RTTI_HASH_IS_ID(k->hash)) {
     ofile << "rtti_type(" << k->hash << ")";
@@ -59,6 +61,8 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
     }
   );
 
+/// Disable smallarray
+#if USE_SMALLARRAY
   /// declare smallarray
   ofile << "#if MMETHOD_USE_SMALLARRAY" << std::endl;
   ofile << "static pole_t _impl_smallarray" << i << "[] = {" << std::endl;
@@ -81,10 +85,13 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
   }
   ofile << "};" << std::endl;
   ofile << "#endif" << std::endl;
+#endif
 
   ofile << "static void _impl_assignarray" << i << "() {\n";
   ofile << "\tdetail::poles_map_type& a = register_base<MMETHOD>::poles<" << i << ">::array;\n" << std::endl;
 
+/// Disable smallarray
+#if USE_SMALLARRAY
   if(arity == 1 && statics.size())
   { // static hashes
     ofile << "#if MMETHOD_USE_SMALLARRAY" << std::endl;
@@ -96,15 +103,20 @@ static void print_map(std::ostream& ofile, std::size_t i, Seq const& t, std::siz
     }
     ofile << "#endif" << std::endl << std::endl;
   }
+#endif
 
+#if USE_SMALLARRAY
   ofile << "#if MMETHOD_USE_SMALLARRAY" << std::endl;
   ofile << "\ta.create<" << dynamics.size() << ">();\n";
   ofile << "#else" << std::endl;
+#endif
   ofile << "\ta.create<" << dynamics.size() + statics.size() << ">();\n";
   if( statics[0]->hash != 0 )
     ofile << "\ta.insert( rtti_type(0), " << statics[0]->hash << " );\n";
   print_insert(ofile, i, statics, arity);
+#if USE_SMALLARRAY
   ofile << "#endif" << std::endl;
+#endif
   print_insert(ofile, i, dynamics, arity);
   ofile << "}" << std::endl;
 }
@@ -146,9 +158,11 @@ void print_initializer(
   for(std::size_t i : decl.argpos) {
     ofile <<
         "template<> template<> detail::poles_map_type register_base<MMETHOD>::poles<" << i << ">::array {\n"
+#if USE_SMALLARRAY
         "#if MMETHOD_USE_SMALLARRAY\n"
         "\tTAG(__protectns)::_impl_smallarray" << i << "\n"
         "#endif\n"
+#endif
         "};"
           << std::endl;
   }

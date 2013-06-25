@@ -50,13 +50,9 @@ private:
   hash_map_base& operator=(hash_map_base const&) = delete;
   hash_map_base& operator=(hash_map_base&&) = delete;
 
-public:
-  void import(hash_map_base const&) noexcept;
-  void move(hash_map_base&) noexcept;
-
 protected:
-  /// hash function
-  inline index_type ATTRIBUTE_PURE hash(key_type a) const noexcept; // thread-safe
+  /// hash function, thread-safe
+  inline index_type ATTRIBUTE_PURE hash(key_type a) const noexcept;
 
 public:
   /// find block -> all these are thread-safe
@@ -76,8 +72,11 @@ public:
   void insert_at(iterator it, key_type key, value_type value);
   void erase(iterator it);
 
+  void flush(hash_map_base const&) noexcept;
+
 private:
   void insert_need_resize(key_type key, value_type value);
+  void move(hash_map_base&) noexcept;
   //@}
 
 private:

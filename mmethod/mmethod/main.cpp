@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 }
 
 void process_file(istream& ifile, registry_t& registry) {
-  for(;;) {
+//   for(;;) {
     iarchive_t arch ( ifile, arch_flags );
 
     std::size_t sz; arch >> sz;
@@ -84,7 +84,7 @@ void process_file(istream& ifile, registry_t& registry) {
         registry.emplace( key, std::move(decl) );
       }
     }
-  }
+//   }
 }
 
 void archive_file(ostream& ofile, registry_t& registry) {

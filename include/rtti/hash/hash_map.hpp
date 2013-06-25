@@ -26,18 +26,15 @@
 namespace rtti {
 namespace hash {
 namespace detail {
+  
+typedef const ::rtti::detail::rtti_node* rtti_hierarchy;
 
 class hash_map {
 public:
   typedef hash_map_base::iterator iterator;
 
 public:
-#if MMETHOD_USE_SMALLARRAY
-  template<std::size_t N>
-  inline constexpr hash_map(bucket_t(&)[N]);
-#else
   inline constexpr hash_map();
-#endif
   ~hash_map();
 
 private:
@@ -52,12 +49,12 @@ public:
 public:
   /// find(), thread-safe
   //@{
-  inline std::uintptr_t ATTRIBUTE_PURE fetch_pole(const ::rtti::detail::rtti_node* rt) const noexcept;
+  inline std::uintptr_t ATTRIBUTE_PURE fetch_pole(rtti_hierarchy rt) const noexcept;
   inline iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
 
 private:
   inline iterator ATTRIBUTE_PURE zero() const noexcept;
-  std::uintptr_t  ATTRIBUTE_PURE do_fetch_pole(const rtti_node*, hash_map::iterator) const noexcept;
+  std::uintptr_t  ATTRIBUTE_PURE do_fetch_pole(rtti_hierarchy, hash_map::iterator) const noexcept;
   //@}
 
 public:
@@ -71,12 +68,6 @@ public:
   //@}
 
 private:
-#if MMETHOD_USE_SMALLARRAY
-  static_assert( false, "SmallArray not supported yet" );
-  std::size_t const m_smallcount;
-  bucket_t* const m_smallarray;
-#endif
-
   hash_map_base m_base;
 
 #if MMETHOD_USE_THREAD

@@ -39,7 +39,7 @@ void hash_map_base::move(hash_map_base& o) noexcept {
   m_array= std::move(o.m_array);
 }
 
-void hash_map_base::import(hash_map_base const& o) noexcept {
+void hash_map_base::flush(hash_map_base const& o) noexcept {
   ASSERT( this != &o );
 
   m_array.reset();
@@ -64,7 +64,7 @@ probe_table(bucket_t* const m_array, std::size_t index, Pred pred) noexcept {
   // empty bucket sentinel is last of m_array -> forces stop since empty
   while(
       (! ptr->empty())
-    & (! pred(ptr))
+   && (! pred(ptr))
   ) {
     ++ptr;
   }
@@ -79,7 +79,7 @@ hash_map_base::iterator
 hash_map_base::do_find(rtti_type key) const noexcept {
   return probe_table(
     m_array.get(), hash(key),
-    [&key](bucket_t const* b) { return b->key == key; }
+    [key](bucket_t const* b) { return b->key == key; }
   );
 }
 //@}
@@ -88,40 +88,30 @@ hash_map_base::do_find(rtti_type key) const noexcept {
 //@{
 // [it] has been returned by [find(key, value)]
 void hash_map_base::insert_at(iterator it, key_type key, value_type value) {
-  if( !it->empty() )
-    return insert(key, value);
-
-  if(LIKELY( it != BADBUCKET ))
+  if( it->empty() && it != BADBUCKET )
     return it->set(key, value);
 
-  // [badbucket] is returned by find
-  // only if probing fails -> no need to retry
-  insert_need_resize(key, value);
+  insert(key, value);
 }
 
 void hash_map_base::insert(key_type key, value_type value) {
   index_type index = hash(key);
 
-  bucket_t* bucket = &m_array[index];
-  if(LIKELY( bucket->empty() )) {
-    bucket->set(key, value);
-    return;
-  }
-
-  bucket = probe_table(
+  auto bucket = probe_table(
     m_array.get(), index,
-    [&key](bucket_t const* b) { return b->key == key; }
+    [key](bucket_t const* b) { return b->key == key; }
   );
-  if(bucket == BADBUCKET)
-    return insert_need_resize(key, value);
-
-  bucket->set(key, value);
+  if(bucket != BADBUCKET)
+    return bucket->set(key, value);
+  
+  insert_need_resize(key, value);
 }
 
 void hash_map_base::erase(iterator it) {
   it->reset();
+  ++it;
 
-  for(++it; !it->empty(); ++it) {
+  for(; !it->empty(); ++it) {
     key_type key = it->key;
     value_type val = it->value;
     it->reset();
@@ -136,7 +126,7 @@ void hash_map_base::insert_need_resize(key_type key, std::uintptr_t value) {
   std::size_t old_size = 1 << m_logsz;
 
   hash_map_base repl;
-  repl.import(*this);
+  repl.flush(*this);
   repl.insert(key, value);
   move(repl);
 }

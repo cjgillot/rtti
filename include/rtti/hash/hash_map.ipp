@@ -8,18 +8,7 @@ namespace hash {
 namespace detail {
 
 inline constexpr hash_map_base::hash_map_base() {}
-
-#if MMETHOD_USE_SMALLARRAY
-template<std::size_t N>
-inline constexpr hash_map::hash_map(bucket_t(&small)[N])
-: m_smallcount(N)
-, m_smallarray(small)
-{
-  static_assert( N > 0, "mmethod : empty array" );
-}
-#else
 inline constexpr hash_map::hash_map() {}
-#endif
 
 namespace {
 inline constexpr std::size_t
@@ -45,13 +34,7 @@ hash_map_base::hash(key_type a) const noexcept
 { return index_type{ std::uintptr_t(a) & m_mask }; }
 
 inline hash_map_base::iterator ATTRIBUTE_PURE hash_map_base::zero() const noexcept { return &m_array[0]; }
-inline hash_map::iterator ATTRIBUTE_PURE hash_map::zero() const noexcept {
-#if MMETHOD_USE_SMALLARRAY
-  return &m_smallarray[0];
-#else
-  return m_base.zero();
-#endif
-}
+inline hash_map     ::iterator ATTRIBUTE_PURE hash_map     ::zero() const noexcept { return m_base.zero(); }
 
 inline hash_map_base::iterator ATTRIBUTE_PURE hash_map_base::find(key_type key) const noexcept {
   bucket_t* bucket = &m_array[ hash(key) ];
@@ -62,11 +45,6 @@ inline hash_map_base::iterator ATTRIBUTE_PURE hash_map_base::find(key_type key) 
   return do_find(key);
 }
 inline hash_map     ::iterator ATTRIBUTE_PURE hash_map     ::find(key_type key) const noexcept {
-#if MMETHOD_USE_SMALLARRAY
-  if(LIKELY( key < m_smallcount ))
-    return m_smallarray + key;
-#endif
-
   return m_base.find(key);
 }
 
@@ -83,12 +61,7 @@ hash_map::fetch_pole(
   iterator it0;
 
 #if MMETHOD_USE_INLINE_FIND
-  if(false);
-#if MMETHOD_USE_SMALLARRAY
-  else if(LIKELY( id0 < m_smallcount ))
-    it0 = m_smallarray + key;
-#endif
-  else if(true) {
+  {
     it0 = &m_base.m_array[ m_base.hash(id0) ];
 
 #if MMETHOD_USE_INLINE_DO_FIND
