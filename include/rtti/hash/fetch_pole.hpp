@@ -8,7 +8,7 @@ namespace hash {
 namespace detail {
 
 // can be moved as non-member
-extern std::uintptr_t
+extern value_type
 ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_NONNULL(3) ATTRIBUTE_HOT()
 do_fetch_pole(
   hash_map const&
@@ -16,11 +16,9 @@ do_fetch_pole(
 , hash_map::iterator it0
 ) noexcept;
 
-}}} // namespace rtti::hash::detail
-
-inline std::uintptr_t
+inline value_type
 ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
-rtti::hash::detail::fetch_pole(
+fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt
 ) noexcept {
@@ -35,25 +33,28 @@ rtti::hash::detail::fetch_pole(
 
 #if MMETHOD_USE_INLINE_DO_FIND
     {
-      it0 = &map.array()[ map.m_base.hash(id0) ];
+      index_type const hh = map.m_base.hash(id0);
+      it0 = &map.array()[ hh ];
 
       do {
-        if(LIKELY( it0->key == id0 ))
-          return it0->value;
+        if(LIKELY( it0->key() == id0 ))
+          return it0->value();
 
         ++it0;
       }
       while(UNLIKELY( !it0->empty() ));
     }
 #else  // MMETHOD_USE_INLINE_DO_FIND
-    t0 = map.find(id0);
+    it0 = map.find(id0);
 #endif // MMETHOD_USE_INLINE_DO_FIND
 
     if(LIKELY( !it0->empty() ))
-      return it0->value;
+      return it0->value();
   }
 
   return do_fetch_pole(map, rt, it0);
 }
+
+}}} // namespace rtti::hash::detail
 
 #endif

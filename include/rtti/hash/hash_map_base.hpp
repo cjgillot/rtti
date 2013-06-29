@@ -18,17 +18,24 @@ typedef std::uintptr_t value_type;
 typedef std::size_t index_type;
 
 struct bucket_t {
-  // assume even values
-  key_type key;
-  value_type value;
+private:
+  typedef std::uintptr_t storage_type;
 
+  // assume even values
+  key_type m_key;
+  storage_type m_value;
+
+public:
   constexpr bucket_t()
-  : key(rtti_type(0)), value(1) {}
-  constexpr bucket_t(std::size_t k, std::size_t v)
-  : key(rtti_type(k)), value(v) {}
+  : m_key(rtti_type(0ul)), m_value(1) {}
+  constexpr bucket_t(key_type k, value_type v)
+  : m_key(k), m_value( static_cast<storage_type>(v) ) {}
+  
+  inline key_type   key()   const { return m_key;   }
+  inline value_type value() const { return static_cast<value_type>(m_value); }
 
   inline bool empty() const
-  { return value & 1; }
+  { return m_value & 1; }
 
   inline void set(key_type k, value_type v);
   inline void reset();

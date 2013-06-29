@@ -26,7 +26,7 @@ namespace hash {
 namespace detail {
 
 /// exported function
-std::uintptr_t ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
+value_type ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
 fetch_pole(hash_map const& map, rtti_hierarchy rt) noexcept;
 
 /// state class
@@ -57,7 +57,7 @@ public:
 private:
   /// fetch_pole()
   //@{
-  friend std::uintptr_t ATTRIBUTE_PURE fetch_pole(hash_map const&, rtti_hierarchy rt) noexcept;
+  friend value_type ATTRIBUTE_PURE fetch_pole(hash_map const&, rtti_hierarchy rt) noexcept;
   inline bucket_t* array() const noexcept { return m_base.m_array.get(); }
   //@}
 

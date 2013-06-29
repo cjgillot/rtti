@@ -13,7 +13,7 @@ inline hash_map_base::iterator ATTRIBUTE_PURE hash_map_base::zero()             
 inline hash_map_base::iterator ATTRIBUTE_PURE hash_map_base::find(key_type key) const noexcept {
   bucket_t* bucket = &m_array[ hash(key) ];
 
-  if(LIKELY( bucket->key == key ))
+  if(LIKELY( bucket->key() == key ))
     return bucket;
 
   return do_find(key);

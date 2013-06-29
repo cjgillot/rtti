@@ -18,10 +18,10 @@ using rtti::hash::detail::value_type;
 
 /// bucket_t implementation
 //@{
-inline void bucket_t::reset() { value = 1; }
-inline void bucket_t::set(rtti_type k, value_type v) {
-  value = v;
-  key = k;
+inline void bucket_t::reset() { m_value = 1; }
+inline void bucket_t::set(key_type k, value_type v) {
+  m_value = static_cast<storage_type>(v);
+  m_key = k;
   ASSERT( !empty() );
 }
 //@}
@@ -49,7 +49,7 @@ void hash_map_base::flush(hash_map_base const& o) {
   std::size_t sz = 1 << o.m_logsz;
   for(std::size_t i = 0; i < sz; ++i)
     if( !o.m_array[i].empty() )
-      insert(key_type( o.m_array[i].key ), o.m_array[i].value);
+      insert(o.m_array[i].key(), o.m_array[i].value());
 }
 //@}
 
@@ -79,7 +79,7 @@ hash_map_base::iterator
 hash_map_base::do_find(rtti_type key) const noexcept {
   return probe_table(
     m_array.get(), hash(key),
-    [key](bucket_t const* b) { return b->key == key; }
+    [key](bucket_t const* b) { return b->key() == key; }
   );
 }
 //@}
@@ -99,7 +99,7 @@ void hash_map_base::insert(key_type key, value_type value) {
 
   auto bucket = probe_table(
     m_array.get(), index,
-    [key](bucket_t const* b) { return b->key == key; }
+    [key](bucket_t const* b) { return b->key() == key; }
   );
   if(bucket != BADBUCKET)
     return bucket->set(key, value);
@@ -113,8 +113,9 @@ void hash_map_base::erase(iterator iter) {
   ++it;
 
   for(; !it->empty(); ++it) {
-    key_type key = it->key;
-    value_type val = it->value;
+    key_type   key = it->key();
+    value_type val = it->value();
+
     it->reset();
     insert(key, val);
   }
