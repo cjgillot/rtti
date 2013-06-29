@@ -16,15 +16,19 @@ using rtti::dmethod::detail::invoker_entry;
 using rtti::dmethod::detail::poles_map_type;
 using rtti::dmethod::detail::invoker_table_type;
 
+using rtti::hash::detail::value_type;
+
+constexpr value_type INIT_VALUE = static_cast<value_type>( 0ul );
+
 // pole stuff
 //@{
 void
 rtti::dmethod::detail::init_pole(poles_map_type& map) {
   map.mem.create<1>();
-  map.mem.insert( rtti_type(0), 0u );
+  map.mem.insert( rtti_type(0ul), INIT_VALUE );
 
   map.poles.create<1>();
-  map.poles.insert( rtti_type(0), 0u );
+  map.poles.insert( rtti_type(0ul), INIT_VALUE );
 
   ASSERT( map.smallint == 0 );
 }
@@ -32,10 +36,10 @@ rtti::dmethod::detail::init_pole(poles_map_type& map) {
 void
 rtti::dmethod::detail::init_pole_unary(poles_map_type& map) {
   map.mem.create<1>();
-  map.mem.insert( rtti_type(0), (std::uintptr_t)nullptr );
+  map.mem.insert( rtti_type(0ul), INIT_VALUE );
 
   map.poles.create<1>();
-  map.poles.insert( rtti_type(0), (std::uintptr_t)nullptr );
+  map.poles.insert( rtti_type(0ul), INIT_VALUE );
 
   ASSERT( map.smallint == 0 );
 }
@@ -53,10 +57,10 @@ rtti::dmethod::detail::insert_pole(
 
   if( !it->empty() )
     // existing pole, nothing to do
-    return it->value;
+    return (std::uintptr_t)it->value();
 
   std::uintptr_t ret = ++map.smallint;
-  map.poles.insert_at( it, hier->id, ret );
+  map.poles.insert_at( it, hier->id, static_cast<value_type>(ret) );
   map.mem.flush( map.poles );
   return ret;
 }
@@ -73,11 +77,11 @@ rtti::dmethod::detail::insert_pole_unary(
 
   auto it = map.poles.find( hier->id );
 
-  if( it->value == (std::uintptr_t)inv )
+  value_type ret = static_cast<value_type>( (std::uintptr_t)inv );
+  if( it->value() == ret )
     // existing pole, nothing to do
     return;
 
-  std::uintptr_t ret = reinterpret_cast<std::uintptr_t>(inv);
   map.poles.insert_at( it, hier->id, ret );
   map.mem.flush( map.poles );
 }
@@ -97,7 +101,7 @@ rtti::dmethod::detail::retract_pole(
     // non-existing pole, nothing to do
     return 0;
 
-  std::uintptr_t ret = it->value;
+  std::uintptr_t ret = (std::uintptr_t)it->value();
   map.poles.erase( it );
   map.mem.flush( map.poles );
   return ret;
@@ -269,7 +273,7 @@ rtti::dmethod::detail::init_table(
   table.entries->next = nullptr;
   table.entries->ptr = nullptr;
   for(std::size_t i = 0; i < arity; ++i)
-    table.entries->types[i] = 0;
+    table.entries->types[i] = rtti_type(0ul);
 
   table.arity = arity;
 }
