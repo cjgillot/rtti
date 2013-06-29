@@ -50,7 +50,7 @@ const klass_t* hierarchy_t::add(std::vector<std::size_t> const& vec) {
 
   for(auto it = vec.begin() + 1, en = vec.end(); it != en; ++it)
   { // rest of path
-    std::size_t hash = boost::lexical_cast<std::size_t>(*it);
+    std::size_t hash = *it;
 
     klass_t& k = dict[hash];
     k.hash = hash;
