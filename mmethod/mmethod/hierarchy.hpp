@@ -6,6 +6,8 @@
 
 #include <boost/dynamic_bitset.hpp>
 
+#include "archive.hpp"
+
 class hierarchy_t;
 class signature_t;
 struct klass_t
@@ -63,7 +65,7 @@ public:
   // remove non-pole in hierarchy
   void shrink();
 
-  const klass_t* add(std::vector<std::size_t> const& vec);
+  const klass_t* add(hashvec_t const& vec);
 
   template<typename Sequence>
   void order(Sequence& seq);

@@ -36,7 +36,7 @@ void hierarchy_t::shrink() {
     p.second.subtype.resize(dict.size());
 }
 
-const klass_t* hierarchy_t::add(std::vector<std::size_t> const& vec) {
+const klass_t* hierarchy_t::add(hashvec_t const& vec) {
   klass_t* first = nullptr;
   klass_t* old = nullptr;
   { // first path item : current pole

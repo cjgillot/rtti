@@ -6,8 +6,10 @@
 #include <string>
 #include <list>
 
+typedef std::vector<std::size_t> hashvec_t;
+
 struct arch_overload {
-  std::vector<std::vector<std::size_t>> hashes;
+  std::vector<hashvec_t> hashes;
 };
 
 struct arch_declaration {
