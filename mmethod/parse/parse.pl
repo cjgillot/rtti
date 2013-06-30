@@ -48,10 +48,10 @@ sub do_compile {
   my %registry;
 
   # read compiler output
-  while(my $line = <>)
+  while(<>)
   {
     # parse compiler line
-    if($line =~ /.*\[with T = rtti::mmethod::mmethod_(\w+)<((\w+::)*)(\w+),\s*(\d+)ul\s*,\s*(\d+)ul\s*,\s*(.*)>\].*/) {
+    if(/.*\[with T = rtti::mmethod::mmethod_(\w+)<((\w+::)*)(\w+),\s*(\d+)ul\s*,\s*(\d+)ul\s*,\s*(.*)>\].*/) {
       my $predicate = $1;
       my( $nspace, $name, $vsize, $fullarity ) = ($2, $4, $5, $6);
       my $tail = $7;
