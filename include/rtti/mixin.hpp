@@ -27,7 +27,7 @@ template<> struct mixin_node<true> {
   rtti::rtti_node const rtti_node_value;
 
 protected:
-  constexpr mixin_node()
+  mixin_node()
   : rtti_node_value(rtti_node_value) {}
 };
 
