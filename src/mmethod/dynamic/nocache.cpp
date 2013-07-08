@@ -106,7 +106,7 @@ static lookup_nocache_intersect(
       std::copy_if(
         ret.begin(), ret.end()
       , std::back_inserter(tmp)
-      , [&s](nocache_value f) {
+      , [&s](nocache_value f) ATTRIBUTE_PURE {
           return s.find(f) != s.end();
       });
     }

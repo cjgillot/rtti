@@ -5,6 +5,8 @@
 
 #include <boost/functional/hash/hash.hpp>
 
+#include "mm/cache_map.hpp"
+
 typedef std::unique_ptr<std::uintptr_t[]> cache_key_type;
 struct cache_hasher {
   std::size_t const arity;
@@ -15,6 +17,8 @@ struct cache_hasher {
 struct cache_equal {
   std::size_t const arity;
   bool operator()(cache_key_type const& a, cache_key_type const& b) const {
+    if(!a.get() || !b.get())
+      return false;
     return std::equal(
       a.get(), a.get()+arity
     , b.get()
@@ -22,7 +26,7 @@ struct cache_equal {
   }
 };
 
-using cache_map = std::unordered_map<cache_key_type, value_type, cache_hasher, cache_equal>;
+using cache_map = mm::cache_map<cache_key_type, value_type, cache_hasher, cache_equal>;
 struct invoker_table_type::mem_table
 {
   explicit mem_table(std::size_t arity)
