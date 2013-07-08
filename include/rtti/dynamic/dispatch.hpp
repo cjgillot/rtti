@@ -10,13 +10,6 @@
 
 namespace rtti { namespace dmethod { namespace detail {
 
-functor_t ATTRIBUTE_PURE lookup(
-  std::size_t arity
-, invoker_table_type& table
-, std::uintptr_t* spec
-, rtti_hierarchy* hiers
-) noexcept;
-
 namespace {
 
 /// fetch_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data

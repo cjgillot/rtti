@@ -9,22 +9,6 @@
 
 namespace rtti { namespace dmethod {
 
-namespace detail {
-
-void init_pole      (detail::poles_map_type& map);
-void init_pole_unary(detail::poles_map_type& map);
-void init_table(std::size_t arity, detail::invoker_table_type& tbl);
-
-std::uintptr_t insert_pole       (poles_map_type& map, rtti_node const* hier);
-void           insert_pole_unary (poles_map_type& map, rtti_node const* hier, functor_t inv);
-void           insert (std::size_t arity, invoker_table_type& table, functor_t inv, std::uintptr_t* spec, rtti_node const** hiers);
-
-std::uintptr_t retract_pole      (poles_map_type& map, rtti_node const* hier);
-functor_t      retract_pole_unary(poles_map_type& map, rtti_node const* hier);
-functor_t      retract(std::size_t arity, invoker_table_type& table, std::uintptr_t* spec, rtti_node const** hiers);
-
-} // namespace detail
-
 namespace {
 
 template<typename Tag, std::size_t BTS>
@@ -78,7 +62,7 @@ namespace {
 template<typename Tag, std::size_t BTS>
 struct save_poles {
   template<std::size_t J, typename K0, typename... Ks>
-  static void eval(std::uintptr_t* m, rtti_node const** h, mpl::mplpack<K0, Ks...>) {
+  static void eval(std::uintptr_t* m, rtti_hierarchy* h, mpl::mplpack<K0, Ks...>) {
     if( BTS & 1 ) {
       *h = ::rtti::static_node< typename mpl::remove_all<K0>::type >();
       *m = insert_pole( Tag::template poles<J>::array, *h );
@@ -122,7 +106,7 @@ void dispatch<Tag,Ret>::insert(F&& f) {
   constexpr std::size_t arity = Tag::traits::vsize;
   constexpr std::size_t btset = Tag::traits::type_bitset;
 
-  typedef typename Tag::traits::trampoline::func_t sig_t;
+  typedef typename Tag::traits::trampoline::sig_t sig_t;
   typedef std::function<sig_t> func_t;
   functor_t inv = new func_t{ Tag::traits::trampoline::template functor<Ret,K...>(f) };
 
@@ -132,7 +116,7 @@ void dispatch<Tag,Ret>::insert(F&& f) {
   }
   else {
     std::uintptr_t spec [ arity ];
-    rtti_node const* hiers [ arity ];
+    rtti_hierarchy hiers [ arity ];
 
     using spoles = save_poles<Tag, btset>;
     spoles::template eval<0>( spec, hiers, mpl::mplpack<K...>() );
@@ -145,7 +129,7 @@ namespace {
 template<typename Tag, std::size_t BTS>
 struct rem_poles {
   template<std::size_t J, typename K0, typename... Ks>
-  static void eval(std::uintptr_t* m, rtti_node const** h, mpl::mplpack<K0, Ks...>) {
+  static void eval(std::uintptr_t* m, rtti_hierarchy* h, mpl::mplpack<K0, Ks...>) {
     if( BTS & 1 ) {
       *h = ::rtti::static_node< typename mpl::remove_all<K0>::type >();
       *m = retract_pole( Tag::template poles<J>::array, *h );
@@ -197,14 +181,14 @@ void dispatch<Tag,Ret>::retract() {
   }
   else {
     std::uintptr_t spec [ arity ];
-    rtti_node const* hiers [ arity ];
+    rtti_hierarchy hiers [ arity ];
 
     using rpoles = rem_poles<Tag, btset>;
     rpoles::template eval<0>( spec, hiers, mpl::mplpack<K...>() );
     f = detail::retract( arity, Tag::invoker_table, spec, hiers );
   }
 
-  typedef typename Tag::traits::trampoline::func_t sig_t;
+  typedef typename Tag::traits::trampoline::sig_t sig_t;
   typedef std::function<sig_t> func_t;
   delete static_cast<func_t*>(f);
 }

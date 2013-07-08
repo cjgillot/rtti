@@ -29,30 +29,36 @@ struct poles_map_type {
 
 struct invoker_entry;
 struct invoker_table_type {
-  invoker_entry* entries;
+  struct mem_table;
+  struct poles_table;
 
-  typedef std::unique_ptr<std::uintptr_t[]> key_type;
-  typedef functor_t value_type;
-  struct hasher {
-    std::size_t* arity;
-    std::size_t operator()(key_type const& a) const;
-  };
-  struct equal {
-    std::size_t* arity;
-    bool operator()(key_type const& a, key_type const& b) const;
-  };
-
-  std::size_t arity = 0;
-
-  hasher hash; equal eq;
-
-  std::unordered_map<key_type, value_type, hasher, equal> mem   { 10, { &arity }, { &arity }};
-  std::unordered_map<key_type, value_type, hasher, equal> poles { 10, { &arity }, { &arity }};
+  mem_table*   cache;
+  poles_table* root;
 
 #if MMETHOD_USE_THREAD
   util::stw_lock lock;
 #endif
 };
+
+
+functor_t ATTRIBUTE_PURE lookup(
+  std::size_t arity
+, invoker_table_type& table
+, std::uintptr_t* spec
+, rtti_hierarchy* hiers
+) noexcept;
+
+void init_pole      (detail::poles_map_type& map);
+void init_pole_unary(detail::poles_map_type& map);
+void init_table(std::size_t arity, detail::invoker_table_type& tbl);
+
+std::uintptr_t insert_pole       (poles_map_type& map, rtti_hierarchy hier);
+void           insert_pole_unary (poles_map_type& map, rtti_hierarchy hier, functor_t inv);
+void           insert (std::size_t arity, invoker_table_type& table, functor_t inv, std::uintptr_t* spec, rtti_hierarchy* hiers);
+
+std::uintptr_t retract_pole      (poles_map_type& map, rtti_hierarchy hier);
+functor_t      retract_pole_unary(poles_map_type& map, rtti_hierarchy hier);
+functor_t      retract(std::size_t arity, invoker_table_type& table, std::uintptr_t* spec, rtti_hierarchy* hiers);
 
 }}} // namespace rtti::mmethod::detail
 
