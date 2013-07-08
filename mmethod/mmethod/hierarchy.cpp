@@ -8,20 +8,6 @@
 // readability improvement
 #define pole subtype[0]
 
-// ----- klass ----- //
-
-inline klass_t::klass_t()
-: hash(0ul)
-, base(nullptr)
-, subtype(1)
-, sig(nullptr) {}
-
-void klass_t::shrink() {
-  /// requires : hierarchy root is a pole
-  while(base && !base->pole)
-    base = base->base;
-}
-
 // ----- hierarchy ----- //
 
 void hierarchy_t::shrink() {
@@ -36,29 +22,29 @@ void hierarchy_t::shrink() {
     p.second.subtype.resize(dict.size());
 }
 
-const klass_t* hierarchy_t::add(hashvec_t const& vec) {
-  klass_t* first = nullptr;
-  klass_t* old = nullptr;
-  { // first path item : current pole
-    std::size_t hash = vec.front();
+klass_t const*
+hierarchy_t::add(hashvec_t const& vec) {
+  klass_t const* base = nullptr;
 
-    // one may test on k.hash to choose whether newly inserted or not
-    klass_t& k = dict[hash];
-    k.hash = hash; k.pole = true;
-    first = old = &k;
-  }
-
-  for(auto it = vec.begin() + 1, en = vec.end(); it != en; ++it)
-  { // rest of path
+  for(auto it = vec.rbegin(), en = vec.rend(); it != en; ++it) {
     std::size_t hash = *it;
-
-    klass_t& k = dict[hash];
-    k.hash = hash;
-    old->base = &k;
-    old = &k;
+ 
+    auto dit = dict.find(hash);
+    if(dit != dict.end()) {
+      klass_t& k = dit->second;
+      
+      assert( k.hash == hash );
+      
+      base = &k;
+    }
+    else {
+      dit = dict.emplace( hash, klass_t{ hash, base } ).first;
+      base = &dit->second;
+    }
   }
-
-  return first;
+  
+  const_cast<klass_t*>(base)->pole = true;
+  return base;
 }
 
 template<typename Sequence>
@@ -80,9 +66,9 @@ void hierarchy_t::order(Sequence& seq) {
       continue;
     }
 
-    klass_t* base = top->base;
+    klass_t* base = const_cast<klass_t*>(top->base);
     while(base && base->pole)
-    { stack.push_back(top); top = base; base = top->base; }
+    { stack.push_back(top); top = base; base = const_cast<klass_t*>(top->base); }
 
     seq.push_back(top);
     top->rank = rank;
