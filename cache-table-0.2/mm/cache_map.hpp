@@ -337,8 +337,9 @@ public:
      *  compatibility with other @a Associative @a Containers.
      *  @see insert( const value_type& )
      */ 
-    pair<iterator,bool> insert( const key_type& key, const data_type& data )
-    { return m_ht.insert( value_type( key, data ) ); }
+    template<typename... Args>
+    pair<iterator,bool> emplace(Args&& ...args)
+    { return m_ht.emplace( std::forward<Args>(args)... ); }
 
     /** Iterator insertion.
      *  Insert multiple items into the map, using the input iterators.

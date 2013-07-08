@@ -585,6 +585,35 @@ public:
         return pair<iterator,bool>( iterator( this, m_table + buck ), true );
     }
 
+    template<typename... Args>
+    pair<iterator,bool> emplace(Args&& ...args)
+    {
+        value_type obj { std::forward<Args>(args)... };
+        const key_type& obj_key = m_key_extract( obj );
+        const size_t buck = m_hasher( obj_key ) & m_mask;
+            
+        const key_type& table_key = m_key_extract( m_table[ buck ] );
+        
+        if ( ! m_key_equal( table_key, m_empty_key ) )
+        {
+            // There's already an item in the bucket and its key it different
+            // from the key of the inserted item.  Element is discarded.
+            ++m_num_collisions;
+
+            // Notify that the item will be discarded, to allow a policy to
+            // do something useful with it.
+            m_discard( m_table[ buck ], obj );
+            _Destroy( m_table + buck );
+            reset_value( m_table + buck );
+        }
+        else
+            ++m_num_elements;
+
+        // Copy the object into the hash table.
+        _Construct( m_table + buck, std::move(obj) );
+        return pair<iterator,bool>( iterator( this, m_table + buck ), true );
+    }
+
     template <class InputIterator>
     void insert( InputIterator first, InputIterator last )
     {
@@ -815,9 +844,7 @@ private:
     /// Initialize the whole hash table with the empty value
     void initialize_memory()
     {
-        std::uninitialized_fill( m_table,
-                                 m_table + m_buckets,
-                                 m_empty_value );
+        std::__uninitialized_default( m_table, m_table + m_buckets );
     }
 
     void reset_value( pointer pos )
