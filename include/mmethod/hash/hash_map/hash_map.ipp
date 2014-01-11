@@ -1,13 +1,13 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_IPP
 #define RTTI_MMETHOD_HASH_MAP_IPP
 
-#include "mmethod/hash/hash_map.hpp"
+#include "mmethod/hash/hash_map/hash_map.hpp"
+#include "mmethod/hash/hash_map/hash_map_base.ipp"
 
 namespace rtti {
 namespace hash {
 namespace detail {
 
-inline constexpr hash_map_base::hash_map_base() {}
 inline constexpr hash_map::hash_map() {}
 
 namespace {
@@ -33,8 +33,8 @@ inline hash_map::iterator ATTRIBUTE_PURE hash_map::find(key_type key) const noex
 
 #ifndef MMETHOD_IN_MMETHOD
 
-#include "hash_map_base.ipp"
-#include "fetch_pole.hpp"
+#include "mmethod/hash/hash_map/hash_map_base.tpp"
+#include "mmethod/hash/fetch_pole.hpp"
 
 #endif
 

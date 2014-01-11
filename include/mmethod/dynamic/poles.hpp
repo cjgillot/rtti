@@ -2,7 +2,7 @@
 #define RTTI_DMETHOD_POLES_HPP
 
 #include "mmethod/shared/basic.hpp"
-#include "mmethod/hash/hash_map.hpp"
+#include "mmethod/hash/hash_map/hash_map.hpp"
 
 #if MMETHOD_USE_THREAD
 #include "util/stw_lock.hpp"

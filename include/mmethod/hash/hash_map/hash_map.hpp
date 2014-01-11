@@ -6,15 +6,11 @@
 #define MMETHOD_USE_THREAD 0
 #define MMETHOD_USE_INLINE_DO_FIND 1
 
-#include "mmethod/hash/hash_map_base.hpp"
+#include "mmethod/hash/hash_map/hash_map_base.hpp"
 
 #include "util/attribute.hpp"
 
 #if MMETHOD_USE_THREAD
-#include <mutex>
-#include <atomic>
-#include <thread>
-
 #include "util/stw_lock.hpp"
 #endif
 
@@ -86,4 +82,4 @@ typedef hash_map poles_map_type;
 
 #endif
 
-#include "mmethod/hash/hash_map.ipp"
+#include "hash_map.ipp"

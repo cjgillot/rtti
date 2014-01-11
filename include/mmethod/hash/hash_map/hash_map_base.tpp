@@ -1,7 +1,8 @@
-#ifndef RTTI_MMETHOD_HASH_MAP_BASE_IPP
-#define RTTI_MMETHOD_HASH_MAP_BASE_IPP
+#ifndef RTTI_MMETHOD_HASH_MAP_BASE_TPP
+#define RTTI_MMETHOD_HASH_MAP_BASE_TPP
 
-#include "mmethod/hash/hash_map_base.hpp"
+#include "mmethod/hash/hash_map/hash_map_base.hpp"
+#include "mmethod/hash/hash_map/hash_map_base.ipp"
 
 namespace rtti {
 namespace hash {

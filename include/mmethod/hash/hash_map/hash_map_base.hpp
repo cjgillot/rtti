@@ -6,40 +6,14 @@
 
 #include <memory>
 
+#include "mmethod/hash/hash_map/bucket.hpp"
+
 // All functions declared in this file
 // are defined in rtti/mmethod/hash_map_base.cpp
 
 namespace rtti {
 namespace hash {
 namespace detail {
-
-typedef rtti_type key_type;
-typedef std::uintptr_t value_type;
-typedef std::size_t index_type;
-
-struct bucket_t {
-private:
-  typedef std::uintptr_t storage_type;
-
-  // assume even values
-  key_type m_key;
-  storage_type m_value;
-
-public:
-  constexpr bucket_t()
-  : m_key(rtti_type(0ul)), m_value(1) {}
-  constexpr bucket_t(key_type k, value_type v)
-  : m_key(k), m_value( static_cast<storage_type>(v) ) {}
-  
-  inline key_type   key()   const { return m_key;   }
-  inline value_type value() const { return static_cast<value_type>(m_value); }
-
-  inline bool empty() const
-  { return m_value & 1; }
-
-  inline void set(key_type k, value_type v);
-  inline void reset();
-};
 
 class hash_map;
 class hash_map_base {
@@ -49,7 +23,7 @@ public:
   friend class hash_map;
 
 public:
-  inline constexpr hash_map_base();
+  constexpr inline hash_map_base();
   ~hash_map_base();
 
 private:
@@ -60,7 +34,7 @@ private:
 
 public:
   /// hash function, thread-safe
-  inline index_type ATTRIBUTE_PURE hash(key_type a) const noexcept;
+  index_type ATTRIBUTE_PURE hash(key_type a) const noexcept;
 
 public:
   /// find block -> all these are thread-safe
@@ -95,5 +69,7 @@ private:
 };
 
 }}} // namespace rtti::hash::detail
+
+#include "mmethod/hash/hash_map/hash_map_base.ipp"
 
 #endif
