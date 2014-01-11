@@ -1,7 +1,7 @@
-#include "rtti/mmethod/regbase.hpp"
-#include "rtti/mmethod/common.hpp"
+#include "mmethod/static/regbase.hpp"
+#include "mmethod/static/common.hpp"
 
-#include "rtti/shared/basic.hpp"
+#include "mmethod/shared/basic.hpp"
 
 #include <limits>
 

@@ -1,0 +1,5 @@
+add_subdirectory(hash)
+add_subdirectory(shared)
+add_subdirectory(static)
+add_subdirectory(dynamic)
+add_subdirectory(templates)

@@ -100,7 +100,7 @@ void process_declaration(std::ostream& ofile, arch_declaration const& decl);
 void generate_file(ostream& ofile, registry_t& registry) {
   static const char includes [] =
     "#define MMETHOD_IN_MMETHOD\n"
-    "#include \"rtti/mmethod/common.hpp\"\n\n"
+    "#include \"mmethod/static/common.hpp\"\n\n"
 
     "using ::rtti::rtti_node;\n"
     "using ::rtti::invoker_t;\n"

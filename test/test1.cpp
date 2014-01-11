@@ -3,7 +3,7 @@
 void test(foo*, std::size_t);
 
 int main(int argc, char** argv) {
-  std::size_t N = 30000000;
+  std::size_t N = 3000000000;
   foo f; bar b; baz z;
   foo* ff = &f;
 
@@ -46,7 +46,7 @@ static void u() {}
 void test(foo* f, std::size_t N) {
   f->func();
 
-//   vf1.insert<baz*, int>( [](...){} );
+//   vf2.insert<foo*, foo&&>( [](foo* u, foo&& v){} );
 
   vf1(f, 0);
   vf2(f, std::move(*f));

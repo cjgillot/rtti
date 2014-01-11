@@ -1,5 +1,5 @@
-#include "rtti/dynamic/poles.hpp"
-#include "rtti/dynamic/dynamic.hpp"
+#include "mmethod/dynamic/poles.hpp"
+#include "mmethod/dynamic/dynamic.hpp"
 
 #include "util/stw_lock.hpp"
 #include "util/attribute.hpp"

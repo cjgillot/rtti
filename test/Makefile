@@ -2,7 +2,7 @@ CXX=g++
 BUILDDIR=../build/mmethod/
 CXXFLAGS+=-std=c++11 -I../include -DNDEBUG -fno-exceptions -fno-rtti -O3 -march=corei7 -mtune=corei7 -pedantic -fomit-frame-pointer
 MMOFLAGS+=-std=c++11 -I../include -DRTTI_MMETHOD_DO_PRINT -Wall -Wextra -O0 -fno-inline
-LDFLAGS+=-L../build/src/ -lrtti -fwhole-program
+LDFLAGS+=-L../build/src/ -lrtti -fwhole-program 
 EXE=./exe
 
 # CXXFLAGS=-std=c++11 -I../include -O0 -g
@@ -32,7 +32,9 @@ clean:
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 %.mmo: %.cpp
+# 	$(CXX) -S $< -o /dev/null $(MMOFLAGS) 2>&1 | perl ../mmethod/parse/parse.pl -o $@
 	$(CXX) -S $< -o /dev/null $(MMOFLAGS) 2>&1 | $(BUILDDIR)/parse/parse -o $@
+# 	/bin/false
 
 mmethod.cc: $(MMO)
 	$(BUILDDIR)/mmethod/mmethod -o $@ $^
