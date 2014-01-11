@@ -55,6 +55,7 @@ private:
   //@{
   friend value_type ATTRIBUTE_PURE fetch_pole(hash_map const&, rtti_hierarchy rt) noexcept;
   inline bucket_t* array() const noexcept { return m_base.m_array.get(); }
+  inline iterator  do_find(key_type key) const noexcept;
   //@}
 
 public:

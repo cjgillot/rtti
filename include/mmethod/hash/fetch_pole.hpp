@@ -2,6 +2,9 @@
 #define RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 
 #include "mmethod/hash/hash_map/hash_map.hpp"
+#include "hash_map/hash_map.hpp"
+
+#include "util/assert.hpp"
 
 namespace rtti {
 namespace hash {
@@ -31,7 +34,23 @@ fetch_pole(
     util::stw_lock::fetch_guard guard { m_mutex };
 #endif
 
-    it0 = map.find(id0);
+    {
+      index_type const hh = map.m_base.hash(id0);
+      it0 = &map.array()[ hh ];
+
+      do {
+        if(LIKELY( it0->key() == id0 ))
+          return it0->value();
+
+#if MMETHOD_USE_INLINE_DO_FIND
+        ++it0;
+      }
+      while(UNLIKELY( !it0->empty() ));
+#else  // MMETHOD_USE_INLINE_DO_FIND
+      } while(false);
+      it0 = map.do_find(id0);
+#endif // MMETHOD_USE_INLINE_DO_FIND
+    }
 
     if(LIKELY( !it0->empty() ))
       return it0->value();

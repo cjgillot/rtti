@@ -26,8 +26,9 @@ inline void hash_map::create() {
   m_base.create(logsz);
 }
 
-inline hash_map::iterator ATTRIBUTE_PURE hash_map::zero()             const noexcept { return m_base.zero();    }
-inline hash_map::iterator ATTRIBUTE_PURE hash_map::find(key_type key) const noexcept { return m_base.find(key); }
+inline hash_map::iterator ATTRIBUTE_PURE hash_map::zero()                const noexcept { return m_base.zero();    }
+inline hash_map::iterator ATTRIBUTE_PURE hash_map::find(key_type key)    const noexcept { return m_base.find(key); }
+inline hash_map::iterator ATTRIBUTE_PURE hash_map::do_find(key_type key) const noexcept { return m_base.do_find(key); }
 
 }}} // namespace rtti::mmethod::detail
 
