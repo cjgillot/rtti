@@ -2,6 +2,7 @@
 #define RTTI_MMETHOD_HASH_MAP_BASE_IPP
 
 #include "mmethod/hash/hash_map/hash_map_base.hpp"
+#include "mmethod/hash/hash_map/bucket.ipp"
 
 namespace rtti {
 namespace hash {
