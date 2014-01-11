@@ -1,4 +1,4 @@
-#include "mmethod/hash/hash_map.hpp"
+#include "mmethod/hash/hash_map/hash_map_base.hpp"
 
 #include "util/assert.hpp"
 
@@ -18,8 +18,8 @@ using rtti::hash::detail::value_type;
 
 /// bucket_t implementation
 //@{
-inline void bucket_t::reset() { m_value = 1; }
-inline void bucket_t::set(key_type k, value_type v) {
+inline void bucket_t::reset() noexcept { m_value = 1; }
+inline void bucket_t::set(key_type k, value_type v) noexcept {
   m_value = static_cast<storage_type>(v);
   m_key = k;
   ASSERT( !empty() );

@@ -1,4 +1,4 @@
-#include "mmethod/hash/hash_map.hpp"
+#include "mmethod/hash/hash_map/hash_map.hpp"
 
 #include "util/assert.hpp"
 

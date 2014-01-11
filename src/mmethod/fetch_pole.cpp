@@ -1,4 +1,4 @@
-#include "mmethod/hash/hash_map.hpp"
+#include "mmethod/hash/hash_map/hash_map.hpp"
 
 #include "util/assert.hpp"
 
@@ -13,12 +13,16 @@ using rtti::hash::detail::value_type;
 
 // can be moved as non-member
 value_type
-ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_NONNULL(3) ATTRIBUTE_HOT()
+ATTRIBUTE_NONNULL(2) ATTRIBUTE_NONNULL(3)
 rtti::hash::detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0
 , hash_map::iterator it0
 ) noexcept {
+#if MMETHOD_USE_THREAD
+  util::stw_lock::fetch_guard read_guard { m_mutex };
+#endif
+
   const rtti_type id0 = rt0->id;
 
   for(rtti_node const* rt = rt0->base; rt; rt = rt->base) {
@@ -26,7 +30,7 @@ rtti::hash::detail::do_fetch_pole(
 
     if(LIKELY( !it->empty() )) {
 #if MMETHOD_USE_THREAD
-      util::stw_lock::convert_guard guard { m_mutex };
+      util::stw_lock::convert_guard write_guard { m_mutex };
 #endif
 
       const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
