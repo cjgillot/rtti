@@ -23,7 +23,7 @@ void do_compile(std::istream& ifile, std::ostream& ofile)
   for(std::string line; std::getline(ifile, line); )
   {
     /// parse error line
-    static const boost::regex re { R"(.*\[with T = rtti::mmethod::mmethod_(\w+)<((\w+::)*)(\w+),\s*(\d+)ul\s*,\s*(\d+)ul\s*,\s*(.*)>\].*)" };
+    static const boost::regex re { R"(.*\[with T = rtti::mmethod::method_(\w+)<((\w+::)*)(\w+),\s*(\d+)ul\s*,\s*(\d+)ul\s*,\s*(.*)>\].*)" };
     boost::smatch result;
     if( !boost::regex_match(line, result, re) )
       continue;
