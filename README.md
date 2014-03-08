@@ -1,13 +1,34 @@
-rtti
-====
+# rtti
 
 Implementation of multimethods in C++11.
 
-This library implements 2 multimethod dispatch mechanisms in C++11 :
-- static table :
-    The compilation command must be echo'ed to a outer program
-    that generates the dispatch table and efficient lookup
-    routines.
+## RTTI library
 
-- dynamic table :
-    The dispatch table is filled at runtime.
+This library creates a efficient replacement of default C++ RTTI.
+
+Using a ISO C++ construct, RTTI provides access to a unique integer per class in the hierarchy.
+For each class, its bases' ids are also exposed as a linked list. This feature
+allows dynamic introspection through the hierarchy.
+
+Note : ids are garanteed to be constructed when main() starts. Using those
+before entering main() results in undefined behaviour.
+
+See *include/rtti/* for further information.
+See *examples/* folder for examples using this library.
+
+## MMETHOD library
+
+This library implements open multi-methods in ISO C++.
+
+The external interface fits in two files :
+- *include/mmethod/mmethod.hpp*
+- *include/mmethod/implement.hpp*
+
+*mmethod.hpp* exports everything needed to declare
+and invoke mmethods. *mmethod.hpp*
+
+*implement.hpp* exports everything needed to implement
+formerly declared mmethods.
+
+See *include/mmethod/* for further information.
+See *examples/* folder for examples using this library.
