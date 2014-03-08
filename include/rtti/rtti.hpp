@@ -13,7 +13,7 @@
   allows dynamic introspection through the hierarchy.
 
   Note : ids are garanteed to be constructed when main() starts. Using those
-    before entering main() results in udefined behaviour.
+    before entering main() results in undefined behaviour.
   
   See examples/ folder for examples using this library.
 
