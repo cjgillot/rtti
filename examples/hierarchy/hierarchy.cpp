@@ -2,6 +2,19 @@
 
 #include <iostream>
 
+/*!\example hierarchy.cpp
+ * 
+ * This example demonstrates hierarchy traversal with \c rtti.
+ * 
+ * Three classes are used : \c foo, \c bar, \c baz
+ * Their node's addresses and ids are output on stdout.
+ * \c baz upward hierarchy is output on stdout.
+ * 
+ * \c foo is the base class
+ * \c bar has a statically defined id \c bar_id
+ * \c baz inherits from \c bar
+ */
+
 using namespace rtti;
 
 struct foo
@@ -41,6 +54,7 @@ int main() {
   BOOST_ASSERT( h->id   == static_node<baz>()->id   );
   BOOST_ASSERT( h->base == static_node<baz>()->base );
 
+  // hierarchy traversal
   for(int k = 0; h; ++k, h = h->base)
     std::cout << "Level " << k << " : " << h->id << std::endl;
 

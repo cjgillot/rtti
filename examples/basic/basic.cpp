@@ -2,11 +2,23 @@
 
 #include <iostream>
 
-// ID assigned to class bar
-const int bar_id = 6;
+/*!\example basic.cpp
+ * 
+ * This example demonstrates basic usage of \c rtti.
+ * 
+ * Four classes are used : \c foo, \c bar, \c baz, \c lap
+ * Their ids are then output on stdout
+ * 
+ * \c foo is the base class
+ * \c bar has a statically defined id \c bar_id
+ * \c baz and \c lap respectively inherit from \c foo and \c bar
+ */
 
 // Maximal statically assigned ID (strict maximum)
 const int max_id = 10;
+
+// ID assigned to class bar
+const int bar_id = 6;
 
 struct foo
 : rtti::base_rtti<foo, max_id> {
