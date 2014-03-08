@@ -1,0 +1,48 @@
+#include "rtti/rtti.hpp"
+
+#include <iostream>
+
+// ID assigned to class bar
+const int bar_id = 6;
+
+// Maximal statically assigned ID (strict maximum)
+const int max_id = 10;
+
+struct foo
+: rtti::base_rtti<foo, max_id> {
+public:
+  virtual ~foo() {}
+};
+
+struct bar
+: foo
+, rtti::static_rtti<bar, foo, bar_id>
+{};
+
+struct baz
+: foo
+, rtti::implement_rtti<baz, foo>
+{};
+
+struct lap
+: bar
+, rtti::implement_rtti<lap , bar>
+{};
+
+int main() {
+  foo f; bar r; baz z; lap l;
+
+  std::cout << "Classes IDs :" << std::endl;
+  std::cout << "- [foo] base class has id 0 : " << rtti::static_id<foo>() << std::endl;
+  std::cout << "- [bar] has known id "          << bar_id << " : " << rtti::static_id<bar>() << std::endl;
+  std::cout << "- [baz] class has id : "        << rtti::static_id<baz>() << std::endl;
+  std::cout << "- [lap] class has id : "        << rtti::static_id<lap>() << std::endl;
+
+  std::cout << "Objects IDs :" << std::endl;
+  std::cout << "- [foo] base class has id 0 : " << rtti::get_id(f) << std::endl;
+  std::cout << "- [bar] has known id "          << bar_id << " : " << rtti::get_id(r) << std::endl;
+  std::cout << "- [baz] class has id : "        << rtti::get_id(z) << std::endl;
+  std::cout << "- [lap] class has id : "        << rtti::get_id(l) << std::endl;
+
+  return 0;
+}
