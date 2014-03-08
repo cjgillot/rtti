@@ -83,7 +83,7 @@ private:
     constexpr static rtti_type static_max = helper::static_max;
     constexpr static rtti_type hash       = helper::hash;
 
-    BOOST_STATIC_ASSERT( hash < static_max )
+    BOOST_STATIC_ASSERT( hash < static_max );
   };
 
 protected:
