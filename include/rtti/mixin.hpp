@@ -82,6 +82,8 @@ private:
 
     constexpr static rtti_type static_max = helper::static_max;
     constexpr static rtti_type hash       = helper::hash;
+
+    BOOST_STATIC_ASSERT( hash < static_max )
   };
 
 protected:
@@ -91,8 +93,6 @@ protected:
   ~mixin() noexcept {}
 };
 
-} // namespace rtti
-
 //@{
 //! \brief Enum flags for some optimizations
 #define RTTI_FLAGS( declare, abstract, final, static ) \
@@ -101,61 +101,59 @@ protected:
   | (final   ? ::rtti::flags::FINAL   : 0) \
   | (static  ? ::rtti::flags::STATIC  : 0) )
 
-// ***** externally used macros ***** //
-//! \brief Abstract base case
-#define ABSTRACT_RTTI( klass, static_max )  \
-  public ::rtti::mixin<                     \
-    klass                                   \
-  , void                                    \
-  , RTTI_FLAGS(1, 1, 0, 1)                  \
-  , 0                                       \
-  >
-
 //! \brief Base case
-#define DECLARE_RTTI( klass, static_max )   \
-  public ::rtti::mixin<                     \
-    klass                                   \
-  , void                                    \
-  , RTTI_FLAGS(1, 0, 0, 1)                  \
-  , static_max                              \
-  >
+template<typename klass, std::size_t static_max = 256>
+struct base_rtti
+: public mixin<
+  klass, void,
+  flags::DECLARE | flags::STATIC
+, static_max
+> {};
 
-//! \brief Derived case
-#define IMPLEMENT_RTTI( klass, parent ) \
-  public ::rtti::mixin<                 \
-    klass                               \
-  , parent                              \
-  , RTTI_FLAGS(0, 0, 0, 0)              \
-  , 0                                   \
-  >
+//! \brief Abstract base case
+template<typename klass, std::size_t static_max = 256>
+struct abstract_base_rtti
+: public mixin<
+  klass, void
+, flags::DECLARE | flags::ABSTRACT
+, static_max
+> {};
 
-//! \brief Static derived case
-#define STATIC_RTTI( klass, parent, id )\
-  public ::rtti::mixin<                 \
-    klass                               \
-  , parent                              \
-  , RTTI_FLAGS(0, 0, 0, 1)              \
-  , id                                  \
-  >
+template<typename klass, typename parent>
+struct implement_rtti
+: public mixin<
+  klass, parent
+, 0
+, 0
+> {};
 
-//! \brief Final case
-#define FINAL_RTTI( klass, parent )     \
-  public ::rtti::mixin<                 \
-    klass                               \
-  , parent                              \
-  , RTTI_FLAGS(0, 0, 1, 0)              \
-  , 0                                   \
-  >
+template<typename klass, typename parent, std::size_t id>
+struct static_rtti
+: public mixin<
+  klass, parent
+, flags::STATIC
+, id
+> {};
 
-//! \brief Static final case
-#define STATIC_FINAL_RTTI( klass, parent, id ) \
-  public ::rtti::mixin<                 \
-    klass                               \
-  , parent                              \
-  , RTTI_FLAGS(0, 0, 1, 1)              \
-  , id                                  \
-  >
+template<typename klass, typename parent>
+struct final_rtti
+: public mixin<
+  klass, parent
+, flags::FINAL
+, 0
+> {};
+
+template<typename klass, typename parent, std::size_t id>
+struct static_final_rtti
+: public mixin<
+  klass, parent
+, flags::FINAL | flags::STATIC
+, id
+> {};
+
 //@}
+
+} // namespace rtti
 
 #endif
 
