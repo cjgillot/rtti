@@ -3,16 +3,11 @@
 
 #include "rtti/rttifwd.hpp"
 
-#define MMETHOD_USE_THREAD 0
 #define MMETHOD_USE_INLINE_DO_FIND 1
 
 #include "mmethod/hash/hash_map/hash_map_base.hpp"
 
-#include "util/attribute.hpp"
-
-#if MMETHOD_USE_THREAD
-#include "util/stw_lock.hpp"
-#endif
+#include "rtti/attribute.hpp"
 
 // All functions declared in this file
 // are defined in rtti/mmethod/hash_map.cpp
@@ -22,8 +17,9 @@ namespace hash {
 namespace detail {
 
 /// exported function
+value_type do_fetch_pole(hash_map const& map, rtti_hierarchy rt0, hash_map_base::iterator it0) BOOST_NOEXCEPT_OR_NOTHROW;
 value_type ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
-fetch_pole(hash_map const& map, rtti_hierarchy rt) noexcept;
+fetch_pole(hash_map const& map, rtti_hierarchy rt) BOOST_NOEXCEPT_OR_NOTHROW;
 
 /// state class
 class hash_map {
@@ -31,14 +27,16 @@ public:
   typedef hash_map_base::iterator iterator;
 
 public:
-  inline constexpr hash_map();
-  ~hash_map();
+  BOOST_CONSTEXPR inline  hash_map() {}
+  inline ~hash_map() {}
 
 private:
-  hash_map(hash_map const&) = delete;
-  hash_map(hash_map&&) = delete;
-  hash_map& operator=(hash_map const&) = delete;
-  hash_map& operator=(hash_map&&) = delete;
+  hash_map(hash_map const&);
+  hash_map& operator=(hash_map const&);
+#ifdef BOOST_HAS_RVALUE_REFS
+  hash_map(hash_map&&);
+  hash_map& operator=(hash_map&&);
+#endif
 
 public:
   void flush(hash_map const&);
@@ -46,21 +44,22 @@ public:
 public:
   /// find(), thread-safe
   //@{
-  iterator ATTRIBUTE_PURE find(key_type key) const noexcept;
-  iterator ATTRIBUTE_PURE zero() const noexcept;
+  iterator ATTRIBUTE_PURE find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
+  iterator ATTRIBUTE_PURE zero() const BOOST_NOEXCEPT_OR_NOTHROW;
   //@}
 
 private:
-  /// fetch_pole()
+  /// fetch_pole(), thread-safe
   //@{
-  friend value_type ATTRIBUTE_PURE fetch_pole(hash_map const&, rtti_hierarchy rt) noexcept;
-  inline bucket_t* array() const noexcept { return m_base.m_array.get(); }
+  friend value_type fetch_pole(hash_map const&, rtti_hierarchy rt) BOOST_NOEXCEPT_OR_NOTHROW;
+  friend value_type do_fetch_pole(hash_map const& map, rtti_hierarchy rt0, hash_map::iterator it0) BOOST_NOEXCEPT_OR_NOTHROW;
+  inline bucket_t* array() const BOOST_NOEXCEPT_OR_NOTHROW { return m_base.m_array.get(); }
   //@}
 
 public:
   /// use by generated code, thread-unsafe
   //@{
-  template<std::size_t N> void create(); // unsafe
+  void create(std::size_t N); // unsafe
   void insert(key_type key, value_type value); // unsafe
   void insert_at(iterator it, key_type key, value_type value); // unsafe
 
@@ -69,10 +68,6 @@ public:
 
 private:
   hash_map_base m_base;
-
-#if MMETHOD_USE_THREAD
-  mutable util::stw_lock m_mutex;
-#endif
 };
 
 typedef bucket_t pole_t;

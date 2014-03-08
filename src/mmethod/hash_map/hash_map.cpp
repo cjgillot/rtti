@@ -1,7 +1,5 @@
 #include "mmethod/hash/hash_map/hash_map.hpp"
 
-#include "util/assert.hpp"
-
 using rtti::rtti_type;
 using rtti::detail::rtti_node;
 using rtti::hash::detail::bucket_t;
@@ -9,8 +7,6 @@ using rtti::hash::detail::hash_map;
 
 /// hash_map implementation
 //@{
-hash_map::~hash_map() {}
-
 void hash_map::flush(hash_map const& m) {
   m_base.flush(m.m_base);
 }

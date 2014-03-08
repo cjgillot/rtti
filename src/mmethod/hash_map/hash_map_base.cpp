@@ -1,6 +1,6 @@
 #include "mmethod/hash/hash_map/hash_map_base.hpp"
 
-#include "util/assert.hpp"
+#include <boost/assert.hpp>
 
 using rtti::rtti_type;
 using rtti::detail::rtti_node;
@@ -8,11 +8,6 @@ using rtti::hash::detail::bucket_t;
 using rtti::hash::detail::hash_map_base;
 using rtti::hash::detail::key_type;
 using rtti::hash::detail::value_type;
-
-#ifndef __EXCEPTIONS__
-#define try if(true)
-#define catch(...) else if(false)
-#endif
 
 #define BADBUCKET (&(m_array[m_mask + 1]))
 
@@ -22,7 +17,7 @@ inline void bucket_t::reset() noexcept { m_value = 1; }
 inline void bucket_t::set(key_type k, value_type v) noexcept {
   m_value = static_cast<storage_type>(v);
   m_key = k;
-  ASSERT( !empty() );
+  BOOST_ASSERT( !empty() );
 }
 //@}
 
@@ -30,8 +25,8 @@ inline void bucket_t::set(key_type k, value_type v) noexcept {
 //@{
 hash_map_base::~hash_map_base() {}
 
-void hash_map_base::move(hash_map_base&& o) noexcept {
-  ASSERT( this != &o );
+void hash_map_base::move(hash_map_base& o) noexcept {
+  BOOST_ASSERT( this != &o );
 
   m_mask = o.m_mask;
   m_logsz= o.m_logsz;
@@ -40,7 +35,7 @@ void hash_map_base::move(hash_map_base&& o) noexcept {
 }
 
 void hash_map_base::flush(hash_map_base const& o) {
-  ASSERT( this != &o );
+  BOOST_ASSERT( this != &o );
 
   m_array.reset();
 
@@ -130,14 +125,14 @@ void hash_map_base::insert_need_resize(key_type key, value_type value) {
   hash_map_base repl;
   repl.flush(*this);
   repl.insert(key, value);
-  move( std::move(repl) );
+  move(repl);
 }
 //@}
 
 /// hash_map_base create()
 //@{
 void hash_map_base::create(std::size_t logsz) {
-  ASSERT( !m_array );
+  BOOST_ASSERT( !m_array );
 
   std::size_t sz = 1 << logsz;
   m_logsz = logsz;

@@ -19,9 +19,13 @@ struct remove_all<T*>
 template<typename T>
 struct remove_all<T&>
 : remove_all<T> {};
+
+#ifdef BOOST_HAS_RVALUE_REFS
 template<typename T>
 struct remove_all<T&&>
 : remove_all<T> {};
+#endif
+
 template<typename T>
 struct remove_all<const T>
 : remove_all<T> {};

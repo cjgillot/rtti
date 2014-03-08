@@ -1,6 +1,3 @@
-#include "mmethod/static/regbase.hpp"
-#include "mmethod/static/common.hpp"
-
 #include "mmethod/shared/basic.hpp"
 
 #include <limits>

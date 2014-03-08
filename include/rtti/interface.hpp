@@ -1,7 +1,9 @@
 #ifndef RTTI_INTERFACE_HPP
 #define RTTI_INTERFACE_HPP
 
-#include <type_traits>
+#include <boost/type_traits.hpp>
+
+#include <boost/static_assert.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -10,10 +12,8 @@
 #include <boost/type_traits/remove_reference.hpp>
 
 #include "rtti/holder/getter.ipp"
-#include "rtti/hash/hash.hpp"
 
-#include "util/attribute.hpp"
-#include "util/compare.hpp"
+#include "rtti/attribute.hpp"
 
 /*!
  * \brief Macros controlling the is_a behaviour
@@ -40,10 +40,10 @@ namespace rtti {
 //! \brief RTTI id type
 using detail::rtti_type;
 
-//! \brief Function for comparision of RTTI ids
-inline util::cmp_t ATTRIBUTE_PURE
-rtti_compare( rtti_type a, rtti_type b )
-{ return util::compare(a,b); }
+// //! \brief Function for comparision of RTTI ids
+// inline util::cmp_t ATTRIBUTE_PURE
+// rtti_compare( rtti_type a, rtti_type b )
+// { return util::compare(a,b); }
 
 //! \brief Function checking exact type
 template<class T, class U>
@@ -51,7 +51,7 @@ inline bool ATTRIBUTE_PURE
 is_exactly_a(const U &x) {
   using Traits = detail::rtti_getter::traits<T>;
 
-  static_assert( std::is_same<
+  static_assert( boost::is_same<
     typename Traits::root
   , typename Traits::root
   >::value,
@@ -67,7 +67,7 @@ template<class T, class U>
 inline bool ATTRIBUTE_PURE ATTRIBUTE_NONNULL(1)
 is_exactly_a(const U* x) {
   // reject pointer-to-pointer
-  static_assert( ! std::is_pointer<U>::value, "is_exactly_a<> called with pointer to pointer" );
+  BOOST_STATIC_ASSERT( ! boost::is_pointer<U>::value && "is_exactly_a<> called with pointer to pointer" );
   typedef typename std::remove_pointer<T>::type T2;
 
   // retry without pointer

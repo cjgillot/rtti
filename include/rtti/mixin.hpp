@@ -1,7 +1,7 @@
 #ifndef RTTI_MIXIN_HPP
 #define RTTI_MIXIN_HPP
 
-#include "rtti/hash/hash.hpp"
+// #include "rtti/hash/hash.hpp"
 #include "rtti/holder/holder.hpp"
 #include "rtti/holder/getter.hpp"
 
@@ -126,7 +126,7 @@ protected:
     klass                               \
   , parent                              \
   , RTTI_FLAGS(0, 0, 0, 0)              \
-  , __RTTI_HASH_TYPE(klass, 0, 0)       \
+  , 0                                   \
   >
 
 //! \brief Static derived case
@@ -135,7 +135,7 @@ protected:
     klass                               \
   , parent                              \
   , RTTI_FLAGS(0, 0, 0, 1)              \
-  , __RTTI_HASH_TYPE(klass, 1, id)      \
+  , id                                  \
   >
 
 //! \brief Final case
@@ -144,7 +144,7 @@ protected:
     klass                               \
   , parent                              \
   , RTTI_FLAGS(0, 0, 1, 0)              \
-  , __RTTI_HASH_TYPE(klass, 0, 0)       \
+  , 0                                   \
   >
 
 //! \brief Static final case
@@ -153,7 +153,7 @@ protected:
     klass                               \
   , parent                              \
   , RTTI_FLAGS(0, 0, 1, 1)              \
-  , __RTTI_HASH_TYPE(klass, 1, id)      \
+  , id                                  \
   >
 //@}
 

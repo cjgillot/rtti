@@ -1,12 +1,13 @@
 #ifndef RTTI_HOLDER_HPP
 #define RTTI_HOLDER_HPP
 
-#include <type_traits>
+#include <boost/type_traits.hpp>
+#include <boost/static_assert.hpp>
 
 #include "rtti/rttifwd.hpp"
 #include "rtti/holder/getter.hpp"
 
-#include "util/assert.hpp"
+#include <boost/assert.hpp>
 
 namespace rtti {
 namespace detail {
@@ -25,8 +26,21 @@ template<>
 struct get_holder<const volatile void> {
 //   typedef typename RTTI_GETTER::traits<T>::base Rt;
   struct type {
-    static constexpr rtti_node* get_node() { return nullptr; }
+    static BOOST_CONSTEXPR rtti_node* get_node() { return 0; }
   };
+};
+
+//! \brief Root holder with the seed
+template<typename Root>
+struct root_holder {
+  template<bool Static>
+  static rtti_type make(std::size_t hash) {
+    if(Static)
+      return rtti_type(hash);
+
+    static std::size_t current = 0;
+    return rtti_type(current++);
+  }
 };
 
 /*
@@ -43,34 +57,35 @@ struct get_holder<const volatile void> {
 template<class T>
 struct holder {
 private:
-  static_assert( std::is_const<T>::value && std::is_volatile<T>::value
-  , "rtti::detail::holder_::holder<> must not be accessed directly" );
+  BOOST_STATIC_ASSERT( boost::is_const<T>::value && boost::is_volatile<T>::value
+  && "rtti::detail::holder_::holder<> must not be accessed directly" );
 
   typedef rtti_getter::traits<T> trts;
+  typedef typename trts::root  root;
   typedef typename trts::super super;
   typedef typename get_holder<super>::type sholder;
 
 public:
-  static constexpr rtti_node node = {
-    rtti_type( trts::hash )
-  , sholder::get_node()
-  };
+  static rtti_node node;
 
-  static constexpr inline
+  static BOOST_CONSTEXPR inline
   const rtti_node*
   ATTRIBUTE_PURE
-  get_node() noexcept
+  get_node() BOOST_NOEXCEPT_OR_NOTHROW
   { return &node; }
 
-  static constexpr inline
+  static inline
   rtti_type
   ATTRIBUTE_PURE
-  get_id() noexcept
+  get_id() BOOST_NOEXCEPT_OR_NOTHROW
   { return node.id; }
 };
 
 template<class T>
-constexpr rtti_node holder<T>::node;
+rtti_node holder<T>::node = {
+  root_holder<root>::template make<trts::static_>(trts::hash)
+, sholder::get_node()
+};
 
 } // namespace holder_
 

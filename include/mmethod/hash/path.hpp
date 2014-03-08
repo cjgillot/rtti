@@ -24,7 +24,7 @@ struct hash {
   template<typename T>
   struct apply {
     typedef typename mpl::remove_all<T>::type RawT;
-    constexpr static rtti_type value = rtti::type_hash<RawT>();
+    BOOST_STATIC_CONSTANT(rtti_type, value = rtti::type_hash<RawT>());
     typedef apply type;
   };
 };

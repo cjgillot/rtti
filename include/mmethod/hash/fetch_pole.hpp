@@ -2,6 +2,7 @@
 #define RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 
 #include "mmethod/hash/hash_map/hash_map.hpp"
+#include "mmethod/hash/hash_map/hash_map.ipp"
 
 namespace rtti {
 namespace hash {
@@ -14,23 +15,19 @@ do_fetch_pole(
   hash_map const&
 , rtti_hierarchy rt0
 , hash_map::iterator it0
-) noexcept;
+) BOOST_NOEXCEPT_OR_NOTHROW;
 
 inline value_type
 ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
 fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt
-) noexcept {
+) BOOST_NOEXCEPT_OR_NOTHROW {
 
   const rtti_type id0 = rt->id;
   hash_map::iterator it0;
 
   {
-#if MMETHOD_USE_THREAD
-    util::stw_lock::fetch_guard guard { m_mutex };
-#endif
-
     it0 = map.find(id0);
 
     if(LIKELY( !it0->empty() ))

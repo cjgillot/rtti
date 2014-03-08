@@ -1,6 +1,6 @@
-#include "mmethod/hash/hash_map/hash_map.hpp"
+#include "mmethod/hash/fetch_pole.hpp"
 
-#include "util/assert.hpp"
+#include <boost/assert.hpp>
 
 using rtti::rtti_type;
 
@@ -18,10 +18,7 @@ rtti::hash::detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0
 , hash_map::iterator it0
-) noexcept {
-#if MMETHOD_USE_THREAD
-  util::stw_lock::fetch_guard read_guard { m_mutex };
-#endif
+) BOOST_NOEXCEPT_OR_NOTHROW {
 
   const rtti_type id0 = rt0->id;
 
@@ -29,9 +26,6 @@ rtti::hash::detail::do_fetch_pole(
     hash_map::iterator it = map.find(rt->id);
 
     if(LIKELY( !it->empty() )) {
-#if MMETHOD_USE_THREAD
-      util::stw_lock::convert_guard write_guard { m_mutex };
-#endif
 
       const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
 #if MMETHOD_USE_DEEP_CACHE

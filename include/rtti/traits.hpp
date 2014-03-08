@@ -1,7 +1,7 @@
 #ifndef RTTI_TRAITS_HPP
 #define RTTI_TRAITS_HPP
 
-#include <type_traits>
+#include <boost/type_traits.hpp>
 #include <boost/type_traits/has_dereference.hpp>
 #include <boost/type_traits/is_virtual_base_of.hpp>
 
@@ -39,36 +39,45 @@ struct copy_ref<T&,U> {
   typedef U& type;
 };
 
+#ifdef BOOST_HAS_RVALUE_REFS
 template<typename T, typename U>
 struct copy_ref<T&&,U> {
   typedef U&& type;
 };
+#endif
 
 template<typename Out>
 struct unsafe_casting {
   struct nonvirtual {
     template<typename In>
-    static Out eval(In&& in)
-    { return static_cast<Out>( std::forward<In>(in) ); }
+    static Out eval(In& in)
+    { return static_cast<Out>( in ); }
   };
   struct dynamic {
     template<typename In>
-    static Out eval(In&& in)
-    { return dynamic_cast<Out>( std::forward<In>(in) ); }
+    static Out eval(In& in)
+    { return dynamic_cast<Out>( in ); }
   };
 
   template<typename In>
-  static Out eval(In&& in) {
-    constexpr bool dyn = boost::is_virtual_base_of<Out, In>::value;
-    using impl = typename std::conditional<dyn, dynamic, nonvirtual>::type;
-    return impl::eval(in);
+  static Out eval(In& in) {
+    typedef boost::is_virtual_base_of<Out, In> dyn;
+    typedef typename boost::mpl::if_<dyn, dynamic, nonvirtual>::type impl;
+    return impl::template eval<In>(in);
+  }
+
+  template<typename In>
+  static Out eval(In const& in) {
+    typedef boost::is_virtual_base_of<Out, In> dyn;
+    typedef typename boost::mpl::if_<dyn, dynamic, nonvirtual>::type impl;
+    return impl::template eval<In const>(in);
   }
 };
 
 template<typename T>
 struct class_traits {
   typedef T&  reference_type;
-  typedef typename std::remove_cv<T>::type class_type;
+  typedef typename boost::remove_cv<T>::type class_type;
   typedef class_type raw_type;
 
   static reference_type get(reference_type v) { return v; }
@@ -86,11 +95,15 @@ struct class_traits {
 
 template<typename T>
 struct fundamental_traits {
-  typedef typename std::remove_cv<T>::type raw_type;
+  typedef typename boost::remove_cv<T>::type raw_type;
   typedef void class_type;
 
   template<typename U, typename V>
-  static U cast(V&& v)
+  static U cast(V& v)
+  { return v; }
+
+  template<typename U, typename V>
+  static U cast(V const& v)
   { return v; }
 
   template<typename U>
@@ -101,13 +114,10 @@ struct fundamental_traits {
 
 template<typename T>
 struct smart_ptr_traits {
-private:
-  static T const& instance;
-
 public:
-  typedef decltype(*instance) reference_type;
-  typedef typename std::remove_cv<
-          typename std::remove_reference<
+  typedef decltype(* std::declval<T>()) reference_type;
+  typedef typename boost::remove_cv<
+          typename boost::remove_reference<
           reference_type
   >::type>::type class_type;
   typedef class_type raw_type;
@@ -118,13 +128,13 @@ public:
 
 template<typename T>
 struct pointer_traits_basecase
-: std::conditional<
-    std::is_class<T>::value
+: boost::mpl::if_<
+    boost::is_class<T>
   , traits_detail::class_traits<T>
   , traits_detail::fundamental_traits<T>
 >::type
 {
-  std::true_type operator*() const;
+  boost::true_type operator*() const;
 };
 
 template<typename CV, typename T>
@@ -148,8 +158,8 @@ struct pointer_traits
 
 template<typename T>
 struct pointer_traits<T const>
-: std::conditional<
-    boost::has_dereference< pointer_traits<T> >::value
+: boost::mpl::if_<
+    boost::has_dereference< pointer_traits<T> >
   , traits_detail::pointer_traits_basecase<T const>
   , traits_detail::wrap_cv_forward<void const, pointer_traits<T> >
 >::type
@@ -157,8 +167,8 @@ struct pointer_traits<T const>
 
 template<typename T>
 struct pointer_traits<T volatile>
-: std::conditional<
-    boost::has_dereference< pointer_traits<T> >::value
+: boost::mpl::if_<
+    boost::has_dereference< pointer_traits<T> >
   , traits_detail::pointer_traits_basecase<T volatile>
   , traits_detail::wrap_cv_forward<void volatile, pointer_traits<T> >
 >::type
@@ -166,10 +176,10 @@ struct pointer_traits<T volatile>
 
 template<typename T>
 struct pointer_traits<T const volatile>
-: std::conditional<
-    boost::has_dereference< pointer_traits<T const> >::value
-  , typename std::conditional<
-      boost::has_dereference< pointer_traits<T volatile> >::value
+: boost::mpl::if_<
+    boost::has_dereference< pointer_traits<T const> >
+  , typename boost::mpl::if_<
+      boost::has_dereference< pointer_traits<T volatile> >
     , traits_detail::pointer_traits_basecase<T const volatile>
     , traits_detail::wrap_cv_forward<void const, pointer_traits<T volatile> >
   >::type
@@ -182,7 +192,7 @@ struct pointer_traits<T*>
 : traits_detail::smart_ptr_traits<T*> {
   template<typename PU>
   static PU cast(T* p) {
-    typedef typename std::remove_pointer<PU>::type U;
+    typedef typename boost::remove_pointer<PU>::type U;
     typedef rtti::traits_detail::unsafe_casting<U*> caster;
     return caster::eval( p );
   }

@@ -1,6 +1,8 @@
 #ifndef RTTI_MMETHOD_MPLPACK_HPP
 #define RTTI_MMETHOD_MPLPACK_HPP
 
+#error lapin
+
 #include <boost/mpl/placeholders.hpp>
 
 #include <boost/mpl/bind.hpp>

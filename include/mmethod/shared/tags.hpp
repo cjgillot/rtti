@@ -7,22 +7,22 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/has_dereference.hpp>
 
-#include <boost/call_traits.hpp>
+#include "mmethod/shared/call_traits.hpp"
 
 #include "mmethod/hash/path.hpp"
 
-namespace boost {
-
-template <typename T>
-struct call_traits<T&&>
-{
-   typedef T&& value_type;
-   typedef T&& reference;
-   typedef const T&& const_reference;
-   typedef T&& param_type;  // hh removed const
-};
-
-} // namespace boost
+// namespace boost {
+// 
+// template <typename T>
+// struct call_traits<T&&>
+// {
+//    typedef T&& value_type;
+//    typedef T&& reference;
+//    typedef const T&& const_reference;
+//    typedef T&& param_type;  // hh removed const
+// };
+// 
+// } // namespace boost
 
 // tag templates -> mark dispatch-guilty types (virtual) and the others
 namespace rtti { namespace tags {
@@ -36,23 +36,23 @@ template<typename T>
 struct unwrap_once {
   typedef T type;
   typedef boost::mpl::false_ has_virtual;
-  constexpr static std::size_t hash = 0;
+//   constexpr static std::size_t hash = 0;
 };
 template<typename T>
-struct unwrap_once<virtual_<T>> {
+struct unwrap_once<virtual_<T> > {
   typedef T type;
   typedef boost::mpl::true_  has_virtual;
-  constexpr static std::size_t hash = rtti::hash::detail::hash::apply<type>::value;
+//   constexpr static std::size_t hash = rtti::hash::detail::hash::apply<type>::value;
 };
 template<typename T>
-struct unwrap_once<static_<T>> {
+struct unwrap_once<static_<T> > {
   typedef T type;
   typedef boost::mpl::false_ has_virtual;
-  constexpr static std::size_t hash = 0;
+//   constexpr static std::size_t hash = 0;
 };
 
 template<typename T>
-struct unwrap {
+struct unwrap_base {
 private:
   typedef rtti::pointer_traits<T> traits;
   typedef typename traits::raw_type deref_t;
@@ -64,15 +64,22 @@ public:
   typedef typename traits::template rebind<raw_type>::other type;
   typedef typename boost::call_traits<type>::param_type arg_type;
   typedef typename unwrapped::has_virtual has_virtual;
-  constexpr static std::size_t hash = unwrapped::hash;
+//   constexpr static std::size_t hash = unwrapped::hash;
+};
+
+struct unwrap {
+  template<typename T>
+  struct apply {
+    typedef typename unwrap_base<T>::type type;
+  };
 };
 
 template<typename T>
 struct rewrap
 : boost::mpl::if_<
-    typename unwrap<T>::has_virtual
-  , virtual_<typename unwrap<T>::type>
-  , static_ <typename unwrap<T>::type>
+    typename unwrap_base<T>::has_virtual
+  , virtual_<typename unwrap_base<T>::type>
+  , static_ <typename unwrap_base<T>::type>
 > {};
 //@}
 
@@ -80,7 +87,7 @@ struct rewrap
 struct is_virtual {
   template<typename T>
   struct apply
-  : unwrap<T>::has_virtual {};
+  : unwrap_base<T>::has_virtual {};
 };
 
 struct make_hierarchy {
@@ -90,12 +97,9 @@ struct make_hierarchy {
 };
 
 // compute dispatch arity
-template<typename... Types>
+template<typename Types>
 struct virtual_size
-: boost::mpl::count_if<
-  boost::mpl::vector<Types...>
-, is_virtual
-> {};
+: boost::mpl::count_if<Types, is_virtual> {};
 
 } // namespace tags
 

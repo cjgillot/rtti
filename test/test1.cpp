@@ -49,7 +49,7 @@ void test(foo* f, std::size_t N) {
 //   vf2.insert<foo*, foo&&>( [](foo* u, foo&& v){} );
 
   vf1(f, 0);
-  vf2(f, std::move(*f));
+  vf2(f, *f);
 
   double t1, t2;
   std::printf("Calling functions %u times :\n", N); std::fflush(stdout);

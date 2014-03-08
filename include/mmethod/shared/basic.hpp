@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "rtti/interface.hpp"
-#include "util/attribute.hpp"
+#include "rtti/attribute.hpp"
 
 #include "mmethod/shared/mpl.hpp"
 
@@ -30,6 +30,6 @@ struct invalid_node {
 
 } // namespace rtti
 
-#include "mmethod/shared/trampoline.hpp"
+#include "mmethod/trampoline/trampoline.hpp"
 
 #endif

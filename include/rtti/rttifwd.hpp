@@ -1,19 +1,14 @@
 #ifndef RTTI_FWD_HPP
 #define RTTI_FWD_HPP
 
-#include <cstdint>
-
-#include "util/strong_typedef.hpp"
-
-// #define RTTI_GETTER \
-//   ::rtti::detail::rtti_getter
+#include <stdint.h>
 
 namespace rtti {
 namespace detail {
 
 //! \brief RTTI id type
-// UTIL_STRONG_TYPEDEF(std::uintptr_t, rtti_type);
-typedef std::uintptr_t rtti_type;
+// UTIL_STRONG_TYPEDEF(uintptr_t, rtti_type);
+typedef uintptr_t rtti_type;
 
 //! \brief RTTI node type
 //! POD class holding a hierarchy bottom-up

@@ -2,7 +2,7 @@
 #define HEAD_HPP
 
 #include "rtti.hpp"
-#include "mmethod/static/register.hpp"
+#include "mmethod/dynamic.hpp"
 
 #include <memory>
 
@@ -73,6 +73,6 @@ struct pointer_traits<std::shared_ptr<T> >
 }
 
 DECLARE_MMETHOD(vf1, void, (v_<foo>*, int));
-DECLARE_MMETHOD(vf2, void, (v_<foo>*, v_<foo>&&));
+DECLARE_MMETHOD(vf2, void, (v_<foo>*, v_<foo>&));
 
 #endif
