@@ -37,6 +37,8 @@ struct make_declare_helper<Tag, Ret, Args>::traits
       >
     >::type::value
   };
+  
+  BOOST_STATIC_ASSERT( vsize > 0 && "At least one virtual parameter must be provided." );
 };
 
 }}} // namespace rtti::mmethod::detail
