@@ -63,7 +63,7 @@ inline rtti_node const*
 ATTRIBUTE_PURE
 get_node(U& x)
 {
-  typedef rtti::pointer_traits<U&&> traits;
+  typedef rtti::pointer_traits<U&> traits;
 #if __EXCEPTIONS__
   if(! traits::valid(x)) throw std::bad_typeid();
 #endif
@@ -76,7 +76,7 @@ inline rtti_node const*
 ATTRIBUTE_PURE
 get_node(U const& x)
 {
-  typedef rtti::pointer_traits<U&&> traits;
+  typedef rtti::pointer_traits<U const&> traits;
 #if __EXCEPTIONS__
   if(! traits::valid(x)) throw std::bad_typeid();
 #endif
