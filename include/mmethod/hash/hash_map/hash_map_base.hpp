@@ -2,7 +2,7 @@
 #define RTTI_MMETHOD_HASH_MAP_BASE_HPP
 
 #include "rtti/rttifwd.hpp"
-#include "rtti/attribute.hpp"
+#include "rtti/detail/attribute.hpp"
 
 #include <memory>
 #include <boost/noncopyable.hpp>

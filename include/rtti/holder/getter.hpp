@@ -3,10 +3,9 @@
 
 #include <utility>
 
-#include "rtti/attribute.hpp"
-
 #include "rtti/rttifwd.hpp"
-#include "rtti/traits.hpp"
+#include "rtti/detail/traits.hpp"
+#include "rtti/detail/attribute.hpp"
 
 namespace rtti {
 namespace detail {

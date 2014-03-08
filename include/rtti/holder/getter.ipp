@@ -3,7 +3,7 @@
 
 #include "rtti/holder/getter.hpp"
 #include "rtti/holder/holder.hpp"
-#include "rtti/traits.hpp"
+#include "rtti/detail/traits.hpp"
 
 #include "mmethod/shared/mpl.hpp"
 

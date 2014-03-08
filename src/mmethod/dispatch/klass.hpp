@@ -4,9 +4,6 @@
 #include <cstddef>
 #include <boost/dynamic_bitset.hpp>
 
-#include "rtti.hpp"
-using namespace rtti;
-
 class hierarchy_t;
 class signature_t;
 struct klass_t

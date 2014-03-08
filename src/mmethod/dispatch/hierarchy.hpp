@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <map>
 
+#include "../dynamic/early.hpp"
+
 #include "klass.hpp"
 
 class hierarchy_t

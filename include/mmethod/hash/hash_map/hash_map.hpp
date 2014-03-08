@@ -7,7 +7,7 @@
 
 #include "mmethod/hash/hash_map/hash_map_base.hpp"
 
-#include "rtti/attribute.hpp"
+#include "rtti/detail/attribute.hpp"
 
 // All functions declared in this file
 // are defined in rtti/mmethod/hash_map.cpp

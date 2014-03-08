@@ -13,7 +13,7 @@
 
 #include "rtti/holder/getter.ipp"
 
-#include "rtti/attribute.hpp"
+#include "rtti/detail/attribute.hpp"
 
 /*!
  * \brief Macros controlling the is_a behaviour

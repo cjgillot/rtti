@@ -1,7 +1,7 @@
 #ifndef RTTI_MMETHOD_TRAMPOLINE_HPP
 #define RTTI_MMETHOD_TRAMPOLINE_HPP
 
-#include "rtti/traits.hpp"
+#include "rtti/detail/traits.hpp"
 #include "mmethod/shared/tags.hpp"
 
 #include <boost/fusion/tuple.hpp>

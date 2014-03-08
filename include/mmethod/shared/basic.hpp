@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "rtti/interface.hpp"
-#include "rtti/attribute.hpp"
+#include "rtti/detail/attribute.hpp"
 
 #include "mmethod/shared/mpl.hpp"
 

@@ -1,7 +1,7 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BUCKET_HPP
 #define RTTI_MMETHOD_HASH_MAP_BUCKET_HPP
 
-#include "rtti/attribute.hpp"
+#include "rtti/detail/attribute.hpp"
 #include "rtti/rttifwd.hpp"
 
 namespace rtti {

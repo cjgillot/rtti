@@ -1,7 +1,7 @@
 #ifndef HEAD_HPP
 #define HEAD_HPP
 
-#include "rtti.hpp"
+#include "rtti/rtti.hpp"
 #include "mmethod/dynamic.hpp"
 
 #include <memory>
