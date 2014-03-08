@@ -28,13 +28,7 @@ struct dispatch {
 
   template<typename Tuple>
   Ret call(Tuple const& args) const {
-    // force seal
-    struct sealer_t {
-      sealer_t(dispatch const* a) { a->seal(); };
-      void touch() {}
-    }
-    static sealer ( this );
-    sealer.touch();
+    this->generate();
 
     // do actual fetching
     invoker_t f = this->fetch( args );
@@ -48,7 +42,17 @@ struct dispatch {
   template<typename K, typename F>
   void insert(F&& f);
 
-  // must not be called outside sealer_t
+  // calls seal once
+  void generate() const {
+    struct sealer_t {
+      sealer_t(dispatch const* a) { a->seal(); };
+      void touch() {}
+    }
+    static sealer ( this );
+    sealer.touch();
+  }
+
+  // must only be called by generate
   void seal() const;
 };
 

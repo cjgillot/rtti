@@ -49,9 +49,8 @@ protected:
   inline void insert(F&& f)
   { m_dispatch.template insert<K>( std::forward<F>(f) ); }
 
-//   template<typename K, typename F>
-//   inline void retract(F&& f)
-//   { m_dispatch.template retract<K...>(); }
+  inline void generate()
+  { m_dispatch.generate(); }
 };
 
 template<typename Tag, typename Sig>

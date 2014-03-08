@@ -25,7 +25,7 @@ private:
 public:
   using decl_maker::operator();
   using decl_maker::insert;
-//   using decl_maker::retract;
+  using decl_maker::generate;
 };
 
 }} // namespace rtti::mmethod
