@@ -103,6 +103,8 @@ MMETHOD_IMPLEMENT(f1, void, (bar* a)) { a->do_something_else(); }
   The dispatch table is generated at the first call to the mmethod,
   It can be computed earlier by a call to <tt>f1.generate()</tt>.
 
+  If an ambiguity is found (no-match or several-match) in the dispatch
+  table generation, the corresponding case will throw \c rtti::bad_dispatch.
  */
 
 #endif
