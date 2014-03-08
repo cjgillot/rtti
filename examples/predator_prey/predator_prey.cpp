@@ -10,7 +10,6 @@ using namespace rtti;
 typedef void ResultType; 
  
 struct object
-: base_rtti<object>
 //Super class of all classes.
 {
       virtual
@@ -46,39 +45,9 @@ struct Prey_abstract;
  
 #define ACCEPT_CONSTANCY
 #define VISIT_CONSTANCY const
- 
-// namespace boost{
-// namespace composite_storage{
-// namespace pack{
-// namespace multiple_dispatch{
-//  
-// template<>
-// struct hosts_concrete
-//   < Predator_abstract
-//   >
-//   : bmpl::package
-//     < Lion
-//     , Bear
-//     , Anaconda
-//     >
-// {
-// };
-//  
-// template<>
-// struct hosts_concrete
-//   < Prey_abstract
-//   >
-//   : bmpl::package
-//     < Gazelle
-//     , Girrafe
-//     >
-// {
-// };
-//  
-// }}}}//exit boost::composite_storage::pack::multiple_dispatch namespace
 
 struct Predator_abstract: object
-, implement_rtti<Predator_abstract, object>
+, base_rtti<Predator_abstract, object>
 {};
  
 struct Lion: public Predator_abstract
@@ -101,7 +70,7 @@ struct Bear: public Predator_abstract
 
 //--------------------------
 struct Prey_abstract: object
-, implement_rtti<Prey_abstract, object>
+, base_rtti<Prey_abstract, object>
 {};
  
 struct Gazelle: public Prey_abstract
@@ -119,29 +88,29 @@ struct Girrafe: public Prey_abstract
 //----------------------
 template<typename T> using v_ = rtti::tags::virtual_<T>;
 
-DECLARE_MMETHOD(huntor, void, (v_<Predator_abstract> const&, v_<Prey_abstract> const&));
+DECLARE_MMETHOD(huntor, ResultType, (v_<Predator_abstract> const&, v_<Prey_abstract> const&));
 
-IMPLEMENT_MMETHOD(huntor, void, ( Lion const&, Gazelle const& ))
+IMPLEMENT_MMETHOD(huntor, ResultType, ( Lion const&, Gazelle const& ))
 {
   std::cout<<"Lion jumps on Gazelle and bites its neck.\n";
 }
  
-IMPLEMENT_MMETHOD(huntor, void, ( Lion const&, Girrafe const& ))
+IMPLEMENT_MMETHOD(huntor, ResultType, ( Lion const&, Girrafe const& ))
 {
   std::cout<<"Lion jumps on Girrafe and bites its ass.\n";
 }
 
-IMPLEMENT_MMETHOD(huntor, void, ( Anaconda const&, Gazelle const& ))
+IMPLEMENT_MMETHOD(huntor, ResultType, ( Anaconda const&, Gazelle const& ))
 {
   std::cout<<"Anaconda injects venom into Gazelle.\n";
 }
 
-IMPLEMENT_MMETHOD(huntor, void, ( Anaconda const&, Girrafe const& ))
+IMPLEMENT_MMETHOD(huntor, ResultType, ( Anaconda const&, Girrafe const& ))
 {
   std::cout<<"Anaconda ignores Girraffe.\n";
 }
 
-IMPLEMENT_MMETHOD(huntor, void, ( Bear const&, Prey_abstract const& prey ))
+IMPLEMENT_MMETHOD(huntor, ResultType, ( Bear const&, Prey_abstract const& prey ))
 {
   std::cout<<"Bear mauls "<<prey.i_am_a()<<"\n";
 }
