@@ -44,6 +44,8 @@ double time(F&& fnc, char const* s) {
 static void u() {}
 
 void test(foo* f, std::size_t N) {
+  vf5(5);
+
   f->func();
 
 //   vf2.insert<foo*, foo&&>( [](foo* u, foo&& v){} );

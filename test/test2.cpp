@@ -1,6 +1,6 @@
 #include "head.hpp"
 
-#include "mmethod/dynamic.tpp"
+#include "mmethod/implement.hpp"
 
 #include <cstdio>
 
@@ -15,6 +15,8 @@ IMPLEMENT_MMETHOD(vf2, void, (baz*, baz&)) {}
 foo::~foo() {}
 
 void foo::func() {}
+void bar::func() {}
+void baz::func() {}
 
 void loop_virt(foo* f, size_t N) {
   do

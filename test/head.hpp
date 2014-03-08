@@ -2,12 +2,12 @@
 #define HEAD_HPP
 
 #include "rtti/rtti.hpp"
-#include "mmethod/dynamic.hpp"
+#include "mmethod/mmethod.hpp"
 
 #include <memory>
 
 struct foo
-: DECLARE_RTTI(foo, 100) {
+: rtti::base_rtti<foo, 10> {
 public:
   virtual void func();
   virtual ~foo();
@@ -15,11 +15,15 @@ public:
 
 struct bar
 : foo
-, STATIC_RTTI(bar, foo, 6) {};
+, rtti::static_rtti<bar, foo, 6> {
+  virtual void func();
+};
 
 struct baz
 : foo
-, IMPLEMENT_RTTI(baz, foo) {};
+, rtti::implement_rtti<baz, foo> {
+  virtual void func();
+};
 
 template<typename T> using v_ = rtti::tags::virtual_<T>;
 
