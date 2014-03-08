@@ -54,7 +54,7 @@ product_deref(product_t& p)
 
 } // namespace <>
 
-#include <iostream>
+// #include <iostream>
 
 #define PRINT_SIG(sig) do {                     \
   size_t __i = 0;                               \
@@ -152,24 +152,25 @@ static void dispatch_one(
     dispatch.insert(std::make_pair( sig, boost::make_optional(*max_set.begin()) ));
 
   else {
-    dispatch.insert(std::make_pair( sig, boost::none ));
-    if(max_set.size() == 0) {
-      std::cerr << "No overload found for signature : ";
-      PRINT_SIG(sig);
-      std::cerr << std::endl;
-    }
-    else {
-      std::cerr << "Ambiguity found for signature : ";
-      PRINT_SIG(sig);
-      std::cerr << std::endl << "note : candidates are : ";
-      size_t ind = 0;
-      for(signature_binding_type const& candidate : max_set) {
-        if(ind++>0)
-          std::cerr << " ; ";
-        PRINT_SIG(candidate.first);
-      }
-      std::cerr << std::endl;
-    }
+    //FIXME : diagnose
+//     dispatch.insert(std::make_pair( sig, boost::none ));
+//     if(max_set.size() == 0) {
+//       std::cerr << "No overload found for signature : ";
+//       PRINT_SIG(sig);
+//       std::cerr << std::endl;
+//     }
+//     else {
+//       std::cerr << "Ambiguity found for signature : ";
+//       PRINT_SIG(sig);
+//       std::cerr << std::endl << "note : candidates are : ";
+//       size_t ind = 0;
+//       for(signature_binding_type const& candidate : max_set) {
+//         if(ind++>0)
+//           std::cerr << " ; ";
+//         PRINT_SIG(candidate.first);
+//       }
+//       std::cerr << std::endl;
+//     }
   }
 }
 
