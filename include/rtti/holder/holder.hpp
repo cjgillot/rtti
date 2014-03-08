@@ -38,7 +38,7 @@ struct root_holder {
     if(Static)
       return rtti_type(hash);
 
-    static std::size_t current = 0;
+    static std::size_t current = rtti_getter::traits<Root>::static_max;
     return rtti_type(current++);
   }
 };
