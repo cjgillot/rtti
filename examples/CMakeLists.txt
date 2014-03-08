@@ -4,4 +4,5 @@ add_subdirectory(hierarchy)
 
 # MMETHOD
 add_subdirectory(unary)
+add_subdirectory(binary)
 add_subdirectory(multifile)
