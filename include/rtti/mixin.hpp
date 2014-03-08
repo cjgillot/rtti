@@ -115,7 +115,7 @@ template<typename klass, std::size_t static_max = 256>
 struct abstract_base_rtti
 : public mixin<
   klass, void
-, flags::DECLARE | flags::ABSTRACT
+, flags::DECLARE | flags::STATIC | flags::ABSTRACT
 , static_max
 > {};
 
