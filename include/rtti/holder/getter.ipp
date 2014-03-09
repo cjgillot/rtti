@@ -5,7 +5,7 @@
 #include "rtti/holder/holder.hpp"
 #include "rtti/detail/traits.hpp"
 
-#include "mmethod/shared/mpl.hpp"
+#include "rtti/detail/traits.hpp"
 
 namespace rtti {
 namespace detail {
@@ -13,7 +13,7 @@ namespace detail {
 template<class T>
 constexpr rtti_node const*
 rtti_getter::static_node() {
-  typedef typename mpl::remove_all<T>::type T2;
+  typedef typename traits_detail::remove_all<T>::type T2;
   typedef typename get_holder::template apply<T2>::type h;
   return h::get_node();
 }

@@ -15,33 +15,6 @@
 
 namespace rtti { namespace dmethod {
 
-// namespace {
-// 
-// template<typename Tag, std::size_t BTS>
-// struct init_poles {
-//   template<std::size_t J, std::size_t arity>
-//   static void eval() {
-//     if( BTS & 1 ) {
-//       detail::poles_map_type& map = Tag::template poles<J>::array;
-// 
-//       if( arity == 1 )
-//         detail::init_pole_unary(map);
-//       else
-//         detail::init_pole(map);
-//     }
-// 
-//     using next = init_poles<Tag, BTS/2>;
-//     next::template eval<J+1, arity>();
-//   }
-// };
-// template<typename Tag>
-// struct init_poles<Tag, 0> {
-//   template<std::size_t, std::size_t>
-//   static void eval() {}
-// };
-// 
-// } // namespace <>
-
 template<typename Tag>
 detail::invoker_table_type register_base<Tag>::invoker_table;
 
@@ -54,13 +27,6 @@ void register_base<Tag>::do_initialize() {
   constexpr std::size_t arity = Tag::traits::vsize;
 
   detail::init_table(arity, Tag::invoker_table);
-//   constexpr std::size_t btset = Tag::traits::type_bitset;
-// 
-//   using spoles = init_poles<Tag, btset>;
-//   spoles::template eval<0, arity>();
-// 
-//   if( arity != 1 )
-//     detail::init_table(arity, Tag::invoker_table);
 }
 
 namespace detail {
@@ -88,11 +54,11 @@ struct save_poles_once {
   template<typename U>
   void operator()(U*) const {
     typedef typename boost::mpl::begin<U>::type first_it;
-    typedef typename rtti::mpl::remove_all<typename boost::mpl::deref<first_it>::type>::type first;
+    typedef typename rtti::traits_detail::remove_all<typename boost::mpl::deref<first_it>::type>::type first;
     enum { J = first::value };
 
     typedef typename boost::mpl::next<first_it>::type second_it;
-    typedef typename rtti::mpl::remove_all<typename boost::mpl::deref<second_it>::type>::type second;
+    typedef typename rtti::traits_detail::remove_all<typename boost::mpl::deref<second_it>::type>::type second;
 
     enum { ok = (BTS >> J) & 1 };
     if( ok ) {
@@ -139,49 +105,6 @@ void dispatch<Tag,Ret>::insert(F&& f) {
 
   detail::inse_table(arity, Tag::invoker_table, inv, hiers);
 }
-
-// namespace {
-// 
-// template<typename Tag, std::size_t BTS>
-// struct rem_poles {
-//   template<std::size_t J, typename K0, typename... Ks>
-//   static void eval(std::uintptr_t* m, rtti_hierarchy* h, mpl::mplpack<K0, Ks...>) {
-//     if( BTS & 1 ) {
-//       *h = ::rtti::static_node< typename mpl::remove_all<K0>::type >();
-//       *m = retract_pole( Tag::template poles<J>::array, *h );
-//       ++h; ++m;
-//     }
-// 
-//     using next = rem_poles<Tag, BTS/2>;
-//     next::template eval<J+1>(m, h, mpl::mplpack<Ks...>());
-//   }
-// };
-// template<typename Tag>
-// struct rem_poles<Tag, 0> {
-//   template<std::size_t, typename... P>
-//   static void eval(P&& ...args) {}
-// };
-// 
-// template<typename Tag, std::size_t BTS>
-// struct rem_poles_unary {
-//   template<std::size_t J, typename K0, typename... Ks>
-//   static functor_t eval(mpl::mplpack<K0, Ks...>) {
-//     if( BTS & 1 ) {
-//       auto node = ::rtti::static_node< typename mpl::remove_all<K0>::type >();
-//       return retract_pole_unary( Tag::template poles<J>::array, node );
-//     }
-// 
-//     using next = rem_poles_unary<Tag, BTS/2>;
-//     return next::template eval<J+1>(mpl::mplpack<Ks...>());
-//   }
-// };
-// template<typename Tag>
-// struct rem_poles_unary<Tag, 0> {
-//   template<std::size_t, typename... P>
-//   static functor_t eval(P&& ...args) { return nullptr; }
-// };
-// 
-// } // namespace <>
 
 namespace {
 
