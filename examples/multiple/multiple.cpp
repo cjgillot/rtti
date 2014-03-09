@@ -3,9 +3,9 @@
 #include <iostream>
 #include <boost/mpl/vector.hpp>
 
-/*!\example basic.cpp
+/*!\example multiple.cpp
  * 
- * This example demonstrates basic usage of \c rtti.
+ * This example demonstrates \c rtti in the case of multiple inheritance.
  * 
  * Four classes are used : \c foo, \c bar, \c baz, \c lap
  * Their ids are then output on stdout
@@ -38,7 +38,7 @@ struct baz
 {};
 
 struct lap
-: bar
+: bar, baz
 , rtti::implement_rtti<lap, boost::mpl::vector<bar, baz>>
 {};
 
