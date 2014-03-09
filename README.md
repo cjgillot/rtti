@@ -32,3 +32,7 @@ formerly declared mmethods.
 
 See *include/mmethod/* for further information.
 See *examples/* folder for examples using this library.
+
+## Supported compilers
+
+GCC 4.8 and CLANG 3.3 have been succesfully tested.
