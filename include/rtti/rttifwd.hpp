@@ -2,6 +2,7 @@
 #define RTTI_FWD_HPP
 
 #include <stdint.h>
+#include <cstddef>
 
 namespace rtti {
 namespace detail {
@@ -14,7 +15,21 @@ typedef uintptr_t rtti_type;
 //! POD class holding a hierarchy bottom-up
 struct rtti_node {
   rtti_type id;
-  const rtti_node* base;
+  std::size_t arity;
+  const rtti_node* base [ 1 ];
+};
+
+//! \brief Variadic RTTI node type
+template<size_t N>
+struct rtti_node_var {
+  rtti_type id;
+  std::size_t arity;
+  const rtti_node* base [ N ];
+};
+template<>
+struct rtti_node_var<0> {
+  rtti_type id;
+  std::size_t arity;
 };
 
 //! \brief Useful typedef

@@ -8,6 +8,9 @@
 #include "rtti/holder/getter.hpp"
 
 #include <boost/assert.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/for_each.hpp>
 
 namespace rtti {
 namespace detail {
@@ -16,15 +19,16 @@ namespace holder_ {
 template<typename> struct holder;
 
 //! \brief Grant access to the holder
-template<class T>
 struct get_holder {
-  typedef holder<const volatile T> type;
+  template<class T>
+  struct apply {
+    typedef holder<T const volatile> type;
+  };
 };
 
 //! \brief Placeholder struct used for hierarchy base
 template<>
-struct get_holder<const volatile void> {
-//   typedef typename RTTI_GETTER::traits<T>::base Rt;
+struct get_holder::apply<const volatile void> {
   struct type {
     static BOOST_CONSTEXPR rtti_node* get_node() { return 0; }
   };
@@ -61,31 +65,69 @@ private:
   && "rtti::detail::holder_::holder<> must not be accessed directly" );
 
   typedef rtti_getter::traits<T> trts;
-  typedef typename trts::root  root;
-  typedef typename trts::super super;
-  typedef typename get_holder<super>::type sholder;
+  typedef typename trts::root    root;
+  typedef typename trts::parents parents;
+  
+  typedef typename boost::mpl::transform<
+    parents
+  , get_holder
+  >::type sholders;
+  enum {
+    Arity = boost::mpl::size<parents>::value
+  };
+
+  struct initializer_t {
+    struct register_one;
+    initializer_t();
+    void touch() const {};
+  }
+  static initializer;
 
 public:
-  static rtti_node node;
+  static rtti_node_var<Arity> node;
 
-  static BOOST_CONSTEXPR inline
+  static inline
   const rtti_node*
   ATTRIBUTE_PURE
   get_node() BOOST_NOEXCEPT_OR_NOTHROW
-  { return &node; }
+  { initializer.touch(); return reinterpret_cast<rtti_node*>(&node); }
 
   static inline
   rtti_type
   ATTRIBUTE_PURE
   get_id() BOOST_NOEXCEPT_OR_NOTHROW
-  { return node.id; }
+  { return get_node()->id; }
 };
 
 template<class T>
-rtti_node holder<T>::node = {
-  root_holder<root>::template make<trts::static_>(trts::hash)
-, sholder::get_node()
+rtti_node_var<holder<T>::Arity> holder<T>::node;
+
+template<class T>
+struct holder<T>::initializer_t::register_one {
+  mutable size_t k;
+
+  template<typename U>
+  void operator()(U) const {
+    holder::node.base[k] = U::get_node();
+    ++k;
+  }
 };
+
+template<class T>
+holder<T>::initializer_t::initializer_t() {
+  holder::node.id = root_holder<root>::template make<trts::static_>(trts::hash);
+
+  holder::node.arity = Arity;
+
+  register_one reg = { 0 };
+  boost::mpl::for_each<
+    sholders
+  >( reg );
+}
+
+template<class T>
+typename holder<T>::initializer_t
+  holder<T>::initializer;
 
 } // namespace holder_
 

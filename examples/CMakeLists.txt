@@ -1,5 +1,6 @@
 # RTTI
 add_subdirectory(basic)
+add_subdirectory(multiple)
 add_subdirectory(hierarchy)
 
 # MMETHOD
