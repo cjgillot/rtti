@@ -198,6 +198,8 @@ static overload_t const& sig_upcast(
 
     // we can safely use [dispatch.at] since all the candidates have been dispatched already
     boost::optional<overload_t> const& bound = dispatch.at(sig);
+    
+    // FIXME may hide ambiguity cascade
     if(bound) return *bound;
   }
 }
