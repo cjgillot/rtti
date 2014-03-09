@@ -1,7 +1,8 @@
 #include "hierarchy.hpp"
 #include "overloads.hpp"
 
-#include <unordered_set>
+#include <list>
+
 #include <boost/range/adaptor/transformed.hpp>
 
 #include <boost/range/begin.hpp>
@@ -54,15 +55,6 @@ product_deref(product_t& p)
 
 } // namespace <>
 
-// #include <iostream>
-
-#define PRINT_SIG(sig) do {                     \
-  size_t __i = 0;                               \
-  for(klass_t const* __k : (sig).array())       \
-    std::cerr << (__i++>0?",":"") << __k->hash  \
-              << '@' << __k->rank; \
-} while(0)
-
 static void dispatch_one(
   const signature_t& sig,
   const pole_table_t &pole_table,
@@ -74,7 +66,8 @@ void dispatch(
   overloads_t& overloads,
   const pole_table_t &pole_table
 ) {
-  std::sort(overloads.begin(), overloads.end());
+// FIXME Why ?
+//   std::sort(overloads.begin(), overloads.end());
 
   for(overload_t const& s : overloads)
     dispatch.insert(std::make_pair( s.first, s ));
@@ -94,12 +87,24 @@ void dispatch(
 
 struct end_loop {};
 
-static overload_t const& sig_upcast(
-  const signature_t &sig0,
-  size_t& k, // next upcast index
-  size_t arity,
-  dispatch_t const& dispatch
-) throw(end_loop);
+namespace {
+
+struct sig_upcaster {
+  signature_t const& sig0;
+  std::size_t const arity;
+  dispatch_t  const& dispatch;
+  
+  std::size_t k;
+  std::size_t b;
+  
+  sig_upcaster(signature_t const& s0, std::size_t a, dispatch_t const& d)
+  : sig0(s0), arity(a), dispatch(d)
+  , k(0), b(0) {}
+  
+  overload_t const& operator()() throw(end_loop);
+};
+
+} // namespace <>
 
 static void dispatch_one(
   const signature_t& sig,
@@ -112,31 +117,30 @@ static void dispatch_one(
   if(dispatch.find(sig) != dispatch.end())
     return;
 
-  // current argument index
-  size_t k = 0;
+  sig_upcaster upcast ( sig, arity, dispatch );
 
   // set of candidates
-  typedef std::set<overload_t> max_set_type;
+  typedef std::list<overload_t> max_set_type;
   max_set_type max_set;
 
   try {
     // insert first candidate
-    max_set.insert( sig_upcast(sig, k, arity, dispatch) );
+    max_set.push_back( upcast() );
 
     for(;;) {
       // new candidate to be tested
-      overload_t const& s2 = sig_upcast(sig, k, arity, dispatch);
+      overload_t const& s2 = upcast();
 
       bool dominated = false;
 
-      for(max_set_type::const_iterator it = max_set.begin(), en = max_set.end(); it != en; ++it)
+      for(max_set_type::iterator it = max_set.begin(), en = max_set.end(); it != en; ++it)
       {
-      restart:
+      filter:
         overload_t const& e = *it;
 
         // [s2] is better match, remove [it]
         if( signature_t::subtypes()(e.first, s2.first) )
-        { it = max_set.erase(it); goto restart; }
+        { it = max_set.erase(it); goto filter; }
 
         // [it] is better match, don't insert [s2]
         else if( signature_t::subtypes()(s2.first, e.first) )
@@ -145,7 +149,7 @@ static void dispatch_one(
 
       // none of [max_set] is better
       if( !dominated )
-        max_set.insert(s2);
+        max_set.push_back(s2);
     }
   }
   catch(end_loop&) {}
@@ -176,25 +180,29 @@ static void dispatch_one(
   }
 }
 
-static overload_t const& sig_upcast(
-  signature_t const& sig0,
-  size_t& k, size_t arity,
-  dispatch_t const& dispatch
-) throw(end_loop)
+overload_t const&
+sig_upcaster::operator()() throw(end_loop)
 {
   for(;;) {
     signature_t sig = sig0;
-    const klass_t** kl = nullptr;
 
-    // find upcast the first derived class found
-    do {
-      // none remaining :
-      if(k == arity) throw end_loop();
+    // continue upcast on base [b] of argument [k]
+    klass_t const* nk;
+    for(;;) {
+      nk = sig.array()[k]->bases[b];
 
-      kl = &sig.array_ref()[k++];
+      if(nk)
+        break;
+      
+      // try next base
+      ++b;
+      
+      // proceed to next argument
+      if(b == sig.array()[k]->bases.size())
+      { b = 0; ++k; }
     }
-    while((*kl)->base == nullptr);
-    *kl = (*kl)->base;
+
+    sig.array_ref()[k] = nk;
 
     // we can safely use [dispatch.at] since all the candidates have been dispatched already
     boost::optional<overload_t> const& bound = dispatch.at(sig);

@@ -22,14 +22,27 @@ rtti::hash::detail::do_fetch_pole(
 
   const rtti_type id0 = rt0->id;
 
-  for(rtti_node const* rt = rt0->base; rt; rt = rt->base) {
+  rtti_node const* rt = rt0;
+
+  for(;;) {
+    // exit condition
+    if(rt->arity == 0)
+      break;
+
+    // by definition of the poles,
+    // a fork either is a pole, or has all its branches behave the same way
+    rt = rt0->base[0];
+
+    BOOST_ASSERT(rt);
+
+    // common case
     hash_map::iterator it = map.find(rt->id);
 
     if(LIKELY( !it->empty() )) {
 
       const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
 #if MMETHOD_USE_DEEP_CACHE
-      for(rtti_node const* rt2 = rt0->base; rt2 != rt; rt2 = rt2->base)
+      for(rtti_node const* rt2 = rt0->base[0]; rt2 != rt; rt2 = rt2->base[0])
         const_cast<hash_map&>(map).insert( rt2->id, it->value() );
 #endif
 

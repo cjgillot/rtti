@@ -87,14 +87,20 @@ struct unsafe_casting {
 
   template<typename In>
   static Out eval(In& in) {
-    typedef boost::is_virtual_base_of<Out, In> dyn;
+    typedef typename remove_all<Out>::type out_class;
+    typedef typename remove_all<In >::type  in_class;
+
+    typedef boost::is_virtual_base_of<in_class, out_class> dyn;
     typedef typename boost::mpl::if_<dyn, dynamic, nonvirtual>::type impl;
     return impl::template eval<In>(in);
   }
 
   template<typename In>
   static Out eval(In const& in) {
-    typedef boost::is_virtual_base_of<Out, In> dyn;
+    typedef typename remove_all<Out>::type out_class;
+    typedef typename remove_all<In >::type  in_class;
+
+    typedef boost::is_virtual_base_of<in_class, out_class> dyn;
     typedef typename boost::mpl::if_<dyn, dynamic, nonvirtual>::type impl;
     return impl::template eval<In const>(in);
   }

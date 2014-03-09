@@ -54,10 +54,6 @@ void process_declaration(early_bindings_type const& decl, seal_table_type& outpu
     overloads.push_back( std::make_pair(make_signature(h, hierarchies), over.second) );
   }
 
-  /// shrink hierarchies
-  BOOST_FOREACH(hierarchy_t& hier, hierarchies)
-    hier.shrink();
-
   /// order poles
   pole_table_t pole_table ( arity );
   order_poles(pole_table, hierarchies);

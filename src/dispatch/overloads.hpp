@@ -21,7 +21,7 @@ inline bool operator<(overload_t const& a, overload_t const& b)
 
 typedef std::vector<overload_t> overloads_t;
 
-typedef std::map<signature_t, boost::optional<overload_t>, signature_t::total_order> dispatch_t;
+typedef std::unordered_map<signature_t, boost::optional<overload_t> > dispatch_t;
 
 namespace std {
   template<>

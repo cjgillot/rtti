@@ -2,16 +2,21 @@
 #define RTTI_MPH_KLASS_HPP
 
 #include <cstddef>
+
+#include <boost/noncopyable.hpp>
 #include <boost/dynamic_bitset.hpp>
 
 class hierarchy_t;
 class signature_t;
 struct klass_t
+: private boost::noncopyable
 {
   friend class hierarchy_t;
 
-  std::size_t const hash;
-  klass_t const* base;
+  std::size_t const id;
+  std::vector<klass_t const*> bases;
+
+  klass_t const* pole;
 
   /// \invariant : subtype[o.rank] = 1 - iff [this] derives from [o]
   /// \invariant : subtype[rank] = 1 - consequence
@@ -21,24 +26,19 @@ struct klass_t
 
   std::size_t rankhash;
 
+  // FIXME why ?
   const signature_t* const sig;
 
 public:
-  klass_t(
-    std::size_t hash
-  , klass_t const* base
-  );
-
-public:
-  // remove non-pole in hierarchy
-  void shrink();
+  // for use by hierarchy_t
+  klass_t(std::size_t id, std::size_t arity);
 
 public:
   // total hashing order
   struct hash_order
   {
     bool operator()(const klass_t& a, const klass_t& b) const
-    { return a.hash < b.hash; }
+    { return a.id < b.id; }
   };
   // total[extended] subtyping order
   struct total_order

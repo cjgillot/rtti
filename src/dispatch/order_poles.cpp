@@ -25,19 +25,6 @@ void order_poles(
   }
 }
 
-static void print_rank(std::ostream& ofile, klass_t const* k, std::size_t arity, bool runtime) {
-  if(arity == 1 && runtime) {
-    // special case : input invoker directly
-    ofile << "(std::uintptr_t)MMETHOD::overload<rtti::mpl::mplpack_c<0";
-    for(const klass_t* k2 : k->sig->array())
-      ofile << ", " << k2->hash << "ul";
-    ofile << ">>::address";
-  }
-  else {
-    ofile << 2 * k->rankhash << " /* " << k->rank << " */";
-  }
-}
-
 struct print_insert {
   poles_map_type& a;
   std::size_t i;
@@ -48,10 +35,10 @@ struct print_insert {
     if(arity == 1) {
       // assert code is 2-aligned
       BOOST_ASSERT( k->rankhash & 1 == 0 );
-      a.insert(k->hash, k->rankhash);
+      a.insert(k->id, k->rankhash);
     }
     else
-      a.insert(k->hash, 2 * k->rankhash);
+      a.insert(k->id, 2 * k->rankhash);
   }
 };
 

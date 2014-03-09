@@ -11,20 +11,30 @@
 class hierarchy_t
 {
 public:
-  typedef std::map<std::size_t, klass_t> dict_t;
+  std::vector<std::unique_ptr<klass_t> > klasses;
+
+  typedef std::unordered_map<std::size_t, klass_t*> dict_t;
   dict_t dict;
+  
+  std::size_t current_rank;
+  
+public:
+  hierarchy_t();
 
 public:
-  // remove non-pole in hierarchy
-  void shrink();
-
   const klass_t* add(rtti_hierarchy hh);
 
-  template<typename Sequence>
-  void order(Sequence& seq);
+  void order(std::vector<klass_t const*>& seq);
 
 public:
-  std::size_t size() const { return dict.size(); }
+  std::size_t size() const { return klasses.size(); }
+  
+private:
+  klass_t* do_add(rtti_hierarchy hh);
+
+  void shrink(std::vector<klass_t const*>& seq);
+  void pole_init(klass_t*);
+  std::size_t pseudo_closest(klass_t const* k, klass_t const* &pole);
 };
 
 typedef std::vector<std::vector<const klass_t*>> pole_table_t;
