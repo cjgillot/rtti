@@ -8,7 +8,7 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-BOOST_CONSTEXPR inline hash_map_base::hash_map_base()
+inline hash_map_base::hash_map_base()
 : m_mask(0), m_logsz(0) {}
 
 }}} // namespace rtti::mmethod::detail
