@@ -23,7 +23,7 @@ private:
   typedef typename detail::make_declare<Tag, Sig>::type decl_maker;
 
 public:
-  using decl_maker::result_type;
+  using typename decl_maker::result_type;
   using decl_maker::operator();
   using decl_maker::insert;
   using decl_maker::generate;

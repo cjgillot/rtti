@@ -27,7 +27,7 @@ public:
   friend class hash_map;
 
 public:
-  BOOST_CONSTEXPR inline hash_map_base();
+  inline hash_map_base();
   ~hash_map_base();
 
 private:

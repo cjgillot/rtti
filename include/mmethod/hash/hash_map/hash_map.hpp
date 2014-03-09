@@ -27,7 +27,7 @@ public:
   typedef hash_map_base::iterator iterator;
 
 public:
-  BOOST_CONSTEXPR inline  hash_map() {}
+  inline  hash_map() {}
   inline ~hash_map() {}
 
 private:
