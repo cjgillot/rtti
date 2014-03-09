@@ -11,7 +11,7 @@
 
 // from dispatch.cpp
 extern void dispatch(
-  const overloads_t& overloads,
+  overloads_t& overloads,
   const pole_table_t &pole_table,
   dispatch_t &dispatch
 );
@@ -47,16 +47,12 @@ void process_declaration(early_bindings_type const& decl, seal_table_type& outpu
   std::vector<hierarchy_t> hierarchies ( arity );
 
   /// parsing input
-  overloads_t overloads ( arity );
+  overloads_t overloads; overloads.reserve( decl.vector.size() );
   BOOST_FOREACH(binding_type const& over, decl.vector) {
     signature_type const& h = over.first;
 
-    for(std::size_t i = 0; i < arity; ++i)
-      overloads.get_back(i) = hierarchies[i].add( h[i] );
-
-    overloads.save(over.second);
+    overloads.push_back( std::make_pair(make_signature(h, hierarchies), over.second) );
   }
-  overloads.finish();
 
   /// shrink hierarchies
   BOOST_FOREACH(hierarchy_t& hier, hierarchies)
@@ -66,25 +62,19 @@ void process_declaration(early_bindings_type const& decl, seal_table_type& outpu
   pole_table_t pole_table ( arity );
   order_poles(pole_table, hierarchies);
 
-  /// order methods
-  overloads.sort();
-
   /// fill up dispatch table
   dispatch_t dispatch_table;
   dispatch(overloads, pole_table, dispatch_table);
 
   /// prepare poles for output : link each pole to a signature in which it appears
   /// \warning This code must be after any change to \c overloads
-  for(const signature_binding_type& sig : overloads.array())
+  for(const overload_t& sig : overloads)
     for(const klass_t* k : sig.first.array())
       const_cast<signature_t const*&>( k->sig ) = &sig.first;
 
-  /// create minimal perfect hash function
+  /// create perfect hash function
   gen_mph(pole_table, dispatch_table, decl, output);
 
   /// print pole tables
   print_poles(output, decl, pole_table);
-
-//   /// print initialization code
-//   print_initializer(output, decl);
 }

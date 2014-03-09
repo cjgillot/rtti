@@ -7,12 +7,10 @@
 #include <boost/range/end.hpp>
 #include <boost/optional.hpp>
 
-#include "hierarchy.hpp"
+#include "klass.hpp"
 
-class overloads_t;
 class signature_t
 {
-  friend class overloads_t;
   std::vector<const klass_t*> sig;
 
 public:

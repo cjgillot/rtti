@@ -29,4 +29,23 @@ public:
 
 typedef std::vector<std::vector<const klass_t*>> pole_table_t;
 
+#include "signature.hpp"
+
+template<typename R0, typename R1>
+signature_t make_signature(R0 const& r0, R1& r1) {
+  signature_t ret ( r1.size() );
+
+  std::transform(
+    r0.begin(), r0.end(),
+    r1.begin(),
+
+    ret.array_ref().begin(),
+
+    [](rtti_hierarchy a0, hierarchy_t& a1)
+    { return a1.add(a0); }
+  );
+
+  return ret;
+}
+
 #endif

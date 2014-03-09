@@ -70,11 +70,13 @@ static void dispatch_one(
 );
 
 void dispatch(
-  const overloads_t& overloads,
+  overloads_t& overloads,
   const pole_table_t &pole_table,
   dispatch_t &dispatch
 ) {
-  for(signature_binding_type const& s : overloads.array())
+  std::sort(overloads.begin(), overloads.end());
+
+  for(overload_t const& s : overloads)
     dispatch.insert(std::make_pair( s.first, s ));
 
   product_t p;
@@ -92,7 +94,7 @@ void dispatch(
 
 struct end_loop {};
 
-static signature_binding_type const& sig_upcast(
+static overload_t const& sig_upcast(
   const signature_t &sig0,
   size_t& k, // next upcast index
   size_t arity,
@@ -114,7 +116,7 @@ static void dispatch_one(
   size_t k = 0;
 
   // set of candidates
-  typedef std::set<signature_binding_type> max_set_type;
+  typedef std::set<overload_t> max_set_type;
   max_set_type max_set;
 
   try {
@@ -123,14 +125,14 @@ static void dispatch_one(
 
     for(;;) {
       // new candidate to be tested
-      signature_binding_type const& s2 = sig_upcast(sig, k, arity, dispatch);
+      overload_t const& s2 = sig_upcast(sig, k, arity, dispatch);
 
       bool dominated = false;
 
       for(max_set_type::const_iterator it = max_set.begin(), en = max_set.end(); it != en; ++it)
       {
       restart:
-        signature_binding_type const& e = *it;
+        overload_t const& e = *it;
 
         // [s2] is better match, remove [it]
         if( signature_t::subtypes()(e.first, s2.first) )
@@ -164,7 +166,7 @@ static void dispatch_one(
 //       PRINT_SIG(sig);
 //       std::cerr << std::endl << "note : candidates are : ";
 //       size_t ind = 0;
-//       for(signature_binding_type const& candidate : max_set) {
+//       for(overload_t const& candidate : max_set) {
 //         if(ind++>0)
 //           std::cerr << " ; ";
 //         PRINT_SIG(candidate.first);
@@ -174,7 +176,7 @@ static void dispatch_one(
   }
 }
 
-static signature_binding_type const& sig_upcast(
+static overload_t const& sig_upcast(
   signature_t const& sig0,
   size_t& k, size_t arity,
   dispatch_t const& dispatch
@@ -195,7 +197,7 @@ static signature_binding_type const& sig_upcast(
     *kl = (*kl)->base;
 
     // we can safely use [dispatch.at] since all the candidates have been dispatched already
-    boost::optional<signature_binding_type> const& bound = dispatch.at(sig);
+    boost::optional<overload_t> const& bound = dispatch.at(sig);
     if(bound) return *bound;
   }
 }
