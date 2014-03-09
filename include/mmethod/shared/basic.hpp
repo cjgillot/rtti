@@ -6,8 +6,6 @@
 #include "rtti/interface.hpp"
 #include "rtti/detail/attribute.hpp"
 
-#include "mmethod/shared/mpl.hpp"
-
 namespace rtti {
 
 typedef void(*invoker_t)();
