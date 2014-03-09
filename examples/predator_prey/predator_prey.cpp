@@ -47,7 +47,7 @@ struct Prey_abstract;
 #define VISIT_CONSTANCY const
 
 struct Predator_abstract: object
-, base_rtti<Predator_abstract, object>
+, base_rtti<Predator_abstract>
 {};
  
 struct Lion: public Predator_abstract
@@ -70,7 +70,7 @@ struct Bear: public Predator_abstract
 
 //--------------------------
 struct Prey_abstract: object
-, base_rtti<Prey_abstract, object>
+, base_rtti<Prey_abstract>
 {};
  
 struct Gazelle: public Prey_abstract
