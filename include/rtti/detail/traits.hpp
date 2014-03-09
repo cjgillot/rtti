@@ -9,6 +9,32 @@ namespace rtti {
 
 namespace traits_detail {
 
+template<typename T>
+struct remove_all
+{ typedef T type; };
+template<typename T>
+struct remove_all<T*>
+: remove_all<T> {};
+template<typename T>
+struct remove_all<T&>
+: remove_all<T> {};
+
+#ifdef BOOST_HAS_RVALUE_REFS
+template<typename T>
+struct remove_all<T&&>
+: remove_all<T> {};
+#endif
+
+template<typename T>
+struct remove_all<const T>
+: remove_all<T> {};
+template<typename T>
+struct remove_all<volatile T>
+: remove_all<T> {};
+template<typename T>
+struct remove_all<const volatile T>
+: remove_all<T> {};
+
 template<typename T, typename U>
 struct copy_cv {
   typedef U type;

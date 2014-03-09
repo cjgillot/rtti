@@ -61,7 +61,7 @@ struct fetch_poles_once {
   template<typename U>
   uintptr_t operator()(uintptr_t m, U const& x) const {
     typedef typename boost::fusion::result_of::begin<U>::type first_it;
-    typedef typename rtti::mpl::remove_all<typename boost::fusion::result_of::deref<first_it>::type>::type first;
+    typedef typename rtti::traits_detail::remove_all<typename boost::fusion::result_of::deref<first_it>::type>::type first;
     enum { J = first::value };
 
     typedef typename boost::fusion::result_of::next<first_it>::type second_it;

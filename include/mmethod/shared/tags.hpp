@@ -9,21 +9,6 @@
 
 #include "mmethod/shared/call_traits.hpp"
 
-#include "mmethod/hash/path.hpp"
-
-// namespace boost {
-// 
-// template <typename T>
-// struct call_traits<T&&>
-// {
-//    typedef T&& value_type;
-//    typedef T&& reference;
-//    typedef const T&& const_reference;
-//    typedef T&& param_type;  // hh removed const
-// };
-// 
-// } // namespace boost
-
 // tag templates -> mark dispatch-guilty types (virtual) and the others
 namespace rtti { namespace tags {
 
@@ -88,12 +73,6 @@ struct is_virtual {
   template<typename T>
   struct apply
   : unwrap_base<T>::has_virtual {};
-};
-
-struct make_hierarchy {
-  template<typename T>
-  struct apply
-  : hash::make_path<T> {};
 };
 
 // compute dispatch arity
