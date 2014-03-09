@@ -29,7 +29,7 @@ struct baz
 
 struct lap
 : bar
-, implement_rtti<lap , bar>
+, implement_rtti<lap, bar>
 {};
 
 template<typename T> using v_ = tags::virtual_<T>;
