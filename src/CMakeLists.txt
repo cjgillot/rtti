@@ -1,8 +1,9 @@
-add_subdirectory(mmethod)
+add_subdirectory(dispatch)
+add_subdirectory(hash_map)
 
 file(GLOB_RECURSE src *.cpp)
 
-include_directories(${CMAKE_SOURCE_DIR}/cache-table-0.2)
+include_directories(.)
 
 # add_definitions(-O3 -fexpensive-optimizations -DNDEBUG -fomit-frame-pointer)
 # add_definitions(-fno-rtti -fexceptions -funroll-loops -pedantic -march=corei7 -mtune=corei7)

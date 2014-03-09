@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <map>
 
-#include "../dynamic/early.hpp"
+#include "early.hpp"
 
 #include "klass.hpp"
 

@@ -12,7 +12,7 @@
 #include "hierarchy.hpp"
 #include "signature.hpp"
 
-#include "../dynamic/early.hpp"
+#include "early.hpp"
 
 class overloads_t;
 

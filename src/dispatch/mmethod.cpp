@@ -5,7 +5,7 @@
 #include "hierarchy.hpp"
 #include "overloads.hpp"
 
-#include "../dynamic/early.hpp"
+#include "early.hpp"
 
 #include <boost/foreach.hpp>
 

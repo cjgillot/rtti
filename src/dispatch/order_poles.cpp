@@ -5,7 +5,7 @@
 #include "hierarchy.hpp"
 #include "overloads.hpp"
 
-#include "../dynamic/early.hpp"
+#include "early.hpp"
 
 #define USE_SMALLARRAY 0
 
@@ -24,43 +24,6 @@ void order_poles(
     h.order(t);
   }
 }
-
-
-#if 0
-
-void print_initializer(
-  std::ostream& ofile
-, arch_declaration const& decl
-) {
-  for(std::size_t i : decl.argpos) {
-    ofile <<
-        "template<> template<> detail::poles_map_type register_base<MMETHOD>::poles<" << i << ">::array {\n"
-#if USE_SMALLARRAY
-        "#if MMETHOD_USE_SMALLARRAY\n"
-        "\tTAG(__protectns)::_impl_smallarray" << i << "\n"
-        "#endif\n"
-#endif
-        "};"
-          << std::endl;
-  }
-  ofile << std::endl;
-
-  if(decl.vsize > 1) {
-    ofile << "template<> invoker_t const* const register_base<MMETHOD>::invoker_table = "
-          << "TAG(__protectns)::_impl_invoker_table - TAG(__protectns)::MIN_HASH_VALUE;"
-          << std::endl << std::endl;
-  }
-
-  ofile << "template<> void register_base<MMETHOD>::do_initialize() {" << std::endl;
-
-  if(decl.vsize > 1)
-    ofile << "\tTAG(__protectns)::_impl_inittable();" << std::endl;
-  for(std::size_t i : decl.argpos)
-    ofile << "\tTAG(__protectns)::_impl_assignarray" << i << "();" << std::endl;
-
-  ofile << "}\n" << std::endl;
-}
-#endif
 
 static void print_rank(std::ostream& ofile, klass_t const* k, std::size_t arity, bool runtime) {
   if(arity == 1 && runtime) {
