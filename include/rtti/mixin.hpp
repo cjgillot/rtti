@@ -1,7 +1,6 @@
 #ifndef RTTI_MIXIN_HPP
 #define RTTI_MIXIN_HPP
 
-// #include "rtti/hash/hash.hpp"
 #include "rtti/holder/holder.hpp"
 #include "rtti/holder/getter.hpp"
 
@@ -10,6 +9,7 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/front.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/transform.hpp>
 
 namespace rtti {
