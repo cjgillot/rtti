@@ -70,9 +70,9 @@ static void dispatch_one(
 );
 
 void dispatch(
+  dispatch_t &dispatch,
   overloads_t& overloads,
-  const pole_table_t &pole_table,
-  dispatch_t &dispatch
+  const pole_table_t &pole_table
 ) {
   std::sort(overloads.begin(), overloads.end());
 

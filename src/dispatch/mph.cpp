@@ -51,10 +51,10 @@ make_assignment(
 
 /* Generates the hash function and the key word recognizer function.  */
 void gen_mph(
+  seal_table_type& f,
   const pole_table_t& pole_table,
   const dispatch_t& dispatch,
-  const early_bindings_type& decl,
-  seal_table_type& f
+  const early_bindings_type& decl
 ) {
   if(decl.arity == 1) {
     rerank_unary(pole_table, dispatch);

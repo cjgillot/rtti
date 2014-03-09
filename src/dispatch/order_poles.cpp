@@ -71,12 +71,12 @@ static void print_map(seal_table_type& output, std::size_t i, Seq const& t, std:
 void print_poles(
   seal_table_type& output
 , early_bindings_type const& decl
-, pole_table_t& pole_table
+, pole_table_t const& pole_table
 ) {
   std::size_t const arity = decl.arity;
 
   for(std::size_t i = 0; i < arity; ++i) {
-    pole_table_t::reference t = pole_table[i];
+    pole_table_t::const_reference t = pole_table[i];
     print_map(output, i, t, arity);
   }
 }
