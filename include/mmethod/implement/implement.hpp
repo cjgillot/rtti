@@ -13,7 +13,7 @@ struct dmethod_implementation
   typedef typename dmethod_implementation::impl_maker impl_maker;
 
 protected:
-  dmethod_implementation() noexcept {}
+  dmethod_implementation() BOOST_NOEXCEPT_OR_NOTHROW {}
 };
 
 #define IMPLEMENTATION_MMETHOD(tag, ret, sig)                   \
