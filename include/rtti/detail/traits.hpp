@@ -261,7 +261,7 @@ struct pointer_traits<T&>
   };
 };
 
-#if BOOST_HAS_RVALUE_REFS
+#ifdef BOOST_HAS_RVALUE_REFS
 template<typename T>
 struct pointer_traits<T&&>
 : pointer_traits<T> {

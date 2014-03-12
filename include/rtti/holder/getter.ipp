@@ -7,11 +7,13 @@
 
 #include "rtti/detail/traits.hpp"
 
+#include "rtti/mixin.hpp"
+
 namespace rtti {
 namespace detail {
 
 template<class T>
-constexpr rtti_node const*
+BOOST_CONSTEXPR rtti_node const*
 rtti_getter::static_node() {
   typedef typename traits_detail::remove_all<T>::type T2;
   typedef typename get_holder::template apply<T2>::type h;
@@ -20,10 +22,10 @@ rtti_getter::static_node() {
 
 template<class T>
 inline rtti_node const&
-rtti_getter::get_node_value(T&& x) noexcept {
-  typedef traits<T> trts;
-  typedef typename mixin<typename trts::root>::type root_mixin;
-  return static_cast<root_mixin const&&>(x).rtti_node_value;
+rtti_getter::get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW {
+//   typedef traits<T> trts;
+//   typedef typename mixin<typename trts::root>::type root_mixin;
+  return *rtti_get_mixin(x).detail::mixin_node::rtti_node_value;
 }
 
 }} // namespace rtti::detail

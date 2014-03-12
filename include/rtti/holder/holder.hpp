@@ -108,21 +108,22 @@ struct holder<T>::initializer_t::register_one {
 
   template<typename U>
   void operator()(U) const {
-    holder::node.base[k] = U::get_node();
+    holder::node.__base[k] = U::get_node();
     ++k;
   }
 };
 
 template<class T>
 holder<T>::initializer_t::initializer_t() {
-  holder::node.id = root_holder<root>::template make<trts::static_>(trts::hash);
-
-  holder::node.arity = Arity;
+  holder::node.__arity = Arity;
 
   register_one reg = { 0 };
   boost::mpl::for_each<
     sholders
   >( reg );
+
+//  // last to get ordering on id
+//   holder::node.id = root_holder<root>::template make<trts::static_>(trts::hash);
 }
 
 template<class T>

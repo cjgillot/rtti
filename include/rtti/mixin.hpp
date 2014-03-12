@@ -4,7 +4,6 @@
 #include "rtti/holder/holder.hpp"
 #include "rtti/holder/getter.hpp"
 
-#include <type_traits>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/int.hpp>
@@ -25,13 +24,8 @@ enum {
 
 namespace detail {
 
-template<bool> struct mixin_node {};
-template<> struct mixin_node<true> {
-  rtti::rtti_node const rtti_node_value;
-
-protected:
-  mixin_node()
-  : rtti_node_value(rtti_node_value) {}
+struct mixin_node {
+  rtti::rtti_node const* rtti_node_value;
 };
 
 template<typename Root>
@@ -49,8 +43,8 @@ private:
   typedef rtti_getter::traits<Super0> Traits;
 
 public:
-  constexpr static rtti_type static_max = Traits::static_max;
-  constexpr static rtti_type hash       { Hash };
+//   constexpr static rtti_type static_max = Traits::static_max;
+//   constexpr static rtti_type hash       { Hash };
   typedef typename Traits::root const volatile root;
   
   typedef typename boost::mpl::transform<
@@ -74,8 +68,8 @@ private:
 };
 template<typename D, typename S, std::size_t Max>
 struct mixin_helper<true, D, S, Max> {
-  constexpr static rtti_type static_max { Max };
-  constexpr static rtti_type hash       { 0 };
+//   constexpr static rtti_type static_max { Max };
+//   constexpr static rtti_type hash       { 0 };
 
   typedef D const volatile      self;
   typedef self                  root;
@@ -91,12 +85,11 @@ template<
 , std::size_t Hash
 >
 struct mixin
-: private detail::mixin_node<Flags & flags::DECLARE> {
+: private virtual detail::mixin_node {
 
   friend class detail::rtti_getter;
-  friend mixin rtti_get_mixin(Derived const volatile&) {
-    // dummy body -> avoid gcc non-template-friend warning
-    return std::declval<mixin>();
+  friend mixin const& rtti_get_mixin(Derived const& d) {
+    return static_cast<mixin const&>(d);
   }
 
 private:
@@ -114,15 +107,15 @@ private:
     static const bool static_   = Flags & rtti::flags::STATIC;
     static const bool final_    = Flags & rtti::flags::FINAL;
 
-    constexpr static rtti_type static_max = helper::static_max;
-    constexpr static rtti_type hash       = helper::hash;
+//     constexpr static rtti_type static_max = helper::static_max;
+//     constexpr static rtti_type hash       = helper::hash;
 
-    BOOST_STATIC_ASSERT( hash < static_max );
+//     BOOST_STATIC_ASSERT( hash < static_max );
   };
 
 protected:
   mixin() noexcept {
-    const_cast<rtti_node&>( detail::rtti_getter::get_node_value(static_cast<Derived&>(*this)) ) = *rtti::static_node<Derived>();
+    this->detail::mixin_node::rtti_node_value = rtti::static_node<Derived>();
   }
   ~mixin() noexcept {}
 };

@@ -15,7 +15,9 @@ struct rtti_getter {
 
   template<class T>
   struct mixin {
-    using type = decltype( rtti_get_mixin( std::declval<T const volatile&>() ) );
+    typedef typename traits_detail::remove_all<T>::type const& class_cref;
+    using ref_type = decltype( rtti_get_mixin( std::declval<class_cref>() ) );
+    typedef typename traits_detail::remove_all<ref_type>::type type;
   };
 
   template<class T>
@@ -31,15 +33,15 @@ struct rtti_getter {
   //! \brief Get object node
   template<class T>
   static rtti_node const&
-  get_node_value(T&& x) BOOST_NOEXCEPT_OR_NOTHROW;
+  get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW;
 };
 
 } // namespace detail
 
-template<class T>
-inline BOOST_CONSTEXPR rtti_type ATTRIBUTE_PURE
-type_hash() BOOST_NOEXCEPT_OR_NOTHROW
-{ return rtti_type( detail::rtti_getter::traits<T>::hash ); }
+// template<class T>
+// inline BOOST_CONSTEXPR rtti_type ATTRIBUTE_PURE
+// type_hash() BOOST_NOEXCEPT_OR_NOTHROW
+// { return rtti_type( detail::rtti_getter::traits<T>::hash ); }
 
 //! \brief Get static node
 template<class T>
@@ -55,7 +57,7 @@ template<class T>
 inline BOOST_CONSTEXPR rtti_type
 ATTRIBUTE_CONST
 static_id() BOOST_NOEXCEPT_OR_NOTHROW
-{ return rtti::static_node<T>()->id; }
+{ return detail::rtti_get_id( rtti::static_node<T>() ); }
 
 //! \brief Get pointer node
 template<class U>
@@ -88,14 +90,14 @@ template<class U>
 inline rtti_type
 ATTRIBUTE_PURE
 get_id(U& x) BOOST_NOEXCEPT_OR_NOTHROW
-{ return rtti::get_node(x)->id; }
+{ return detail::rtti_get_id( rtti::get_node(x) ); }
 
 //! \brief Get object id
 template<class U>
 inline rtti_type
 ATTRIBUTE_PURE
 get_id(U const& x) BOOST_NOEXCEPT_OR_NOTHROW
-{ return rtti::get_node(x)->id; }
+{ return detail::rtti_get_id( rtti::get_node(x) ); }
 
 } // namespace rtti
 

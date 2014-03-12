@@ -14,7 +14,7 @@ typedef void* rtti_type;
 //! \brief RTTI node type
 //! POD class holding a hierarchy bottom-up
 struct rtti_node {
-  rtti_type __id;
+//   rtti_type __id;
   std::size_t __arity;
   const rtti_node* __base [ 1 ];
 };
@@ -22,13 +22,13 @@ struct rtti_node {
 //! \brief Variadic RTTI node type
 template<size_t N>
 struct rtti_node_var {
-  rtti_type __id;
+//   rtti_type __id;
   std::size_t __arity;
   const rtti_node* __base [ N ];
 };
 template<>
 struct rtti_node_var<0> {
-  rtti_type __id;
+//   rtti_type __id;
   std::size_t __arity;
 };
 
@@ -40,7 +40,7 @@ struct rtti_getter;
 
 inline rtti_type
 rtti_get_id(rtti_node const* n)
-{ return n->__id; }
+{ return (void*)n; }
 
 } // namespace detail
 
