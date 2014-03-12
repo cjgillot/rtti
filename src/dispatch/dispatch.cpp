@@ -7,6 +7,7 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/optional.hpp>
+#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace {
@@ -69,7 +70,7 @@ void dispatch(
 // FIXME Why ?
 //   std::sort(overloads.begin(), overloads.end());
 
-  for(overload_t const& s : overloads)
+  BOOST_FOREACH(overload_t const& s, overloads)
     dispatch.insert(std::make_pair( s.first, s ));
 
   product_t p;

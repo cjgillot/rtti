@@ -11,25 +11,20 @@
 
 class signature_t
 {
-  std::vector<const klass_t*> sig;
+  typedef std::vector<const klass_t*> sig_type;
+  sig_type sig;
 
 public:
   explicit signature_t(std::size_t a)
-  : sig(a, nullptr) {}
+  : sig(a, NULL) {}
 
   template<typename Range>
   explicit signature_t(const Range &v)
   : sig(boost::begin(v), boost::end(v)) {}
 
-  signature_t(const signature_t&) = default;
-  signature_t& operator=(const signature_t&) = default;
-
-  signature_t(signature_t&&) = default;
-  signature_t& operator=(signature_t&&) = default;
-
 public:
-  std::vector<const klass_t*>& array_ref() { return sig; }
-  std::vector<const klass_t*> const& array() const { return sig; }
+  sig_type& array_ref() { return sig; }
+  sig_type const& array() const { return sig; }
 
 public:
   // total[extended] subtyping order

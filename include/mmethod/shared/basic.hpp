@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <stdint.h>
 
-#include "rtti/interface.hpp"
+#include "rtti/rttifwd.hpp"
 #include "rtti/detail/attribute.hpp"
 
 #include <boost/static_assert.hpp>

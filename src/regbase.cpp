@@ -6,8 +6,8 @@ using namespace rtti::detail;
 
 const rtti::rtti_node
 invalid_node::node = {
-  rtti_type( std::numeric_limits<std::uintptr_t>::max() ),
-  0, nullptr
+  rtti_type( std::numeric_limits<uintptr_t>::max() ),
+  0, NULL
 };
 
 void rtti::_rtti_bad_dispatch() {
@@ -20,4 +20,4 @@ void rtti::_rtti_bad_dispatch() {
 
 rtti::bad_dispatch::bad_dispatch()
 : std::runtime_error("Unresolved call for mmethod") {}
-rtti::bad_dispatch::~bad_dispatch() noexcept {}
+rtti::bad_dispatch::~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW {}

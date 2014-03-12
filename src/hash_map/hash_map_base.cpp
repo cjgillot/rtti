@@ -13,8 +13,8 @@ using rtti::hash::detail::value_type;
 
 /// bucket_t implementation
 //@{
-inline void bucket_t::reset() noexcept { m_value = 1; }
-inline void bucket_t::set(key_type k, value_type v) noexcept {
+inline void bucket_t::reset() BOOST_NOEXCEPT_OR_NOTHROW { m_value = 1; }
+inline void bucket_t::set(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW {
   m_value = static_cast<storage_type>(v);
   m_key = k;
   BOOST_ASSERT( !empty() );
@@ -25,13 +25,13 @@ inline void bucket_t::set(key_type k, value_type v) noexcept {
 //@{
 hash_map_base::~hash_map_base() {}
 
-void hash_map_base::move(hash_map_base& o) noexcept {
+void hash_map_base::move(hash_map_base& o) BOOST_NOEXCEPT_OR_NOTHROW {
   BOOST_ASSERT( this != &o );
 
   m_mask = o.m_mask;
   m_logsz= o.m_logsz;
 
-  m_array= std::move(o.m_array);
+  m_array.swap(o.m_array);
 }
 
 void hash_map_base::flush(hash_map_base const& o) {
@@ -50,16 +50,15 @@ void hash_map_base::flush(hash_map_base const& o) {
 
 namespace {
 // helper function for [do_find] and [insert]
-template<typename Pred>
 inline bucket_t* ATTRIBUTE_PURE
-probe_table(bucket_t* const m_array, std::size_t index, Pred pred) noexcept {
+probe_table(bucket_t* const m_array, std::size_t index, rtti_type key) BOOST_NOEXCEPT_OR_NOTHROW {
   // use linear probing
   bucket_t* ptr = &m_array[index];
 
   // empty bucket sentinel is last of m_array -> forces stop since empty
   while(
       (! ptr->empty())
-   && (! pred(ptr))
+   && (ptr->key() != key)
   ) {
     ++ptr;
   }
@@ -71,10 +70,9 @@ probe_table(bucket_t* const m_array, std::size_t index, Pred pred) noexcept {
 /// hash_map_base find()
 //@{
 hash_map_base::iterator
-hash_map_base::do_find(rtti_type key) const noexcept {
+hash_map_base::do_find(rtti_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   return probe_table(
-    m_array.get(), hash(key),
-    [key](bucket_t const* b) { return b->key() == key; }
+    m_array.get(), hash(key), key
   );
 }
 //@}
@@ -92,9 +90,8 @@ void hash_map_base::insert_at(iterator it, key_type key, value_type value) {
 void hash_map_base::insert(key_type key, value_type value) {
   index_type index = hash(key);
 
-  auto bucket = probe_table(
-    m_array.get(), index,
-    [key](bucket_t const* b) { return b->key() == key; }
+  bucket_t* bucket = probe_table(
+    m_array.get(), index, key
   );
   if(bucket != BADBUCKET)
     return bucket->set(key, value);

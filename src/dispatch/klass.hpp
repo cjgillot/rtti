@@ -56,6 +56,6 @@ public:
   };
 };
 
-typedef std::vector<std::vector<const klass_t*>> pole_table_t;
+typedef std::vector<std::vector<const klass_t*> > pole_table_t;
 
 #endif

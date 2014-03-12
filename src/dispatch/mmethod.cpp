@@ -62,8 +62,8 @@ void process_declaration(early_bindings_type const& decl, seal_table_type& outpu
 
   /// prepare poles for output : link each pole to a signature in which it appears
   /// \warning This code must be after any change to \c overloads
-  for(const overload_t& sig : overloads)
-    for(const klass_t* k : sig.first.array())
+  BOOST_FOREACH(const overload_t& sig, overloads)
+    BOOST_FOREACH(const klass_t* k, sig.first.array())
       const_cast<signature_t const*&>( k->sig ) = &sig.first;
 
   /// create perfect hash function

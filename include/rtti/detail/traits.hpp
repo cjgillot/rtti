@@ -145,9 +145,26 @@ struct fundamental_traits {
 };
 
 template<typename T>
+struct raw_ptr_traits;
+
+template<typename T>
+struct raw_ptr_traits<T*> {
+public:
+  typedef T& reference_type;
+  typedef typename boost::remove_cv<
+          typename boost::remove_reference<
+          reference_type
+  >::type>::type class_type;
+  typedef class_type raw_type;
+
+  static reference_type get(T* v) { return *v; }
+  static bool valid(T* v) { return bool(v); }
+};
+
+template<typename T>
 struct smart_ptr_traits {
 public:
-  typedef decltype(* std::declval<T>()) reference_type;
+  typedef typename T::element_type& reference_type;
   typedef typename boost::remove_cv<
           typename boost::remove_reference<
           reference_type
@@ -244,6 +261,7 @@ struct pointer_traits<T&>
   };
 };
 
+#if BOOST_HAS_RVALUE_REFS
 template<typename T>
 struct pointer_traits<T&&>
 : pointer_traits<T> {
@@ -252,6 +270,7 @@ struct pointer_traits<T&&>
     typedef typename pointer_traits<T>::template rebind<U>::other&& other;
   };
 };
+#endif
 
 } // namespace rtti
 

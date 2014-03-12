@@ -13,7 +13,7 @@
 class hierarchy_t
 {
 public:
-  std::vector<std::unique_ptr<klass_t> > klasses;
+  std::vector<klass_t* > klasses;
 
   typedef boost::unordered_map<rtti_type, klass_t*> dict_t;
   dict_t dict;
@@ -21,7 +21,8 @@ public:
   std::size_t current_rank;
   
 public:
-  hierarchy_t();
+   hierarchy_t();
+  ~hierarchy_t();
 
 public:
   const klass_t* add(rtti_hierarchy hh);
@@ -39,9 +40,16 @@ private:
   std::size_t pseudo_closest(klass_t const* k, klass_t const* &pole);
 };
 
-typedef std::vector<std::vector<const klass_t*>> pole_table_t;
+typedef std::vector<std::vector<const klass_t*> > pole_table_t;
 
 #include "signature.hpp"
+
+namespace {
+  struct hierarchy_adder {
+    klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
+    { return a1.add(a0); }
+  };
+} // namespace <>
 
 template<typename R0, typename R1>
 signature_t make_signature(R0 const& r0, R1& r1) {
@@ -53,8 +61,7 @@ signature_t make_signature(R0 const& r0, R1& r1) {
 
     ret.array_ref().begin(),
 
-    [](rtti_hierarchy a0, hierarchy_t& a1)
-    { return a1.add(a0); }
+    hierarchy_adder()
   );
 
   return ret;
