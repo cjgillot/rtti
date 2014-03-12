@@ -5,6 +5,7 @@
 #include <stack>
 
 #include "hierarchy.hpp"
+#include "manip.hpp"
 
 // readability improvement
 #define is_pole subtype[0]
@@ -22,7 +23,7 @@ hierarchy_t::do_add(rtti_hierarchy vec) {
   if(!vec)
     return nullptr;
 
-  std::size_t id = vec->id;
+  rtti_type id = rtti_get_id(vec);
 
   dict_t::iterator dit = dict.find(id);
   if(dit != dict.end()) {
@@ -33,12 +34,14 @@ hierarchy_t::do_add(rtti_hierarchy vec) {
     return k;
   }
   else {
-    klasses.emplace_back( new klass_t( id, vec->arity ) );
+    std::size_t const arity = rtti_get_base_arity(vec);
+
+    klasses.emplace_back( new klass_t( id, arity ) );
     klass_t& k = *klasses.back();
 
     dict.insert(std::make_pair( id, &k ));
-    for(std::size_t i = 0; i < vec->arity; ++i)
-      k.bases[i] = do_add(vec->base[i]);
+    for(std::size_t i = 0; i < arity; ++i)
+      k.bases[i] = do_add( rtti_get_base(vec, i) );
 
     return &k;
   }

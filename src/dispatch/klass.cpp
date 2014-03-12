@@ -11,7 +11,7 @@
 // ----- klass ----- //
 
 klass_t::klass_t(
-  std::size_t hh
+  rtti_type hh
 , std::size_t arity
 )
 : id(hh)

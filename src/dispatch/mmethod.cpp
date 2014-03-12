@@ -1,7 +1,5 @@
 #include <vector>
 
-#include "rtti/hash/hash.hpp"
-
 #include "hierarchy.hpp"
 #include "overloads.hpp"
 

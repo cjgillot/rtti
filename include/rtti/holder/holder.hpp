@@ -96,7 +96,7 @@ public:
   rtti_type
   ATTRIBUTE_PURE
   get_id() BOOST_NOEXCEPT_OR_NOTHROW
-  { return get_node()->id; }
+  { return rtti_get_id( get_node() ); }
 };
 
 template<class T>

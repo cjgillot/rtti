@@ -6,6 +6,8 @@
 #include <boost/noncopyable.hpp>
 #include <boost/dynamic_bitset.hpp>
 
+#include "early.hpp"
+
 class hierarchy_t;
 class signature_t;
 struct klass_t
@@ -13,7 +15,7 @@ struct klass_t
 {
   friend class hierarchy_t;
 
-  std::size_t const id;
+  rtti_type const id;
   std::vector<klass_t const*> bases;
 
   klass_t const* pole;
@@ -31,7 +33,7 @@ struct klass_t
 
 public:
   // for use by hierarchy_t
-  klass_t(std::size_t id, std::size_t arity);
+  klass_t(rtti_type id, std::size_t arity);
 
 public:
   // total hashing order
