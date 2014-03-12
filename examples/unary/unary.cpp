@@ -32,8 +32,8 @@ struct lap
 , implement_rtti<lap, bar>
 {};
 
-template<typename T> using v_ = tags::virtual_<T>;
-DECLARE_MMETHOD(f1, int, (v_<foo>&));
+using tags::_v;
+DECLARE_MMETHOD(f1, int, (_v<foo>&));
 
 IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return a.f(); }
 IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return a.g(); }

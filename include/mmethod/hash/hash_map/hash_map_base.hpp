@@ -70,7 +70,7 @@ private:
 private:
   std::size_t m_mask; // == (1 << m_logsz) - 1
   
-#ifdef BOOST_NO_CXX11_NOEXCEPT
+#ifndef BOOST_HAS_RVALUE_REFS
   boost::scoped_array<bucket_t> m_array;
 #else
   std::unique_ptr<bucket_t[]> m_array;

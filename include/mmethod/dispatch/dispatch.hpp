@@ -40,7 +40,7 @@ struct dispatch {
   }
 
   template<typename K, typename F>
-  void insert(F&& f);
+  void insert(F const& f);
 
   // calls seal once
   void generate() const {

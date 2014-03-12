@@ -39,8 +39,8 @@ struct bar3
 , implement_rtti<bar3, bar1>
 {};
 
-template<typename T> using v_ = tags::virtual_<T>;
-DECLARE_MMETHOD(f1, int, (v_<foo1>&, v_<bar1>&));
+using tags::_v;
+DECLARE_MMETHOD(f1, int, (_v<foo1>&, _v<bar1>&));
 
 IMPLEMENT_MMETHOD(f1, int, (foo1& a, bar1& b)) { return 0; }
 IMPLEMENT_MMETHOD(f1, int, (foo2& a, bar2& b)) { return 13; }

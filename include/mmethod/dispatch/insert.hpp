@@ -24,7 +24,7 @@ detail::poles_map_type register_base<Tag>::poles<J>::array;
 
 template<typename Tag>
 void register_base<Tag>::do_initialize() {
-  constexpr std::size_t arity = Tag::traits::vsize;
+  enum { arity = Tag::traits::vsize };
 
   detail::init_table(arity, Tag::invoker_table);
 }
@@ -92,7 +92,7 @@ struct save_poles {
 
 template<typename Tag, typename Ret>
 template<typename K, typename F>
-void dispatch<Tag,Ret>::insert(F&& f) {
+void dispatch<Tag,Ret>::insert(F const& f) {
   enum {
     arity = Tag::traits::vsize,
     btset = Tag::traits::type_bitset
@@ -110,7 +110,7 @@ namespace {
 
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct seal_poles {
-  template<std::size_t J = 0>
+  template<std::size_t J>
   static void eval(poles_map_type** p) {
     enum { ok = BTS & 1 };
     if( ok ) {
@@ -123,7 +123,7 @@ struct seal_poles {
 };
 template<std::size_t Arity, typename Tag>
 struct seal_poles<Arity, Tag, 0> {
-  template<std::size_t J = 0>
+  template<std::size_t J>
   static void eval(poles_map_type**) {}
 };
 
@@ -139,7 +139,7 @@ void dispatch<Tag,Ret>::seal() const {
   poles_map_type* poles [ arity ];
   seal_table_type seal_table = { Tag::invoker_table, poles };
 
-  seal_poles<arity, Tag, btset>::eval( poles );
+  seal_poles<arity, Tag, btset>::template eval<0>( poles );
 
   detail::seal_table(arity, Tag::invoker_table, seal_table);
 }

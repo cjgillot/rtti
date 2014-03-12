@@ -3,6 +3,8 @@
 
 #include "mmethod/dynamic/poles.hpp"
 
+#include <vector>
+
 using namespace rtti;
 
 typedef std::vector<rtti_hierarchy> signature_type;
