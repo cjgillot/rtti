@@ -12,8 +12,8 @@
 // tag templates -> mark dispatch-guilty types (virtual) and the others
 namespace rtti { namespace tags {
 
-template<typename T> struct virtual_ { typedef T type; };
-template<typename T> struct  static_ { typedef T type; };
+template<typename T> struct _v { typedef T type; };
+template<typename T> struct _s { typedef T type; };
 
 // get tag-free type
 //@{
@@ -24,13 +24,13 @@ struct unwrap_once {
 //   constexpr static std::size_t hash = 0;
 };
 template<typename T>
-struct unwrap_once<virtual_<T> > {
+struct unwrap_once<_v<T> > {
   typedef T type;
   typedef boost::mpl::true_  has_virtual;
 //   constexpr static std::size_t hash = rtti::hash::detail::hash::apply<type>::value;
 };
 template<typename T>
-struct unwrap_once<static_<T> > {
+struct unwrap_once<_s<T> > {
   typedef T type;
   typedef boost::mpl::false_ has_virtual;
 //   constexpr static std::size_t hash = 0;
@@ -59,13 +59,13 @@ struct unwrap {
   };
 };
 
-template<typename T>
-struct rewrap
-: boost::mpl::if_<
-    typename unwrap_base<T>::has_virtual
-  , virtual_<typename unwrap_base<T>::type>
-  , static_ <typename unwrap_base<T>::type>
-> {};
+// template<typename T>
+// struct rewrap
+// : boost::mpl::if_<
+//     typename unwrap_base<T>::has_virtual
+//   , _v<typename unwrap_base<T>::type>
+//   , _s<typename unwrap_base<T>::type>
+// > {};
 //@}
 
 // mpl predicate

@@ -15,8 +15,8 @@ public:
   int f();
 };
 
-template<typename T> using v_ = tags::virtual_<T>;
-DECLARE_MMETHOD(f1, int, (v_<foo>&));
+using tags::_v;
+DECLARE_MMETHOD(f1, int, (_v<foo>&));
 
 foo* make_foo();
 foo* make_bar();

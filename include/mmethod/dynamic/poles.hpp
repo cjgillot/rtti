@@ -4,8 +4,6 @@
 #include "mmethod/shared/basic.hpp"
 #include "mmethod/hash/hash_map/hash_map.hpp"
 
-#include <unordered_map>
-
 namespace rtti {
 namespace dmethod {
 namespace detail {
