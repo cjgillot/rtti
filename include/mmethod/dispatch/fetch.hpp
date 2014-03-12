@@ -38,7 +38,7 @@ struct get_poles_map<true> {
 template<bool OK>
 struct get_node {
   template<typename T>
-  static rtti_hierarchy get(T&&);
+  static rtti_hierarchy get(T const&);
 };
 
 template<>
