@@ -1,6 +1,7 @@
 #include "rtti/rtti.hpp"
 
 #include <iostream>
+#include <boost/mpl/vector.hpp>
 
 /*!\example basic.cpp
  * 
@@ -20,6 +21,8 @@ const int max_id = 10;
 // ID assigned to class bar
 const int bar_id = 6;
 
+using boost::mpl::vector;
+
 struct foo
 : rtti::base_rtti<foo, max_id> {
 public:
@@ -28,17 +31,17 @@ public:
 
 struct bar
 : foo
-, rtti::static_rtti<bar, foo, bar_id>
+, rtti::static_rtti<bar, vector<foo>, bar_id>
 {};
 
 struct baz
 : foo
-, rtti::implement_rtti<baz, foo>
+, rtti::implement_rtti<baz, vector<foo> >
 {};
 
 struct lap
 : bar
-, rtti::implement_rtti<lap , bar>
+, rtti::implement_rtti<lap, vector<bar> >
 {};
 
 int main() {

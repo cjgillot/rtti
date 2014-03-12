@@ -3,7 +3,10 @@
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
 
+#include <boost/mpl/vector.hpp>
+
 using namespace rtti;
+using boost::mpl::vector;
 
 #include <iostream>
 
@@ -15,12 +18,12 @@ public:
 
 struct foo2
 : foo1
-, implement_rtti<foo2, foo1>
+, implement_rtti<foo2, vector<foo1> >
 {};
 
 struct foo3
 : foo1
-, implement_rtti<foo3, foo1>
+, implement_rtti<foo3, vector<foo1> >
 {};
 
 struct bar1
@@ -31,12 +34,12 @@ public:
 
 struct bar2
 : bar1
-, implement_rtti<bar2, bar1>
+, implement_rtti<bar2, vector<bar1> >
 {};
 
 struct bar3
 : bar1
-, implement_rtti<bar3, bar1>
+, implement_rtti<bar3, vector<bar1> >
 {};
 
 using tags::_v;
