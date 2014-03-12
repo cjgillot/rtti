@@ -6,6 +6,7 @@
 #include <boost/mpl/vector.hpp>
 
 using namespace rtti;
+using boost::mpl::vector;
 
 /*!\example diamond.cpp
  * 
@@ -27,21 +28,21 @@ public:
 
 struct bar
 : virtual foo
-, implement_rtti<bar, boost::mpl::vector<foo> >
+, implement_rtti<bar, vector<foo> >
 {};
 
 struct baz
 : virtual foo
-, implement_rtti<baz, boost::mpl::vector<foo> >
+, implement_rtti<baz, vector<foo> >
 {};
 
 struct lap
 : bar, baz
-, implement_rtti<lap, boost::mpl::vector<bar, baz>>
+, implement_rtti<lap, vector<bar, baz> >
 {};
 
-template<typename T> using v_ = tags::virtual_<T>;
-DECLARE_MMETHOD(f1, int, (v_<foo>&));
+using tags::_v;
+DECLARE_MMETHOD(f1, int, (_v<foo>&));
 
 IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return 5; }
 IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return 7; }
@@ -51,9 +52,9 @@ int main() {
   foo f; bar r; baz z; lap l;
 
   std::cout << f1(f) << std::endl; // prints 5
-  std::cout << f1(r) << std::endl; // prints 42
-  std::cout << f1(z) << std::endl; // prints 10
-  std::cout << f1(l) << std::endl; // prints 42 (lap is-a bar)
+  std::cout << f1(r) << std::endl; // prints 7
+  std::cout << f1(z) << std::endl; // prints 5
+  std::cout << f1(l) << std::endl; // prints 15
   
   return 0;
 }
