@@ -102,7 +102,7 @@ private:
     typedef typename helper::self    self;
     typedef typename helper::parents parents;
     typedef typename helper::root    root;
-    
+
     static const bool abstract_ = Flags & rtti::flags::ABSTRACT;
     static const bool static_   = Flags & rtti::flags::STATIC;
     static const bool final_    = Flags & rtti::flags::FINAL;

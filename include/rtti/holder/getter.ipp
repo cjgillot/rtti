@@ -23,8 +23,6 @@ rtti_getter::static_node() {
 template<class T>
 inline rtti_node const&
 rtti_getter::get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW {
-//   typedef traits<T> trts;
-//   typedef typename mixin<typename trts::root>::type root_mixin;
   return *rtti_get_mixin(x).detail::mixin_node::rtti_node_value;
 }
 

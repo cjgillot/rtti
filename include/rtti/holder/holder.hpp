@@ -7,6 +7,8 @@
 #include "rtti/rttifwd.hpp"
 #include "rtti/holder/getter.hpp"
 
+#include "rtti/holder/node.hpp"
+
 #include <boost/assert.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/size.hpp>
@@ -30,32 +32,9 @@ struct get_holder {
 template<>
 struct get_holder::apply<const volatile void> {
   struct type {
-    static BOOST_CONSTEXPR rtti_node* get_node() { return 0; }
+    static BOOST_CONSTEXPR rtti_node* get_node() { return NULL; }
   };
 };
-
-//! \brief Root holder with the seed
-template<typename Root>
-struct root_holder {
-  template<bool Static>
-  static rtti_type make(std::size_t hash) {
-    if(Static)
-      return rtti_type(hash);
-
-    static std::size_t current = rtti_getter::traits<Root>::static_max;
-    return rtti_type(current++);
-  }
-};
-
-/*
- * Current implementation :
- *
- * rtti_type is a native unsigned integer,
- * which range allows for at least 2 ^ 16 classes
- * in a hierarchy.
- *
- * A new class id is just its name's string hash value.
- */
 
 //! Arguments must be const-qualified to avoid unnecessary instanciations
 template<class T>
@@ -65,7 +44,6 @@ private:
   && "rtti::detail::holder_::holder<> must not be accessed directly" );
 
   typedef rtti_getter::traits<T> trts;
-  typedef typename trts::root    root;
   typedef typename trts::parents parents;
   
   typedef typename boost::mpl::transform<
@@ -80,8 +58,8 @@ private:
     struct register_one;
     initializer_t();
     void touch() const {};
-  }
-  static initializer;
+  };
+  static initializer_t initializer;
 
 public:
   static rtti_node_var<Arity> node;
@@ -121,9 +99,6 @@ holder<T>::initializer_t::initializer_t() {
   boost::mpl::for_each<
     sholders
   >( reg );
-
-//  // last to get ordering on id
-//   holder::node.id = root_holder<root>::template make<trts::static_>(trts::hash);
 }
 
 template<class T>
