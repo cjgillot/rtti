@@ -7,6 +7,7 @@
 #include <functional>
 
 #include <boost/functional/hash.hpp>
+#include <boost/unordered_map.hpp>
 #include <boost/optional.hpp>
 
 #include "hierarchy.hpp"
@@ -21,17 +22,11 @@ inline bool operator<(overload_t const& a, overload_t const& b)
 
 typedef std::vector<overload_t> overloads_t;
 
-typedef std::unordered_map<signature_t, boost::optional<overload_t> > dispatch_t;
+typedef boost::unordered_map<signature_t, boost::optional<overload_t> > dispatch_t;
 
-namespace std {
-  template<>
-  struct hash<signature_t>
-  {
-    std::size_t operator()(const signature_t& s) const
-    {
-      return boost::hash_range(s.array().begin(), s.array().end());
-    };
-  };
+inline std::size_t hash_value(const signature_t& s)
+{
+  return boost::hash_range(s.array().begin(), s.array().end());
 }
 
 #endif

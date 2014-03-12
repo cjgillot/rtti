@@ -8,14 +8,16 @@
 
 #include "klass.hpp"
 
+#include <boost/unordered_map.hpp>
+
 class hierarchy_t
 {
 public:
   std::vector<std::unique_ptr<klass_t> > klasses;
 
-  typedef std::unordered_map<std::size_t, klass_t*> dict_t;
+  typedef boost::unordered_map<rtti_type, klass_t*> dict_t;
   dict_t dict;
-  
+
   std::size_t current_rank;
   
 public:
