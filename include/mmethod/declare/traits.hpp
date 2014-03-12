@@ -6,7 +6,6 @@
 
 #include "mmethod/shared/tags.hpp"
 
-#include <type_traits>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/times.hpp>
 #include <boost/mpl/size_t.hpp>
@@ -32,8 +31,8 @@ struct make_declare_helper<Tag, Ret, Args>::traits
       type_tags,
       boost::mpl::size_t<0>,
       boost::mpl::if_<mpl_::_2
-      , boost::mpl::next<boost::mpl::times<mpl_::_1, boost::mpl::size_t<2>>>
-      , boost::mpl::times<mpl_::_1, boost::mpl::size_t<2>>
+      , boost::mpl::next<boost::mpl::times<mpl_::_1, boost::mpl::size_t<2> > >
+      , boost::mpl::times<mpl_::_1, boost::mpl::size_t<2> >
       >
     >::type::value
   };

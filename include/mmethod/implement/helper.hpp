@@ -41,7 +41,7 @@ protected:
 
   typedef make_implement_helper impl_maker;
 
-  make_implement_helper() noexcept {
+  make_implement_helper() BOOST_NOEXCEPT_OR_NOTHROW {
     Tag().template insert<Args>( &impl_maker::trampoline::call );
   }
 };

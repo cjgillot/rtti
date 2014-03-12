@@ -47,7 +47,7 @@ protected:
 
 protected:
   template<typename K, typename F>
-  inline void insert(F&& f)
+  inline void insert(F const& f)
   { m_dispatch.template insert<K>( std::forward<F>(f) ); }
 
   inline void generate()

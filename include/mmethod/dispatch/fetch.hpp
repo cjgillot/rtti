@@ -44,8 +44,11 @@ struct get_node {
 template<>
 struct get_node<true> {
   template<typename T>
-  static rtti_hierarchy get(T&& t)
-  { return ::rtti::get_node( std::forward<T>(t) ); }
+  static rtti_hierarchy get(T const& t)
+  { return ::rtti::get_node(t); }
+  template<typename T>
+  static rtti_hierarchy get(T& t)
+  { return ::rtti::get_node(t); }
 };
 
 /// fetch_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data
@@ -58,6 +61,8 @@ struct get_node<true> {
 /// \endcode
 template<typename Tag, std::size_t BTS>
 struct fetch_poles_once {
+  typedef uintptr_t result_type;
+
   template<typename U>
   uintptr_t operator()(uintptr_t m, U const& x) const {
     typedef typename boost::fusion::result_of::begin<U>::type first_it;
@@ -83,7 +88,7 @@ struct fetch_poles_once {
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_poles {
   template<typename Tuple>
-  static void eval(std::uintptr_t& m, Tuple const& args) {
+  static void eval(uintptr_t& m, Tuple const& args) {
     fetch_poles_once<Tag, BTS> fetcher;
     
     enum { TSize = boost::mpl::size<Tuple>::value };
@@ -97,13 +102,13 @@ struct fetch_poles {
 
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
-  static invoker_t ATTRIBUTE_PURE eval(std::uintptr_t spec) {
+  static invoker_t ATTRIBUTE_PURE eval(uintptr_t spec) {
     return Tag::invoker_table[spec / 2];
   }
 };
 template<typename Tag, std::size_t BTS>
 struct fetch_invoker<1, Tag, BTS> {
-  static invoker_t ATTRIBUTE_PURE eval(std::uintptr_t spec) {
+  static invoker_t ATTRIBUTE_PURE eval(uintptr_t spec) {
     return (invoker_t)spec;
   }
 };
@@ -119,7 +124,7 @@ invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
     btset = Tag::traits::type_bitset
   };
 
-  std::uintptr_t spec = 0;
+  uintptr_t spec = 0;
   fetch_poles<arity, Tag, btset>::eval( spec, args );
 
   return fetch_invoker<arity, Tag, btset>::eval( spec );

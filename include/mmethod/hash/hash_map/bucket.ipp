@@ -7,13 +7,20 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-constexpr bucket_t::bucket_t() noexcept:                         bucket_t( rtti_type(0ul), 1 )                     {}
-constexpr bucket_t::bucket_t(key_type k, value_type v) noexcept: m_key(k), m_value( static_cast<storage_type>(v) ) {}
+BOOST_CONSTEXPR inline
+bucket_t::bucket_t() BOOST_NOEXCEPT_OR_NOTHROW
+: m_key( rtti_type(0ul) ), m_value(1)
+{}
 
-inline key_type   bucket_t::key()   const noexcept { return m_key;   }
+BOOST_CONSTEXPR inline
+bucket_t::bucket_t(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW
+: m_key(k), m_value( static_cast<storage_type>(v) )
+{}
 
-inline bool       bucket_t::empty() const noexcept { return m_value & 1; }
-inline value_type bucket_t::value() const noexcept { return static_cast<value_type>(m_value); }
+inline key_type   bucket_t::key()   const BOOST_NOEXCEPT_OR_NOTHROW { return m_key;   }
+
+inline bool       bucket_t::empty() const BOOST_NOEXCEPT_OR_NOTHROW { return m_value & 1; }
+inline value_type bucket_t::value() const BOOST_NOEXCEPT_OR_NOTHROW { return static_cast<value_type>(m_value); }
 
 }}} // namespace rtti::hash::detail
 
