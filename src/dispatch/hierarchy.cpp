@@ -1,6 +1,6 @@
 #include <boost/tokenizer.hpp>
 
-#include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
 #include <vector>
 #include <stack>
 
@@ -16,12 +16,18 @@ hierarchy_t::hierarchy_t()
 : current_rank(0)
 {}
 
+hierarchy_t::~hierarchy_t()
+{
+  BOOST_FOREACH(klass_t* k, klasses)
+    delete k;
+}
+
 typedef hierarchy_t::dict_t dict_t;
 
 klass_t*
 hierarchy_t::do_add(rtti_hierarchy vec) {
   if(!vec)
-    return nullptr;
+    return NULL;
 
   rtti_type id = rtti_get_id(vec);
 
@@ -36,7 +42,7 @@ hierarchy_t::do_add(rtti_hierarchy vec) {
   else {
     std::size_t const arity = rtti_get_base_arity(vec);
 
-    klasses.emplace_back( new klass_t( id, arity ) );
+    klasses.push_back( new klass_t( id, arity ) );
     klass_t& k = *klasses.back();
 
     dict.insert(std::make_pair( id, &k ));
@@ -47,18 +53,21 @@ hierarchy_t::do_add(rtti_hierarchy vec) {
   }
 }
 
-void
-hierarchy_t::shrink(std::vector<klass_t const*>& seq) {
-  for(klass_t const* p0 : seq) {
-    klass_t* p = const_cast<klass_t*>(p0);
-    for(klass_t const*& b : p->bases)
-      b = b->pole;
+namespace {
 
-    std::sort(p->bases.begin(), p->bases.end());
-    p->bases.erase( std::unique(p->bases.begin(), p->bases.end()), p->bases.end() );
-    p->bases.erase( std::remove(p->bases.begin(), p->bases.end(), nullptr), p->bases.end() );
-  }
-}
+struct rank_compare {
+  bool operator()(klass_t const* a, klass_t const* b) const
+  { return a->rank < b->rank; }
+};
+
+struct select_second {
+  template<typename Pair>
+  typename Pair::second_type
+    operator()(Pair const& b) const
+  { return b.second; }
+};
+
+} // namespace
 
 klass_t const*
 hierarchy_t::add(rtti_hierarchy vec) {
@@ -69,15 +78,37 @@ hierarchy_t::add(rtti_hierarchy vec) {
 }
 
 void
+hierarchy_t::shrink(std::vector<klass_t const*>& seq) {
+  BOOST_FOREACH(klass_t const* p0, seq) {
+    klass_t* p = const_cast<klass_t*>(p0);
+    BOOST_FOREACH(klass_t const*& b, p->bases)
+      b = b->pole;
+
+    std::sort(p->bases.begin(), p->bases.end());
+    p->bases.erase( std::unique(p->bases.begin(), p->bases.end()), p->bases.end() );
+    p->bases.erase( std::remove(p->bases.begin(), p->bases.end(), (klass_t const*)NULL), p->bases.end() );
+  }
+  
+  std::sort(seq.begin(), seq.end(), rank_compare());
+}
+
+void
 hierarchy_t::pole_init(klass_t* k)
 {
   std::size_t r = current_rank++;
   k->rank = r;
 
-  k->subtype.set(r);
+  if(k->subtype.size() <= r)
+    k->subtype.resize(1+r);
 
-  for(klass_t const* b : k->bases)
+  BOOST_FOREACH(klass_t const* b, k->bases) {
+    if(b->subtype.size() <= r)
+      const_cast<klass_t*>(b)->subtype.resize(1+r);
+
     k->subtype |= b->subtype;
+  }
+
+  k->subtype.set(r);
 }
 
 std::size_t
@@ -87,20 +118,24 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
   std::vector<klass_t const*> candidates;
   candidates.reserve(k->bases.size());
 
-  for(klass_t const* base : k->bases)
+  BOOST_FOREACH(klass_t const* base, k->bases)
     if(k->pole)
       candidates.push_back(k->pole);
 
   if(candidates.size() == 0)
     return 0;
 
+  if(candidates.size() == 1) {
+    pole = candidates.front();
+    return 1;
+  }
+
   klass_t const* const maxK = *std::max_element(
     candidates.begin(), candidates.end(),
-    [](klass_t const* a, klass_t const* b)
-    { return a->rank < b->rank; }
+    rank_compare()
   );
 
-  for(klass_t const* k : candidates)
+  BOOST_FOREACH(klass_t const* k, candidates)
     if( !klass_t::subtypes()(*k, *maxK) )
       return 2;
 
@@ -108,57 +143,86 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
   return 1;
 }
 
+namespace {
+
+// is_pole is used as a traversal flag
+struct wanderer_t {
+  std::vector<klass_t const*> stack;
+
+  wanderer_t(std::size_t dictsz)
+  { stack.reserve(dictsz); }
+
+  void push(klass_t const* k) {
+    const_cast<klass_t*>(k)->is_pole = false;
+    stack.push_back(k);
+  }
+
+  klass_t* pop() {
+    for(;;) {
+      if(stack.empty())
+        return NULL;
+
+      klass_t* top = const_cast<klass_t*>( stack.back() );
+      stack.pop_back();
+
+      if(top->is_pole)
+        continue;
+
+      top->is_pole = true;
+
+      BOOST_FOREACH(klass_t const* base, top->bases)
+        // not visited yet
+        if(! base->is_pole)
+          stack.push_back(base);
+
+      // FIXME sure ?
+      stack.erase( std::remove(stack.begin(), stack.end(), top), stack.end() );
+
+      // already visited
+      if(top->pole)
+        continue;
+
+      return top;
+    }
+  }
+  bool empty() const { return stack.empty(); }
+};
+
+} // namespace <>
+
 void hierarchy_t::order(std::vector<klass_t const*>& seq) {
   // primary poles are marked by add()
 
   /// hierarchy must be shrunk already
-  std::vector<klass_t*> stack; stack.reserve(dict.size());
+  wanderer_t wanderer (dict.size());
   std::transform(
     dict.begin(), dict.end(),
-    std::back_inserter(stack),
-    [](dict_t::reference p) { return p.second; }
+    std::back_inserter(wanderer.stack),
+    select_second()
   );
 
+  // FIXME just in case
+  seq.clear();
+
   // init primary poles
-  for(klass_t* k : stack)
+  BOOST_FOREACH(klass_t const* k, wanderer.stack)
     if(k->is_pole) {
-      pole_init(k);
-      k->is_pole = false;
-      
+      BOOST_ASSERT( k->pole == k );
+      klass_t* k2 = const_cast<klass_t*>(k);
+
+      pole_init(k2);
       seq.push_back(k);
     }
 
-  // is_pole marks traversed state
-  while(!stack.empty()) {
-    klass_t* top = stack.back();
-
-    // already visited
-    if(top->is_pole) {
-      stack.pop_back();
-      continue;
-    }
-
-    // upcast if not visited yet
-    for(;;) {
-      bool need_upcast = false;
-      for(klass_t const* base : top->bases)
-        if(! base->is_pole) {
-          need_upcast = true;
-          stack.push_back( const_cast<klass_t*>(base) );
-        }
-
-      if(!need_upcast)
-        break;
-      
-      stack.push_back(top);
-      top = const_cast<klass_t*>(top->bases[0]);
-    }
+  // traverse
+  while(klass_t* top = wanderer.pop()) {
+    BOOST_ASSERT( std::find(seq.begin(), seq.end(), top) == seq.end() );
 
     // compute
     klass_t const* pole;
     std::size_t sz = pseudo_closest(top, pole);
     if(sz == 0)
-      top->pole = nullptr;
+      top->pole = NULL;
 
     else if(sz == 1)
       top->pole = pole;
@@ -169,9 +233,6 @@ void hierarchy_t::order(std::vector<klass_t const*>& seq) {
 
       seq.push_back(top);
     }
-
-    // mark visited
-    top->is_pole = true;
   }
   
   shrink(seq);

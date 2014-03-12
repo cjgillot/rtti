@@ -98,10 +98,7 @@ struct sig_upcaster {
   std::size_t k;
   std::size_t b;
   
-  sig_upcaster(signature_t const& s0, std::size_t a, dispatch_t const& d)
-  : sig0(s0), arity(a), dispatch(d)
-  , k(0), b(0) {}
-  
+  sig_upcaster(signature_t const& s0, std::size_t a, dispatch_t const& d);
   overload_t const& operator()() throw(end_loop);
 };
 
@@ -160,7 +157,7 @@ static void dispatch_one(
 
   else {
     //FIXME : diagnose
-//     dispatch.insert(std::make_pair( sig, boost::none ));
+    dispatch.insert(std::make_pair( sig, boost::none ));
 //     if(max_set.size() == 0) {
 //       std::cerr << "No overload found for signature : ";
 //       PRINT_SIG(sig);
@@ -181,6 +178,10 @@ static void dispatch_one(
   }
 }
 
+sig_upcaster::sig_upcaster(const signature_t& s0, std::size_t a, const dispatch_t& d)
+: sig0(s0), arity(a), dispatch(d)
+, k(0), b(0) {}
+
 overload_t const&
 sig_upcaster::operator()() throw(end_loop)
 {
@@ -188,19 +189,20 @@ sig_upcaster::operator()() throw(end_loop)
     signature_t sig = sig0;
 
     // continue upcast on base [b] of argument [k]
-    klass_t const* nk;
-    for(;;) {
+    klass_t const* nk = NULL;
+    while(!nk) {
+      // proceed to next argument
+      while( b == sig.array()[k]->bases.size() ) {
+        b = 0; ++k;
+        if(k == arity)
+          throw end_loop();
+      }
+
+      // select
       nk = sig.array()[k]->bases[b];
 
-      if(nk)
-        break;
-      
-      // try next base
+      // prepare for next base
       ++b;
-      
-      // proceed to next argument
-      if(b == sig.array()[k]->bases.size())
-      { b = 0; ++k; }
     }
 
     sig.array_ref()[k] = nk;
