@@ -12,7 +12,6 @@
 
 #include <functional>
 #include <boost/fusion/include/accumulate.hpp>
-#include <boost/fusion/include/for_each.hpp>
 #include <boost/fusion/include/begin.hpp>
 #include <boost/fusion/include/deref.hpp>
 #include <boost/fusion/include/zip.hpp>

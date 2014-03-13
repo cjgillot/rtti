@@ -8,6 +8,7 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/front.hpp>
+#include <boost/mpl/size_t.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/transform.hpp>
 
@@ -18,7 +19,6 @@ enum {
   DECLARE  = 1 << 0
 , ABSTRACT = 1 << 1
 , FINAL    = 1 << 2
-, STATIC   = 1 << 3
 };
 } // namespace flags
 
@@ -36,17 +36,15 @@ struct has_root {
   {};
 };
 
-template<bool Declare, typename Derived, typename Supers, std::size_t Hash>
+template<bool Declare, typename Derived, typename Supers>
 struct mixin_helper {
 private:
   typedef typename boost::mpl::front<Supers>::type Super0;
   typedef rtti_getter::traits<Super0> Traits;
 
 public:
-//   constexpr static rtti_type static_max = Traits::static_max;
-//   constexpr static rtti_type hash       { Hash };
   typedef typename Traits::root const volatile root;
-  
+
   typedef typename boost::mpl::transform<
     Supers
   , boost::add_cv<boost::mpl::_>
@@ -66,11 +64,8 @@ private:
     && "hierarchy must have a unique root class !"
   ));
 };
-template<typename D, typename S, std::size_t Max>
-struct mixin_helper<true, D, S, Max> {
-//   constexpr static rtti_type static_max { Max };
-//   constexpr static rtti_type hash       { 0 };
-
+template<typename D, typename S>
+struct mixin_helper<true, D, S> {
   typedef D const volatile      self;
   typedef self                  root;
   typedef boost::mpl::vector<>  parents;
@@ -81,8 +76,7 @@ struct mixin_helper<true, D, S, Max> {
 template<
   typename Derived
 , typename Supers
-, unsigned char Flags
-, std::size_t Hash
+, typename Flags
 >
 struct mixin
 : private virtual detail::mixin_node {
@@ -96,91 +90,63 @@ private:
   // structure used by RTTI_GETTER
   struct rtti_traits {
   private:
-    typedef detail::mixin_helper<Flags & rtti::flags::DECLARE, Derived, Supers, Hash> helper;
+    typedef detail::mixin_helper<Flags::value & rtti::flags::DECLARE, Derived, Supers> helper;
 
   public:
     typedef typename helper::self    self;
     typedef typename helper::parents parents;
     typedef typename helper::root    root;
 
-    static const bool abstract_ = Flags & rtti::flags::ABSTRACT;
-    static const bool static_   = Flags & rtti::flags::STATIC;
-    static const bool final_    = Flags & rtti::flags::FINAL;
-
-//     constexpr static rtti_type static_max = helper::static_max;
-//     constexpr static rtti_type hash       = helper::hash;
-
-//     BOOST_STATIC_ASSERT( hash < static_max );
+    static const bool abstract_ = Flags::value & rtti::flags::ABSTRACT;
+    static const bool final_    = Flags::value & rtti::flags::FINAL;
   };
 
 protected:
-  mixin() noexcept {
+  mixin() BOOST_NOEXCEPT_OR_NOTHROW {
     this->detail::mixin_node::rtti_node_value = rtti::static_node<Derived>();
   }
-  ~mixin() noexcept {}
+  ~mixin() BOOST_NOEXCEPT_OR_NOTHROW {}
 };
 
 //@{
-//! \brief Enum flags for some optimizations
-#define RTTI_FLAGS( declare, abstract, final, static ) \
-  ( (declare ? ::rtti::flags::DECLARE : 0) \
-  | (abstract? ::rtti::flags::ABSTRACT: 0) \
-  | (final   ? ::rtti::flags::FINAL   : 0) \
-  | (static  ? ::rtti::flags::STATIC  : 0) )
-
 //! \brief Base case
-template<typename klass, std::size_t static_max = 256>
+template<typename klass>
 struct base_rtti
 : public mixin<
   klass, void const volatile
-, flags::DECLARE | flags::STATIC
-, static_max
+, boost::mpl::size_t< flags::DECLARE >
 > {};
 
 //! \brief Abstract base case
-template<typename klass, std::size_t static_max = 256>
+template<typename klass>
 struct abstract_base_rtti
 : public mixin<
   klass, void const volatile
-, flags::DECLARE | flags::STATIC | flags::ABSTRACT
-, static_max
+, boost::mpl::size_t< flags::DECLARE | flags::ABSTRACT >
 > {};
 
 template<typename klass, typename parents>
 struct implement_rtti
 : public mixin<
   klass, parents
-, 0
-, 0
-> {};
-
-template<typename klass, typename parents, std::size_t id>
-struct static_rtti
-: public mixin<
-  klass, parents
-, flags::STATIC
-, id
+, boost::mpl::size_t< 0 >
 > {};
 
 template<typename klass, typename parents>
 struct final_rtti
 : public mixin<
   klass, parents
-, flags::FINAL
-, 0
-> {};
-
-template<typename klass, typename parents, std::size_t id>
-struct static_final_rtti
-: public mixin<
-  klass, parents
-, flags::FINAL | flags::STATIC
-, id
+, boost::mpl::size_t< flags::FINAL >
 > {};
 
 //@}
 
 } // namespace rtti
+
+#include <boost/typeof/typeof.hpp>
+#include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
+
+BOOST_TYPEOF_REGISTER_TEMPLATE(rtti::mixin, 3)
 
 #endif
 

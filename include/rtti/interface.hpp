@@ -40,21 +40,16 @@ namespace rtti {
 //! \brief RTTI id type
 using detail::rtti_type;
 
-// //! \brief Function for comparision of RTTI ids
-// inline util::cmp_t ATTRIBUTE_PURE
-// rtti_compare( rtti_type a, rtti_type b )
-// { return util::compare(a,b); }
-
 //! \brief Function checking exact type
 template<class T, class U>
 inline bool ATTRIBUTE_PURE
 is_exactly_a(const U &x) {
-  using Traits = detail::rtti_getter::traits<T>;
+  typedef detail::rtti_getter::traits<T> Traits;
 
-  static_assert( boost::is_same<
+  BOOST_STATIC_ASSERT_MSG(( boost::is_same<
     typename Traits::root
   , typename Traits::root
-  >::value,
+  >::value),
     "is_exactly_a<> should be called"
     "inside an unique hierarchy"
   );
@@ -67,113 +62,12 @@ template<class T, class U>
 inline bool ATTRIBUTE_PURE ATTRIBUTE_NONNULL(1)
 is_exactly_a(const U* x) {
   // reject pointer-to-pointer
-  BOOST_STATIC_ASSERT( ! boost::is_pointer<U>::value && "is_exactly_a<> called with pointer to pointer" );
-  typedef typename std::remove_pointer<T>::type T2;
+  BOOST_STATIC_ASSERT_MSG( ! boost::is_pointer<U>::value, "is_exactly_a<> called with pointer to pointer" );
+  typedef typename boost::remove_pointer<T>::type T2;
 
   // retry without pointer
   return rtti::is_exactly_a<T2, U>( *x );
 }
-
-namespace detail {
-
-// T and U shall be const-qualified raw class types (no reference, no pointers)
-template<class T, class U>
-struct is_a_impl {
-  static inline bool ATTRIBUTE_PURE
-  apply(const U &x)
-  {
-#ifdef RTTI_IS_A_USE_DYNAMIC_CAST
-
-    return dynamic_cast<const T*>( &x ) != 0;
-
-#else
-    // manual implementation using type nodes
-
-    const ::rtti::rtti_type id = RTTI_TYPE_ID( T );
-    const ::rtti::rtti_node* n = RTTI_NODE( x );
-
-    do {
-      // got it ?
-      if( n->id == id )
-        return true;
-
-      // upcast
-      n = n->base;
-    } while( n );
-    return false;
-
-#endif
-  }
-};
-
-// in case of final target, is_a means is_exactly_a
-template<class T, class U>
-struct is_a_final {
-  static inline bool ATTRIBUTE_PURE
-  apply(const U &x)
-  {
-#ifdef RTTI_IS_A_USE_FINAL
-
-    return is_exactly_a<T, U>( x );
-
-#else
-
-    return is_a_impl<T,U>::apply( x );
-
-#endif
-  }
-};
-
-// trivial cases
-template<class T>
-struct is_a_impl<T, T> {
-  static inline bool ATTRIBUTE_CONST
-  apply(const T &)
-  { return true; }
-};
-
-template<class T>
-struct is_a_final<T, T> {
-  static inline bool ATTRIBUTE_CONST
-  apply(const T &)
-  { return true; }
-};
-
-}
-
-/*!
- * \brief Test if a pointer implements a given class
- *
- * This version relies on \c dynamic_cast,
- * and has exactly its complexity.
- */
-template<class T, class U>
-inline bool ATTRIBUTE_PURE
-is_a(const U &x)
-{
-  STATIC_ASSERT(( boost::is_same<
-    typename detail::rtti_getter::traits<T>::root
-  , typename detail::rtti_getter::traits<U>::root
-  >::value &&
-    "is_a should be called"
-    "inside an unique hierarchy"
-  ));
-
-  // U shall already be a raw class
-  typedef typename boost::remove_reference<T>::type T2;
-  typedef typename boost::remove_pointer <T2>::type T3;
-  typedef typename boost::mpl::if_c<
-    detail::rtti_getter::traits<T3>::final_
-  , detail::is_a_final<const T3, const U>
-  , detail::is_a_impl<const T3, const U>
-  >::type impl_t;
-  return impl_t::apply( x );
-}
-
-template<class T, class U>
-inline bool ATTRIBUTE_PURE ATTRIBUTE_NONNULL(1)
-is_a(const U* x)
-{ return is_a<T>( *x ); }
 
 } // namespace rtti
 

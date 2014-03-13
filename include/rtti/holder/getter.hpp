@@ -7,6 +7,8 @@
 #include "rtti/detail/traits.hpp"
 #include "rtti/detail/attribute.hpp"
 
+#include <boost/typeof/typeof.hpp>
+
 namespace rtti {
 namespace detail {
 
@@ -16,7 +18,7 @@ struct rtti_getter {
   template<class T>
   struct mixin {
     typedef typename traits_detail::remove_all<T>::type const& class_cref;
-    using ref_type = decltype( rtti_get_mixin( std::declval<class_cref>() ) );
+    typedef BOOST_TYPEOF( rtti_get_mixin( boost::declval<class_cref>() ) ) ref_type;
     typedef typename traits_detail::remove_all<ref_type>::type type;
   };
 
@@ -37,11 +39,6 @@ struct rtti_getter {
 };
 
 } // namespace detail
-
-// template<class T>
-// inline BOOST_CONSTEXPR rtti_type ATTRIBUTE_PURE
-// type_hash() BOOST_NOEXCEPT_OR_NOTHROW
-// { return rtti_type( detail::rtti_getter::traits<T>::hash ); }
 
 //! \brief Get static node
 template<class T>
