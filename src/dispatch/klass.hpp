@@ -28,7 +28,7 @@ struct klass_t
 
   std::size_t rankhash;
 
-  // FIXME why ?
+  // Used in unary case in mph.cpp
   const signature_t* const sig;
 
 public:
