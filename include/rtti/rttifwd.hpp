@@ -26,6 +26,14 @@ rtti_get_id(rtti_node const* n)
 
 } // namespace detail
 
+namespace adl {
+
+void rtti_get_mixin(...);
+void rtti_parents_size(...);
+void rtti_parents_foreach(...);
+
+} // namespace adl
+
 using detail::rtti_type;
 using detail::rtti_node;
 using detail::rtti_hierarchy;

@@ -16,13 +16,14 @@ template<class T>
 BOOST_CONSTEXPR rtti_node const*
 rtti_getter::static_node() {
   typedef typename traits_detail::remove_all<T>::type T2;
-  typedef typename get_holder::template apply<T2>::type h;
+  typedef typename get_holder<T2>::type h;
   return h::get_node();
 }
 
 template<class T>
 inline rtti_node const&
 rtti_getter::get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW {
+  using adl::rtti_get_mixin;
   return *rtti_get_mixin(x).detail::mixin_node::rtti_node_value;
 }
 

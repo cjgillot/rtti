@@ -21,38 +21,32 @@ namespace holder_ {
 template<typename> struct holder;
 
 //! \brief Grant access to the holder
+template<typename T>
 struct get_holder {
-  template<class T>
-  struct apply {
-    typedef holder<T const volatile> type;
-  };
+  typedef holder<T const volatile> type;
 };
 
 //! \brief Placeholder struct used for hierarchy base
 template<>
-struct get_holder::apply<const volatile void> {
+struct get_holder<const volatile void> {
   struct type {
     static BOOST_CONSTEXPR rtti_node* get_node() { return NULL; }
   };
 };
 
+using adl::rtti_parents_size;
+using adl::rtti_parents_foreach;
+
 //! Arguments must be const-qualified to avoid unnecessary instanciations
 template<class T>
 struct holder {
 private:
-  BOOST_STATIC_ASSERT( boost::is_const<T>::value && boost::is_volatile<T>::value
-  && "rtti::detail::holder_::holder<> must not be accessed directly" );
+  BOOST_STATIC_ASSERT_MSG(
+    boost::is_const<T>::value && boost::is_volatile<T>::value,
+    "rtti::detail::holder_::holder<> must not be accessed directly"
+  );
 
-  typedef rtti_getter::traits<T> trts;
-  typedef typename trts::parents parents;
-  
-  typedef typename boost::mpl::transform<
-    parents
-  , get_holder
-  >::type sholders;
-  enum {
-    Arity = boost::mpl::size<parents>::value
-  };
+  BOOST_STATIC_CONSTANT(std::size_t, Arity = sizeof( rtti_parents_size((T*)NULL) ));
 
   struct initializer_t {
     struct register_one;
@@ -84,8 +78,9 @@ template<class T>
 struct holder<T>::initializer_t::register_one {
   mutable size_t k;
 
-  template<typename U>
-  void operator()(U) const {
+  template<typename P>
+  void operator()(P*) const {
+    typedef typename get_holder<P>::type U;
     holder::node.__base[k] = U::get_node();
     ++k;
   }
@@ -96,9 +91,7 @@ holder<T>::initializer_t::initializer_t() {
   holder::node.__arity = Arity;
 
   register_one reg = { 0 };
-  boost::mpl::for_each<
-    sholders
-  >( reg );
+  rtti_parents_foreach(reg, (T*)NULL);
 }
 
 template<class T>

@@ -15,18 +15,6 @@ namespace detail {
 //! \brief Friend structure for in-class rtti access
 struct rtti_getter {
 
-  template<class T>
-  struct mixin {
-    typedef typename traits_detail::remove_all<T>::type const& class_cref;
-    typedef BOOST_TYPEOF( rtti_get_mixin( boost::declval<class_cref>() ) ) ref_type;
-    typedef typename traits_detail::remove_all<ref_type>::type type;
-  };
-
-  template<class T>
-  struct traits
-  : public mixin<T>::type::rtti_traits
-  {};
-
   //! \brief Get static node
   template<class T>
   static BOOST_CONSTEXPR rtti_node const*

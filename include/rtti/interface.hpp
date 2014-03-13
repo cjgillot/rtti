@@ -44,16 +44,6 @@ using detail::rtti_type;
 template<class T, class U>
 inline bool ATTRIBUTE_PURE
 is_exactly_a(const U &x) {
-  typedef detail::rtti_getter::traits<T> Traits;
-
-  BOOST_STATIC_ASSERT_MSG(( boost::is_same<
-    typename Traits::root
-  , typename Traits::root
-  >::value),
-    "is_exactly_a<> should be called"
-    "inside an unique hierarchy"
-  );
-
   return rtti::static_id<T>() == rtti::get_id(x);
 }
 
