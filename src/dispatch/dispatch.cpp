@@ -104,7 +104,7 @@ struct sig_upcaster {
   std::size_t b;
   
   sig_upcaster(signature_t const& s0, std::size_t a, dispatch_t const& d);
-  overload_t const& operator()() throw(end_loop);
+  overload_t const* operator()() BOOST_NOEXCEPT_OR_NOTHROW;
 };
 
 } // namespace <>
@@ -126,36 +126,34 @@ static void dispatch_one(
   typedef std::list<overload_t> max_set_type;
   max_set_type max_set;
 
-  try {
-    // insert first candidate
-    max_set.push_back( upcast() );
+  for(;;) {
+    // new candidate to be tested
+    overload_t const* up = upcast();
 
-    for(;;) {
-      // new candidate to be tested
-      overload_t const& s2 = upcast();
+    // end loop ?
+    if(!up)
+      break;
 
-      bool dominated = false;
+    bool dominated = false;
 
-      for(max_set_type::iterator it = max_set.begin(), en = max_set.end(); it != en; ++it)
-      {
-      filter:
-        overload_t const& e = *it;
+    for(max_set_type::iterator it = max_set.begin(), en = max_set.end(); it != en; ++it)
+    {
+    filter:
+      overload_t const& e = *it;
 
-        // [s2] is better match, remove [it]
-        if( signature_t::subtypes()(e.first, s2.first) )
-        { it = max_set.erase(it); goto filter; }
+      // [*up] is better match, remove [it]
+      if( signature_t::subtypes()(e.first, up->first) )
+      { it = max_set.erase(it); goto filter; }
 
-        // [it] is better match, don't insert [s2]
-        else if( signature_t::subtypes()(s2.first, e.first) )
-        { dominated = true; break; }
-      }
-
-      // none of [max_set] is better
-      if( !dominated )
-        max_set.push_back(s2);
+      // [it] is better match, don't insert [s2]
+      else if( signature_t::subtypes()(up->first, e.first) )
+      { dominated = true; break; }
     }
+
+    // none of [max_set] is better
+    if( !dominated )
+      max_set.push_back(*up);
   }
-  catch(end_loop&) {}
 
   if(max_set.size() == 1)
     dispatch.insert(std::make_pair( sig, boost::make_optional(*max_set.begin()) ));
@@ -187,8 +185,8 @@ sig_upcaster::sig_upcaster(const signature_t& s0, std::size_t a, const dispatch_
 : sig0(s0), arity(a), dispatch(d)
 , k(0), b(0) {}
 
-overload_t const&
-sig_upcaster::operator()() throw(end_loop)
+overload_t const*
+sig_upcaster::operator()() BOOST_NOEXCEPT_OR_NOTHROW
 {
   for(;;) {
     signature_t sig = sig0;
@@ -200,7 +198,7 @@ sig_upcaster::operator()() throw(end_loop)
       while( b == sig.array()[k]->bases.size() ) {
         b = 0; ++k;
         if(k == arity)
-          throw end_loop();
+          return NULL;
       }
 
       // select
@@ -216,6 +214,6 @@ sig_upcaster::operator()() throw(end_loop)
     boost::optional<overload_t> const& bound = dispatch.at(sig);
     
     // FIXME may hide ambiguity cascade
-    if(bound) return *bound;
+    if(bound) return &*bound;
   }
 }
