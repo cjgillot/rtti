@@ -1,5 +1,10 @@
-#ifndef RTTI_DMETHOD_POLES_HPP
-#define RTTI_DMETHOD_POLES_HPP
+//          Copyright Camille Gillot 2012 - 2014.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef RTTI_MMETHOD_POLES_HPP
+#define RTTI_MMETHOD_POLES_HPP
 
 #include "mmethod/shared/basic.hpp"
 #include "mmethod/hash/hash_map/hash_map.hpp"
