@@ -113,7 +113,7 @@ struct class_traits {
   typedef class_type raw_type;
 
   static reference_type get(reference_type v) { return v; }
-  static bool valid(reference_type v) { return true; }
+  static bool valid(reference_type) { return true; }
 
   template<typename U>
   static U cast(reference_type v)

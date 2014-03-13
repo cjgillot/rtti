@@ -34,7 +34,7 @@ struct get_holder<const volatile void> {
   };
 };
 
-using adl::rtti_parents_size;
+using adl::rtti_parents_size_1p;
 using adl::rtti_parents_foreach;
 
 //! Arguments must be const-qualified to avoid unnecessary instanciations
@@ -46,7 +46,7 @@ private:
     "rtti::detail::holder_::holder<> must not be accessed directly"
   );
 
-  BOOST_STATIC_CONSTANT(std::size_t, Arity = sizeof( rtti_parents_size((T*)NULL) ));
+  BOOST_STATIC_CONSTANT(std::size_t, Arity = sizeof( rtti_parents_size_1p((T*)NULL) ) - 1);
 
   struct initializer_t {
     struct register_one;

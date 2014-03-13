@@ -26,11 +26,11 @@ protected:
   struct traits;
 
 private:
+  friend struct detail::dispatch<Tag,Ret>;
   typedef detail::dispatch<Tag,Ret> dispatch_type;
 
   // grant access
-  friend dispatch_type;
-  friend class register_base<Tag>;
+  friend struct register_base<Tag>;
   template<typename Tag2, typename Over2, typename Ret2, typename Args2>
   friend struct make_implement_helper;
 

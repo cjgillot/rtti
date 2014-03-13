@@ -29,7 +29,7 @@ rtti_get_id(rtti_node const* n)
 namespace adl {
 
 void rtti_get_mixin(...);
-void rtti_parents_size(...);
+void rtti_parents_size_1p(...);
 void rtti_parents_foreach(...);
 
 } // namespace adl

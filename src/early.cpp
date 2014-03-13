@@ -33,7 +33,7 @@ extern void process_declaration(early_bindings_type const& decl, seal_table_type
 
 void
 rtti::dmethod::detail::seal_table(
-  std::size_t arity
+  std::size_t /*arity*/
 , invoker_table_type table
 , seal_table_type& seal
 ) {

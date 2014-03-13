@@ -38,15 +38,15 @@ private:
   >::type parents;
 
   BOOST_STATIC_CONSTANT(std::size_t, arity = boost::mpl::size<parents>::value);
-  struct arity_type { unsigned char __dummy [ arity ]; };
-  BOOST_STATIC_ASSERT( sizeof(arity_type) == arity );
+  struct arity_type { unsigned char __dummy [ 1+arity ]; };
+  BOOST_STATIC_ASSERT( sizeof(arity_type) == 1+arity );
 
 public:
-  friend class detail::rtti_getter;
+  friend struct detail::rtti_getter;
   friend mixin const& rtti_get_mixin(Derived const& d) {
     return static_cast<mixin const&>(d);
   }
-  friend arity_type rtti_parents_size(Derived const volatile*) {
+  friend arity_type rtti_parents_size_1p(Derived const volatile*) {
     // dummy body : we don't want any call to this
     return boost::declval<arity_type>();
   }

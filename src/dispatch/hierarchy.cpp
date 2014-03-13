@@ -119,8 +119,8 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
   candidates.reserve(k->bases.size());
 
   BOOST_FOREACH(klass_t const* base, k->bases)
-    if(k->pole)
-      candidates.push_back(k->pole);
+    if(base->pole)
+      candidates.push_back(base->pole);
 
   if(candidates.size() == 0)
     return 0;

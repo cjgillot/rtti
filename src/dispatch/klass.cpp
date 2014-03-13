@@ -16,6 +16,6 @@ klass_t::klass_t(
 )
 : id(hh)
 , bases(arity)
-, subtype(1)
 , pole(NULL)
+, subtype(1)
 , sig(NULL) {}

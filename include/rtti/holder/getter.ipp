@@ -5,8 +5,6 @@
 #include "rtti/holder/holder.hpp"
 #include "rtti/detail/traits.hpp"
 
-#include "rtti/detail/traits.hpp"
-
 #include "rtti/mixin.hpp"
 
 namespace rtti {

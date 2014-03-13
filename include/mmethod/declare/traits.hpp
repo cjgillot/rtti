@@ -24,10 +24,8 @@ struct make_declare_helper<Tag, Ret, Args>::traits
 
   typedef rtti::detail::trampoline<Tag, Ret, unwrapped_args> trampoline;
 
-  enum {
-    vsize = tags::virtual_size<Args>::value
-  ,
-    type_bitset = boost::mpl::reverse_fold<
+  BOOST_STATIC_CONSTANT(std::size_t, vsize = tags::virtual_size<Args>::value);
+  BOOST_STATIC_CONSTANT(std::size_t, type_bitset = (boost::mpl::reverse_fold<
       type_tags,
       boost::mpl::size_t<0>,
       boost::mpl::if_<mpl_::_2
@@ -35,9 +33,9 @@ struct make_declare_helper<Tag, Ret, Args>::traits
       , boost::mpl::times<mpl_::_1, boost::mpl::size_t<2> >
       >
     >::type::value
-  };
-  
-  BOOST_STATIC_ASSERT( vsize > 0 && "At least one virtual parameter must be provided." );
+  ));
+
+  BOOST_STATIC_ASSERT_MSG( vsize > 0, "At least one virtual parameter must be provided." );
 };
 
 }}} // namespace rtti::mmethod::detail
