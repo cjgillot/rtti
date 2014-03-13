@@ -85,11 +85,6 @@ struct implement_rtti
 
 } // namespace rtti
 
-#include <boost/typeof/typeof.hpp>
-#include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
-
-BOOST_TYPEOF_REGISTER_TEMPLATE(rtti::mixin, 3)
-
 #endif
 
 #include "rtti/holder/getter.ipp"

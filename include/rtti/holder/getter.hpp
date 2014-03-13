@@ -7,8 +7,6 @@
 #include "rtti/detail/traits.hpp"
 #include "rtti/detail/attribute.hpp"
 
-#include <boost/typeof/typeof.hpp>
-
 namespace rtti {
 namespace detail {
 
