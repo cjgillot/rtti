@@ -6,8 +6,7 @@
 #include "hierarchy.hpp"
 
 #include <boost/foreach.hpp>
-#include <vector>
-#include <stack>
+#include <deque>
 
 #include "rtti/rtti.hpp"
 
@@ -115,13 +114,14 @@ namespace {
 //! klass objects are popped from the most general
 //! to the most derived type
 struct wanderer_t {
-  std::vector<klass_t*> stack;
+  std::deque<klass_t*> stack;
 
-  wanderer_t(std::size_t dictsz)
-  { stack.reserve(dictsz); }
+  wanderer_t(std::size_t) {}
+
+  typedef klass_t* value_type;
 
   // is_pole is used as a traversal flag
-  void push(klass_t const* k) {
+  void push_back(klass_t const* k) {
     klass_t* next = const_cast<klass_t*>(k);
     next->is_pole() = false;
     stack.push_back(next);
@@ -132,21 +132,34 @@ struct wanderer_t {
       if(stack.empty())
         return NULL;
 
-      klass_t* top = const_cast<klass_t*>( stack.back() );
+      // get next element
+      klass_t* top = stack.back();
       stack.pop_back();
 
+      // already traversed ?
       if(top->is_pole() )
         continue;
 
-      top->is_pole() = true;
-
+      // inject base classes
+      bool need_upcast = false;
       BOOST_FOREACH(klass_t const* base, top->get_bases()) {
         klass_t* next = const_cast<klass_t*>(base);
 
         // not visited yet
-        if(! next->is_pole() )
+        if(! next->is_pole() ) {
           stack.push_back(next);
+          need_upcast = true;
+        }
       }
+
+      // retry if a base has been injected
+      if(need_upcast) {
+        stack.push_front(top);
+        continue;
+      }
+
+      // mark as traversed
+      top->is_pole() = true;
 
       // FIXME sure ?
       stack.erase( std::remove(stack.begin(), stack.end(), top), stack.end() );
@@ -162,14 +175,6 @@ struct wanderer_t {
 void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
   // primary poles are marked by add()
 
-  /// hierarchy must be shrunk already
-  wanderer_t wanderer (dict.size());
-  std::transform(
-    dict.begin(), dict.end(),
-    std::back_inserter(wanderer.stack),
-    select_second()
-  );
-
   // Prepare room -> worst case
   BOOST_ASSERT( seq.empty() );
   seq.reserve(klasses.size());
@@ -182,6 +187,14 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
     else
       BOOST_ASSERT( !k->pole );
 #endif
+
+  // prepare traversal structure
+  wanderer_t wanderer (dict.size());
+  std::transform(
+    dict.begin(), dict.end(),
+    std::back_inserter(wanderer),
+    select_second()
+  );
 
   // traverse
   while(klass_t* top = wanderer.pop()) {
