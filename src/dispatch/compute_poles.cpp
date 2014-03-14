@@ -11,9 +11,6 @@
 
 #include "rtti/rtti.hpp"
 
-// readability improvement
-#define is_pole subtype[0]
-
 /* Implementation of pole computation algorithm from [1]
  * 
  * Algorithms are described in terms of this paper.
@@ -27,7 +24,7 @@ namespace {
 
 struct rank_compare {
   bool operator()(klass_t const* a, klass_t const* b) const
-  { return a->rank < b->rank; }
+  { return klass_t::total_order()(*b,*a); }
 };
 
 struct select_second {
@@ -114,16 +111,20 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
 
 namespace {
 
-// is_pole is used as a traversal flag
+//!\brief Topological sort traversal functor
+//! klass objects are popped from the most general
+//! to the most derived type
 struct wanderer_t {
-  std::vector<klass_t const*> stack;
+  std::vector<klass_t*> stack;
 
   wanderer_t(std::size_t dictsz)
   { stack.reserve(dictsz); }
 
+  // is_pole is used as a traversal flag
   void push(klass_t const* k) {
-    const_cast<klass_t*>(k)->is_pole = false;
-    stack.push_back(k);
+    klass_t* next = const_cast<klass_t*>(k);
+    next->is_pole() = false;
+    stack.push_back(next);
   }
 
   klass_t* pop() {
@@ -134,22 +135,21 @@ struct wanderer_t {
       klass_t* top = const_cast<klass_t*>( stack.back() );
       stack.pop_back();
 
-      if(top->is_pole)
+      if(top->is_pole() )
         continue;
 
-      top->is_pole = true;
+      top->is_pole() = true;
 
-      BOOST_FOREACH(klass_t const* base, top->bases)
+      BOOST_FOREACH(klass_t const* base, top->get_bases()) {
+        klass_t* next = const_cast<klass_t*>(base);
+
         // not visited yet
-        if(! base->is_pole)
-          stack.push_back(base);
+        if(! next->is_pole() )
+          stack.push_back(next);
+      }
 
       // FIXME sure ?
       stack.erase( std::remove(stack.begin(), stack.end(), top), stack.end() );
-
-      // already visited
-      if(top->pole)
-        continue;
 
       return top;
     }
@@ -170,35 +170,45 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
     select_second()
   );
 
-  // FIXME just in case
-  seq.clear();
   // Prepare room -> worst case
+  BOOST_ASSERT( seq.empty() );
   seq.reserve(klasses.size());
 
-  // init primary poles
+#ifndef NDEBUG
+  // assert structure
   BOOST_FOREACH(klass_t const* k, wanderer.stack)
-    if(k->is_pole) {
+    if(k->is_pole)
       BOOST_ASSERT( k->pole == k );
-      klass_t* k2 = const_cast<klass_t*>(k);
-
-      pole_init(k2);
-      seq.push_back(k);
-    }
+    else
+      BOOST_ASSERT( !k->pole );
+#endif
 
   // traverse
   while(klass_t* top = wanderer.pop()) {
     BOOST_ASSERT( std::find(seq.begin(), seq.end(), top) == seq.end() );
 
-    // compute
-    klass_t const* pole;
-    std::size_t sz = pseudo_closest(top, pole);
-    if(sz == 0)
-      top->pole = NULL;
+    if(! top->pole) {
 
-    else if(sz == 1)
-      top->pole = pole;
+      // compute
+      klass_t const* pole;
+      std::size_t const sz = pseudo_closest(top, pole);
 
+      if(sz == 0)
+        top->pole = NULL;
+
+      else if(sz == 1)
+        top->pole = pole;
+
+      else {
+        top->pole = top;
+        goto init_push;
+      }
+    }
+
+    // init and push
     else {
+    init_push:
+
       pole_init(top);
       top->pole = top;
 

@@ -11,9 +11,6 @@
 
 #include "rtti/rtti.hpp"
 
-// readability improvement
-#define is_pole subtype[0]
-
 // ----- hierarchy ----- //
 
 hierarchy_t::hierarchy_t()
@@ -58,7 +55,7 @@ hierarchy_t::do_add(rtti_hierarchy vec) {
 klass_t const*
 hierarchy_t::add(rtti_hierarchy vec) {
   klass_t* base = do_add(vec);
-  const_cast<klass_t*>(base)->pole = base;
-  const_cast<klass_t*>(base)->is_pole = true;
+  base->pole = base;
+  base->is_pole() = true;
   return base;
 }

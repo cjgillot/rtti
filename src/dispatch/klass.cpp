@@ -10,9 +10,6 @@
 
 #include "hierarchy.hpp"
 
-// readability improvement
-#define is_pole subtype[0]
-
 // ----- klass ----- //
 
 klass_t::klass_t(

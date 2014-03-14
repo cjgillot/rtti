@@ -52,6 +52,8 @@ public:
   rtti_type         get_id()       const { return id;       }
   bases_type const& get_bases()    const { return bases;    }
 
+  boost::dynamic_bitset<>::reference is_pole() { return subtype[0]; }
+
 public:
   // total hashing order
   struct hash_order
