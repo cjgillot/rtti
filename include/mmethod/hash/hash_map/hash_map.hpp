@@ -3,16 +3,17 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_HASH_MAP_HPP
-#define RTTI_MMETHOD_HASH_MAP_HPP
+#ifndef RTTI_MMETHOD_HASH_MAP_BASE_HPP
+#define RTTI_MMETHOD_HASH_MAP_BASE_HPP
 
-#include "rtti/rtti.hpp"
-
-#define MMETHOD_USE_INLINE_DO_FIND 1
-
-#include "mmethod/hash/hash_map/hash_map_base.hpp"
-
+#include "rtti/rttifwd.hpp"
 #include "rtti/detail/attribute.hpp"
+
+#include <memory>
+#include <boost/noncopyable.hpp>
+#include <boost/scoped_array.hpp>
+
+#include "mmethod/hash/hash_map/bucket.hpp"
 
 // All functions declared in this file
 // are defined in rtti/mmethod/hash_map.cpp
@@ -21,19 +22,15 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-/// exported function
-value_type do_fetch_pole(hash_map const& map, rtti_hierarchy rt0, hash_map_base::iterator it0) BOOST_NOEXCEPT_OR_NOTHROW;
-value_type ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
-fetch_pole(hash_map const& map, rtti_hierarchy rt) BOOST_NOEXCEPT_OR_NOTHROW;
-
-/// state class
-class hash_map {
+class hash_map
+: private boost::noncopyable
+{
 public:
-  typedef hash_map_base::iterator iterator;
+  typedef bucket_t const* iterator;
 
 public:
-  inline  hash_map() {}
-  inline ~hash_map() {}
+  inline hash_map();
+  ~hash_map();
 
 private:
   hash_map(hash_map const&);
@@ -44,42 +41,48 @@ private:
 #endif
 
 public:
-  void flush(hash_map const&);
-  
+  /// hash function, thread-safe
+  index_type ATTRIBUTE_PURE hash(key_type a) const BOOST_NOEXCEPT_OR_NOTHROW;
+
 public:
-  /// find(), thread-safe
+  /// find block -> all these are thread-safe
   //@{
-  iterator ATTRIBUTE_PURE find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
   iterator ATTRIBUTE_PURE zero() const BOOST_NOEXCEPT_OR_NOTHROW;
-  //@}
+  iterator ATTRIBUTE_PURE find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
 
 private:
-  /// fetch_pole(), thread-safe
-  //@{
-  friend value_type fetch_pole(hash_map const&, rtti_hierarchy rt) BOOST_NOEXCEPT_OR_NOTHROW;
-  friend value_type do_fetch_pole(hash_map const& map, rtti_hierarchy rt0, hash_map::iterator it0) BOOST_NOEXCEPT_OR_NOTHROW;
-  inline bucket_t* array() const BOOST_NOEXCEPT_OR_NOTHROW { return m_base.m_array.get(); }
+  iterator ATTRIBUTE_PURE do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
   //@}
 
 public:
-  /// use by generated code, thread-unsafe
+  /// insert block -> all these must be protected by mutex
   //@{
-  void create(std::size_t N); // unsafe
-  void insert(key_type key, value_type value); // unsafe
-  void insert_at(iterator it, key_type key, value_type value); // unsafe
-
+  void create(std::size_t sz);
+  void insert(key_type key, value_type value);
+  void insert_at(iterator it, key_type key, value_type value);
   void erase(iterator it);
+
+  void flush(hash_map const&);
+
+private:
+  void insert_need_resize(key_type key, value_type value);
+  void move(hash_map&) BOOST_NOEXCEPT_OR_NOTHROW;
   //@}
 
 private:
-  hash_map_base m_base;
-};
+  std::size_t m_mask; // == (1 << m_logsz) - 1
+  
+#ifndef BOOST_HAS_RVALUE_REFS
+  boost::scoped_array<bucket_t> m_array;
+#else
+  std::unique_ptr<bucket_t[]> m_array;
+#endif
 
-typedef bucket_t pole_t;
-typedef hash_map poles_map_type;
+  std::size_t m_logsz;
+};
 
 }}} // namespace rtti::hash::detail
 
-#endif
+#include "mmethod/hash/hash_map/hash_map.ipp"
 
-#include "hash_map.ipp"
+#endif

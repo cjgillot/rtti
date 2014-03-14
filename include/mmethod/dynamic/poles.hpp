@@ -13,7 +13,7 @@ namespace rtti {
 namespace dmethod {
 namespace detail {
 
-using hash::detail::poles_map_type;
+typedef hash::detail::hash_map poles_map_type;
 
 typedef invoker_t* invoker_table_type;
 

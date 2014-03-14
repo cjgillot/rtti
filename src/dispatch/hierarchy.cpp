@@ -10,6 +10,7 @@
 #include <stack>
 
 #include "hierarchy.hpp"
+#include "rtti/rtti.hpp"
 
 // readability improvement
 #define is_pole subtype[0]

@@ -4,6 +4,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "mmethod/hash/fetch_pole.hpp"
+#include "rtti/rtti.hpp"
 
 #include <boost/assert.hpp>
 
