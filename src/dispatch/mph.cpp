@@ -4,7 +4,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "early.hpp"
-#include "overloads.hpp"
+#include "forward.hpp"
 
 #include <numeric>
 #include <boost/foreach.hpp>
@@ -66,7 +66,7 @@ make_assignment(
 } // namespace <>
 
 /* Generates the hash function and the key word recognizer function.  */
-void gen_mph(
+void rtti_dispatch::output_dispatch_table(
   seal_table_type& f,
   const pole_table_t& pole_table,
   const dispatch_t& dispatch,

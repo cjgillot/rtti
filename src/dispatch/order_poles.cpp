@@ -3,6 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include "forward.hpp"
+
 #include <vector>
 
 #include "hierarchy.hpp"
@@ -13,7 +15,7 @@
 #define USE_SMALLARRAY 0
 
 
-void order_poles(
+void rtti_dispatch::order_poles(
   pole_table_t& pole_table
 , std::vector<hierarchy_t>& hierarchies
 ) {
@@ -57,7 +59,7 @@ static void print_map(seal_table_type& output, std::size_t i, Seq const& t, std:
   std::for_each(dynamics.begin(), dynamics.end(), ins);
 }
 
-void print_poles(
+void rtti_dispatch::output_pole_tables(
   seal_table_type& output
 , early_bindings_type const& decl
 , pole_table_t const& pole_table

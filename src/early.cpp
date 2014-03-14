@@ -34,8 +34,6 @@ rtti::dmethod::detail::inse_table(
   eb->vector.push_back(std::make_pair(signature_type(hiers, hiers+arity), inv));
 }
 
-extern void process_declaration(early_bindings_type const& decl, seal_table_type& output);
-
 void
 rtti::dmethod::detail::seal_table(
   std::size_t /*arity*/
@@ -46,7 +44,7 @@ rtti::dmethod::detail::seal_table(
   // we assume this function is called strictly after [inse_table] finished on the same [table]
   early_bindings_type* eb = reinterpret_cast<early_bindings_type*>(table);
 
-  process_declaration(*eb, seal);
+  rtti_dispatch::process_declaration(*eb, seal);
 
   delete eb;
 }

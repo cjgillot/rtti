@@ -3,8 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "hierarchy.hpp"
-#include "overloads.hpp"
+#include "forward.hpp"
 
 #include <list>
 
@@ -14,6 +13,14 @@
 #include <boost/optional.hpp>
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
+
+/* Implementation of pole computation algorithm from [2]
+ * 
+ * Algorithms are described in terms of this paper.
+ * 
+ * [1] Pirkelbauer, Solodkyy, Stroustrup. Report on language support
+ * for Multi-Methods and Open-Methods for C++.
+ */
 
 namespace {
 
@@ -67,14 +74,12 @@ static void dispatch_one(
   dispatch_t &dispatch
 );
 
-void dispatch(
+void rtti_dispatch::dispatch(
   dispatch_t &dispatch,
   overloads_t& overloads,
   const pole_table_t &pole_table
 ) {
-// FIXME Why ?
-//   std::sort(overloads.begin(), overloads.end());
-
+  // insert known overloads
   BOOST_FOREACH(overload_t const& s, overloads)
     dispatch.insert(std::make_pair( s.first, s ));
 

@@ -24,4 +24,9 @@ using rtti::invoker_t;
 using rtti::dmethod::detail::poles_map_type;
 using rtti::dmethod::detail::seal_table_type;
 
+namespace rtti_dispatch {
+  // dispatch/mmethod.cpp
+  extern void process_declaration(early_bindings_type const&, seal_table_type&);
+}
+
 #endif
