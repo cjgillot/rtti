@@ -34,10 +34,10 @@ struct beginner {
 
 void product_alloc(product_t& p, const pole_table_t &table)
 {
-  p.reserve(table.size());
+  p.resize(table.size());
   std::transform(
     table.begin(), table.end(),
-    std::back_inserter(p),
+    p.begin(),
     beginner()
   );
 }
@@ -96,8 +96,6 @@ void rtti_dispatch::dispatch(
   while( product_incr(p, pole_table) );
 }
 
-struct end_loop {};
-
 namespace {
 
 struct sig_upcaster {
@@ -119,11 +117,11 @@ static void dispatch_one(
   const pole_table_t &pole_table,
   dispatch_t &dispatch
 ) {
-  const size_t arity = pole_table.size();
-
   // already registered
   if(dispatch.find(sig) != dispatch.end())
     return;
+
+  std::size_t const arity = pole_table.size();
 
   sig_upcaster upcast ( sig, arity, dispatch );
 
@@ -139,20 +137,26 @@ static void dispatch_one(
     if(!up)
       break;
 
+    // poll max_set
     bool dominated = false;
-
-    for(max_set_type::iterator it = max_set.begin(), en = max_set.end(); it != en; ++it)
     {
-    filter:
-      overload_t const& e = *it;
+      max_set_type::iterator it = max_set.begin(), en = max_set.end();
+      for(; it != en;)
+      {
+        overload_t const& e = *it;
 
-      // [*up] is better match, remove [it]
-      if( signature_t::subtypes()(e.first, up->first) )
-      { it = max_set.erase(it); goto filter; }
+        // [*up] is better match, remove [it]
+        if( signature_t::subtypes()(e.first, up->first) )
+          it = max_set.erase(it);
 
-      // [it] is better match, don't insert [s2]
-      else if( signature_t::subtypes()(up->first, e.first) )
-      { dominated = true; break; }
+        // [it] is better match, don't insert [s2]
+        else if( signature_t::subtypes()(up->first, e.first) )
+        { dominated = true; break; }
+
+        // continue
+        else
+          ++it;
+      }
     }
 
     // none of [max_set] is better
