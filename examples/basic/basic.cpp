@@ -16,53 +16,48 @@
  * Their ids are then output on stdout
  * 
  * \c foo is the base class
- * \c bar has a statically defined id \c bar_id
+ * \c bar inherits from \c foo
  * \c baz and \c lap respectively inherit from \c foo and \c bar
  */
 
-// Maximal statically assigned ID (strict maximum)
-const int max_id = 10;
-
-// ID assigned to class bar
-const int bar_id = 6;
-
+using namespace rtti;
 using boost::mpl::vector;
 
 struct foo
-: rtti::base_rtti<foo, max_id> {
+: base_rtti<foo> {
 public:
   virtual ~foo() {}
 };
 
 struct bar
 : foo
-, rtti::static_rtti<bar, vector<foo>, bar_id>
+, implement_rtti<bar, vector<foo> >
 {};
 
 struct baz
 : foo
-, rtti::implement_rtti<baz, vector<foo> >
+, implement_rtti<baz, vector<foo> >
 {};
 
 struct lap
 : bar
-, rtti::implement_rtti<lap, vector<bar> >
+, implement_rtti<lap, vector<bar> >
 {};
 
 int main() {
   foo f; bar r; baz z; lap l;
 
   std::cout << "Classes IDs :" << std::endl;
-  std::cout << "- [foo] base class has id 0 : " << rtti::static_id<foo>() << std::endl;
-  std::cout << "- [bar] has known id "          << bar_id << " : " << rtti::static_id<bar>() << std::endl;
-  std::cout << "- [baz] class has id : "        << rtti::static_id<baz>() << std::endl;
-  std::cout << "- [lap] class has id : "        << rtti::static_id<lap>() << std::endl;
+  std::cout << "- [foo] " << static_id<foo>() << std::endl;
+  std::cout << "- [bar] " << static_id<bar>() << std::endl;
+  std::cout << "- [baz] " << static_id<baz>() << std::endl;
+  std::cout << "- [lap] " << static_id<lap>() << std::endl;
 
   std::cout << "Objects IDs :" << std::endl;
-  std::cout << "- [foo] base class has id 0 : " << rtti::get_id(f) << std::endl;
-  std::cout << "- [bar] has known id "          << bar_id << " : " << rtti::get_id(r) << std::endl;
-  std::cout << "- [baz] class has id : "        << rtti::get_id(z) << std::endl;
-  std::cout << "- [lap] class has id : "        << rtti::get_id(l) << std::endl;
+  std::cout << "- [foo] " << get_id(f) << std::endl;
+  std::cout << "- [bar] " << get_id(r) << std::endl;
+  std::cout << "- [baz] " << get_id(z) << std::endl;
+  std::cout << "- [lap] " << get_id(l) << std::endl;
 
   return 0;
 }

@@ -9,8 +9,10 @@
 
 #include <iostream>
 #include <boost/bind.hpp>
+#include <boost/mpl/vector.hpp>
 
 using namespace rtti;
+using boost::mpl::vector;
 
 typedef void ResultType; 
  
@@ -56,19 +58,19 @@ struct Predator_abstract: object
 {};
  
 struct Lion: public Predator_abstract
-, public implement_rtti<Lion, Predator_abstract>
+, public implement_rtti<Lion, vector<Predator_abstract> >
 {
   std::string i_am_a() const { return "Lion"; }
 };
  
 struct Anaconda: public Predator_abstract
-, public implement_rtti<Anaconda, Predator_abstract>
+, public implement_rtti<Anaconda, vector<Predator_abstract> >
 {
   std::string i_am_a() const { return "Anaconda"; }
 };
  
 struct Bear: public Predator_abstract
-, public implement_rtti<Bear, Predator_abstract>
+, public implement_rtti<Bear, vector<Predator_abstract> >
 {
   std::string i_am_a() const { return "Bear"; }
 };
@@ -79,13 +81,13 @@ struct Prey_abstract: object
 {};
  
 struct Gazelle: public Prey_abstract
-, public implement_rtti<Gazelle, Prey_abstract>
+, public implement_rtti<Gazelle, vector<Prey_abstract> >
 {
   std::string i_am_a() const { return "Gazelle"; }
 };
  
 struct Girrafe: public Prey_abstract
-, public implement_rtti<Girrafe, Prey_abstract>
+, public implement_rtti<Girrafe, vector<Prey_abstract> >
 {
   std::string i_am_a() const { return "Gazelle"; }
 };

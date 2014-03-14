@@ -8,9 +8,11 @@
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
 
-using namespace rtti;
-
 #include <iostream>
+#include <boost/mpl/vector.hpp>
+
+using namespace rtti;
+using boost::mpl::vector;
 
 struct foo
 : base_rtti<foo> {
@@ -22,19 +24,19 @@ public:
 
 struct bar
 : foo
-, implement_rtti<bar, foo>
+, implement_rtti<bar, vector<foo> >
 {
   int g() { return 42; }
 };
 
 struct baz
 : foo
-, implement_rtti<baz, foo>
+, implement_rtti<baz, vector<foo> >
 {};
 
 struct lap
 : bar
-, implement_rtti<lap, bar>
+, implement_rtti<lap, vector<bar> >
 {};
 
 using tags::_v;

@@ -7,9 +7,11 @@
 
 #include "mmethod/implement.hpp"
 
+#include <boost/mpl/vector.hpp>
+
 struct baz
 : foo
-, implement_rtti<baz, foo>
+, implement_rtti<baz, boost::mpl::vector<foo> >
 {};
 
 foo* make_baz() { return new baz; }

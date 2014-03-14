@@ -7,9 +7,11 @@
 
 #include "mmethod/implement.hpp"
 
+#include <boost/mpl/vector.hpp>
+
 struct bar
 : foo
-, implement_rtti<bar, foo>
+, implement_rtti<bar, boost::mpl::vector<foo> >
 {
   int g();
 };
