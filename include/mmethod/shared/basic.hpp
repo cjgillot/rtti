@@ -27,13 +27,6 @@ struct bad_dispatch
 
 void ATTRIBUTE_NORETURN _rtti_bad_dispatch();
 
-namespace detail {
-struct invalid_node {
-  typedef invalid_node type;
-  static const rtti_node node;
-};
-} // namespace detail
-
 } // namespace rtti
 
 #endif

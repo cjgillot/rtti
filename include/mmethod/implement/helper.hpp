@@ -24,23 +24,6 @@ private:
 
   enum { vsize = traits::vsize };
 
-// protected:
-//   template<std::size_t I>
-//   struct get_node {
-//   private:
-//     using arg_t = typename Args::template get<I>::type;
-//     using klass_t = typename rtti::mpl::remove_all<arg_t>::type;
-//     using virtual_t = typename Tag::traits::type_tags::template get<I>::type;
-//     using dispatch_t = typename boost::mpl::if_<
-//       virtual_t
-//     , ::rtti::detail::get_holder<klass_t>
-//     , ::rtti::detail::invalid_node
-//     >::type::type;
-// 
-//   public:
-//     constexpr static rtti_node const* value = &dispatch_t::node;
-//   };
-
 protected:
   typedef typename traits::trampoline::template apply<Over, Ret, Args> trampoline;
 
