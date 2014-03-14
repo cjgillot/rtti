@@ -9,8 +9,6 @@
 #include <stdint.h>
 #include <cstddef>
 
-#include <boost/assert.hpp>
-
 namespace rtti {
 namespace detail {
 

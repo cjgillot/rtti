@@ -8,6 +8,8 @@
 
 #include "rtti/rttifwd.hpp"
 
+#include <boost/assert.hpp>
+
 namespace rtti {
 namespace detail {
 namespace holder_ {

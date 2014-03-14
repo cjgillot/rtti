@@ -14,11 +14,6 @@
 
 #include "rtti/holder/node.hpp"
 
-#include <boost/assert.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/for_each.hpp>
-
 namespace rtti {
 namespace detail {
 namespace holder_ {

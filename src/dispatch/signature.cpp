@@ -35,7 +35,7 @@ bool signature_t::total_order::operator()(const signature_t& a, const signature_
 // partial subtyping order
 bool signature_t::subtypes::operator()(const signature_t& a, const signature_t& b) const
 {
-  assert(a.sig.size() == b.sig.size());
+  BOOST_ASSERT(a.sig.size() == b.sig.size());
   // return true if [b] is better overload than [a]
   // ie. if [\forall i, a_i <: b_i \and \exists_i, \not(b_i <: a_i)]
   klass_t::subtypes f;
@@ -49,7 +49,7 @@ bool signature_t::subtypes::operator()(const signature_t& a, const signature_t& 
       it1 != en1;
       ++it1, ++it2)
   {
-    assert(it2 != en2); (void)en2;
+    BOOST_ASSERT(it2 != en2); (void)en2;
 
     bool isder = f(**it1, **it2);
     bool isbase = f(**it2, **it1);

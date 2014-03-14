@@ -34,7 +34,7 @@ hierarchy_t::do_add(rtti_hierarchy vec) {
   if(dit != dict.end()) {
     klass_t* k = dit->second;
 
-    assert( k->id == id );
+    BOOST_ASSERT( k->id == id );
 
     return k;
   }
