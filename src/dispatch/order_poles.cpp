@@ -29,25 +29,31 @@ void rtti_dispatch::order_poles(
   }
 }
 
-struct print_insert {
+namespace {
+
+struct insert_once_unary {
   poles_map_type& a;
-  std::size_t i;
-  std::size_t arity;
 
   void operator()(klass_t const* k) {
     // insert expects 2-aligned values
-    if(arity == 1) {
-      // assert code is 2-aligned
-      BOOST_ASSERT( (k->rankhash & 1) == 0 );
-      a.insert(k->get_id(), k->rankhash);
-    }
-    else
-      a.insert(k->get_id(), 2 * k->rankhash);
+    BOOST_ASSERT( (k->rankhash & 1) == 0 );
+    a.insert(k->get_id(), k->rankhash);
   }
 };
 
+struct insert_once {
+  poles_map_type& a;
+
+  void operator()(klass_t const* k) {
+    // insert expects 2-aligned values
+    a.insert(k->get_id(), 2 * k->rankhash);
+  }
+};
+
+} // namespace <>
+
 template<typename Seq>
-static void print_map(seal_table_type& output, std::size_t i, Seq const& t, std::size_t arity) {
+static void fill_map(seal_table_type& output, std::size_t i, Seq const& t, std::size_t arity) {
   /// split \c t between static and dynamic id
   std::vector<klass_t const*> dynamics ( boost::begin(t), boost::end(t) );
 
@@ -55,8 +61,14 @@ static void print_map(seal_table_type& output, std::size_t i, Seq const& t, std:
 
   a.create( dynamics.size() );
 
-  print_insert ins = { a, i, arity };
-  std::for_each(dynamics.begin(), dynamics.end(), ins);
+  if(arity == 1) {
+    insert_once_unary ins = { a };
+    std::for_each(dynamics.begin(), dynamics.end(), ins);
+  }
+  else {
+    insert_once ins = { a };
+    std::for_each(dynamics.begin(), dynamics.end(), ins);
+  }
 }
 
 void rtti_dispatch::output_pole_tables(
@@ -68,6 +80,6 @@ void rtti_dispatch::output_pole_tables(
 
   for(std::size_t i = 0; i < arity; ++i) {
     pole_table_t::const_reference t = pole_table[i];
-    print_map(output, i, t, arity);
+    fill_map(output, i, t, arity);
   }
 }
