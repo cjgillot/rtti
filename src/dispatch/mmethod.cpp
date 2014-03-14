@@ -20,7 +20,7 @@ void rtti_dispatch::process_declaration(early_bindings_type const& decl, seal_ta
   BOOST_FOREACH(binding_type const& over, decl.vector) {
     signature_type const& h = over.first;
 
-    overloads.push_back( std::make_pair(make_signature(h, hierarchies), over.second) );
+    overloads.push_back( overload_t(make_signature(h, hierarchies), over.second) );
   }
 
   /// order poles
