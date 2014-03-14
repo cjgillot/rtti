@@ -161,9 +161,6 @@ struct wanderer_t {
       // mark as traversed
       top->is_pole() = true;
 
-      // FIXME sure ?
-      stack.erase( std::remove(stack.begin(), stack.end(), top), stack.end() );
-
       return top;
     }
   }
@@ -182,7 +179,7 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
 #ifndef NDEBUG
   // assert structure
   BOOST_FOREACH(klass_t const* k, wanderer.stack)
-    if(k->is_pole)
+    if(k->is_pole())
       BOOST_ASSERT( k->pole == k );
     else
       BOOST_ASSERT( !k->pole );
