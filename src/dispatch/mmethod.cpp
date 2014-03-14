@@ -37,9 +37,6 @@ void rtti_dispatch::process_declaration(early_bindings_type const& decl, seal_ta
     BOOST_FOREACH(const klass_t* k, sig.first.array())
       const_cast<signature_t const*&>( k->sig ) = &sig.first;
 
-  /// create perfect hash function
-  output_dispatch_table(output, pole_table, dispatch_table, decl);
-
-  /// print pole tables
-  output_pole_tables(output, decl, pole_table);
+  /// output
+  output_tables(output, pole_table, dispatch_table, decl);
 }

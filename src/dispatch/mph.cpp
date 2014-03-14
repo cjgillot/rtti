@@ -9,83 +9,164 @@
 #include <numeric>
 #include <boost/foreach.hpp>
 
-static std::size_t
-rerank(
-  pole_table_t const& table
+typedef boost::unordered_map<klass_t const*, uintptr_t> hash_table_type;
+
+class output_device {
+  hash_table_type ht;
+  std::size_t max_index;
+
+  pole_table_t const& poles;
+  dispatch_t   const& dispatch;
+
+public:
+  output_device(pole_table_t const& p, dispatch_t const& d)
+  : poles(p), dispatch(d) {}
+
+  void output_pole_tables(
+    seal_table_type& output
+  , early_bindings_type const& decl
+  );
+  void output_dispatch_table(
+    seal_table_type& output
+  , const early_bindings_type& decl
+  );
+
+  void rerank(
+    const early_bindings_type& decl
+  );
+  
+private:
+  void rerank_unary();
+  void rerank_other();
+};
+
+void output_device::rerank(
+  const early_bindings_type& decl
 ) {
+  if(decl.arity == 1)
+    rerank_unary();
+  
+  else
+    rerank_other();
+}
+
+void output_device::rerank_unary() {
+  BOOST_FOREACH(pole_table_t::const_reference h, poles) {
+    BOOST_FOREACH(klass_t const* k, h) {
+      dispatch_t::mapped_type const& target = dispatch.at( *k->sig );
+
+      uintptr_t value = reinterpret_cast<uintptr_t>(target ? target->second : &BAD_DISPATCH);
+      ht.insert(std::make_pair(k, value));
+    }
+  }
+}
+
+void output_device::rerank_other() {
   std::size_t incr = 1;
 
-  BOOST_FOREACH(pole_table_t::const_reference h, table) {
+  BOOST_FOREACH(pole_table_t::const_reference h, poles) {
     std::size_t current = 0;
 
     BOOST_FOREACH(klass_t const* k, h) {
-      const_cast<klass_t*>( k )->rankhash = current;
+      // insert expects 2-aligned values
+      ht.insert(std::make_pair(k, 2 * current));
       current += incr;
     }
 
     incr = current;
   }
 
-  return incr;
-}
-
-static void
-rerank_unary(
-  pole_table_t const& table
-, dispatch_t dispatch
-) {
-  BOOST_FOREACH(pole_table_t::const_reference h, table) {
-    BOOST_FOREACH(klass_t const* k, h) {
-      dispatch_t::mapped_type const& target = dispatch.at( *k->sig );
-      const_cast<klass_t*>( k )->rankhash = reinterpret_cast<uintptr_t>(target ? target->second : &BAD_DISPATCH);
-    }
-  }
+  max_index = incr;
 }
 
 namespace {
 
 struct rankhash_adder {
+  hash_table_type const& ht;
+
   std::size_t operator()(std::size_t acc, klass_t const* k)
-  { return acc + k->rankhash; }
+  { return acc + ht.at(k); }
 };
-
-static void
-make_assignment(
-  signature_t const& sig,
-  invoker_t  inv,
-  invoker_t* table
-) {
-  std::size_t const index = std::accumulate(
-    sig.array().begin(), sig.array().end(), 0,
-    rankhash_adder()
-  );
-
-  table[index] = inv;
-}
 
 } // namespace <>
 
-/* Generates the hash function and the key word recognizer function.  */
-void rtti_dispatch::output_dispatch_table(
+static void
+make_assignment(
+  signature_t const& sig
+, invoker_t  inv
+, invoker_t* table
+, hash_table_type const& ht
+) {
+  rankhash_adder adder = { ht };
+
+  std::size_t const index = std::accumulate(
+    sig.array().begin(), sig.array().end(), 0,
+    adder
+  );
+
+  table[index/2] = inv;
+}
+
+void output_device::output_dispatch_table(
+  seal_table_type& f
+, const early_bindings_type& decl
+) {
+  if(decl.arity == 1)
+    return;
+
+  invoker_t* const table = new invoker_t [ max_index ];
+  f.table = table;
+
+  std::fill_n(table, max_index, BAD_DISPATCH);
+
+  // assign dispatch table
+  BOOST_FOREACH(dispatch_t::const_reference p, dispatch)
+    if(p.second)
+      make_assignment(p.first, p.second->second, table, ht);
+}
+
+static void fill_map(
+  poles_map_type& a
+, pole_table_t::const_reference t
+, hash_table_type const& ht
+, std::size_t arity
+) {
+  /// split \c t between static and dynamic id
+  std::vector<klass_t const*> dynamics ( boost::begin(t), boost::end(t) );
+
+  a.create( dynamics.size() );
+
+  // insert expects 2-aligned values
+  BOOST_FOREACH(klass_t const* k, dynamics) {
+    uintptr_t value = ht.at(k);
+    BOOST_ASSERT( (value & 1) == 0 );
+    a.insert(k->get_id(), value);
+  }
+}
+
+void output_device::output_pole_tables(
+  seal_table_type& output
+, early_bindings_type const& decl
+) {
+  std::size_t const arity = decl.arity;
+
+  for(std::size_t i = 0; i < arity; ++i) {
+    pole_table_t::const_reference t = poles[i];
+    poles_map_type& pm = *output.poles[i];
+
+    fill_map(pm, t, ht, arity);
+  }
+}
+
+void rtti_dispatch::output_tables(
   seal_table_type& f,
   const pole_table_t& pole_table,
   const dispatch_t& dispatch,
   const early_bindings_type& decl
 ) {
-  if(decl.arity == 1) {
-    rerank_unary(pole_table, dispatch);
-  }
-  else {
-    std::size_t const max_index = rerank(pole_table);
+  output_device dev ( pole_table, dispatch );
 
-    invoker_t* const table = new invoker_t [ max_index ];
-    f.table = table;
-    
-    std::fill_n(table, max_index, BAD_DISPATCH);
-    
-    /* Generate an array of reserved words at appropriate locations.  */
-    BOOST_FOREACH(dispatch_t::const_reference p, dispatch)
-      if(p.second)
-        make_assignment(p.first, p.second->second, table);
-  }
+  dev.rerank(decl);
+  dev.output_dispatch_table(f, decl);
+  dev.output_pole_tables(f, decl);
 }

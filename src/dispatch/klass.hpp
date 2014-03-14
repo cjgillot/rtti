@@ -36,9 +36,6 @@ private:
   boost::dynamic_bitset<> subtype;
 
 public:
-  // TODO Rename that
-  std::size_t rankhash;
-
   // TODO Remove that
   // Used in unary case in mph.cpp
   const signature_t* const sig;
