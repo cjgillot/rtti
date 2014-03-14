@@ -24,4 +24,27 @@ struct rtti_node_var<0> {
 
 }}} // namespace rtti::detail::holder_
 
+struct rtti::detail::rtti_node {
+  detail::holder_::rtti_node_var<1> self;
+};
+
+inline rtti::rtti_type
+rtti::detail::rtti_get_id(rtti_node const* n)
+{ return (void*)n; }
+
+inline rtti::rtti_node const*
+rtti::detail::rtti_get_base(rtti_node const* n, std::size_t k)
+{
+  BOOST_ASSERT(n);
+  BOOST_ASSERT(k < n->self.__arity);
+  return n->self.__base[k];
+}
+
+inline std::size_t
+rtti::detail::rtti_get_base_arity(rtti_node const* n)
+{
+  BOOST_ASSERT(n);
+  return n->self.__arity;
+}
+
 #endif

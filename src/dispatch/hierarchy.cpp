@@ -10,7 +10,6 @@
 #include <stack>
 
 #include "hierarchy.hpp"
-#include "manip.hpp"
 
 // readability improvement
 #define is_pole subtype[0]

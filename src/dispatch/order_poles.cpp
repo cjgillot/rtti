@@ -37,7 +37,7 @@ struct print_insert {
     // insert expects 2-aligned values
     if(arity == 1) {
       // assert code is 2-aligned
-      BOOST_ASSERT( k->rankhash & 1 == 0 );
+      BOOST_ASSERT( (k->rankhash & 1) == 0 );
       a.insert(k->id, k->rankhash);
     }
     else

@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <cstddef>
 
+#include <boost/assert.hpp>
+
 namespace rtti {
 namespace detail {
 
@@ -25,23 +27,30 @@ typedef rtti_node const* rtti_hierarchy;
 //! \brief Friend structure for in-class rtti access
 struct rtti_getter;
 
-inline rtti_type
-rtti_get_id(rtti_node const* n)
-{ return (void*)n; }
+// Defined in node.hpp
+inline rtti_type        rtti_get_id(rtti_node const* n);
+inline rtti_node const* rtti_get_base(rtti_node const* n, std::size_t k = 0);
+inline std::size_t      rtti_get_base_arity(rtti_node const* n);
 
 } // namespace detail
 
 namespace adl {
 
-void rtti_get_mixin(...);
-void rtti_parents_size_1p(...);
-void rtti_parents_foreach(...);
+struct opaque;
+
+void rtti_get_mixin(opaque&);
+void rtti_parents_size_1p(opaque*);
+void rtti_parents_foreach(opaque&, opaque*);
 
 } // namespace adl
 
 using detail::rtti_type;
 using detail::rtti_node;
 using detail::rtti_hierarchy;
+
+using detail::rtti_get_id;
+using detail::rtti_get_base;
+using detail::rtti_get_base_arity;
 
 } // namespace rtti
 

@@ -4,7 +4,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "mmethod/shared/basic.hpp"
-#include "manip.hpp"
+#include "rtti/rtti.hpp"
 
 #include <limits>
 
