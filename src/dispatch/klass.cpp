@@ -21,3 +21,6 @@ klass_t::klass_t(
 , pole(NULL)
 , subtype(1)
 , sig(NULL) {}
+
+klass_t::~klass_t()
+{}
