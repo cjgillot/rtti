@@ -18,10 +18,14 @@ class signature_t;
 struct klass_t
 : private boost::noncopyable
 {
+public:
+  typedef std::vector<klass_t const*> bases_type;
+
+private:
   friend class hierarchy_t;
 
   rtti_type const id;
-  std::vector<klass_t const*> bases;
+  bases_type bases;
 
   klass_t const* pole;
 
@@ -31,14 +35,22 @@ struct klass_t
   std::size_t rank;
   boost::dynamic_bitset<> subtype;
 
+public:
+  // TODO Rename that
   std::size_t rankhash;
 
+  // TODO Remove that
   // Used in unary case in mph.cpp
   const signature_t* const sig;
 
-public:
+private:
   // for use by hierarchy_t
-  klass_t(rtti_type id, std::size_t arity);
+   klass_t(rtti_type id, std::size_t arity);
+  ~klass_t();
+  
+public:
+  rtti_type         get_id()       const { return id;       }
+  bases_type const& get_bases()    const { return bases;    }
 
 public:
   // total hashing order

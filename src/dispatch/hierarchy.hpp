@@ -15,34 +15,41 @@
 
 #include <boost/unordered_map.hpp>
 
+/*!\brief Class hierarchy object
+ * 
+ * This class acts as a factory for \c klass objects.
+ */
 class hierarchy_t
 {
 public:
-  std::vector<klass_t* > klasses;
-
-  typedef boost::unordered_map<rtti_type, klass_t*> dict_t;
-  dict_t dict;
-
-  std::size_t current_rank;
-  
-public:
+  //!\brief Ctor
    hierarchy_t();
+  //!\brief Dtor
   ~hierarchy_t();
 
 public:
+  //!\brief Add a new class to the hierarchy
+  //!\arg hh : \c rtti_hierarchy
+  //!\return a pointer to a klass representing \c hh in \c *this
   const klass_t* add(rtti_hierarchy hh);
 
-  void order(std::vector<klass_t const*>& seq);
+  //!\brief Compute poles for \c *this
+  void compute_poles(std::vector<klass_t const*>& seq);
 
-public:
-  std::size_t size() const { return klasses.size(); }
-  
 private:
   klass_t* do_add(rtti_hierarchy hh);
 
   void shrink(std::vector<klass_t const*>& seq);
   void pole_init(klass_t*);
   std::size_t pseudo_closest(klass_t const* k, klass_t const* &pole);
+
+private:
+  std::vector<klass_t* > klasses;
+
+  typedef boost::unordered_map<rtti_type, klass_t*> dict_t;
+  dict_t dict;
+
+  std::size_t current_rank;
 };
 
 typedef std::vector<std::vector<const klass_t*> > pole_table_t;

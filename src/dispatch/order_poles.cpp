@@ -23,8 +23,7 @@ void order_poles(
     pole_table_t::reference t = pole_table[i];
     hierarchy_t& h = hierarchies[i];
 
-    t.reserve( h.size() );
-    h.order(t);
+    h.compute_poles(t);
   }
 }
 
@@ -38,10 +37,10 @@ struct print_insert {
     if(arity == 1) {
       // assert code is 2-aligned
       BOOST_ASSERT( (k->rankhash & 1) == 0 );
-      a.insert(k->id, k->rankhash);
+      a.insert(k->get_id(), k->rankhash);
     }
     else
-      a.insert(k->id, 2 * k->rankhash);
+      a.insert(k->get_id(), 2 * k->rankhash);
   }
 };
 

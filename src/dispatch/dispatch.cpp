@@ -195,14 +195,14 @@ sig_upcaster::operator()() BOOST_NOEXCEPT_OR_NOTHROW
     klass_t const* nk = NULL;
     while(!nk) {
       // proceed to next argument
-      while( b == sig.array()[k]->bases.size() ) {
+      while( b == sig.array()[k]->get_bases().size() ) {
         b = 0; ++k;
         if(k == arity)
           return NULL;
       }
 
       // select
-      nk = sig.array()[k]->bases[b];
+      nk = sig.array()[k]->get_bases()[b];
 
       // prepare for next base
       ++b;
