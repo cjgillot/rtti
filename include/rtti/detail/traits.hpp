@@ -243,7 +243,7 @@ struct pointer_traits<T const volatile>
 
 template<typename T>
 struct pointer_traits<T*>
-: traits_detail::smart_ptr_traits<T*> {
+: traits_detail::raw_ptr_traits<T*> {
   template<typename PU>
   static PU cast(T* p) {
     typedef typename boost::remove_pointer<PU>::type U;
