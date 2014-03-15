@@ -44,11 +44,7 @@ double time(F&& fnc, char const* s) {
 static void u() {}
 
 void test(foo* f, std::size_t N) {
-  vf5(5);
-
   f->func();
-
-//   vf2.insert<foo*, foo&&>( [](foo* u, foo&& v){} );
 
   vf1(f, 0);
   vf2(f, *f);
@@ -63,14 +59,4 @@ void test(foo* f, std::size_t N) {
 
   t2 = time([=](){ loop_mm2 (f, f, N); }, "mmethod2");
   std::printf("ratio : %f\n", t2 / t1);
-}
-
-#include <atomic>
-
-void test2(foo* f, std::size_t N) {
-  volatile int i = 0;
-  std::atomic<int> volatile j { 0 };
-
-  for(std::size_t k = 0; k < N; ++k) (int)i;
-  for(std::size_t k = 0; k < N; ++k) (int)j;
 }
