@@ -30,14 +30,11 @@ fetch_pole(
 ) BOOST_NOEXCEPT_OR_NOTHROW {
 
   const rtti_type id0 = rtti_get_id(rt);
-  hash_map::iterator it0;
 
-  {
-    it0 = map.find(id0);
+  hash_map::iterator const it0 = map.find(id0);
 
-    if(LIKELY( !it0->empty() ))
-      return it0->value();
-  }
+  if(LIKELY( it0->key() == id0 ))
+    return it0->value();
 
   return do_fetch_pole(map, rt, it0);
 }

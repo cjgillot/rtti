@@ -32,6 +32,26 @@ inline hash_map::iterator ATTRIBUTE_PURE hash_map::find(key_type key) const BOOS
   return do_find(key);
 }
 
+#ifdef MMETHOD_INLINE_DO_FIND
+inline hash_map::iterator ATTRIBUTE_PURE hash_map::do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
+  std::size_t const index = hash(key);
+  bucket_t* ptr = &m_array[index];
+
+  // empty bucket sentinel is last of m_array -> forces stop since empty
+  while(
+      (! ptr->empty())
+   && (ptr->key() != key)
+  ) {
+    ++ptr;
+  }
+
+  // assert empty() => (key() != key)
+  BOOST_ASSERT( !ptr->empty() || ptr->key() != key );
+
+  return ptr;
+}
+#endif
+
 }}} // namespace rtti::mmethod::detail
 
 #endif

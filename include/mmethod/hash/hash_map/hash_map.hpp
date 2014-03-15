@@ -9,6 +9,8 @@
 #include "rtti/rttifwd.hpp"
 #include "rtti/detail/attribute.hpp"
 
+#define MMETHOD_INLINE_DO_FIND
+
 #include <memory>
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_array.hpp>

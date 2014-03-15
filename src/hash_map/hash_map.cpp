@@ -72,6 +72,8 @@ probe_table(bucket_t* const m_array, std::size_t index, rtti_type key) BOOST_NOE
 }
 } // namespace <anonymous>
 
+#ifndef MMETHOD_INLINE_DO_FIND
+
 /// hash_map find()
 //@{
 hash_map::iterator
@@ -81,6 +83,8 @@ hash_map::do_find(rtti_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   );
 }
 //@}
+
+#endif
 
 /// hash_map insert()
 //@{
