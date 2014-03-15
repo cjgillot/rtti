@@ -142,12 +142,16 @@ nbits(std::size_t n) {
 void hash_map::create(std::size_t sz) {
   BOOST_ASSERT( !m_array );
 
-  std::size_t const logsz = 1 + nbits(sz | 7);
-  std::size_t const size  = 1 << logsz;
+  // round up
+  std::size_t const logsz = 1 + nbits(sz);
+  sz  = 1 << logsz;
+
   m_logsz = logsz;
   m_mask  = sz - 1;
 
   // use an over-sized array -> sentinel bucket
   m_array.reset( new bucket_t[sz + 1] );
+
+  BOOST_ASSERT( m_array[m_mask+1].empty() );
 }
 //@}

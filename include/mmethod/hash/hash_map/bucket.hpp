@@ -15,7 +15,7 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-typedef rtti_type       key_type;
+typedef rtti_type    key_type;
 typedef uintptr_t  value_type;
 typedef size_t     index_type;
 
