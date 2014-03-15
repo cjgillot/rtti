@@ -18,7 +18,7 @@ namespace detail {
 
 inline index_type         ATTRIBUTE_PURE hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
   uintptr_t v = uintptr_t(a);
-  v >>= boost::alignment_of<rtti::rtti_node>::value;
+  v /= boost::alignment_of<rtti::rtti_node>::value;
   return index_type( v & m_mask );
 }
 
