@@ -54,8 +54,9 @@ void output_device::rerank_unary() {
   BOOST_FOREACH(pole_table_t::const_reference h, poles) {
     BOOST_FOREACH(klass_t const* k, h) {
       dispatch_t::mapped_type const& target = dispatch.at( *k->sig );
+      invoker_t ptr = target.second;
 
-      uintptr_t value = reinterpret_cast<uintptr_t>(target ? target->second : &BAD_DISPATCH);
+      uintptr_t value = reinterpret_cast<uintptr_t>(ptr ? ptr : &BAD_DISPATCH);
       ht.insert(std::make_pair(k, value));
     }
   }
@@ -97,6 +98,8 @@ make_assignment(
 , invoker_t* table
 , hash_table_type const& ht
 ) {
+  BOOST_ASSERT(inv);
+
   rankhash_adder adder = { ht };
 
   std::size_t const index = std::accumulate(
@@ -120,9 +123,11 @@ void output_device::output_dispatch_table(
   std::fill_n(table, max_index, BAD_DISPATCH);
 
   // assign dispatch table
-  BOOST_FOREACH(dispatch_t::const_reference p, dispatch)
-    if(p.second)
-      make_assignment(p.first, p.second->second, table, ht);
+  BOOST_FOREACH(dispatch_t::const_reference p, dispatch) {
+    invoker_t inv = p.second.second;
+    if(inv)
+      make_assignment(p.first, inv, table, ht);
+  }
 }
 
 static void fill_map(

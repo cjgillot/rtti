@@ -165,11 +165,11 @@ static void dispatch_one(
   }
 
   if(max_set.size() == 1)
-    dispatch.insert(std::make_pair( sig, boost::make_optional(*max_set.begin()) ));
+    dispatch.insert(std::make_pair( sig, max_set.front() ));
 
   else {
     //FIXME : diagnose
-    dispatch.insert(std::make_pair( sig, boost::none ));
+    dispatch.insert(std::make_pair( sig, overload_t(sig, NULL) ));
 //     if(max_set.size() == 0) {
 //       std::cerr << "No overload found for signature : ";
 //       PRINT_SIG(sig);
@@ -220,9 +220,8 @@ sig_upcaster::operator()() BOOST_NOEXCEPT_OR_NOTHROW
     sig.array_ref()[k] = nk;
 
     // we can safely use [dispatch.at] since all the candidates have been dispatched already
-    boost::optional<overload_t> const& bound = dispatch.at(sig);
-    
-    // FIXME may hide ambiguity cascade
-    if(bound) return &*bound;
+    overload_t const& bound = dispatch.at(sig);
+
+    return &bound;
   }
 }
