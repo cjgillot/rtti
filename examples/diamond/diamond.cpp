@@ -25,20 +25,26 @@ using boost::mpl::vector;
  * \c baz and \c lap respectively inherit from \c foo and \c bar
  */
 
-struct foo
-: base_rtti<foo> {
+struct foo1
+: base_rtti<foo1> {
 public:
-  virtual ~foo() {}
+  virtual ~foo1() {}
+};
+
+struct foo2
+: base_rtti<foo2> {
+public:
+  virtual ~foo2() {}
 };
 
 struct bar
-: virtual foo
-, implement_rtti<bar, vector<foo> >
+: virtual foo1
+, implement_rtti<bar, vector<foo1> >
 {};
 
 struct baz
-: virtual foo
-, implement_rtti<baz, vector<foo> >
+: virtual foo1, foo2
+, implement_rtti<baz, vector<foo1, foo2> >
 {};
 
 struct lap
@@ -47,14 +53,14 @@ struct lap
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo>&));
+DECLARE_MMETHOD(f1, int, (_v<foo1>&));
 
-IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return 5; }
+IMPLEMENT_MMETHOD(f1, int, (foo1&a)) { return 5; }
 IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return 7; }
 IMPLEMENT_MMETHOD(f1, int, (lap& a)) { return 15; }
 
 int main() {
-  foo f; bar r; baz z; lap l;
+  foo1 f; bar r; baz z; lap l;
 
   std::cout << f1(f) << std::endl; // prints 5
   std::cout << f1(r) << std::endl; // prints 7

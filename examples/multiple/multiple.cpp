@@ -15,9 +15,8 @@
  * Four classes are used : \c foo, \c bar, \c baz, \c lap
  * Their ids are then output on stdout
  * 
- * \c foo is the base class
- * \c bar has a statically defined id \c bar_id
- * \c baz and \c lap respectively inherit from \c foo and \c bar
+ * \c foo and \c bar are unrelated base classes
+ * \c baz inherits from both \c foo and \c bar
  */
 
 using namespace rtti;
@@ -30,34 +29,28 @@ public:
 };
 
 struct bar
-: foo
-, implement_rtti<bar, vector<foo> >
-{};
+: base_rtti<bar> {
+public:
+  virtual ~bar() {}
+};
 
 struct baz
-: foo
-, implement_rtti<baz, vector<foo> >
-{};
-
-struct lap
-: bar, baz
-, implement_rtti<lap, vector<bar, baz> >
+: foo, bar
+, implement_rtti<baz, vector<foo, bar> >
 {};
 
 int main() {
-  foo f; bar r; baz z; lap l;
+  foo f; bar r; baz z;
 
   std::cout << "Classes IDs :" << std::endl;
   std::cout << "- [foo] " << static_id<foo>() << std::endl;
   std::cout << "- [bar] " << static_id<bar>() << std::endl;
   std::cout << "- [baz] " << static_id<baz>() << std::endl;
-  std::cout << "- [lap] " << static_id<lap>() << std::endl;
 
   std::cout << "Objects IDs :" << std::endl;
   std::cout << "- [foo] " << get_id(f) << std::endl;
   std::cout << "- [bar] " << get_id(r) << std::endl;
   std::cout << "- [baz] " << get_id(z) << std::endl;
-  std::cout << "- [lap] " << get_id(l) << std::endl;
 
   return 0;
 }
