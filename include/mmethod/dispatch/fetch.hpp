@@ -123,6 +123,8 @@ struct fetch_invoker<1, Tag, BTS> {
 template<typename Tag, typename Ret>
 template<typename Tuple>
 invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
+  this->generate();
+
   enum {
     arity = Tag::traits::vsize,
     btset = Tag::traits::type_bitset
@@ -131,7 +133,10 @@ invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
   uintptr_t spec = 0;
   fetch_poles<arity, Tag, btset>::eval( spec, args );
 
-  return fetch_invoker<arity, Tag, btset>::eval( spec );
+  invoker_t ret = fetch_invoker<arity, Tag, btset>::eval( spec );
+  BOOST_ASSERT(ret);
+
+  return ret;
 }
 
 }}} // rtti::mmethod::detail

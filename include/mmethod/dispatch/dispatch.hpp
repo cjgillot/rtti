@@ -31,19 +31,6 @@ struct dispatch {
   template<typename Tuple>
   invoker_t ATTRIBUTE_PURE fetch(Tuple const& args) const;
 
-  template<typename Tuple>
-  Ret call(Tuple const& args) const {
-    this->generate();
-
-    // do actual fetching
-    invoker_t f = this->fetch( args );
-
-    BOOST_ASSERT(f);
-
-    typedef typename Tag::traits::trampoline::sig_t func_t;
-    return (*reinterpret_cast<func_t>(f))( args );
-  }
-
   template<typename K, typename F>
   void insert(F const& f);
 

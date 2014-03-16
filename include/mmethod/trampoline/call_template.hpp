@@ -23,10 +23,16 @@
     BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), a)
 
 protected:
-  inline Ret operator()(MMETHOD_TRAMPOLINE_FUNC_PARMS) const
+  inline func_t fetch(MMETHOD_TRAMPOLINE_FUNC_PARMS) const
   {
     typedef boost::fusion::tuple<MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES> tuple_type;
-    return (Ret) m_dispatch.call( tuple_type(MMETHOD_TRAMPOLINE_FUNC_ARGS) );
+    invoker_t inv = m_dispatch.fetch( tuple_type(MMETHOD_TRAMPOLINE_FUNC_ARGS) );
+    return reinterpret_cast<func_t>(inv);
+  }
+  inline Ret operator()(MMETHOD_TRAMPOLINE_FUNC_PARMS) const
+  {
+    func_t f = this->fetch(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
 #undef MMETHOD_TRAMPOLINE_FUNC_TYPE

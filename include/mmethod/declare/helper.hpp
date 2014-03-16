@@ -44,6 +44,7 @@ private:
 protected:
   typedef make_declare_helper decl_maker;
   typedef Ret result_type;
+  typedef typename traits::trampoline::sig_t func_t;
 
 //   template<typename... Args2>
 //   inline Ret operator()(Args2&& ...args) const

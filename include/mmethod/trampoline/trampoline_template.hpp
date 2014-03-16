@@ -21,19 +21,24 @@ struct trampoline_base<
 #define MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE, BOOST_PP_EMPTY)
 
+#define MMETHOD_TRAMPOLINE_FUNC_PARM(J,I,D) \
+    MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE(J,I,D) BOOST_PP_CAT(a,I)
+
+#define MMETHOD_TRAMPOLINE_FUNC_PARMS \
+    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_PARM, BOOST_PP_EMPTY)
+
 #define MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,D) \
-    rtti::pointer_traits< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types) >::template cast< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2) >( boost::fusion::get<I>(arg) )
+    rtti::pointer_traits< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types) >::template cast< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2) >( BOOST_PP_CAT(a,I) )
 
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
 
-  typedef boost::fusion::tuple<MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES> const& param_type;
-  typedef Ret (*sig_t)(param_type);
+  typedef Ret (*sig_t)(MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES);
 
   template<typename Over, typename Ret2, typename Types2>
   struct apply {
     static Over over;
-    static Ret call(param_type arg) MMETHOD_ATTRIBUTE_ALIGNED
+    static Ret call(MMETHOD_TRAMPOLINE_FUNC_PARMS) MMETHOD_ATTRIBUTE_ALIGNED
     { return over.call(MMETHOD_TRAMPOLINE_FUNC_ARGS); }
   };
 
@@ -42,7 +47,7 @@ struct trampoline_base<
 //     return [f](typename tags::unwrap_base<Types>::arg_type... args) -> Ret
 //     { return f( rtti::pointer_traits<Types>::template cast<Types2>(args)... ); };
 //   }
-  
+
 #undef MMETHOD_TRAMPOLINE_FUNC_TYPE
 #undef MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE
 #undef MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES
