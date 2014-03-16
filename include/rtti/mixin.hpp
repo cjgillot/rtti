@@ -9,14 +9,12 @@
 #include "rtti/holder/holder.hpp"
 #include "rtti/holder/getter.hpp"
 
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/size_t.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/transform.hpp>
+
+#include <boost/static_assert.hpp>
 
 namespace rtti {
 namespace detail {
