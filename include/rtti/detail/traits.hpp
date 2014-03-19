@@ -123,11 +123,6 @@ struct class_traits {
   template<typename U>
   static U cast(reference_type v)
   { return unsafe_casting<U>::eval(v); }
-
-  template<typename U>
-  struct rebind {
-    typedef typename copy_cv<T,U>::type other;
-  };
 };
 
 template<typename T>
@@ -143,10 +138,6 @@ struct fundamental_traits {
   static U cast(V const& v)
   { return v; }
 
-  template<typename U>
-  struct rebind {
-    typedef typename copy_cv<T,U>::type other;
-  };
 };
 
 template<typename T>
@@ -191,19 +182,10 @@ struct pointer_traits_basecase
   boost::true_type operator*() const;
 };
 
-template<typename CV, typename T>
-struct wrap_cv_forward
-: T {
   template<typename U>
-  struct rebind {
-  private:
-    typedef typename T::template rebind<U>::other O;
-  public:
-    typedef typename copy_cv<CV, O>::type other;
-  };
 };
 
-} // namespace
+} // namespace traits_detail
 
 template<typename T>
 struct pointer_traits

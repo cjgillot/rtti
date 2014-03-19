@@ -19,14 +19,14 @@ struct foo
 public:
   virtual ~foo() {}
   
-  int f() { return 5; }
+  int f() const { return 5; }
 };
 
 struct bar
 : foo
 , implement_rtti<bar, vector<foo> >
 {
-  int g() { return 42; }
+  int g() const { return 42; }
 };
 
 struct baz
@@ -40,11 +40,11 @@ struct lap
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo>&));
+DECLARE_MMETHOD(f1, int, (_v<foo const&>));
 
-IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return a.f(); }
-IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return a.g(); }
-IMPLEMENT_MMETHOD(f1, int, (baz& a)) { return 2 * a.f(); }
+IMPLEMENT_MMETHOD(f1, int, (foo const& a)) { return a.f(); }
+IMPLEMENT_MMETHOD(f1, int, (bar const& a)) { return a.g(); }
+IMPLEMENT_MMETHOD(f1, int, (baz const& a)) { return 2 * a.f(); }
 
 int main() {
   foo f; bar r; baz z; lap l;

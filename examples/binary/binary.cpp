@@ -48,7 +48,7 @@ struct bar3
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo1>&, _v<bar1>&));
+DECLARE_MMETHOD(f1, int, (_v<foo1&>, _v<bar1&>));
 
 IMPLEMENT_MMETHOD(f1, int, (foo1& a, bar1& b)) { return 0; }
 IMPLEMENT_MMETHOD(f1, int, (foo2& a, bar2& b)) { return 13; }

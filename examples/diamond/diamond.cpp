@@ -53,7 +53,7 @@ struct lap
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo1>&));
+DECLARE_MMETHOD(f1, int, (_v<foo1&>));
 
 IMPLEMENT_MMETHOD(f1, int, (foo1&a)) { return 5; }
 IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return 7; }

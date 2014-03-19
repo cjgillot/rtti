@@ -95,7 +95,7 @@ struct Girrafe: public Prey_abstract
 //----------------------
 using rtti::tags::_v;
 
-DECLARE_MMETHOD(huntor, ResultType, (_v<Predator_abstract> const&, _v<Prey_abstract> const&));
+DECLARE_MMETHOD(huntor, ResultType, (_v<Predator_abstract const&>, _v<Prey_abstract const&>));
 
 IMPLEMENT_MMETHOD(huntor, ResultType, ( Lion const&, Gazelle const& ))
 {

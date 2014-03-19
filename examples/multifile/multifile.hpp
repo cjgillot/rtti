@@ -21,7 +21,7 @@ public:
 };
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo>&));
+DECLARE_MMETHOD(f1, int, (_v<foo&>));
 
 foo* make_foo();
 foo* make_bar();
