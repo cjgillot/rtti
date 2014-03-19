@@ -40,43 +40,6 @@ template<typename T>
 struct remove_all<const volatile T>
 : remove_all<T> {};
 
-template<typename T, typename U>
-struct copy_cv {
-  typedef U type;
-};
-
-template<typename T, typename U>
-struct copy_cv<T const,U> {
-  typedef U const type;
-};
-
-template<typename T, typename U>
-struct copy_cv<T volatile,U> {
-  typedef U volatile type;
-};
-
-template<typename T, typename U>
-struct copy_cv<T const volatile,U> {
-  typedef U const volatile type;
-};
-
-template<typename T, typename U>
-struct copy_ref {
-  typedef U type;
-};
-
-template<typename T, typename U>
-struct copy_ref<T&,U> {
-  typedef U& type;
-};
-
-#ifdef BOOST_HAS_RVALUE_REFS
-template<typename T, typename U>
-struct copy_ref<T&&,U> {
-  typedef U&& type;
-};
-#endif
-
 template<typename Out>
 struct unsafe_casting {
   struct nonvirtual {
