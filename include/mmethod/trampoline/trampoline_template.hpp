@@ -47,12 +47,6 @@ struct callback {
     { return over.call(MMETHOD_TRAMPOLINE_FUNC_ARGS); }
   };
 
-//   template<typename Ret2, typename... Types2, typename Func>
-//   static std::function<sig_t> functor(Func&& f) {
-//     return [f](typename tags::unwrap_base<Types>::arg_type... args) -> Ret
-//     { return f( rtti::pointer_traits<Types>::template cast<Types2>(args)... ); };
-//   }
-
 #undef MMETHOD_TRAMPOLINE_FUNC_TYPE
 #undef MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE
 #undef MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES
