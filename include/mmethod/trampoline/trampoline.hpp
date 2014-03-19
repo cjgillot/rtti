@@ -20,16 +20,6 @@
 namespace rtti {
 namespace detail {
 
-template<typename Sequence, std::size_t N>
-struct nth_deref
-: boost::mpl::deref<
-    typename boost::mpl::advance_c<
-      typename boost::mpl::begin<Sequence>::type
-    , N
-    >::type
->
-{};
-
 template<std::size_t Arity, typename TAG, typename Ret, typename Types>
 struct trampoline_base;
 

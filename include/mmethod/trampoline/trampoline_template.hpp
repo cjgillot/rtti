@@ -13,7 +13,7 @@ struct trampoline_base<
   typedef typename boost::mpl::transform<Types, tags::unwrap>::type unwrapped_args;
 
 #define MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,D) \
-    typename nth_deref< D, I >::type
+    typename boost::mpl::at_c< D, I >::type
 
 #define MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE(J,I,D) \
     typename boost::call_traits< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,unwrapped_args) >::param_type
