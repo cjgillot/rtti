@@ -15,7 +15,8 @@ using namespace rtti;
 using boost::mpl::vector;
 
 struct foo
-: base_rtti<foo> {
+: base_rtti<foo>
+, private boost::noncopyable {
 public:
   virtual ~foo() {}
   
