@@ -12,6 +12,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/vector.hpp>
 
+#include <boost/cast.hpp>
+
 using namespace rtti;
 using boost::mpl::vector;
 
@@ -42,10 +44,30 @@ struct lap
 
 #define PTR(T) boost::shared_ptr< T >
 
-using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<PTR(foo)>));
+namespace rtti {
 
-IMPLEMENT_MMETHOD(f1, int, (PTR(foo) a)) { return a->f(); }
+template<typename T>
+struct pointer_traits<PTR(T)> {
+  typedef typename boost::remove_cv<T>::type class_type;
+
+  static T& get(PTR(T) const& v) { return *v; }
+  static bool valid(PTR(T) const& v) { return bool(v); }
+
+  template<typename U>
+  static typename rtti::traits_detail::remove_all<U>::type
+  cast(PTR(T) v) {
+    typedef typename rtti::traits_detail::remove_all<U>::type Uclass;
+    typedef typename Uclass::element_type O;
+    return Uclass(v, boost::polymorphic_downcast<O*>(v.get()));
+  }
+};
+
+} // namespace rtti
+
+using tags::_v;
+DECLARE_MMETHOD(f1, int, (_v<PTR(foo) const&>));
+
+IMPLEMENT_MMETHOD(f1, int, (PTR(foo) const& a)) { return a->f(); }
 IMPLEMENT_MMETHOD(f1, int, (PTR(bar) a)) { return a->g(); }
 IMPLEMENT_MMETHOD(f1, int, (PTR(baz) a)) { return 2 * a->f(); }
 
