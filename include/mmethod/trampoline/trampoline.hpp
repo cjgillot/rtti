@@ -20,7 +20,32 @@
 namespace rtti {
 namespace detail {
 
-template<std::size_t Arity, typename TAG, typename Ret, typename Types>
+template<typename In, typename Out>
+struct pointer_caster {
+  typedef typename boost::call_traits<In>::param_type param;
+  static Out eval(param x) {
+    return rtti::pointer_traits<In>::template cast<Out>(x);
+  }
+};
+
+template<typename In, typename Out>
+struct other_caster {
+  // rely on implicit conversion
+  typedef typename boost::call_traits<Out>::param_type param;
+  static Out eval(param x) {
+    return x;
+  }
+};
+
+template<typename Tag, typename In, typename Out>
+struct caster
+: boost::mpl::if_<
+  Tag
+, pointer_caster<In,Out>
+, other_caster<In,Out>
+>::type {};
+
+template<std::size_t Arity>
 struct trampoline_base;
 
 #define BOOST_PP_FILENAME_1 "mmethod/trampoline/trampoline_template.hpp"
@@ -29,11 +54,12 @@ struct trampoline_base;
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS
 
-template<typename TAG, typename Ret, typename Types>
+template<typename TAG, typename Ret, typename Types, typename Tags>
 struct trampoline
 : trampoline_base<
-    boost::fusion::tuple_size<Types>::value,
-    TAG, Ret, Types
+    boost::fusion::tuple_size<Types>::value
+>::template callback<
+    TAG, Ret, Types, Tags
 > {};
 
 }} // namespace rtti::detail

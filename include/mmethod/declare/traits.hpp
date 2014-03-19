@@ -27,7 +27,7 @@ struct make_declare_helper<Tag, Ret, Args>::traits
   typedef typename boost::mpl::transform<Args, tags::unwrap>::type unwrapped_args;
   typedef typename boost::mpl::transform<Args, tags::is_virtual>::type type_tags;
 
-  typedef rtti::detail::trampoline<Tag, Ret, unwrapped_args> trampoline;
+  typedef rtti::detail::trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline;
 
   BOOST_STATIC_CONSTANT(std::size_t, vsize = tags::virtual_size<Args>::value);
   BOOST_STATIC_CONSTANT(std::size_t, type_bitset = (boost::mpl::reverse_fold<
