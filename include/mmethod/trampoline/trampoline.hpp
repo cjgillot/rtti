@@ -20,29 +20,21 @@
 namespace rtti {
 namespace detail {
 
-template<typename In, typename Out>
-struct pointer_caster {
-  typedef typename boost::call_traits<In>::param_type param;
-  static Out eval(param x) {
-    return rtti::pointer_traits<In>::template cast<Out>(x);
-  }
-};
-
-template<typename In, typename Out>
+template<typename In>
 struct other_caster {
   // rely on implicit conversion
-  typedef typename boost::call_traits<Out>::param_type param;
-  static Out eval(param x) {
+  template<typename Out>
+  static Out cast(typename boost::call_traits<Out>::param_type x) {
     return x;
   }
 };
 
-template<typename Tag, typename In, typename Out>
+template<typename Tag, typename In>
 struct caster
 : boost::mpl::if_<
   Tag
-, pointer_caster<In,Out>
-, other_caster<In,Out>
+, pointer_traits<In>
+, other_caster<In>
 >::type {};
 
 template<std::size_t Arity>

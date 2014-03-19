@@ -31,8 +31,9 @@ struct callback {
     rtti::detail::caster<                       \
       MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Tags)    \
     , MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types)   \
-    , MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2)  \
-    >::eval( BOOST_PP_CAT(a,I) )
+    >::template cast<                           \
+      MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2)  \
+    >( BOOST_PP_CAT(a,I) )
 
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
