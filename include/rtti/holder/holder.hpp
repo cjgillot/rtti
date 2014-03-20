@@ -34,9 +34,6 @@ struct get_holder<const volatile void> {
   };
 };
 
-using adl::rtti_parents_size_1p;
-using adl::rtti_parents_foreach;
-
 //! Arguments must be const-qualified to avoid unnecessary instanciations
 template<class T>
 struct holder {
@@ -106,4 +103,3 @@ using holder_::get_holder;
 
 #endif
 
-// #include "rtti/holder.ipp"

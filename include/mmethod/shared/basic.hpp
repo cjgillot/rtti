@@ -10,7 +10,6 @@
 #include <stdint.h>
 
 #include "rtti/rttifwd.hpp"
-#include "rtti/detail/attribute.hpp"
 
 #include <boost/static_assert.hpp>
 
@@ -25,7 +24,7 @@ struct bad_dispatch
   virtual ~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW;
 };
 
-void ATTRIBUTE_NORETURN _rtti_bad_dispatch();
+void _rtti_bad_dispatch();
 
 } // namespace rtti
 

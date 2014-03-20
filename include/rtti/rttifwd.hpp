@@ -32,16 +32,6 @@ inline std::size_t      rtti_get_base_arity(rtti_node const* n);
 
 } // namespace detail
 
-namespace adl {
-
-struct opaque;
-
-void rtti_get_mixin(opaque&);
-void rtti_parents_size_1p(opaque*);
-void rtti_parents_foreach(opaque&, opaque*);
-
-} // namespace adl
-
 using detail::rtti_type;
 using detail::rtti_node;
 using detail::rtti_hierarchy;
