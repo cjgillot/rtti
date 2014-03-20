@@ -4,14 +4,14 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "mmethod/shared/basic.hpp"
-#include "rtti/rtti.hpp"
 
-#include <limits>
+#include <boost/config.hpp>
+#include <cstdlib>
 
 using namespace rtti::detail;
 
 void rtti::_rtti_bad_dispatch() {
-#if __EXCEPTIONS
+#ifdef BOOST_NO_EXCEPTIONS
   throw bad_dispatch();
 #else
   std::abort();
