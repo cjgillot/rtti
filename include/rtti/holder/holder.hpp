@@ -102,4 +102,3 @@ using holder_::get_holder;
 }} // namespace rtti::detail
 
 #endif
-

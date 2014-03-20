@@ -10,6 +10,10 @@
 
 #include <boost/assert.hpp>
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace rtti {
 namespace detail {
 namespace holder_ {
@@ -48,5 +52,9 @@ rtti::detail::rtti_get_base_arity(rtti_node const* n)
   BOOST_ASSERT(n);
   return n->self.__arity;
 }
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif

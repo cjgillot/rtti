@@ -6,7 +6,11 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
 #define RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
 
-#include "bucket.hpp"
+#include "mmethod/hash/hash_map/bucket.hpp"
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace rtti {
 namespace hash {
@@ -28,5 +32,9 @@ inline bool       bucket_t::empty() const BOOST_NOEXCEPT_OR_NOTHROW { return m_v
 inline value_type bucket_t::value() const BOOST_NOEXCEPT_OR_NOTHROW { return static_cast<value_type>(m_value); }
 
 }}} // namespace rtti::hash::detail
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif

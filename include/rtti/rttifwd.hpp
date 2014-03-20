@@ -9,6 +9,10 @@
 #include <stdint.h>
 #include <cstddef>
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace rtti {
 namespace detail {
 
@@ -41,5 +45,9 @@ using detail::rtti_get_base;
 using detail::rtti_get_base_arity;
 
 } // namespace rtti
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif

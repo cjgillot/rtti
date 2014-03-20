@@ -9,6 +9,10 @@
 #include "mmethod/hash/hash_map/hash_map.hpp"
 #include "mmethod/hash/hash_map/hash_map.ipp"
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace rtti {
 namespace hash {
 namespace detail {
@@ -40,5 +44,9 @@ fetch_pole(
 }
 
 }}} // namespace rtti::hash::detail
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif

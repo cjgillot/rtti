@@ -11,6 +11,10 @@
 #include "rtti/detail/attribute.hpp"
 #include "rtti/rttifwd.hpp"
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace rtti {
 namespace hash {
 namespace detail {
@@ -42,5 +46,9 @@ public:
 };
 
 }}} // namespace rtti::hash::detail
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif

@@ -13,6 +13,10 @@
 
 #include <boost/type_traits/alignment_of.hpp>
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace rtti {
 namespace hash {
 namespace detail {
@@ -58,5 +62,8 @@ inline hash_map::iterator ATTRIBUTE_PURE hash_map::do_find(key_type key) const B
 
 }}} // namespace rtti::mmethod::detail
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif

@@ -17,6 +17,10 @@
 
 #include "mmethod/hash/hash_map/bucket.hpp"
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 // All functions declared in this file
 // are defined in rtti/mmethod/hash_map.cpp
 
@@ -85,5 +89,8 @@ private:
 
 }}} // namespace rtti::hash::detail
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif
