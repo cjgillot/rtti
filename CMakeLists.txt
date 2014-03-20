@@ -14,4 +14,5 @@ add_definitions(-std=c++11 -g -O0)
 
 add_subdirectory(examples)
 add_subdirectory(include)
+add_subdirectory(doc)
 add_subdirectory(src)
