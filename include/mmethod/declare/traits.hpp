@@ -6,8 +6,7 @@
 #ifndef RTTI_MMETHOD_DECLARE_TRAITS_HPP
 #define RTTI_MMETHOD_DECLARE_TRAITS_HPP
 
-#include "mmethod/dynamic/poles.hpp"
-#include "mmethod/declare/declare.hpp"
+#include "mmethod/declare/register.hpp"
 
 #include "mmethod/shared/tags.hpp"
 
@@ -40,7 +39,7 @@ struct make_declare_helper<Tag, Ret, Args>::traits
     >::type::value
   ));
 
-  BOOST_STATIC_ASSERT_MSG( vsize > 0, "At least one virtual parameter must be provided." );
+  BOOST_STATIC_ASSERT_MSG( (vsize > 0), "At least one virtual parameter must be provided." );
 };
 
 }}} // namespace rtti::mmethod::detail

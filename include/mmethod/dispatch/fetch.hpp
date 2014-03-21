@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FETCH_HPP
 #define RTTI_MMETHOD_DISPATCH_FETCH_HPP
 
-#include "mmethod/dispatch/dispatch.hpp"
+#include "mmethod/dispatch/forward.hpp"
 
 #include "mmethod/dynamic/poles.hpp"
 

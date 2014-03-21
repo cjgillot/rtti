@@ -6,38 +6,9 @@
 #ifndef RTTI_MMETHOD_DECLARE_HPP
 #define RTTI_MMETHOD_DECLARE_HPP
 
-#include "mmethod/shared/basic.hpp"
-#include "mmethod/shared/tags.hpp"
-
-#include "mmethod/dynamic/common.hpp"
-#include "mmethod/dispatch/dispatch.hpp"
-
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/function_types/components.hpp>
-
+#include "mmethod/declare/register.hpp"
 #include "mmethod/declare/helper.hpp"
-
-namespace rtti { namespace dmethod {
-
-template<typename Tag, typename Sig>
-struct dmethod_register
-: register_base<Tag>
-, detail::make_declare<Tag, Sig>::type {
-private:
-  typedef typename detail::make_declare<Tag, Sig>::type decl_maker;
-
-public:
-  typedef typename decl_maker::func_t function_type;
-  using typename decl_maker::result_type;
-
-  using decl_maker::operator();
-  using decl_maker::fetch;
-  using decl_maker::insert;
-  using decl_maker::generate;
-};
-
-}} // namespace rtti::mmethod
+#include "mmethod/declare/traits.hpp"
 
 #define __MMETHOD_TAG(name) BOOST_PP_CAT(__rtti_mmethod_tags__, name)
 
@@ -49,7 +20,5 @@ struct __MMETHOD_TAG(name)              \
   template<typename> struct overload;   \
 }; \
 static __MMETHOD_TAG(name) name /* ; */
-
-#include "mmethod/declare/traits.hpp"
 
 #endif

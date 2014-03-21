@@ -7,11 +7,11 @@
 #define RTTI_MMETHOD_TRAMPOLINE_HPP
 
 #include "rtti/detail/traits.hpp"
-#include "mmethod/shared/tags.hpp"
+#include "mmethod/shared/call_traits.hpp"
+
+#include <boost/mpl/at.hpp>
 
 #include <boost/fusion/tuple.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/push_front.hpp>
 #include <boost/fusion/include/size.hpp>
 
 #include <boost/preprocessor/enum.hpp>
@@ -29,10 +29,10 @@ struct other_caster {
   }
 };
 
-template<typename Tag, typename In>
+template<typename IsVirtual, typename In>
 struct caster
 : boost::mpl::if_<
-  Tag
+  IsVirtual
 , pointer_traits<In>
 , other_caster<In>
 >::type {};

@@ -7,7 +7,6 @@
 #define RTTI_MMETHOD_DECLARE_HELPER_HPP
 
 #include "mmethod/shared/basic.hpp"
-#include "mmethod/shared/tags.hpp"
 
 #include "mmethod/dynamic/common.hpp"
 #include "mmethod/dispatch/dispatch.hpp"
@@ -17,6 +16,7 @@
 #include <boost/mpl/pop_front.hpp>
 #include <boost/function_types/components.hpp>
 
+// for trampoline/call.hpp
 #include "mmethod/shared/call_traits.hpp"
 #include <boost/fusion/tuple.hpp>
 
@@ -66,7 +66,7 @@ private:
   typedef boost::function_types::components<Sig> components;
   typedef typename boost::mpl::front<components>::type result;
   typedef typename boost::mpl::pop_front<components>::type args;
-  
+
 public:
   typedef make_declare_helper<Tag, result, args> type;
 };
