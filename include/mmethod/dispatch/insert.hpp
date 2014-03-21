@@ -7,11 +7,13 @@
 #define RTTI_MMETHOD_DYNAMIC_HPP
 
 #include "mmethod/dispatch/forward.hpp"
+#include "mmethod/dispatch/fetch.hpp"
 
 #include "mmethod/declare/traits.hpp"
 #include "mmethod/dynamic/common.hpp"
 
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/range_c.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/zip_view.hpp>
 #include <boost/mpl/placeholders.hpp>

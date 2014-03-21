@@ -6,7 +6,8 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FORWARD_HPP
 #define RTTI_MMETHOD_DISPATCH_FORWARD_HPP
 
-#include "rtti/rttifwd.hpp"
+#include "mmethod/shared/basic.hpp"
+
 #include "rtti/detail/attribute.hpp"
 
 namespace rtti {
