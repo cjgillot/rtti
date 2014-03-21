@@ -10,7 +10,7 @@
 #include "rtti/holder/holder.hpp"
 #include "rtti/detail/traits.hpp"
 
-#include "rtti/mixin.hpp"
+#include "rtti/mixin/mixin_node.hpp"
 
 namespace rtti {
 namespace detail {
