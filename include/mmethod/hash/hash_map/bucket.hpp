@@ -8,7 +8,6 @@
 
 #include <stdint.h>
 
-#include "rtti/detail/attribute.hpp"
 #include "rtti/rttifwd.hpp"
 
 #include <boost/config.hpp>
@@ -38,9 +37,9 @@ public:
   BOOST_CONSTEXPR bucket_t(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW;
 
   // access
-  key_type   ATTRIBUTE_PURE key()   const BOOST_NOEXCEPT_OR_NOTHROW;
-  value_type ATTRIBUTE_PURE value() const BOOST_NOEXCEPT_OR_NOTHROW;
-  bool       ATTRIBUTE_PURE empty() const BOOST_NOEXCEPT_OR_NOTHROW;
+  key_type   key()   const BOOST_NOEXCEPT_OR_NOTHROW;
+  value_type value() const BOOST_NOEXCEPT_OR_NOTHROW;
+  bool       empty() const BOOST_NOEXCEPT_OR_NOTHROW;
 
   // modification
   void set(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW;

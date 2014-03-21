@@ -7,7 +7,6 @@
 #define RTTI_MMETHOD_HASH_MAP_BASE_HPP
 
 #include "rtti/rttifwd.hpp"
-#include "rtti/detail/attribute.hpp"
 
 #define MMETHOD_INLINE_DO_FIND
 
@@ -48,18 +47,18 @@ private:
   hash_map& operator=(hash_map&&);
 #endif
 
-public:
+private:
   /// hash function, thread-safe
-  index_type ATTRIBUTE_PURE hash(key_type a) const BOOST_NOEXCEPT_OR_NOTHROW;
+  index_type hash(key_type a) const BOOST_NOEXCEPT_OR_NOTHROW;
 
 public:
   /// find block -> all these are thread-safe
   //@{
-  iterator ATTRIBUTE_PURE zero() const BOOST_NOEXCEPT_OR_NOTHROW;
-  iterator ATTRIBUTE_PURE find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
+  iterator zero() const BOOST_NOEXCEPT_OR_NOTHROW;
+  iterator find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
 
 private:
-  iterator ATTRIBUTE_PURE do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
+  iterator do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
   //@}
 
 public:

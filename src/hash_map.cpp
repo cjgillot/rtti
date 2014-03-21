@@ -56,7 +56,7 @@ void hash_map::flush(hash_map const& o) {
 
 namespace {
 // helper function for [do_find] and [insert]
-inline bucket_t* ATTRIBUTE_PURE
+inline bucket_t*
 probe_table(bucket_t* const m_array, std::size_t index, rtti_type key) BOOST_NOEXCEPT_OR_NOTHROW {
   // use linear probing
   bucket_t* ptr = &m_array[index];

@@ -9,6 +9,8 @@
 #include "mmethod/hash/hash_map.hpp"
 #include "mmethod/hash/hash_map.ipp"
 
+#include "rtti/detail/attribute.hpp"
+
 #include <boost/config.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS

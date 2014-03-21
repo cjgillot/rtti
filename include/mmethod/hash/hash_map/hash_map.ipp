@@ -11,6 +11,8 @@
 
 #include "rtti/holder/node.hpp"
 
+#include "rtti/detail/attribute.hpp"
+
 #include <boost/type_traits/alignment_of.hpp>
 
 #include <boost/config.hpp>
@@ -26,14 +28,14 @@ namespace detail {
 inline hash_map::hash_map()
 : m_mask(0), m_logsz(0) {}
 
-inline index_type         ATTRIBUTE_PURE hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
+inline index_type         hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
   uintptr_t v = uintptr_t(a);
   v /= boost::alignment_of<rtti::rtti_node>::value;
   return index_type( v & m_mask );
 }
 
-inline hash_map::iterator ATTRIBUTE_PURE hash_map::zero()             const BOOST_NOEXCEPT_OR_NOTHROW { return &m_array[0]; }
-inline hash_map::iterator ATTRIBUTE_PURE hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
+inline hash_map::iterator hash_map::zero()             const BOOST_NOEXCEPT_OR_NOTHROW { return &m_array[0]; }
+inline hash_map::iterator hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   bucket_t* bucket = &m_array[ hash(key) ];
 
   if(LIKELY( bucket->key() == key ))
@@ -43,7 +45,7 @@ inline hash_map::iterator ATTRIBUTE_PURE hash_map::find(key_type key) const BOOS
 }
 
 #ifdef MMETHOD_INLINE_DO_FIND
-inline hash_map::iterator ATTRIBUTE_PURE hash_map::do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
+inline hash_map::iterator hash_map::do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   std::size_t const index = hash(key);
   bucket_t* ptr = &m_array[index];
 

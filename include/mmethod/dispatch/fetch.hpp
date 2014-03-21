@@ -106,13 +106,13 @@ struct fetch_poles {
 
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
-  static invoker_t ATTRIBUTE_PURE eval(uintptr_t spec) {
+  static invoker_t eval(uintptr_t spec) {
     return Tag::invoker_table[spec / 2];
   }
 };
 template<typename Tag, std::size_t BTS>
 struct fetch_invoker<1, Tag, BTS> {
-  static invoker_t ATTRIBUTE_PURE eval(uintptr_t spec) {
+  static invoker_t eval(uintptr_t spec) {
     return (invoker_t)spec;
   }
 };
