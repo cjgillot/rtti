@@ -45,7 +45,7 @@ rtti::hash::detail::do_fetch_pole(
     // common case
     hash_map::iterator it = map.find( rtti_get_id(rt) );
 
-    if(LIKELY( !it->empty() )) {
+    if(BOOST_LIKELY( !it->empty() )) {
 
       const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
 #if MMETHOD_USE_DEEP_CACHE

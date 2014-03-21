@@ -11,8 +11,6 @@
 
 #include "rtti/holder/node.hpp"
 
-#include "rtti/detail/attribute.hpp"
-
 #include <boost/type_traits/alignment_of.hpp>
 
 #include <boost/config.hpp>
@@ -38,7 +36,7 @@ inline hash_map::iterator hash_map::zero()             const BOOST_NOEXCEPT_OR_N
 inline hash_map::iterator hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   bucket_t* bucket = &m_array[ hash(key) ];
 
-  if(LIKELY( bucket->key() == key ))
+  if(BOOST_LIKELY( bucket->key() == key ))
     return bucket;
 
   return do_find(key);

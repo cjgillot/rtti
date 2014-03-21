@@ -72,13 +72,3 @@
 #define MMETHOD_ATTRIBUTE_ALIGNED
 #endif
 #endif
-
-#ifndef LIKELY
-#ifdef __GNUC__
-#define   LIKELY(x) (bool(__builtin_expect(!!(x), 1)))
-#define UNLIKELY(x) (bool(__builtin_expect(!!(x), 0)))
-#else
-#define   LIKELY(x) (!!(x))
-#define UNLIKELY(x) (!!(x))
-#endif
-#endif
