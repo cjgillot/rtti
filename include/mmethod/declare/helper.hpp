@@ -9,7 +9,7 @@
 #include "mmethod/shared/basic.hpp"
 
 #include "mmethod/dynamic/common.hpp"
-#include "mmethod/dispatch/dispatch.hpp"
+#include "mmethod/dispatch/forward.hpp"
 #include "mmethod/trampoline/trampoline.hpp"
 
 #include <boost/mpl/front.hpp>
