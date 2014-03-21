@@ -9,6 +9,12 @@
 #include "mmethod/shared/basic.hpp"
 #include "mmethod/hash/hash_map/hash_map.hpp"
 
+#include <boost/config.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace rtti {
 namespace dmethod {
 namespace detail {
@@ -27,5 +33,9 @@ void inse_table(std::size_t arity, invoker_table_type& table, invoker_t inv, rtt
 void seal_table(std::size_t arity, invoker_table_type  table, seal_table_type& seal);
 
 }}} // namespace rtti::mmethod::detail
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif
