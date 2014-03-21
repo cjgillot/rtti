@@ -12,6 +12,7 @@
 #include "mmethod/declare/traits.hpp"
 #include "mmethod/dynamic/common.hpp"
 
+#include <boost/mpl/at.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -59,12 +60,12 @@ struct save_poles_once {
 
   template<typename U>
   void operator()(U*) const {
-    typedef typename boost::mpl::begin<U>::type first_it;
-    typedef typename rtti::traits_detail::remove_all<typename boost::mpl::deref<first_it>::type>::type first;
+    typedef typename boost::mpl::at_c<U, 0>::type first_raw;
+    typedef typename rtti::traits_detail::remove_all<first_raw>::type first;
     enum { J = first::value };
 
-    typedef typename boost::mpl::next<first_it>::type second_it;
-    typedef typename rtti::traits_detail::remove_all<typename boost::mpl::deref<second_it>::type>::type second;
+    typedef typename boost::mpl::at_c<U, 1>::type second_raw;
+    typedef typename rtti::traits_detail::remove_all<second_raw>::type second;
 
     enum { ok = (BTS >> J) & 1 };
     if( ok ) {

@@ -16,11 +16,13 @@
 #include "mmethod/hash/fetch_pole.hpp"
 
 #include <functional>
-#include <boost/fusion/include/accumulate.hpp>
+
+#include <boost/mpl/range_c.hpp>
+#include <boost/fusion/include/zip.hpp>
+#include <boost/fusion/include/at_c.hpp>
 #include <boost/fusion/include/begin.hpp>
 #include <boost/fusion/include/deref.hpp>
-#include <boost/fusion/include/zip.hpp>
-#include <boost/mpl/range_c.hpp>
+#include <boost/fusion/include/accumulate.hpp>
 
 namespace rtti { namespace dmethod { namespace detail {
 
@@ -69,14 +71,12 @@ struct fetch_poles_once {
 
   template<typename U>
   uintptr_t operator()(uintptr_t m, U const& x) const {
-    typedef typename boost::fusion::result_of::begin<U>::type first_it;
-    typedef typename rtti::traits_detail::remove_all<typename boost::fusion::result_of::deref<first_it>::type>::type first;
+    typedef typename boost::fusion::result_of::at_c<U, 0>::type first_raw;
+    typedef typename rtti::traits_detail::remove_all<first_raw>::type first;
     enum { J = first::value };
 
-    typedef typename boost::fusion::result_of::next<first_it>::type second_it;
-    typedef typename boost::fusion::result_of::deref<second_it>::type second;
-
-    second arg = boost::fusion::deref(boost::fusion::next(boost::fusion::begin(x)));
+    typedef typename boost::fusion::result_of::at_c<U, 1>::type second;
+    second arg = boost::fusion::at_c<1>(x);
 
     enum { ok = (BTS >> J) & 1 };
     if( ok ) {
