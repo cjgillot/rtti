@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/hash/hash_map/hash_map.hpp"
-#include "mmethod/hash/hash_map/hash_map.ipp"
+#include "mmethod/hash/hash_map.hpp"
+#include "mmethod/hash/hash_map.ipp"
 
 #include <boost/assert.hpp>
 

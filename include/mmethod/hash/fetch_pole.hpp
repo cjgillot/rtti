@@ -6,8 +6,8 @@
 #ifndef RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 #define RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 
-#include "mmethod/hash/hash_map/hash_map.hpp"
-#include "mmethod/hash/hash_map/hash_map.ipp"
+#include "mmethod/hash/hash_map.hpp"
+#include "mmethod/hash/hash_map.ipp"
 
 #include <boost/config.hpp>
 

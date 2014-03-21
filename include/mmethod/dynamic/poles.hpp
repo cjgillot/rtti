@@ -7,7 +7,7 @@
 #define RTTI_MMETHOD_POLES_HPP
 
 #include "mmethod/shared/basic.hpp"
-#include "mmethod/hash/hash_map/hash_map.hpp"
+#include "mmethod/hash/hash_map.hpp"
 
 #include <boost/config.hpp>
 
