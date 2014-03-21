@@ -10,7 +10,8 @@
 #include "mmethod/dispatch/fetch.hpp"
 
 #include "mmethod/declare/traits.hpp"
-#include "mmethod/dynamic/common.hpp"
+
+#include "mmethod/dynamic/poles.hpp"
 
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/vector.hpp>
@@ -20,14 +21,14 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform_view.hpp>
 
-namespace rtti { namespace dmethod {
+namespace rtti { namespace dmethod { namespace detail {
 
 template<typename Tag>
-detail::invoker_table_type register_base<Tag>::invoker_table;
+invoker_table_type register_base<Tag>::invoker_table;
 
 template<typename Tag>
 template<std::size_t J>
-detail::poles_map_type register_base<Tag>::poles<J>::array;
+poles_map_type register_base<Tag>::poles<J>::array;
 
 template<typename Tag>
 void register_base<Tag>::do_initialize() {
@@ -35,8 +36,6 @@ void register_base<Tag>::do_initialize() {
 
   detail::init_table(arity, Tag::invoker_table);
 }
-
-namespace detail {
 
 namespace {
 

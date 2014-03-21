@@ -8,7 +8,6 @@
 
 #include "mmethod/shared/basic.hpp"
 
-#include "mmethod/dynamic/common.hpp"
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/trampoline/trampoline.hpp"
 

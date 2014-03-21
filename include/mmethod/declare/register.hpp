@@ -7,13 +7,14 @@
 #define RTTI_MMETHOD_DECLARE_REGISTER_HPP
 
 #include "mmethod/declare/helper.hpp"
-#include "mmethod/dynamic/common.hpp"
+
+#include "mmethod/dynamic/poles.hpp"
 
 namespace rtti { namespace dmethod {
 
 template<typename Tag, typename Sig>
 struct dmethod_register
-: register_base<Tag>
+: detail::register_base<Tag>
 , detail::make_declare<Tag, Sig>::type {
 private:
   typedef typename detail::make_declare<Tag, Sig>::type decl_maker;

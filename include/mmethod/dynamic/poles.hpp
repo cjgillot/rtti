@@ -19,10 +19,24 @@ namespace rtti {
 namespace dmethod {
 namespace detail {
 
+//! useful typedefs
 typedef hash::detail::hash_map poles_map_type;
-
 typedef invoker_t* invoker_table_type;
 
+//! structure holding tables
+template<typename Tag>
+struct register_base {
+
+  template<std::size_t> struct poles {
+    static detail::poles_map_type array;
+  };
+
+  static void do_initialize();
+  static detail::invoker_table_type invoker_table;
+
+};
+
+//! structure used for table generation
 struct seal_table_type {
   invoker_table_type& table;
   poles_map_type** poles;
