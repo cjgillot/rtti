@@ -10,4 +10,26 @@
 #include "rtti/holder/getter.hpp"
 #include "rtti/holder/getter.ipp"
 
+#include <boost/mpl/vector.hpp>
+
+namespace rtti {
+
+//! \brief Base case
+template<typename klass>
+struct base_rtti
+: public mixin<
+  klass, boost::mpl::vector<>
+, boost::true_type
+> {};
+
+//! \brief Any other class
+template<typename klass, typename parents>
+struct implement_rtti
+: public mixin<
+  klass, parents
+, boost::false_type
+> {};
+
+} // namespace rtti
+
 #endif
