@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "rtti/rtti.hpp"
+#include "mmethod/rtti.hpp"
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
 
@@ -95,7 +95,7 @@ struct Girrafe: public Prey_abstract
 //----------------------
 using rtti::tags::_v;
 
-DECLARE_MMETHOD(huntor, ResultType, (_v<Predator_abstract> const&, _v<Prey_abstract> const&));
+DECLARE_MMETHOD(huntor, ResultType, (_v<Predator_abstract const&>, _v<Prey_abstract const&>));
 
 IMPLEMENT_MMETHOD(huntor, ResultType, ( Lion const&, Gazelle const& ))
 {

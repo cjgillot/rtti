@@ -6,35 +6,37 @@
 #ifndef RTTI_MMETHOD_DYNAMIC_HPP
 #define RTTI_MMETHOD_DYNAMIC_HPP
 
-#include "mmethod/dynamic/common.hpp"
-#include "mmethod/dispatch/dispatch.hpp"
+#include "mmethod/dispatch/forward.hpp"
+#include "mmethod/dispatch/fetch.hpp"
 
-#include "mmethod/declare/declare.hpp"
-#include "mmethod/declare/helper.hpp"
+#include "mmethod/detail/access.hpp"
 
+#include "mmethod/table/table.hpp"
+#include "mmethod/table/generate.hpp"
+
+#include <boost/mpl/at.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/range_c.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/zip_view.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform_view.hpp>
 
-namespace rtti { namespace dmethod {
+namespace rtti { namespace mmethod { namespace detail {
 
 template<typename Tag>
-detail::invoker_table_type register_base<Tag>::invoker_table;
+invoker_table_type register_base<Tag>::invoker_table;
 
 template<typename Tag>
 template<std::size_t J>
-detail::poles_map_type register_base<Tag>::poles<J>::array;
+poles_map_type register_base<Tag>::poles<J>::array;
 
-template<typename Tag>
-void register_base<Tag>::do_initialize() {
-  enum { arity = Tag::traits::vsize };
+template<typename Tag, typename Ret>
+void dispatch<Tag,Ret>::initialize() {
+  enum { arity = access::traits<Tag>::vsize };
 
   detail::init_table(arity, Tag::invoker_table);
 }
-
-namespace detail {
 
 namespace {
 
@@ -58,12 +60,12 @@ struct save_poles_once {
 
   template<typename U>
   void operator()(U*) const {
-    typedef typename boost::mpl::begin<U>::type first_it;
-    typedef typename rtti::traits_detail::remove_all<typename boost::mpl::deref<first_it>::type>::type first;
+    typedef typename boost::mpl::at_c<U, 0>::type first_raw;
+    typedef typename rtti::traits_detail::remove_all<first_raw>::type first;
     enum { J = first::value };
 
-    typedef typename boost::mpl::next<first_it>::type second_it;
-    typedef typename rtti::traits_detail::remove_all<typename boost::mpl::deref<second_it>::type>::type second;
+    typedef typename boost::mpl::at_c<U, 1>::type second_raw;
+    typedef typename rtti::traits_detail::remove_all<second_raw>::type second;
 
     enum { ok = (BTS >> J) & 1 };
     if( ok ) {
@@ -99,8 +101,8 @@ template<typename Tag, typename Ret>
 template<typename K, typename F>
 void dispatch<Tag,Ret>::insert(F const& f) {
   enum {
-    arity = Tag::traits::vsize,
-    btset = Tag::traits::type_bitset
+    arity = access::traits<Tag>::vsize,
+    btset = access::traits<Tag>::type_bitset
   };
   rtti_hierarchy hiers [ arity ];
 
@@ -135,10 +137,10 @@ struct seal_poles<Arity, Tag, 0> {
 } // namespace <>
 
 template<typename Tag, typename Ret>
-void dispatch<Tag,Ret>::seal() const {
+void dispatch<Tag,Ret>::seal() {
   enum {
-    arity = Tag::traits::vsize,
-    btset = Tag::traits::type_bitset
+    arity = access::traits<Tag>::vsize,
+    btset = access::traits<Tag>::type_bitset
   };
 
   poles_map_type* poles [ arity ];

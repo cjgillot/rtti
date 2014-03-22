@@ -3,8 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/hash/fetch_pole.hpp"
-#include "rtti/rtti.hpp"
+#include "mmethod/table/fetch_pole.hpp"
+
+#include "mmethod/rtti/holder/node.hpp"
 
 #include <boost/assert.hpp>
 
@@ -19,7 +20,6 @@ using rtti::hash::detail::value_type;
 
 // can be moved as non-member
 value_type
-ATTRIBUTE_NONNULL(2) ATTRIBUTE_NONNULL(3)
 rtti::hash::detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0
@@ -44,7 +44,7 @@ rtti::hash::detail::do_fetch_pole(
     // common case
     hash_map::iterator it = map.find( rtti_get_id(rt) );
 
-    if(LIKELY( !it->empty() )) {
+    if(BOOST_LIKELY( !it->empty() )) {
 
       const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
 #if MMETHOD_USE_DEEP_CACHE

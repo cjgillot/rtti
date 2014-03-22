@@ -13,7 +13,6 @@
 
 #include <boost/functional/hash.hpp>
 #include <boost/unordered_map.hpp>
-#include <boost/optional.hpp>
 
 #include "hierarchy.hpp"
 #include "signature.hpp"
@@ -22,12 +21,10 @@
 
 typedef std::pair<signature_t, invoker_t> overload_t;
 
-inline bool operator<(overload_t const& a, overload_t const& b)
-{ return signature_t::total_order()(a.first, b.first); }
-
 typedef std::vector<overload_t> overloads_t;
 
-typedef boost::unordered_map<signature_t, boost::optional<overload_t> > dispatch_t;
+// the invoker overload_t::second is null in case of bad dispatch
+typedef boost::unordered_map<signature_t, overload_t> dispatch_t;
 
 inline std::size_t hash_value(const signature_t& s)
 {

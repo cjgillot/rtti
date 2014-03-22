@@ -4,7 +4,6 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 add_subdirectory(dispatch)
-add_subdirectory(hash_map)
 
 file(GLOB_RECURSE src *.cpp)
 

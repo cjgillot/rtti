@@ -6,10 +6,7 @@
 #ifndef RTTI_MMETHOD_DECLARE_TRAITS_HPP
 #define RTTI_MMETHOD_DECLARE_TRAITS_HPP
 
-#include "mmethod/dynamic/poles.hpp"
-#include "mmethod/declare/declare.hpp"
-
-#include "mmethod/shared/tags.hpp"
+#include "mmethod/traits/tags.hpp"
 
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/times.hpp>
@@ -18,16 +15,14 @@
 #include <boost/mpl/reverse_fold.hpp>
 
 namespace rtti {
-namespace dmethod {
+namespace mmethod {
 namespace detail {
 
-template<typename Tag, typename Ret, typename Args>
-struct make_declare_helper<Tag, Ret, Args>::traits
+template<typename Ret, typename Args>
+struct make_declare_traits
 {
   typedef typename boost::mpl::transform<Args, tags::unwrap>::type unwrapped_args;
   typedef typename boost::mpl::transform<Args, tags::is_virtual>::type type_tags;
-
-  typedef rtti::detail::trampoline<Tag, Ret, unwrapped_args> trampoline;
 
   BOOST_STATIC_CONSTANT(std::size_t, vsize = tags::virtual_size<Args>::value);
   BOOST_STATIC_CONSTANT(std::size_t, type_bitset = (boost::mpl::reverse_fold<
@@ -40,7 +35,7 @@ struct make_declare_helper<Tag, Ret, Args>::traits
     >::type::value
   ));
 
-  BOOST_STATIC_ASSERT_MSG( vsize > 0, "At least one virtual parameter must be provided." );
+  BOOST_STATIC_ASSERT_MSG( (vsize > 0), "At least one virtual parameter must be provided." );
 };
 
 }}} // namespace rtti::mmethod::detail

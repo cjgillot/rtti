@@ -25,10 +25,11 @@
 namespace {
 
 typedef std::vector<const klass_t*> kvector_t;
+typedef kvector_t::const_iterator   iter_t;
 typedef std::vector<kvector_t::const_iterator> product_t;
 
 struct beginner {
-  kvector_t::const_iterator operator()(kvector_t const& p) const
+  iter_t operator()(kvector_t const& p) const
   { return p.begin(); }
 };
 
@@ -54,7 +55,7 @@ bool product_incr(product_t& p, const pole_table_t &table)
 }
 
 struct deref
-: std::unary_function<std::vector<const klass_t*>::const_iterator, const klass_t*>
+: std::unary_function<iter_t, const klass_t*>
 {
   result_type operator()(const argument_type& it) const
   { return *it; }
@@ -165,11 +166,11 @@ static void dispatch_one(
   }
 
   if(max_set.size() == 1)
-    dispatch.insert(std::make_pair( sig, boost::make_optional(*max_set.begin()) ));
+    dispatch.insert(std::make_pair( sig, max_set.front() ));
 
   else {
     //FIXME : diagnose
-    dispatch.insert(std::make_pair( sig, boost::none ));
+    dispatch.insert(std::make_pair( sig, overload_t(sig, NULL) ));
 //     if(max_set.size() == 0) {
 //       std::cerr << "No overload found for signature : ";
 //       PRINT_SIG(sig);
@@ -220,9 +221,8 @@ sig_upcaster::operator()() BOOST_NOEXCEPT_OR_NOTHROW
     sig.array_ref()[k] = nk;
 
     // we can safely use [dispatch.at] since all the candidates have been dispatched already
-    boost::optional<overload_t> const& bound = dispatch.at(sig);
-    
-    // FIXME may hide ambiguity cascade
-    if(bound) return &*bound;
+    overload_t const& bound = dispatch.at(sig);
+
+    return &bound;
   }
 }

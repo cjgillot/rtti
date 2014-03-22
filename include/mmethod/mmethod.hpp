@@ -6,7 +6,6 @@
 #ifndef RTTI_MMETHOD_HPP
 #define RTTI_MMETHOD_HPP
 
-#include "mmethod/dispatch/dispatch.hpp"
 #include "mmethod/declare/declare.hpp"
 
 /*! \page RTTI.MMethod library

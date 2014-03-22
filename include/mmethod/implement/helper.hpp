@@ -6,41 +6,42 @@
 #ifndef RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 #define RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 
-#include "mmethod/shared/basic.hpp"
-#include "mmethod/trampoline/trampoline.hpp"
+#include "mmethod/declare/traits.hpp"
+#include "mmethod/declare/trampoline.hpp"
 
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/function_types/components.hpp>
+#include "mmethod/detail/access.hpp"
+
+#include <boost/function_types/result_type.hpp>
+#include <boost/function_types/parameter_types.hpp>
 
 namespace rtti {
-namespace dmethod {
+namespace mmethod {
 namespace detail {
 
 template<typename Tag, typename Over, typename Ret, typename Args>
 struct make_implement_helper {
 private:
-  typedef typename Tag::traits traits;
+  typedef access::trampoline<Tag> trampoline;
+  typedef access::traits<Tag> traits;
 
   enum { vsize = traits::vsize };
 
 protected:
-  typedef typename traits::trampoline::template apply<Over, Ret, Args> trampoline;
+  typedef typename trampoline::template apply<Over, Ret, Args> callback;
 
   typedef make_implement_helper impl_maker;
 
   make_implement_helper() BOOST_NOEXCEPT_OR_NOTHROW {
-    Tag().template insert<Args>( &impl_maker::trampoline::call );
+    Tag().template insert<Args>( &callback::call );
   }
 };
 
 template<typename Tag, typename Over, typename Sig>
 struct make_implement {
 private:
-  typedef boost::function_types::components<Sig> components;
-  typedef typename boost::mpl::front<components>::type result;
-  typedef typename boost::mpl::pop_front<components>::type args;
-  
+  typedef typename boost::function_types::result_type<Sig>::type result;
+  typedef typename boost::function_types::parameter_types<Sig>::type args;
+
 public:
   typedef make_implement_helper<Tag, Over, result, args> type;
 };

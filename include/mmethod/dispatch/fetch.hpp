@@ -6,23 +6,23 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FETCH_HPP
 #define RTTI_MMETHOD_DISPATCH_FETCH_HPP
 
-#include "mmethod/dispatch/dispatch.hpp"
+#include "mmethod/dispatch/forward.hpp"
 
-#include "mmethod/dynamic/poles.hpp"
+#include "mmethod/detail/access.hpp"
 
-#include "mmethod/shared/basic.hpp"
-#include "rtti/holder/getter.hpp"
+#include "mmethod/table/table.hpp"
+#include "mmethod/table/fetch_pole.hpp"
 
-#include "mmethod/hash/fetch_pole.hpp"
+#include "mmethod/rtti/getter.hpp"
 
 #include <functional>
-#include <boost/fusion/include/accumulate.hpp>
-#include <boost/fusion/include/begin.hpp>
-#include <boost/fusion/include/deref.hpp>
-#include <boost/fusion/include/zip.hpp>
-#include <boost/mpl/range_c.hpp>
 
-namespace rtti { namespace dmethod { namespace detail {
+#include <boost/mpl/range_c.hpp>
+#include <boost/fusion/include/zip.hpp>
+#include <boost/fusion/include/at_c.hpp>
+#include <boost/fusion/include/accumulate.hpp>
+
+namespace rtti { namespace mmethod { namespace detail {
 
 namespace {
 
@@ -69,14 +69,12 @@ struct fetch_poles_once {
 
   template<typename U>
   uintptr_t operator()(uintptr_t m, U const& x) const {
-    typedef typename boost::fusion::result_of::begin<U>::type first_it;
-    typedef typename rtti::traits_detail::remove_all<typename boost::fusion::result_of::deref<first_it>::type>::type first;
+    typedef typename boost::fusion::result_of::at_c<U, 0>::type first_raw;
+    typedef typename rtti::traits_detail::remove_all<first_raw>::type first;
     enum { J = first::value };
 
-    typedef typename boost::fusion::result_of::next<first_it>::type second_it;
-    typedef typename boost::fusion::result_of::deref<second_it>::type second;
-
-    second arg = boost::fusion::deref(boost::fusion::next(boost::fusion::begin(x)));
+    typedef typename boost::fusion::result_of::at_c<U, 1>::type second;
+    second arg = boost::fusion::at_c<1>(x);
 
     enum { ok = (BTS >> J) & 1 };
     if( ok ) {
@@ -106,13 +104,13 @@ struct fetch_poles {
 
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
-  static invoker_t ATTRIBUTE_PURE eval(uintptr_t spec) {
+  static invoker_t eval(uintptr_t spec) {
     return Tag::invoker_table[spec / 2];
   }
 };
 template<typename Tag, std::size_t BTS>
 struct fetch_invoker<1, Tag, BTS> {
-  static invoker_t ATTRIBUTE_PURE eval(uintptr_t spec) {
+  static invoker_t eval(uintptr_t spec) {
     return (invoker_t)spec;
   }
 };
@@ -123,15 +121,20 @@ struct fetch_invoker<1, Tag, BTS> {
 template<typename Tag, typename Ret>
 template<typename Tuple>
 invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
+  this->generate();
+
   enum {
-    arity = Tag::traits::vsize,
-    btset = Tag::traits::type_bitset
+    arity = access::traits<Tag>::vsize,
+    btset = access::traits<Tag>::type_bitset
   };
 
   uintptr_t spec = 0;
   fetch_poles<arity, Tag, btset>::eval( spec, args );
 
-  return fetch_invoker<arity, Tag, btset>::eval( spec );
+  invoker_t ret = fetch_invoker<arity, Tag, btset>::eval( spec );
+  BOOST_ASSERT(ret);
+
+  return ret;
 }
 
 }}} // rtti::mmethod::detail

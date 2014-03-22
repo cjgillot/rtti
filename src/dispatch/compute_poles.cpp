@@ -8,8 +8,6 @@
 #include <boost/foreach.hpp>
 #include <deque>
 
-#include "rtti/rtti.hpp"
-
 /* Implementation of pole computation algorithm from [1]
  * 
  * Algorithms are described in terms of this paper.
