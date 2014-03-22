@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
 #define RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
 
-#include "mmethod/hash/hash_map/bucket.hpp"
+#include "mmethod/table/hash_map/bucket.hpp"
 
 #include <boost/config.hpp>
 

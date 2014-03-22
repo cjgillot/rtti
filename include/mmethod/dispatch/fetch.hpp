@@ -8,12 +8,11 @@
 
 #include "mmethod/dispatch/forward.hpp"
 
-#include "mmethod/dynamic/poles.hpp"
+#include "mmethod/table/table.hpp"
+#include "mmethod/table/fetch_pole.hpp"
 
 #include "mmethod/shared/basic.hpp"
 #include "rtti/holder/getter.hpp"
-
-#include "mmethod/hash/fetch_pole.hpp"
 
 #include <functional>
 

@@ -8,7 +8,7 @@
 
 #include "mmethod/declare/helper.hpp"
 
-#include "mmethod/dynamic/poles.hpp"
+#include "mmethod/table/table.hpp"
 
 namespace rtti { namespace mmethod {
 

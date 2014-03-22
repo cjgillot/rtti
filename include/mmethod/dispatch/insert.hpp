@@ -11,7 +11,8 @@
 
 #include "mmethod/declare/traits.hpp"
 
-#include "mmethod/dynamic/poles.hpp"
+#include "mmethod/table/table.hpp"
+#include "mmethod/table/generate.hpp"
 
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/vector.hpp>

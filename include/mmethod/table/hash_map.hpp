@@ -3,12 +3,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_HASH_MAP_IPP
-#define RTTI_MMETHOD_HASH_MAP_IPP
+#ifndef RTTI_MMETHOD_HASH_MAP_HPP
+#define RTTI_MMETHOD_HASH_MAP_HPP
 
-#include "mmethod/hash/hash_map.hpp"
-
-#include "mmethod/hash/hash_map/bucket.ipp"
-#include "mmethod/hash/hash_map/hash_map.ipp"
+#include "mmethod/table/hash_map/bucket.hpp"
+#include "mmethod/table/hash_map/hash_map.hpp"
 
 #endif

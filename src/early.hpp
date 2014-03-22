@@ -6,7 +6,8 @@
 #ifndef EARLY_HPP
 #define EARLY_HPP
 
-#include "mmethod/dynamic/poles.hpp"
+#include "mmethod/table/table.hpp"
+#include "mmethod/table/generate.hpp"
 
 #include <vector>
 
