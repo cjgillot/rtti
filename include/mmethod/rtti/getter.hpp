@@ -6,33 +6,15 @@
 #ifndef RTTI_INTERFACE_HPP
 #define RTTI_INTERFACE_HPP
 
-#include <boost/type_traits.hpp>
-
 #include <boost/static_assert.hpp>
 
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 
+#include "mmethod/rtti/getter/getter.hpp"
 #include "mmethod/rtti/getter/getter.ipp"
 
 #include "mmethod/detail/attribute.hpp"
-
-/*!
- * \brief Macros controlling the is_a behaviour
- * \{
- */
-//! Choose whether \ref rtti::is_a should
-//! use built-in \c dynamic_cast<> operator,
-//! or prefer reimplementing it in terms of \c rtti_node
-#define RTTI_IS_A_USE_DYNAMIC_CAST
-//! Choose whether \ref rtti::is_a should
-//! use \ref rtti::is_exactly_a when the target
-//! is flagged as a final class
-#define RTTI_IS_A_USE_FINAL
-/*!\}*/
 
 /*
  * In this file, the [pure] attribute is
