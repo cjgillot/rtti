@@ -9,6 +9,8 @@
 #include "mmethod/declare/traits.hpp"
 #include "mmethod/declare/trampoline.hpp"
 
+#include "mmethod/detail/access.hpp"
+
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/function_types/components.hpp>
@@ -20,8 +22,8 @@ namespace detail {
 template<typename Tag, typename Over, typename Ret, typename Args>
 struct make_implement_helper {
 private:
-  typedef typename Tag::trampoline trampoline;
-  typedef typename Tag::traits traits;
+  typedef access::trampoline<Tag> trampoline;
+  typedef access::traits<Tag> traits;
 
   enum { vsize = traits::vsize };
 

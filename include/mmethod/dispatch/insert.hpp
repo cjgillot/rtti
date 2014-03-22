@@ -11,6 +11,8 @@
 
 #include "mmethod/declare/traits.hpp"
 
+#include "mmethod/detail/access.hpp"
+
 #include "mmethod/table/table.hpp"
 #include "mmethod/table/generate.hpp"
 
@@ -33,7 +35,7 @@ poles_map_type register_base<Tag>::poles<J>::array;
 
 template<typename Tag, typename Ret>
 void dispatch<Tag,Ret>::initialize() {
-  enum { arity = Tag::traits::vsize };
+  enum { arity = access::traits<Tag>::vsize };
 
   detail::init_table(arity, Tag::invoker_table);
 }
@@ -101,8 +103,8 @@ template<typename Tag, typename Ret>
 template<typename K, typename F>
 void dispatch<Tag,Ret>::insert(F const& f) {
   enum {
-    arity = Tag::traits::vsize,
-    btset = Tag::traits::type_bitset
+    arity = access::traits<Tag>::vsize,
+    btset = access::traits<Tag>::type_bitset
   };
   rtti_hierarchy hiers [ arity ];
 
@@ -139,8 +141,8 @@ struct seal_poles<Arity, Tag, 0> {
 template<typename Tag, typename Ret>
 void dispatch<Tag,Ret>::seal() {
   enum {
-    arity = Tag::traits::vsize,
-    btset = Tag::traits::type_bitset
+    arity = access::traits<Tag>::vsize,
+    btset = access::traits<Tag>::type_bitset
   };
 
   poles_map_type* poles [ arity ];

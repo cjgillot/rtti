@@ -17,8 +17,8 @@
 
 namespace rtti { namespace mmethod { namespace detail {
 
-template<typename Tag2, typename Over2, typename Ret2, typename Args2>
-struct make_implement_helper;
+// detail/access.hpp
+struct access;
 
 template<typename Tag, typename Ret, typename Args>
 struct make_declare_helper
@@ -28,17 +28,11 @@ private:
   typedef make_declare_call<Tag, Ret, Args> call_helper;
 
 protected:
-  typedef make_declare_traits<Ret, Args> traits;
-  typedef typename call_helper::trampoline_type trampoline;
+  typedef typename call_helper::traits_type traits_type;
+  typedef typename call_helper::trampoline_type trampoline_type;
 
 private:
-  friend struct detail::dispatch<Tag,Ret>;
-  typedef detail::dispatch<Tag,Ret> dispatch_type;
-
-  // grant access
-  friend struct register_base<Tag>;
-  template<typename Tag2, typename Over2, typename Ret2, typename Args2>
-  friend struct make_implement_helper;
+  friend struct rtti::mmethod::detail::access;
 
 protected:
   typedef make_declare_helper decl_maker;

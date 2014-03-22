@@ -8,6 +8,8 @@
 
 #include "mmethod/dispatch/forward.hpp"
 
+#include "mmethod/detail/access.hpp"
+
 #include "mmethod/table/table.hpp"
 #include "mmethod/table/fetch_pole.hpp"
 
@@ -124,8 +126,8 @@ invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
   this->generate();
 
   enum {
-    arity = Tag::traits::vsize,
-    btset = Tag::traits::type_bitset
+    arity = access::traits<Tag>::vsize,
+    btset = access::traits<Tag>::type_bitset
   };
 
   uintptr_t spec = 0;

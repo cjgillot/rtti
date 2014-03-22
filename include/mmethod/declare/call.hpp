@@ -18,17 +18,18 @@ namespace rtti { namespace mmethod { namespace detail {
 
 template<typename Tag, typename Ret, typename Args>
 struct make_declare_call {
+protected: // traits_type
+  typedef make_declare_traits<Ret, Args> traits_type;
+
 private:
-  typedef make_declare_traits<Ret, Args> traits;
+  typedef typename traits_type::unwrapped_args unwrapped_args;
+  typedef typename traits_type::type_tags      type_tags;
 
-  typedef typename traits::unwrapped_args unwrapped_args;
-  typedef typename traits::type_tags      type_tags;
-
-protected:
+protected: // trampoline_type
   typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;
   typedef typename trampoline_type::sig_t func_t;
 
-protected:
+private:   // dispatch_type
   typedef detail::dispatch<Tag,Ret> dispatch_type;
   dispatch_type m_dispatch;
 
