@@ -6,8 +6,11 @@
 #ifndef RTTI_HOLDER_HPP
 #define RTTI_HOLDER_HPP
 
-#include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/add_cv.hpp>
+#include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/is_class.hpp>
+#include <boost/type_traits/is_volatile.hpp>
 
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/rtti/holder/node.hpp"
@@ -16,35 +19,21 @@ namespace rtti {
 namespace detail {
 namespace holder_ {
 
-template<typename> struct holder;
-
-//! \brief Grant access to the holder
-template<typename T>
-struct get_holder {
-  typedef holder<T const volatile> type;
-};
-
-//! \brief Placeholder struct used for hierarchy base
-template<>
-struct get_holder<const volatile void> {
-  struct type {
-    static BOOST_CONSTEXPR rtti_node* get_node() { return NULL; }
-  };
-};
-
-//! Arguments must be const-qualified to avoid unnecessary instanciations
+//! \brief Structure holding class-wide rtti information
+//! \note Arguments must be const-qualified to avoid unnecessary instanciations
 template<class T>
 struct holder {
 private:
   BOOST_STATIC_ASSERT_MSG(
-    boost::is_const<T>::value && boost::is_volatile<T>::value,
-    "rtti::detail::holder_::holder<> must not be accessed directly"
+     boost::is_class<T>::value
+  && boost::is_const<T>::value
+  && boost::is_volatile<T>::value
+  , "rtti::detail::holder_::holder<> must not be accessed directly"
   );
 
   BOOST_STATIC_CONSTANT(std::size_t, Arity = sizeof( rtti_parents_size_1p((T*)NULL) ) - 1);
 
   struct initializer_t {
-    struct register_one;
     initializer_t();
     void touch() const {};
   };
@@ -66,12 +55,24 @@ public:
   { return rtti_get_id( get_node() ); }
 };
 
-template<class T>
-rtti_node_var<holder<T>::Arity> holder<T>::node;
+//! \brief Grant access to the holder
+template<typename T>
+struct get_holder {
+  typedef holder<typename boost::add_cv<T>::type> type;
+};
 
-template<class T>
-struct holder<T>::initializer_t::register_one {
-  mutable size_t k;
+//! \brief Placeholder struct used for hierarchy base
+template<>
+struct get_holder<const volatile void> {
+  struct type {
+    static BOOST_CONSTEXPR rtti_node* get_node() { return NULL; }
+  };
+};
+
+namespace {
+
+struct register_one {
+  mutable std::size_t k;
 
   template<typename P>
   void operator()(P*) const {
@@ -80,6 +81,8 @@ struct holder<T>::initializer_t::register_one {
     ++k;
   }
 };
+
+} // namespace <>
 
 template<class T>
 holder<T>::initializer_t::initializer_t() {
@@ -92,6 +95,10 @@ holder<T>::initializer_t::initializer_t() {
 template<class T>
 typename holder<T>::initializer_t
   holder<T>::initializer;
+
+template<class T>
+rtti_node_var<holder<T>::Arity>
+  holder<T>::node;
 
 } // namespace holder_
 
