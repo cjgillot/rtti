@@ -5,6 +5,43 @@
 
 #include "mmethod/detail/prefix.hpp"
 
+namespace rtti {
+namespace mmethod {
+namespace detail {
+namespace call_detail {
+
+template<>
+struct make_declare_call_base<
+  BOOST_PP_ITERATION()
+> {
+
+template<typename Tag, typename Ret, typename Args>
+struct apply {
+protected: // traits_type
+  typedef make_declare_traits<Ret, Args> traits_type;
+
+private:
+  typedef typename traits_type::unwrapped_args unwrapped_args;
+  typedef typename traits_type::type_tags      type_tags;
+
+protected: // trampoline_type
+  typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;
+  typedef typename trampoline_type::sig_t func_t;
+
+private:   // dispatch_type
+  typedef detail::dispatch<Tag,Ret> dispatch_type;
+  dispatch_type m_dispatch;
+
+protected:
+  template<typename K, typename F>
+  inline void insert(F const& f)
+  { m_dispatch.template insert<K>(f); }
+
+  inline void generate()
+  { m_dispatch.generate(); }
+
+protected:
+
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
 
@@ -27,5 +64,11 @@
   }
 
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
+
+}; // apply
+
+}; // make_declare_call_base
+
+}}}} // namespace rtti::mmethod::detail::call_detail
 
 #include "mmethod/detail/suffix.hpp"

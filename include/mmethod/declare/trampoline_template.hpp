@@ -3,6 +3,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include "mmethod/detail/prefix.hpp"
+
+namespace rtti {
+namespace mmethod {
+namespace detail {
+namespace trampoline_detail {
+
 template<>
 struct trampoline_base<
   BOOST_PP_ITERATION()
@@ -11,8 +18,6 @@ struct trampoline_base<
 template<typename TAG, typename Ret, typename Types, typename Tags>
 struct callback {
   typedef Ret return_type;
-
-#include "mmethod/detail/prefix.hpp"
 
 #define MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D)      \
     trampoline_detail::caster<                  \
@@ -41,8 +46,6 @@ struct callback {
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
 #undef MMETHOD_TRAMPOLINE_FUNC_CAST_ARG
 
-#include "mmethod/detail/suffix.hpp"
-
 }; // struct callback
 
 }; // struct trampoline_base
@@ -54,3 +57,7 @@ Over
   ::template callback<TAG, Ret, Types, Tags>
   ::apply<Over, Ret2, Types2>
   ::over;
+
+}}}} // namespace rtti::mmethod::detail::trampoline_detail
+
+#include "mmethod/detail/suffix.hpp"

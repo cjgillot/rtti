@@ -11,43 +11,38 @@
 
 #include "mmethod/dispatch/dispatch.hpp"
 
-#include "mmethod/traits/call_traits.hpp"
+#include "mmethod/detail/iterate.hpp"
+
+#include <boost/mpl/size.hpp>
 #include <boost/fusion/tuple.hpp>
 
-namespace rtti { namespace mmethod { namespace detail {
+namespace rtti {
+namespace mmethod {
+namespace detail {
+namespace call_detail {
 
-template<typename Tag, typename Ret, typename Args>
-struct make_declare_call {
-protected: // traits_type
-  typedef make_declare_traits<Ret, Args> traits_type;
+template<std::size_t Arity>
+struct make_declare_call_base;
 
-private:
-  typedef typename traits_type::unwrapped_args unwrapped_args;
-  typedef typename traits_type::type_tags      type_tags;
+}}}} // namespace rtti::mmethod::detail::call_detail
 
-protected: // trampoline_type
-  typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;
-  typedef typename trampoline_type::sig_t func_t;
-
-private:   // dispatch_type
-  typedef detail::dispatch<Tag,Ret> dispatch_type;
-  dispatch_type m_dispatch;
-
-protected:
 #define BOOST_PP_FILENAME_1 "mmethod/declare/call_template.hpp"
-#define BOOST_PP_ITERATION_LIMITS (0, 2)
+#define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
 #include BOOST_PP_ITERATE()
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS
 
-protected:
-  template<typename K, typename F>
-  inline void insert(F const& f)
-  { m_dispatch.template insert<K>(f); }
+namespace rtti {
+namespace mmethod {
+namespace detail {
 
-  inline void generate()
-  { m_dispatch.generate(); }
-};
+template<typename Tag, typename Ret, typename Args>
+struct make_declare_call
+: protected call_detail::make_declare_call_base<
+    boost::mpl::size<Args>::value
+>::template apply<
+  Tag, Ret, Args
+> {};
 
 }}} // namespace rtti::mmethod::detail
 

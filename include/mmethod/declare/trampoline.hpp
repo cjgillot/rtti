@@ -9,13 +9,9 @@
 #include "mmethod/traits/pointer_traits.hpp"
 #include "mmethod/traits/call_traits.hpp"
 
-#include <boost/mpl/at.hpp>
+#include "mmethod/detail/iterate.hpp"
 
-#include <boost/fusion/tuple.hpp>
-#include <boost/fusion/include/size.hpp>
-
-#include <boost/preprocessor/enum.hpp>
-#include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/mpl/size.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -42,18 +38,22 @@ struct caster
 template<std::size_t Arity>
 struct trampoline_base;
 
+}}}} // namespace rtti::mmethod::detail::trampoline_detail
+
 #define BOOST_PP_FILENAME_1 "mmethod/declare/trampoline_template.hpp"
-#define BOOST_PP_ITERATION_LIMITS (0, 2)
+#define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
 #include BOOST_PP_ITERATE()
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS
 
-} // namespace trampoline_detail
+namespace rtti {
+namespace mmethod {
+namespace detail {
 
 template<typename TAG, typename Ret, typename Types, typename Tags>
 struct make_trampoline
 : trampoline_detail::trampoline_base<
-    boost::fusion::tuple_size<Types>::value
+    boost::mpl::size<Types>::value
 >::template callback<
     TAG, Ret, Types, Tags
 > {};
