@@ -9,9 +9,8 @@
 #include "mmethod/declare/call.hpp"
 #include "mmethod/declare/traits.hpp"
 
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/function_types/components.hpp>
+#include <boost/function_types/result_type.hpp>
+#include <boost/function_types/parameter_types.hpp>
 
 namespace rtti { namespace mmethod { namespace detail {
 
@@ -46,9 +45,8 @@ protected:
 template<typename Tag, typename Sig>
 struct make_declare {
 private:
-  typedef boost::function_types::components<Sig> components;
-  typedef typename boost::mpl::front<components>::type result;
-  typedef typename boost::mpl::pop_front<components>::type args;
+  typedef typename boost::function_types::result_type<Sig>::type result;
+  typedef typename boost::function_types::parameter_types<Sig>::type args;
 
 public:
   typedef make_declare_helper<Tag, result, args> type;

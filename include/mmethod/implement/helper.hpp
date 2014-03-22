@@ -11,9 +11,8 @@
 
 #include "mmethod/detail/access.hpp"
 
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/function_types/components.hpp>
+#include <boost/function_types/result_type.hpp>
+#include <boost/function_types/parameter_types.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -40,10 +39,9 @@ protected:
 template<typename Tag, typename Over, typename Sig>
 struct make_implement {
 private:
-  typedef boost::function_types::components<Sig> components;
-  typedef typename boost::mpl::front<components>::type result;
-  typedef typename boost::mpl::pop_front<components>::type args;
-  
+  typedef typename boost::function_types::result_type<Sig>::type result;
+  typedef typename boost::function_types::parameter_types<Sig>::type args;
+
 public:
   typedef make_implement_helper<Tag, Over, result, args> type;
 };
