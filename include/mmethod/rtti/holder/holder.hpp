@@ -34,6 +34,7 @@ private:
   BOOST_STATIC_CONSTANT(std::size_t, Arity = sizeof( rtti_parents_size_1p((T*)NULL) ) - 1);
 
   struct initializer_t {
+    struct register_one;
     initializer_t();
     void touch() const {};
   };
@@ -69,9 +70,8 @@ struct get_holder<const volatile void> {
   };
 };
 
-namespace {
-
-struct register_one {
+template<class T>
+struct holder<T>::initializer_t::register_one {
   mutable std::size_t k;
 
   template<typename P>
@@ -81,8 +81,6 @@ struct register_one {
     ++k;
   }
 };
-
-} // namespace <>
 
 template<class T>
 holder<T>::initializer_t::initializer_t() {
