@@ -18,7 +18,7 @@ template<typename Tag, typename Ret>
 struct dispatch {
   dispatch() {
     struct initializer_t {
-      initializer_t() { Tag::do_initialize(); };
+      initializer_t() { dispatch::initialize(); };
       void touch() {}
     }
     static initializer;
@@ -31,18 +31,21 @@ struct dispatch {
   template<typename K, typename F>
   void insert(F const& f);
 
-  // calls seal once
   void generate() const {
     struct sealer_t {
-      sealer_t(dispatch const* a) { a->seal(); };
+      sealer_t() { dispatch::seal(); };
       void touch() {}
     }
-    static sealer ( this );
+    static sealer;
     sealer.touch();
   }
 
+private:
+  // must only be called by ctor
+  static void initialize();
+
   // must only be called by generate
-  void seal() const;
+  static void seal();
 };
 
 }}} // rtti::mmethod::detail

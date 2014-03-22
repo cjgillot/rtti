@@ -37,7 +37,6 @@ struct register_base {
     static detail::poles_map_type array;
   };
 
-  static void do_initialize();
   static detail::invoker_table_type invoker_table;
 
 };

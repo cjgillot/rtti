@@ -31,8 +31,8 @@ template<typename Tag>
 template<std::size_t J>
 poles_map_type register_base<Tag>::poles<J>::array;
 
-template<typename Tag>
-void register_base<Tag>::do_initialize() {
+template<typename Tag, typename Ret>
+void dispatch<Tag,Ret>::initialize() {
   enum { arity = Tag::traits::vsize };
 
   detail::init_table(arity, Tag::invoker_table);
@@ -137,7 +137,7 @@ struct seal_poles<Arity, Tag, 0> {
 } // namespace <>
 
 template<typename Tag, typename Ret>
-void dispatch<Tag,Ret>::seal() const {
+void dispatch<Tag,Ret>::seal() {
   enum {
     arity = Tag::traits::vsize,
     btset = Tag::traits::type_bitset
