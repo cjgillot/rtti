@@ -11,7 +11,7 @@
 #include "rtti/detail/attribute.hpp"
 
 namespace rtti {
-namespace dmethod {
+namespace mmethod {
 namespace detail {
 
 /// main dispatch function

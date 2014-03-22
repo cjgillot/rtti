@@ -16,7 +16,7 @@
 #endif
 
 namespace rtti {
-namespace dmethod {
+namespace mmethod {
 namespace detail {
 
 //! useful typedefs

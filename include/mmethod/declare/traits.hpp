@@ -17,7 +17,7 @@
 #include <boost/mpl/reverse_fold.hpp>
 
 namespace rtti {
-namespace dmethod {
+namespace mmethod {
 namespace detail {
 
 template<typename Tag, typename Ret, typename Args>

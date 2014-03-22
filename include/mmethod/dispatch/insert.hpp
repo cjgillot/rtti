@@ -21,7 +21,7 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform_view.hpp>
 
-namespace rtti { namespace dmethod { namespace detail {
+namespace rtti { namespace mmethod { namespace detail {
 
 template<typename Tag>
 invoker_table_type register_base<Tag>::invoker_table;

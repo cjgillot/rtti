@@ -10,21 +10,21 @@
 #include "mmethod/implement/helper.hpp"
 
 namespace rtti {
-namespace dmethod {
+namespace mmethod {
 
 template<typename Tag, typename Sig>
-struct dmethod_implementation
+struct mmethod_implementation
 : detail::make_implement<Tag, typename Tag::template overload<Sig>, Sig>::type {
-  typedef typename dmethod_implementation::impl_maker impl_maker;
+  typedef typename mmethod_implementation::impl_maker impl_maker;
 
 protected:
-  dmethod_implementation() BOOST_NOEXCEPT_OR_NOTHROW {}
+  mmethod_implementation() BOOST_NOEXCEPT_OR_NOTHROW {}
 };
 
 #define IMPLEMENTATION_MMETHOD(tag, ret, sig)                   \
 template<>                                                      \
 struct tag::overload<ret sig>                                   \
-: ::rtti::dmethod::dmethod_implementation<tag, ret sig> {       \
+: ::rtti::mmethod::mmethod_implementation<tag, ret sig> {       \
   static ret call sig;                                          \
   overload() {}                                                 \
 };                                                              \

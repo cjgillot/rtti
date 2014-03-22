@@ -24,7 +24,7 @@
 #include <boost/fusion/include/deref.hpp>
 #include <boost/fusion/include/accumulate.hpp>
 
-namespace rtti { namespace dmethod { namespace detail {
+namespace rtti { namespace mmethod { namespace detail {
 
 namespace {
 

@@ -20,7 +20,7 @@
 #include "mmethod/shared/tags.hpp"
 #include <boost/fusion/tuple.hpp>
 
-namespace rtti { namespace dmethod { namespace detail {
+namespace rtti { namespace mmethod { namespace detail {
   
 template<typename Tag2, typename Over2, typename Ret2, typename Args2>
 struct make_implement_helper;

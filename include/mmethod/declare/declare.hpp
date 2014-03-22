@@ -14,7 +14,7 @@
 
 #define DECLARE_MMETHOD(name, ret, sig) \
 struct __MMETHOD_TAG(name)              \
-: rtti::dmethod::dmethod_register<      \
+: rtti::mmethod::mmethod_register<      \
   __MMETHOD_TAG(name)                   \
 , ret sig   > {                         \
   template<typename> struct overload;   \

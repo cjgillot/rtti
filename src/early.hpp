@@ -21,8 +21,8 @@ struct early_bindings_type {
 
 #define BAD_DISPATCH (rtti::_rtti_bad_dispatch)
 using rtti::invoker_t;
-using rtti::dmethod::detail::poles_map_type;
-using rtti::dmethod::detail::seal_table_type;
+using rtti::mmethod::detail::poles_map_type;
+using rtti::mmethod::detail::seal_table_type;
 
 namespace rtti_dispatch {
   // dispatch/mmethod.cpp

@@ -6,7 +6,7 @@
 #include "early.hpp"
 
 void
-rtti::dmethod::detail::init_table(
+rtti::mmethod::detail::init_table(
   std::size_t arity
 , invoker_table_type& tbl
 ) {
@@ -17,7 +17,7 @@ rtti::dmethod::detail::init_table(
 }
 
 void
-rtti::dmethod::detail::inse_table(
+rtti::mmethod::detail::inse_table(
   std::size_t arity
 , invoker_table_type& table
 , invoker_t inv
@@ -35,7 +35,7 @@ rtti::dmethod::detail::inse_table(
 }
 
 void
-rtti::dmethod::detail::seal_table(
+rtti::mmethod::detail::seal_table(
   std::size_t /*arity*/
 , invoker_table_type table
 , seal_table_type& seal

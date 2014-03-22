@@ -14,7 +14,7 @@
 #include <boost/function_types/components.hpp>
 
 namespace rtti {
-namespace dmethod {
+namespace mmethod {
 namespace detail {
 
 template<typename Tag, typename Over, typename Ret, typename Args>

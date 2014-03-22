@@ -10,10 +10,10 @@
 
 #include "mmethod/dynamic/poles.hpp"
 
-namespace rtti { namespace dmethod {
+namespace rtti { namespace mmethod {
 
 template<typename Tag, typename Sig>
-struct dmethod_register
+struct mmethod_register
 : detail::register_base<Tag>
 , detail::make_declare<Tag, Sig>::type {
 private:
