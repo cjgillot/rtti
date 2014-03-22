@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_HPP
 #define RTTI_MMETHOD_HASH_MAP_HPP
 
-#include "mmethod/table/hash_map/bucket.hpp"
 #include "mmethod/table/hash_map/hash_map.hpp"
+#include "mmethod/table/hash_map/hash_map.ipp"
 
 #endif

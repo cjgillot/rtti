@@ -6,8 +6,7 @@
 #ifndef RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 #define RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 
-#include "mmethod/table/hash_map.hpp"
-#include "mmethod/table/hash_map.ipp"
+#include "mmethod/table/table.hpp"
 
 #include "mmethod/detail/attribute.hpp"
 
