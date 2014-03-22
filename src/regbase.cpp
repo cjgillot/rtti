@@ -11,7 +11,7 @@
 using namespace rtti::detail;
 
 void rtti::_rtti_bad_dispatch() {
-#ifdef BOOST_NO_EXCEPTIONS
+#ifndef BOOST_NO_EXCEPTIONS
   throw bad_dispatch();
 #else
   std::abort();
