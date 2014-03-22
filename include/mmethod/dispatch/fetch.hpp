@@ -20,8 +20,6 @@
 #include <boost/mpl/range_c.hpp>
 #include <boost/fusion/include/zip.hpp>
 #include <boost/fusion/include/at_c.hpp>
-#include <boost/fusion/include/begin.hpp>
-#include <boost/fusion/include/deref.hpp>
 #include <boost/fusion/include/accumulate.hpp>
 
 namespace rtti { namespace mmethod { namespace detail {

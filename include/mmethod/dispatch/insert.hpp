@@ -9,8 +9,6 @@
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/dispatch/fetch.hpp"
 
-#include "mmethod/declare/traits.hpp"
-
 #include "mmethod/detail/access.hpp"
 
 #include "mmethod/table/table.hpp"
