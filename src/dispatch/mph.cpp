@@ -134,7 +134,6 @@ static void fill_map(
   poles_map_type& a
 , pole_table_t::const_reference t
 , hash_table_type const& ht
-, std::size_t arity
 ) {
   /// split \c t between static and dynamic id
   std::vector<klass_t const*> dynamics ( boost::begin(t), boost::end(t) );
@@ -159,7 +158,7 @@ void output_device::output_pole_tables(
     pole_table_t::const_reference t = poles[i];
     poles_map_type& pm = *output.poles[i];
 
-    fill_map(pm, t, ht, arity);
+    fill_map(pm, t, ht);
   }
 }
 
