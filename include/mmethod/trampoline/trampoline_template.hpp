@@ -12,46 +12,37 @@ template<typename TAG, typename Ret, typename Types, typename Tags>
 struct callback {
   typedef Ret return_type;
 
-#define MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,D) \
-    typename boost::mpl::at_c< D, I >::type
+#include "mmethod/trampoline/prefix.hpp"
 
-#define MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE(J,I,D) \
-    typename boost::call_traits< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types) >::param_type
-
-#define MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES \
-    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE, BOOST_PP_EMPTY)
-
-#define MMETHOD_TRAMPOLINE_FUNC_PARM(J,I,D) \
-    MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE(J,I,D) BOOST_JOIN(a,I)
-
-#define MMETHOD_TRAMPOLINE_FUNC_PARMS \
-    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_PARM, BOOST_PP_EMPTY)
-
-#define MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,D)      \
+#define MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D)      \
     trampoline_detail::caster<                  \
       MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Tags)    \
     , MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types)   \
     >::template cast<                           \
       MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2)  \
-    >( BOOST_JOIN(a,I) )
+    >( MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,D) )
 
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
-    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
+    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_CAST_ARG, BOOST_PP_EMPTY)
 
-  typedef Ret (*sig_t)(MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES);
+  typedef Ret (*sig_t)(MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(Types));
 
   template<typename Over, typename Ret2, typename Types2>
   struct apply {
     static Over over;
-    static Ret call(MMETHOD_TRAMPOLINE_FUNC_PARMS) MMETHOD_ATTRIBUTE_ALIGNED
-    { return over.call(MMETHOD_TRAMPOLINE_FUNC_ARGS); }
+    static Ret call(
+      MMETHOD_TRAMPOLINE_FUNC_PARMS(Types)
+    ) MMETHOD_ATTRIBUTE_ALIGNED
+    {
+      return over.call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    }
   };
 
-#undef MMETHOD_TRAMPOLINE_FUNC_TYPE
-#undef MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE
-#undef MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES
-#undef MMETHOD_TRAMPOLINE_FUNC_ARG
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
+#undef MMETHOD_TRAMPOLINE_FUNC_CAST_ARG
+
+#include "mmethod/trampoline/suffix.hpp"
+
 }; // struct callback
 
 }; // struct trampoline_base
