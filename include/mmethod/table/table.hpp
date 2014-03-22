@@ -6,10 +6,12 @@
 #ifndef RTTI_MMETHOD_TABLE_TABLE_HPP
 #define RTTI_MMETHOD_TABLE_TABLE_HPP
 
-#include "mmethod/shared/basic.hpp"
 #include "mmethod/table/hash_map.hpp"
 
+#include <boost/static_assert.hpp>
 #include <boost/config.hpp>
+
+#include <stdint.h>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -18,6 +20,10 @@
 namespace rtti {
 namespace mmethod {
 namespace detail {
+
+//! function pointer generic type
+typedef void(*invoker_t)();
+BOOST_STATIC_ASSERT_MSG( sizeof(invoker_t) <= sizeof(uintptr_t), "Platform not supported" );
 
 //! useful typedefs
 typedef hash::detail::hash_map poles_map_type;

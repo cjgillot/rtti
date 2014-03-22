@@ -3,12 +3,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/shared/basic.hpp"
+#include "mmethod/shared/bad_dispatch.hpp"
 
 #include <boost/config.hpp>
 #include <cstdlib>
-
-using namespace rtti::detail;
 
 void rtti::_rtti_bad_dispatch() {
 #ifndef BOOST_NO_EXCEPTIONS

@@ -6,7 +6,6 @@
 #ifndef RTTI_MMETHOD_IMPLEMENT_HPP
 #define RTTI_MMETHOD_IMPLEMENT_HPP
 
-#include "mmethod/shared/basic.hpp"
 #include "mmethod/implement/helper.hpp"
 
 namespace rtti {

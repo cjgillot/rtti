@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 #define RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 
-#include "mmethod/shared/basic.hpp"
+#include "mmethod/declare/traits.hpp"
 #include "mmethod/trampoline/trampoline.hpp"
 
 #include <boost/mpl/front.hpp>

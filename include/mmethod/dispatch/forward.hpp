@@ -6,8 +6,7 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FORWARD_HPP
 #define RTTI_MMETHOD_DISPATCH_FORWARD_HPP
 
-#include "mmethod/shared/basic.hpp"
-
+#include "mmethod/table/table.hpp"
 #include "mmethod/detail/attribute.hpp"
 
 namespace rtti {

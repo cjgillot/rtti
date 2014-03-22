@@ -11,7 +11,6 @@
 #include "mmethod/table/table.hpp"
 #include "mmethod/table/fetch_pole.hpp"
 
-#include "mmethod/shared/basic.hpp"
 #include "mmethod/rtti/getter/getter.hpp"
 
 #include <functional>

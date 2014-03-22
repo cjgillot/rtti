@@ -3,25 +3,18 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_BASIC_HPP
-#define RTTI_MMETHOD_BASIC_HPP
+#ifndef RTTI_MMETHOD_BAD_DISPATCH_HPP
+#define RTTI_MMETHOD_BAD_DISPATCH_HPP
 
 #include <stdexcept>
-#include <stdint.h>
-
-#include "mmethod/rttifwd.hpp"
 
 #include <boost/config.hpp>
-#include <boost/static_assert.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
 
 namespace rtti {
-
-typedef void(*invoker_t)();
-BOOST_STATIC_ASSERT_MSG( sizeof(invoker_t) <= sizeof(uintptr_t), "Platform not supported" );
 
 struct bad_dispatch
 : std::runtime_error {

@@ -9,9 +9,12 @@
 #include "mmethod/table/table.hpp"
 #include "mmethod/table/generate.hpp"
 
+#include "mmethod/shared/bad_dispatch.hpp"
+
 #include <vector>
 
 using namespace rtti;
+using rtti::mmethod::detail::invoker_t;
 
 typedef std::vector<rtti_hierarchy> signature_type;
 typedef std::pair<signature_type, invoker_t> binding_type;
@@ -21,7 +24,7 @@ struct early_bindings_type {
 };
 
 #define BAD_DISPATCH (rtti::_rtti_bad_dispatch)
-using rtti::invoker_t;
+
 using rtti::mmethod::detail::poles_map_type;
 using rtti::mmethod::detail::seal_table_type;
 

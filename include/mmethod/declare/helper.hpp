@@ -6,8 +6,6 @@
 #ifndef RTTI_MMETHOD_DECLARE_HELPER_HPP
 #define RTTI_MMETHOD_DECLARE_HELPER_HPP
 
-#include "mmethod/shared/basic.hpp"
-
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/trampoline/trampoline.hpp"
 
