@@ -16,7 +16,7 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
-#include "mmethod/rtti/holder/getter.ipp"
+#include "mmethod/rtti/getter/getter.ipp"
 
 #include "mmethod/detail/attribute.hpp"
 

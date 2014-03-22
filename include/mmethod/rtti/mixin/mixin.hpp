@@ -7,7 +7,7 @@
 #define RTTI_MIXIN_MIXIN_HPP
 
 #include "mmethod/rtti/mixin/mixin_node.hpp"
-#include "mmethod/rtti/holder/getter.hpp"
+#include "mmethod/rtti/getter/getter.hpp"
 
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/vector.hpp>

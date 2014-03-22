@@ -12,7 +12,7 @@
 #include "mmethod/table/fetch_pole.hpp"
 
 #include "mmethod/shared/basic.hpp"
-#include "mmethod/rtti/holder/getter.hpp"
+#include "mmethod/rtti/getter/getter.hpp"
 
 #include <functional>
 
