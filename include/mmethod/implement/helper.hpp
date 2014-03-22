@@ -7,7 +7,7 @@
 #define RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 
 #include "mmethod/declare/traits.hpp"
-#include "mmethod/trampoline/trampoline.hpp"
+#include "mmethod/declare/trampoline.hpp"
 
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/pop_front.hpp>

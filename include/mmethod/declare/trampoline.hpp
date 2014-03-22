@@ -42,7 +42,7 @@ struct caster
 template<std::size_t Arity>
 struct trampoline_base;
 
-#define BOOST_PP_FILENAME_1 "mmethod/trampoline/trampoline_template.hpp"
+#define BOOST_PP_FILENAME_1 "mmethod/declare/trampoline_template.hpp"
 #define BOOST_PP_ITERATION_LIMITS (0, 2)
 #include BOOST_PP_ITERATE()
 #undef BOOST_PP_FILENAME_1

@@ -12,7 +12,7 @@ template<typename TAG, typename Ret, typename Types, typename Tags>
 struct callback {
   typedef Ret return_type;
 
-#include "mmethod/trampoline/prefix.hpp"
+#include "mmethod/detail/prefix.hpp"
 
 #define MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D)      \
     trampoline_detail::caster<                  \
@@ -41,7 +41,7 @@ struct callback {
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
 #undef MMETHOD_TRAMPOLINE_FUNC_CAST_ARG
 
-#include "mmethod/trampoline/suffix.hpp"
+#include "mmethod/detail/suffix.hpp"
 
 }; // struct callback
 

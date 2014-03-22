@@ -3,12 +3,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/trampoline/prefix.hpp"
+#include "mmethod/detail/prefix.hpp"
 
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
 
-protected:
   inline func_t fetch(
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
@@ -29,4 +28,4 @@ protected:
 
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
 
-#include "mmethod/trampoline/suffix.hpp"
+#include "mmethod/detail/suffix.hpp"

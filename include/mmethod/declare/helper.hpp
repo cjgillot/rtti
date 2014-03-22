@@ -7,17 +7,13 @@
 #define RTTI_MMETHOD_DECLARE_HELPER_HPP
 
 #include "mmethod/dispatch/forward.hpp"
-#include "mmethod/trampoline/trampoline.hpp"
 
+#include "mmethod/declare/call.hpp"
 #include "mmethod/declare/traits.hpp"
 
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/function_types/components.hpp>
-
-// for trampoline/call.hpp
-#include "mmethod/traits/call_traits.hpp"
-#include <boost/fusion/tuple.hpp>
 
 namespace rtti { namespace mmethod { namespace detail {
 
@@ -25,14 +21,15 @@ template<typename Tag2, typename Over2, typename Ret2, typename Args2>
 struct make_implement_helper;
 
 template<typename Tag, typename Ret, typename Args>
-struct make_declare_helper {
+struct make_declare_helper
+: protected make_declare_call<Tag, Ret, Args>
+{
+private:
+  typedef make_declare_call<Tag, Ret, Args> call_helper;
+
 protected:
   typedef make_declare_traits<Ret, Args> traits;
-
-private:
-  typedef typename traits::unwrapped_args unwrapped_args;
-  typedef typename traits::type_tags      type_tags;
-  typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline;
+  typedef typename call_helper::trampoline_type trampoline;
 
 private:
   friend struct detail::dispatch<Tag,Ret>;
@@ -43,25 +40,15 @@ private:
   template<typename Tag2, typename Over2, typename Ret2, typename Args2>
   friend struct make_implement_helper;
 
-  dispatch_type m_dispatch;
-
 protected:
   typedef make_declare_helper decl_maker;
   typedef Ret result_type;
-  typedef typename trampoline::sig_t func_t;
+  typedef typename call_helper::func_t func_t;
 
-//   template<typename... Args2>
-//   inline Ret operator()(Args2&& ...args) const
-//   { return (Ret) m_dispatch.call( boost::fusion::make_tuple( std::forward<Args2>(args)... ) ); }
-#include "mmethod/trampoline/call.hpp"
-
-protected:
-  template<typename K, typename F>
-  inline void insert(F const& f)
-  { m_dispatch.template insert<K>(f); }
-
-  inline void generate()
-  { m_dispatch.generate(); }
+  using call_helper::fetch;
+  using call_helper::insert;
+  using call_helper::generate;
+  using call_helper::operator();
 };
 
 template<typename Tag, typename Sig>
