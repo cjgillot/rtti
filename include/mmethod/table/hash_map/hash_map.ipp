@@ -9,7 +9,7 @@
 #include "mmethod/table/hash_map/hash_map.hpp"
 #include "mmethod/table/hash_map/bucket.ipp"
 
-#include "rtti/holder/node.hpp"
+#include "mmethod/rtti/holder/node.hpp"
 
 #include <boost/type_traits/alignment_of.hpp>
 

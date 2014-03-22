@@ -16,8 +16,8 @@
 #include <boost/function_types/components.hpp>
 
 // for trampoline/call.hpp
-#include "mmethod/shared/call_traits.hpp"
-#include "mmethod/shared/tags.hpp"
+#include "mmethod/traits/call_traits.hpp"
+#include "mmethod/traits/tags.hpp"
 #include <boost/fusion/tuple.hpp>
 
 namespace rtti { namespace mmethod { namespace detail {

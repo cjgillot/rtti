@@ -6,8 +6,7 @@
 #ifndef MULTIFILE_HPP
 #define MULTIFILE_HPP
 
-#include "rtti/rtti.hpp"
-
+#include "mmethod/rtti.hpp"
 #include "mmethod/mmethod.hpp"
 
 using namespace rtti;

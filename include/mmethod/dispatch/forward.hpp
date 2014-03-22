@@ -8,7 +8,7 @@
 
 #include "mmethod/shared/basic.hpp"
 
-#include "rtti/detail/attribute.hpp"
+#include "mmethod/detail/attribute.hpp"
 
 namespace rtti {
 namespace mmethod {

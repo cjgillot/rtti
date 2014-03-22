@@ -6,8 +6,8 @@
 #ifndef RTTI_MIXIN_MIXIN_HPP
 #define RTTI_MIXIN_MIXIN_HPP
 
-#include "rtti/mixin/mixin_node.hpp"
-#include "rtti/holder/getter.hpp"
+#include "mmethod/rtti/mixin/mixin_node.hpp"
+#include "mmethod/rtti/holder/getter.hpp"
 
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/vector.hpp>

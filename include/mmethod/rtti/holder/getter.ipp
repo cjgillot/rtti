@@ -6,11 +6,11 @@
 #ifndef RTTI_GETTER_IPP
 #define RTTI_GETTER_IPP
 
-#include "rtti/holder/getter.hpp"
-#include "rtti/holder/holder.hpp"
-#include "rtti/detail/traits.hpp"
+#include "mmethod/rtti/holder/getter.hpp"
+#include "mmethod/rtti/holder/holder.hpp"
+#include "mmethod/traits/pointer_traits.hpp"
 
-#include "rtti/mixin/mixin_node.hpp"
+#include "mmethod/rtti/mixin/mixin_node.hpp"
 
 namespace rtti {
 namespace detail {

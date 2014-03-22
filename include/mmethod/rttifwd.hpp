@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <cstddef>
 
-#include "rtti/detail/attribute.hpp"
+#include "mmethod/detail/attribute.hpp"
 
 #include <boost/config.hpp>
 

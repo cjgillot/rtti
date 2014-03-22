@@ -9,7 +9,7 @@
 #include "mmethod/table/hash_map.hpp"
 #include "mmethod/table/hash_map.ipp"
 
-#include "rtti/detail/attribute.hpp"
+#include "mmethod/detail/attribute.hpp"
 
 #include <boost/config.hpp>
 

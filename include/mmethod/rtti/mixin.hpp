@@ -6,9 +6,9 @@
 #ifndef RTTI_MIXIN_HPP
 #define RTTI_MIXIN_HPP
 
-#include "rtti/mixin/mixin.hpp"
-#include "rtti/holder/getter.hpp"
-#include "rtti/holder/getter.ipp"
+#include "mmethod/rtti/mixin/mixin.hpp"
+#include "mmethod/rtti/holder/getter.hpp"
+#include "mmethod/rtti/holder/getter.ipp"
 
 #include <boost/mpl/vector.hpp>
 

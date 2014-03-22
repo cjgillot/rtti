@@ -8,7 +8,7 @@
 
 #include "mmethod/declare/register.hpp"
 
-#include "mmethod/shared/tags.hpp"
+#include "mmethod/traits/tags.hpp"
 
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/times.hpp>

@@ -6,7 +6,7 @@
 #ifndef RTTI_MIXIN_NODE_HPP
 #define RTTI_MIXIN_NODE_HPP
 
-#include "rtti/rttifwd.hpp"
+#include "mmethod/rttifwd.hpp"
 
 namespace rtti {
 namespace detail {

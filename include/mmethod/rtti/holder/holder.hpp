@@ -9,10 +9,8 @@
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 
-#include "rtti/rttifwd.hpp"
-#include "rtti/holder/getter.hpp"
-
-#include "rtti/holder/node.hpp"
+#include "mmethod/rttifwd.hpp"
+#include "mmethod/rtti/holder/node.hpp"
 
 namespace rtti {
 namespace detail {

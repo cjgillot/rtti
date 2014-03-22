@@ -16,9 +16,9 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
-#include "rtti/holder/getter.ipp"
+#include "mmethod/rtti/holder/getter.ipp"
 
-#include "rtti/detail/attribute.hpp"
+#include "mmethod/detail/attribute.hpp"
 
 /*!
  * \brief Macros controlling the is_a behaviour

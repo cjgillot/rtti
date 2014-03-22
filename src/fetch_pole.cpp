@@ -5,7 +5,7 @@
 
 #include "mmethod/table/fetch_pole.hpp"
 
-#include "rtti/holder/node.hpp"
+#include "mmethod/rtti/holder/node.hpp"
 
 #include <boost/assert.hpp>
 

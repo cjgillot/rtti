@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BASE_HPP
 #define RTTI_MMETHOD_HASH_MAP_BASE_HPP
 
-#include "rtti/rttifwd.hpp"
+#include "mmethod/rttifwd.hpp"
 
 #define MMETHOD_INLINE_DO_FIND
 

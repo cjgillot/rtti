@@ -6,7 +6,7 @@
 #ifndef RTTI_HOLDER_NODE_HPP
 #define RTTI_HOLDER_NODE_HPP
 
-#include "rtti/rttifwd.hpp"
+#include "mmethod/rttifwd.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/config.hpp>

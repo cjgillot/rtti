@@ -6,9 +6,9 @@
 #ifndef RTTI_HPP
 #define RTTI_HPP
 
-#include "rtti/holder/node.hpp"
-#include "rtti/interface.hpp"
-#include "rtti/mixin.hpp"
+#include "mmethod/rtti/holder/node.hpp"
+#include "mmethod/rtti/interface.hpp"
+#include "mmethod/rtti/mixin.hpp"
 
 /*! \mainpage RTTI library
 

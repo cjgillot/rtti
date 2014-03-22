@@ -6,7 +6,7 @@
 #ifndef RTTI_SHARED_TAGS_HPP
 #define RTTI_SHARED_TAGS_HPP
 
-#include "mmethod/shared/call_traits.hpp"
+#include "mmethod/traits/call_traits.hpp"
 
 #include <boost/mpl/count_if.hpp>
 

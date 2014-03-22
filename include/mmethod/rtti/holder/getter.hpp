@@ -8,9 +8,9 @@
 
 #include <utility>
 
-#include "rtti/rttifwd.hpp"
-#include "rtti/detail/traits.hpp"
-#include "rtti/detail/attribute.hpp"
+#include "mmethod/rttifwd.hpp"
+#include "mmethod/traits/pointer_traits.hpp"
+#include "mmethod/detail/attribute.hpp"
 
 namespace rtti {
 namespace detail {

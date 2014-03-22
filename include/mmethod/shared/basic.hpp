@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <stdint.h>
 
-#include "rtti/rttifwd.hpp"
+#include "mmethod/rttifwd.hpp"
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>

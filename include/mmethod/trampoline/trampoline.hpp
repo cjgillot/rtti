@@ -6,8 +6,8 @@
 #ifndef RTTI_MMETHOD_TRAMPOLINE_HPP
 #define RTTI_MMETHOD_TRAMPOLINE_HPP
 
-#include "rtti/detail/traits.hpp"
-#include "mmethod/shared/call_traits.hpp"
+#include "mmethod/traits/pointer_traits.hpp"
+#include "mmethod/traits/call_traits.hpp"
 
 #include <boost/mpl/at.hpp>
 
