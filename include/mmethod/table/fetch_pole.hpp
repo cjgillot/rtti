@@ -20,7 +20,6 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-// can be moved as non-member
 extern value_type
 do_fetch_pole(
   hash_map const&
