@@ -10,7 +10,7 @@
 #include "mmethod/declare/helper.hpp"
 #include "mmethod/declare/traits.hpp"
 
-#define __MMETHOD_TAG(name) BOOST_PP_CAT(__rtti_mmethod_tags__, name)
+#define __MMETHOD_TAG(name) BOOST_JOIN(__rtti_mmethod_tags__, name)
 
 #define DECLARE_MMETHOD(name, ret, sig) \
 struct __MMETHOD_TAG(name)              \
