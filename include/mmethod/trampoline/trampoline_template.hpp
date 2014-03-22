@@ -28,7 +28,7 @@ struct callback {
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_PARM, BOOST_PP_EMPTY)
 
 #define MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,D)      \
-    rtti::detail::caster<                       \
+    trampoline_detail::caster<                  \
       MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Tags)    \
     , MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types)   \
     >::template cast<                           \

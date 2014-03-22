@@ -18,7 +18,9 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 
 namespace rtti {
+namespace mmethod {
 namespace detail {
+namespace trampoline_detail {
 
 template<typename In>
 struct other_caster {
@@ -46,14 +48,16 @@ struct trampoline_base;
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS
 
+} // namespace trampoline_detail
+
 template<typename TAG, typename Ret, typename Types, typename Tags>
-struct trampoline
-: trampoline_base<
+struct make_trampoline
+: trampoline_detail::trampoline_base<
     boost::fusion::tuple_size<Types>::value
 >::template callback<
     TAG, Ret, Types, Tags
 > {};
 
-}} // namespace rtti::detail
+}}} // namespace rtti::mmethod::detail
 
 #endif

@@ -9,24 +9,30 @@
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/trampoline/trampoline.hpp"
 
+#include "mmethod/declare/traits.hpp"
+
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/function_types/components.hpp>
 
 // for trampoline/call.hpp
 #include "mmethod/traits/call_traits.hpp"
-#include "mmethod/traits/tags.hpp"
 #include <boost/fusion/tuple.hpp>
 
 namespace rtti { namespace mmethod { namespace detail {
-  
+
 template<typename Tag2, typename Over2, typename Ret2, typename Args2>
 struct make_implement_helper;
 
 template<typename Tag, typename Ret, typename Args>
 struct make_declare_helper {
 protected:
-  struct traits;
+  typedef make_declare_traits<Ret, Args> traits;
+
+private:
+  typedef typename traits::unwrapped_args unwrapped_args;
+  typedef typename traits::type_tags      type_tags;
+  typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline;
 
 private:
   friend struct detail::dispatch<Tag,Ret>;
@@ -42,7 +48,7 @@ private:
 protected:
   typedef make_declare_helper decl_maker;
   typedef Ret result_type;
-  typedef typename traits::trampoline::sig_t func_t;
+  typedef typename trampoline::sig_t func_t;
 
 //   template<typename... Args2>
 //   inline Ret operator()(Args2&& ...args) const

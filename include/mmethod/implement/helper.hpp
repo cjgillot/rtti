@@ -20,17 +20,18 @@ namespace detail {
 template<typename Tag, typename Over, typename Ret, typename Args>
 struct make_implement_helper {
 private:
+  typedef typename Tag::trampoline trampoline;
   typedef typename Tag::traits traits;
 
   enum { vsize = traits::vsize };
 
 protected:
-  typedef typename traits::trampoline::template apply<Over, Ret, Args> trampoline;
+  typedef typename trampoline::template apply<Over, Ret, Args> callback;
 
   typedef make_implement_helper impl_maker;
 
   make_implement_helper() BOOST_NOEXCEPT_OR_NOTHROW {
-    Tag().template insert<Args>( &impl_maker::trampoline::call );
+    Tag().template insert<Args>( &callback::call );
   }
 };
 
