@@ -47,14 +47,14 @@ using detail::rtti_type;
 
 //! \brief Function checking exact type
 template<class T, class U>
-inline bool ATTRIBUTE_PURE
+inline bool MMETHOD_ATTRIBUTE_PURE
 is_exactly_a(const U &x) {
   return rtti::static_id<T>() == rtti::get_id(x);
 }
 
 //! \brief Function checking exact type, pointer version
 template<class T, class U>
-inline bool ATTRIBUTE_PURE ATTRIBUTE_NONNULL(1)
+inline bool MMETHOD_ATTRIBUTE_PURE
 is_exactly_a(const U* x) {
   // reject pointer-to-pointer
   BOOST_STATIC_ASSERT_MSG( ! boost::is_pointer<U>::value, "is_exactly_a<> called with pointer to pointer" );

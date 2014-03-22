@@ -20,7 +20,6 @@ using rtti::hash::detail::value_type;
 
 // can be moved as non-member
 value_type
-ATTRIBUTE_NONNULL(2) ATTRIBUTE_NONNULL(3)
 rtti::hash::detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0

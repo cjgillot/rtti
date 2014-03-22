@@ -27,7 +27,7 @@ struct dispatch {
   }
 
   template<typename Tuple>
-  invoker_t ATTRIBUTE_PURE fetch(Tuple const& args) const;
+  invoker_t MMETHOD_ATTRIBUTE_PURE fetch(Tuple const& args) const;
 
   template<typename K, typename F>
   void insert(F const& f);

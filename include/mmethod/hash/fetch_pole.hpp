@@ -23,7 +23,6 @@ namespace detail {
 
 // can be moved as non-member
 extern value_type
-ATTRIBUTE_NONNULL(2) ATTRIBUTE_NONNULL(3)
 do_fetch_pole(
   hash_map const&
 , rtti_hierarchy rt0
@@ -31,7 +30,7 @@ do_fetch_pole(
 ) BOOST_NOEXCEPT_OR_NOTHROW;
 
 inline value_type
-ATTRIBUTE_PURE ATTRIBUTE_NONNULL(2) ATTRIBUTE_HOT()
+MMETHOD_ATTRIBUTE_PURE
 fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt
