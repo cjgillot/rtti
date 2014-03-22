@@ -6,8 +6,7 @@
 #ifndef RTTI_SHARED_TAGS_HPP
 #define RTTI_SHARED_TAGS_HPP
 
-#include "mmethod/traits/call_traits.hpp"
-
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/count_if.hpp>
 
 // tag templates -> mark dispatch-guilty types (virtual) and the others
@@ -39,8 +38,7 @@ private:
   typedef unwrap_once<T> unwrapped;
 
 public:
-  typedef typename unwrapped::type     type;
-  typedef typename boost::call_traits<type>::param_type arg_type;
+  typedef typename unwrapped::type        type;
   typedef typename unwrapped::has_virtual has_virtual;
 };
 
