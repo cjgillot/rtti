@@ -4,7 +4,6 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "mmethod/table/hash_map.hpp"
-#include "mmethod/table/hash_map.ipp"
 
 #include <boost/assert.hpp>
 
