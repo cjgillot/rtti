@@ -7,7 +7,8 @@
 
 #include "mmethod/rtti/holder/node.hpp"
 
-#include <boost/foreach.hpp>
+#include "foreach.hpp"
+
 #include <boost/assert.hpp>
 #include <vector>
 #include <stack>
@@ -20,7 +21,7 @@ hierarchy_t::hierarchy_t()
 
 hierarchy_t::~hierarchy_t()
 {
-  BOOST_FOREACH(klass_t* k, klasses)
+  foreach(klass_t* k, klasses)
     delete k;
 }
 

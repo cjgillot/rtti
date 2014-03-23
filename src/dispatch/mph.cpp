@@ -6,7 +6,8 @@
 #include "early.hpp"
 #include "forward.hpp"
 
-#include <boost/foreach.hpp>
+#include "foreach.hpp"
+
 #include <boost/assert.hpp>
 #include <numeric>
 
@@ -52,8 +53,8 @@ void output_device::rerank(
 }
 
 void output_device::rerank_unary() {
-  BOOST_FOREACH(pole_table_t::const_reference h, poles) {
-    BOOST_FOREACH(klass_t const* k, h) {
+  foreach(pole_table_t::const_reference h, poles) {
+    foreach(klass_t const* k, h) {
       dispatch_t::mapped_type const& target = dispatch.at( *k->sig );
       invoker_t ptr = target.second;
 
@@ -66,10 +67,10 @@ void output_device::rerank_unary() {
 void output_device::rerank_other() {
   std::size_t incr = 1;
 
-  BOOST_FOREACH(pole_table_t::const_reference h, poles) {
+  foreach(pole_table_t::const_reference h, poles) {
     std::size_t current = 0;
 
-    BOOST_FOREACH(klass_t const* k, h) {
+    foreach(klass_t const* k, h) {
       // insert expects 2-aligned values
       ht.insert(std::make_pair(k, 2 * current));
       current += incr;
@@ -124,7 +125,7 @@ void output_device::output_dispatch_table(
   std::fill_n(table, max_index, BAD_DISPATCH);
 
   // assign dispatch table
-  BOOST_FOREACH(dispatch_t::const_reference p, dispatch) {
+  foreach(dispatch_t::const_reference p, dispatch) {
     invoker_t inv = p.second.second;
     if(inv)
       make_assignment(p.first, inv, table, ht);
@@ -142,7 +143,7 @@ static void fill_map(
   a.create( dynamics.size() );
 
   // insert expects 2-aligned values
-  BOOST_FOREACH(klass_t const* k, dynamics) {
+  foreach(klass_t const* k, dynamics) {
     uintptr_t value = ht.at(k);
     BOOST_ASSERT( (value & 1) == 0 );
     a.insert(k->get_id(), value);

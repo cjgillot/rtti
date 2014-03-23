@@ -5,7 +5,8 @@
 
 #include "hierarchy.hpp"
 
-#include <boost/foreach.hpp>
+#include "foreach.hpp"
+
 #include <boost/assert.hpp>
 #include <deque>
 
@@ -40,13 +41,13 @@ struct select_second {
 //! \arg seq : vector of poles in the hierarchy
 void
 hierarchy_t::shrink(std::vector<klass_t const*>& seq) {
-  BOOST_FOREACH(klass_t const* pole0, seq) {
+  foreach(klass_t const* pole0, seq) {
     BOOST_ASSERT(pole0->pole == pole0);
 
     klass_t* pole = const_cast<klass_t*>(pole0);
 
     // shortcut non-poles
-    BOOST_FOREACH(klass_t const*& base, pole->bases)
+    foreach(klass_t const*& base, pole->bases)
       base = base->pole;
 
     // cleanup bases array
@@ -73,7 +74,7 @@ hierarchy_t::pole_init(klass_t* k) {
   if(k->subtype.size() <= r)
     k->subtype.resize(1+r);
 
-  BOOST_FOREACH(klass_t const* b, k->bases) {
+  foreach(klass_t const* b, k->bases) {
     if(b->subtype.size() <= r)
       const_cast<klass_t*>(b)->subtype.resize(1+r);
 
@@ -91,7 +92,7 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
   std::vector<klass_t const*> candidates;
   candidates.reserve(k->bases.size());
 
-  BOOST_FOREACH(klass_t const* base, k->bases)
+  foreach(klass_t const* base, k->bases)
     if(base->pole)
       candidates.push_back(base->pole);
 
@@ -110,7 +111,7 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
     rank_compare()
   );
 
-  BOOST_FOREACH(klass_t const* k, candidates)
+  foreach(klass_t const* k, candidates)
     // degenerate case
     if( !klass_t::subtypes()(*k, *maxK) )
       return 2;
@@ -192,7 +193,7 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
 
 #ifndef NDEBUG
   // assert structure
-  BOOST_FOREACH(klass_t const* k, wanderer.stack)
+  foreach(klass_t const* k, wanderer.stack)
     if(k->is_pole())
       BOOST_ASSERT( k->pole == k );
     else

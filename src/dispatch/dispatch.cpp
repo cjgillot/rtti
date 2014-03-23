@@ -5,13 +5,14 @@
 
 #include "forward.hpp"
 
+#include "foreach.hpp"
+
 #include <list>
 
 #include <boost/range/adaptor/transformed.hpp>
 
 #include <boost/range/begin.hpp>
 #include <boost/optional.hpp>
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 /* Implementation of pole computation algorithm from [2]
@@ -81,7 +82,7 @@ void rtti_dispatch::dispatch(
   const pole_table_t &pole_table
 ) {
   // insert known overloads
-  BOOST_FOREACH(overload_t const& s, overloads)
+  foreach(overload_t const& s, overloads)
     dispatch.insert(std::make_pair( s.first, s ));
 
   product_t p;
