@@ -51,11 +51,18 @@ bool signature_t::subtypes::operator()(const signature_t& a, const signature_t& 
   {
     BOOST_ASSERT(it2 != en2); (void)en2;
 
-    bool isder = f(**it1, **it2);
-    bool isbase = f(**it2, **it1);
-    if(!isder)
-      return false;
+    klass_t const* const klass1 = *it1;
+    klass_t const* const klass2 = *it2;
+
+    bool const isder  = f(*klass1, *klass2);
+    bool const isbase = f(*klass2, *klass1);
+
+    // \forall_i a_i <: b_i
+    if(!isder) return false;
+
+    // \exists_i \not(b_i <: a_i)
     notallbase |= !isbase;
   }
+
   return notallbase;
 }
