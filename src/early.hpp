@@ -7,8 +7,6 @@
 #define EARLY_HPP
 
 #include "mmethod/export/table.hpp"
-#include "mmethod/export/generate.hpp"
-
 #include "mmethod/export/bad_dispatch.hpp"
 
 #include <vector>

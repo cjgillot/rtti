@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_TABLE_GENERATE_HPP
 #define RTTI_MMETHOD_TABLE_GENERATE_HPP
 
-#include "mmethod/export/table.hpp"
+#include "mmethod/export/table/table.hpp"
 
 #include <boost/config.hpp>
 
