@@ -40,18 +40,27 @@ struct select_second {
 //! \arg seq : vector of poles in the hierarchy
 void
 hierarchy_t::shrink(std::vector<klass_t const*>& seq) {
-  BOOST_FOREACH(klass_t const* p0, seq) {
-    BOOST_ASSERT(p0->pole == p0);
+  BOOST_FOREACH(klass_t const* pole0, seq) {
+    BOOST_ASSERT(pole0->pole == pole0);
 
-    klass_t* p = const_cast<klass_t*>(p0);
-    BOOST_FOREACH(klass_t const*& b, p->bases)
-      b = b->pole;
+    klass_t* pole = const_cast<klass_t*>(pole0);
 
-    std::sort(p->bases.begin(), p->bases.end());
-    p->bases.erase( std::unique(p->bases.begin(), p->bases.end()), p->bases.end() );
-    p->bases.erase( std::remove(p->bases.begin(), p->bases.end(), (klass_t const*)NULL), p->bases.end() );
+    // shortcut non-poles
+    BOOST_FOREACH(klass_t const*& base, pole->bases)
+      base = base->pole;
+
+    // cleanup bases array
+    typedef klass_t::bases_type::iterator iterator_t;
+    iterator_t // iterator pair representing valid slice of the array
+      base_begin = pole->bases.begin()
+    , base_end   = pole->bases.end();
+
+    std::sort(base_begin, base_end);
+    base_end = std::unique(base_begin, base_end);
+    base_end = std::remove(base_begin, base_end, static_cast<klass_t const*>(NULL));
+    pole->bases.erase(base_end, pole->bases.end());
   }
-  
+
   std::sort(seq.begin(), seq.end(), rank_compare());
 }
 
@@ -86,6 +95,7 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
     if(base->pole)
       candidates.push_back(base->pole);
 
+  // trivial cases
   if(candidates.size() == 0)
     return 0;
 
@@ -94,15 +104,18 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
     return 1;
   }
 
+  // compare to maximal element
   klass_t const* const maxK = *std::max_element(
     candidates.begin(), candidates.end(),
     rank_compare()
   );
 
   BOOST_FOREACH(klass_t const* k, candidates)
+    // degenerate case
     if( !klass_t::subtypes()(*k, *maxK) )
       return 2;
 
+  // assign and return
   pole = maxK;
   return 1;
 }
@@ -129,6 +142,7 @@ struct wanderer_t {
 
   klass_t* pop() {
     for(;;) {
+      // exit condition
       if(stack.empty())
         return NULL;
 
