@@ -5,13 +5,13 @@
 
 #include "signature.hpp"
 
-#include <vector>
-
-#include <algorithm>
-#include <functional>
-
 #include <boost/functional/hash.hpp>
 #include <boost/optional.hpp>
+#include <boost/assert.hpp>
+
+#include <functional>
+#include <algorithm>
+#include <vector>
 
 namespace {
 

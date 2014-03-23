@@ -5,11 +5,12 @@
 
 #include "hierarchy.hpp"
 
+#include "mmethod/rtti/holder/node.hpp"
+
 #include <boost/foreach.hpp>
+#include <boost/assert.hpp>
 #include <vector>
 #include <stack>
-
-#include "mmethod/rtti/holder/node.hpp"
 
 // ----- hierarchy ----- //
 

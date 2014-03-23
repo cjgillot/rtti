@@ -6,6 +6,7 @@
 #include "hierarchy.hpp"
 
 #include <boost/foreach.hpp>
+#include <boost/assert.hpp>
 #include <deque>
 
 /* Implementation of pole computation algorithm from [1]

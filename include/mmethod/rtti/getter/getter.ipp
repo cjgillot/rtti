@@ -13,6 +13,8 @@
 #include "mmethod/rtti/holder/holder.hpp"
 #include "mmethod/rtti/mixin/mixin_node.hpp"
 
+#include <boost/config.hpp>
+
 namespace rtti {
 namespace detail {
 

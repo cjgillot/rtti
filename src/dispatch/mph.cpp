@@ -6,8 +6,9 @@
 #include "early.hpp"
 #include "forward.hpp"
 
-#include <numeric>
 #include <boost/foreach.hpp>
+#include <boost/assert.hpp>
+#include <numeric>
 
 typedef boost::unordered_map<klass_t const*, uintptr_t> hash_table_type;
 

@@ -16,6 +16,7 @@
 
 #include <functional>
 
+#include <boost/assert.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <boost/fusion/include/zip.hpp>
 #include <boost/fusion/include/at_c.hpp>
