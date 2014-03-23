@@ -114,6 +114,10 @@ struct sig_upcaster {
 
 } // namespace <>
 
+typedef std::list<overload_t> max_set_type;
+
+static void filter_insert(max_set_type& max_set, overload_t const* up);
+
 static void dispatch_one(
   const signature_t& sig,
   const pole_table_t &pole_table,
@@ -128,7 +132,6 @@ static void dispatch_one(
   sig_upcaster upcast ( sig, arity, dispatch );
 
   // set of candidates
-  typedef std::list<overload_t> max_set_type;
   max_set_type max_set;
 
   for(;;) {
@@ -139,31 +142,8 @@ static void dispatch_one(
     if(!up)
       break;
 
-    // poll max_set
-    bool dominated = false;
-    {
-      max_set_type::iterator it = max_set.begin(), en = max_set.end();
-      for(; it != en;)
-      {
-        overload_t const& e = *it;
-
-        // [*up] is better match, remove [it]
-        if( signature_t::subtypes()(e.first, up->first) )
-          it = max_set.erase(it);
-
-        // [it] is better match, don't insert [s2]
-        else if( signature_t::subtypes()(up->first, e.first) )
-        { dominated = true; break; }
-
-        // continue
-        else
-          ++it;
-      }
-    }
-
-    // none of [max_set] is better
-    if( !dominated )
-      max_set.push_back(*up);
+    // insert in max_set
+    filter_insert(max_set, up);
   }
 
   if(max_set.size() == 1)
@@ -226,4 +206,39 @@ sig_upcaster::operator()() BOOST_NOEXCEPT_OR_NOTHROW
 
     return &bound;
   }
+}
+
+static void filter_insert(
+  max_set_type& max_set
+, overload_t const* up
+) {
+  signature_t::subtypes subtypes;
+
+  // poll max_set
+  bool dominated = false;
+  {
+    max_set_type::iterator
+      iter = max_set.begin()
+    , endl = max_set.end();
+
+    while(iter != endl) {
+      overload_t const& e = *iter;
+
+      // [*up] is better match, remove [it]
+      if( subtypes(e.first, up->first) )
+        iter = max_set.erase(iter);
+
+      // [it] is better match, don't insert [s2]
+      else if( subtypes(up->first, e.first) )
+      { dominated = true; break; }
+
+      // continue
+      else
+        ++iter;
+    }
+  }
+
+  // none of [max_set] is better
+  if( !dominated )
+    max_set.push_back(*up);
 }
