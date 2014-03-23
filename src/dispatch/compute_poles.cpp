@@ -114,6 +114,7 @@ namespace {
 struct wanderer_t {
   std::deque<klass_t*> stack;
 
+  explicit
   wanderer_t(std::size_t) {}
 
   typedef klass_t* value_type;

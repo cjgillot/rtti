@@ -3,6 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include "signature.hpp"
+
 #include <vector>
 
 #include <algorithm>
@@ -10,8 +12,6 @@
 
 #include <boost/functional/hash.hpp>
 #include <boost/optional.hpp>
-
-#include "signature.hpp"
 
 namespace {
 
