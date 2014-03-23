@@ -89,12 +89,14 @@ struct fetch_poles_once {
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_poles {
   template<typename Tuple>
-  static void eval(uintptr_t& m, Tuple const& args) {
+  static uintptr_t eval(Tuple const& args) {
     fetch_poles_once<Tag, BTS> fetcher;
     
     enum { TSize = boost::mpl::size<Tuple>::value };
-    m = boost::fusion::accumulate(
-      boost::fusion::zip( boost::mpl::range_c<std::size_t, 0, TSize>(), args)
+    typedef boost::mpl::range_c<std::size_t, 0, TSize> counter_range;
+
+    return boost::fusion::accumulate(
+      boost::fusion::zip( counter_range(), args)
     , uintptr_t(0)
     , fetcher
     );
@@ -127,8 +129,7 @@ invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
     btset = access::traits<Tag>::type_bitset
   };
 
-  uintptr_t spec = 0;
-  fetch_poles<arity, Tag, btset>::eval( spec, args );
+  uintptr_t spec = fetch_poles<arity, Tag, btset>::eval( args );
 
   invoker_t ret = fetch_invoker<arity, Tag, btset>::eval( spec );
   BOOST_ASSERT(ret);

@@ -100,12 +100,12 @@ template<typename Tag, typename Ret>
 template<typename K, typename F>
 void dispatch<Tag,Ret>::insert(F const& f) {
   enum {
-    arity = access::traits<Tag>::vsize,
-    btset = access::traits<Tag>::type_bitset
+    arity = access::traits<Tag>::vsize
+  , btset = access::traits<Tag>::type_bitset
   };
   rtti_hierarchy hiers [ arity ];
 
-  save_poles<arity, Tag, btset>::eval( hiers, (K*)0 );
+  save_poles<arity, Tag, btset>::eval( hiers, static_cast<K*>(NULL) );
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
