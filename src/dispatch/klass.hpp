@@ -31,7 +31,6 @@ private:
 
   /// \invariant : subtype[o.rank] = 1 - iff [this] derives from [o]
   /// \invariant : subtype[rank] = 1 - consequence
-  /// \invariant : subtype[0] is pole flag then : rank == 0 iff [this] is the root
   std::size_t rank;
   boost::dynamic_bitset<> subtype;
 
@@ -48,8 +47,6 @@ private:
 public:
   rtti_type         get_id()       const { return id;       }
   bases_type const& get_bases()    const { return bases;    }
-
-  boost::dynamic_bitset<>::reference is_pole() { return subtype[0]; }
 
 public:
   // total hashing order

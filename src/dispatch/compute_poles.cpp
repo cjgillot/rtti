@@ -7,6 +7,7 @@
 
 #include "foreach.hpp"
 
+#include <boost/unordered_map.hpp>
 #include <boost/assert.hpp>
 #include <deque>
 
@@ -129,6 +130,7 @@ namespace {
 //! to the most derived type
 struct wanderer_t {
   std::deque<klass_t*> stack;
+  boost::unordered_map<klass_t const*, bool> visited;
 
   explicit
   wanderer_t(std::size_t) {}
@@ -138,7 +140,7 @@ struct wanderer_t {
   // is_pole is used as a traversal flag
   void push_back(klass_t const* k) {
     klass_t* next = const_cast<klass_t*>(k);
-    next->is_pole() = false;
+    visited[next] = false;
     stack.push_back(next);
   }
 
@@ -153,7 +155,7 @@ struct wanderer_t {
       stack.pop_back();
 
       // already traversed ?
-      if(top->is_pole() )
+      if( visited[top] )
         continue;
 
       // inject base classes
@@ -166,7 +168,7 @@ struct wanderer_t {
       }
 
       // mark as traversed
-      top->is_pole() = true;
+      visited[top] = true;
 
       return top;
     }
@@ -182,7 +184,7 @@ private:
       klass_t* next = const_cast<klass_t*>(base);
 
       // not visited yet
-      if(! next->is_pole() ) {
+      if(! visited[next] ) {
         stack.push_back(next);
         need_upcast = true;
       }

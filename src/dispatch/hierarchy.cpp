@@ -58,6 +58,5 @@ klass_t const*
 hierarchy_t::add(rtti_hierarchy vec) {
   klass_t* base = do_add(vec);
   base->pole = base;
-  base->is_pole() = true;
   return base;
 }
