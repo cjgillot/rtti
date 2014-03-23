@@ -10,8 +10,8 @@
 
 #include "mmethod/detail/access.hpp"
 
-#include "mmethod/table/table.hpp"
-#include "mmethod/table/fetch_pole.hpp"
+#include "mmethod/export/table.hpp"
+#include "mmethod/export/fetch_pole.hpp"
 
 #include "mmethod/rtti/getter.hpp"
 

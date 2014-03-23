@@ -14,7 +14,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_array.hpp>
 
-#include "mmethod/table/hash_map/bucket.hpp"
+#include "mmethod/export/hash_map/bucket.hpp"
 
 #include <boost/config.hpp>
 

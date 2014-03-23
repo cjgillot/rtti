@@ -11,8 +11,8 @@
 
 #include "mmethod/detail/access.hpp"
 
-#include "mmethod/table/table.hpp"
-#include "mmethod/table/generate.hpp"
+#include "mmethod/export/table.hpp"
+#include "mmethod/export/generate.hpp"
 
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/vector.hpp>

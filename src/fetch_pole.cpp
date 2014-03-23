@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/table/fetch_pole.hpp"
+#include "mmethod/export/fetch_pole.hpp"
 
 #include "mmethod/rtti/holder/node.hpp"
 

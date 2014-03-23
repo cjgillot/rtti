@@ -8,7 +8,7 @@
 
 #include "mmethod/declare/helper.hpp"
 
-#include "mmethod/table/table.hpp"
+#include "mmethod/export/table.hpp"
 
 namespace rtti { namespace mmethod {
 

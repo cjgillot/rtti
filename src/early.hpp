@@ -6,10 +6,10 @@
 #ifndef EARLY_HPP
 #define EARLY_HPP
 
-#include "mmethod/table/table.hpp"
-#include "mmethod/table/generate.hpp"
+#include "mmethod/export/table.hpp"
+#include "mmethod/export/generate.hpp"
 
-#include "mmethod/shared/bad_dispatch.hpp"
+#include "mmethod/export/bad_dispatch.hpp"
 
 #include <vector>
 

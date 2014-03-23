@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_TABLE_TABLE_HPP
 #define RTTI_MMETHOD_TABLE_TABLE_HPP
 
-#include "mmethod/table/hash_map.hpp"
+#include "mmethod/export/hash_map.hpp"
 
 #include <boost/static_assert.hpp>
 #include <boost/config.hpp>
