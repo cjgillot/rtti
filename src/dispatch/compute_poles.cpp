@@ -114,7 +114,7 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t* *out_pole) {
 
   foreach(klass_t const* k, candidates)
     // degenerate case
-    if( !klass_t::subtypes()(*k, *maxK) )
+    if( !klass_t::is_subtype_of()(*maxK, *k) )
       return 2;
 
   // assign and return

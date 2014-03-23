@@ -65,7 +65,7 @@ public:
     { return a.rank > b.rank; }
   };
   // partial subtyping order
-  struct subtypes
+  struct is_subtype_of
   {
     bool operator()(const klass_t& a, const klass_t& b) const
     { return a.subtype[b.rank]; }

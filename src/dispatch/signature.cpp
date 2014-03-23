@@ -38,9 +38,9 @@ bool signature_t::subtypes::operator()(const signature_t& a, const signature_t& 
   BOOST_ASSERT(a.sig.size() == b.sig.size());
   // return true if [b] is better overload than [a]
   // ie. if [\forall i, a_i <: b_i \and \exists_i, \not(b_i <: a_i)]
-  klass_t::subtypes f;
+  klass_t::is_subtype_of f;
   bool notallbase = false;
-  
+
   typedef sig_type::const_iterator it_type;
   for(it_type it1 = a.sig.begin(),
               it2 = b.sig.begin(),
