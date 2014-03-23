@@ -86,8 +86,9 @@ hierarchy_t::pole_init(klass_t* k) {
 
 //!\brief Pseudo-closest algorithm (Fig 9)
 std::size_t
-hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
-{
+hierarchy_t::pseudo_closest(const klass_t* k, const klass_t* *out_pole) {
+  BOOST_ASSERT(pole);
+
   // compute candidates
   std::vector<klass_t const*> candidates;
   candidates.reserve(k->bases.size());
@@ -101,7 +102,7 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
     return 0;
 
   if(candidates.size() == 1) {
-    pole = candidates.front();
+    *out_pole = candidates.front();
     return 1;
   }
 
@@ -117,7 +118,7 @@ hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
       return 2;
 
   // assign and return
-  pole = maxK;
+  *out_pole = maxK;
   return 1;
 }
 
@@ -156,16 +157,7 @@ struct wanderer_t {
         continue;
 
       // inject base classes
-      bool need_upcast = false;
-      BOOST_FOREACH(klass_t const* base, top->get_bases()) {
-        klass_t* next = const_cast<klass_t*>(base);
-
-        // not visited yet
-        if(! next->is_pole() ) {
-          stack.push_back(next);
-          need_upcast = true;
-        }
-      }
+      bool const need_upcast = reinject_bases(top);
 
       // retry if a base has been injected
       if(need_upcast) {
@@ -179,7 +171,25 @@ struct wanderer_t {
       return top;
     }
   }
+
   bool empty() const { return stack.empty(); }
+
+private:
+  bool reinject_bases(klass_t* top_pole) {
+    bool need_upcast = false;
+
+    foreach(klass_t const* base, top_pole->get_bases()) {
+      klass_t* next = const_cast<klass_t*>(base);
+
+      // not visited yet
+      if(! next->is_pole() ) {
+        stack.push_back(next);
+        need_upcast = true;
+      }
+    }
+
+    return need_upcast;
+  }
 };
 
 } // namespace <>
@@ -216,7 +226,7 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
 
       // compute
       klass_t const* pole;
-      std::size_t const sz = pseudo_closest(top, pole);
+      std::size_t const sz = pseudo_closest(top, &pole);
 
       if(sz == 0)
         top->pole = NULL;
