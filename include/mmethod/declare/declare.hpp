@@ -10,17 +10,4 @@
 #include "mmethod/declare/helper.hpp"
 #include "mmethod/declare/traits.hpp"
 
-#include <boost/config.hpp>
-
-#define MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
-
-#define DECLARE_MMETHOD(name, ret, sig) \
-struct MMETHOD_TAG(name)                \
-: rtti::mmethod::mmethod_register<      \
-  MMETHOD_TAG(name)                     \
-, ret sig   > {                         \
-  template<typename> struct overload;   \
-}; \
-static MMETHOD_TAG(name) name /* ; */
-
 #endif
