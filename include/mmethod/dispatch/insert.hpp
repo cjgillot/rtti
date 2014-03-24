@@ -8,18 +8,13 @@
 
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/dispatch/fetch.hpp"
+#include "mmethod/dispatch/arity_loop.hpp"
 
 #include "mmethod/detail/access.hpp"
 
 #include "mmethod/export/table.hpp"
 
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/range_c.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/zip_view.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/transform_view.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -27,57 +22,25 @@ namespace detail {
 
 namespace {
 
-template<bool OK>
-struct get_static_node {
-  template<typename T>
-  static rtti_hierarchy get();
-};
-
-template<>
-struct get_static_node<true> {
-  template<typename T>
-  static rtti_hierarchy get()
-  { return ::rtti::static_node<T>(); }
-};
-
-template<typename Tag, std::size_t BTS>
+template<typename Tag, typename Tuple>
 struct save_poles_once {
-  // workaround mpl::for_each which requires const functor
-  mutable rtti_hierarchy* h;
+  rtti_hierarchy* h;
 
-  template<typename U>
-  void operator()(U*) const {
-    typedef typename boost::mpl::at_c<U, 0>::type first_raw;
-    typedef typename rtti::traits_detail::remove_all<first_raw>::type first;
-    enum { J = first::value };
+  template<std::size_t J>
+  void apply() {
+    typedef typename boost::mpl::at_c<Tuple, J>::type arg_type;
 
-    typedef typename boost::mpl::at_c<U, 1>::type second;
-
-    enum { ok = (BTS >> J) & 1 };
-    if( ok ) {
-      *h = get_static_node<ok>::template get< second >();
-      ++h;
-    }
+    *h = ::rtti::static_node< arg_type >();
+    ++h;
   }
 };
-template<std::size_t Arity, typename Tag, std::size_t BTS>
+template<typename Tag, std::size_t BTS>
 struct save_poles {
   template<typename Tuple>
   static void eval(rtti_hierarchy* h, Tuple*) {
-    save_poles_once<Tag, BTS> fetcher = { h };
+    save_poles_once<Tag, Tuple> fetcher = { h };
 
-    enum { TSize = boost::mpl::size<Tuple>::value };
-    typedef boost::mpl::zip_view<
-      boost::mpl::vector<
-        boost::mpl::range_c<std::size_t, 0, TSize>
-      , Tuple
-      >
-    > zipped_tuple;
-
-    boost::mpl::for_each<
-      zipped_tuple
-    , boost::add_pointer<boost::mpl::_>
-    >( fetcher );
+    arity_loop<BTS>::apply(fetcher);
   }
 };
 
@@ -92,7 +55,7 @@ void dispatch<Tag,Ret>::insert(F const& f) {
   };
   rtti_hierarchy hiers [ arity ];
 
-  save_poles<arity, Tag, btset>::eval( hiers, static_cast<K*>(NULL) );
+  save_poles<Tag, btset>::eval( hiers, static_cast<K*>(NULL) );
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 

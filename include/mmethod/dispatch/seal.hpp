@@ -8,18 +8,11 @@
 
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/dispatch/fetch.hpp"
+#include "mmethod/dispatch/arity_loop.hpp"
 
 #include "mmethod/detail/access.hpp"
 
 #include "mmethod/export/table.hpp"
-
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/range_c.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/zip_view.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/transform_view.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -27,23 +20,23 @@ namespace detail {
 
 namespace {
 
-template<std::size_t Arity, typename Tag, std::size_t BTS>
-struct seal_poles {
-  template<std::size_t J>
-  static void eval(poles_map_type** p) {
-    enum { ok = BTS & 1 };
-    if( ok ) {
-      *p = &get_poles_map<ok>::template get<Tag, J>();
-      ++p;
-    }
+template<typename Tag>
+struct seal_poles_once {
+  poles_map_type** p;
 
-    seal_poles<Arity, Tag, (BTS>>1)>::template eval<J+1>(p);
+  template<std::size_t J>
+  void apply() {
+    *p = get_poles_map::get<Tag, J>();
+    ++p;
   }
 };
-template<std::size_t Arity, typename Tag>
-struct seal_poles<Arity, Tag, 0> {
-  template<std::size_t J>
-  static void eval(poles_map_type**) {}
+template<typename Tag, std::size_t BTS>
+struct seal_poles {
+  static void eval(poles_map_type** h) {
+    seal_poles_once<Tag> fetcher = { h };
+
+    arity_loop<BTS>::apply(fetcher);
+  }
 };
 
 } // namespace <>
@@ -51,14 +44,14 @@ struct seal_poles<Arity, Tag, 0> {
 template<typename Tag, typename Ret>
 void dispatch<Tag,Ret>::seal() {
   enum {
-    arity = access::traits<Tag>::vsize,
-    btset = access::traits<Tag>::type_bitset
+    arity = access::traits<Tag>::vsize
+  , btset = access::traits<Tag>::type_bitset
   };
 
   poles_map_type* poles [ arity ];
   seal_table_type seal_table = { get_register<Tag>::invoker_table, poles };
 
-  seal_poles<arity, Tag, btset>::template eval<0>( poles );
+  seal_poles<Tag, btset>::eval( poles );
 
   detail::seal_table(arity, get_register<Tag>::invoker_table, seal_table);
 }
