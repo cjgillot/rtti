@@ -28,8 +28,6 @@ inline void bucket_t::set(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW {
 
 /// hash_map implementation
 //@{
-hash_map::~hash_map() {}
-
 void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
   BOOST_ASSERT( this != &o );
 

@@ -37,15 +37,6 @@ public:
 
 public:
   inline hash_map();
-  ~hash_map();
-
-private:
-  hash_map(hash_map const&);
-  hash_map& operator=(hash_map const&);
-#ifdef BOOST_HAS_RVALUE_REFS
-  hash_map(hash_map&&);
-  hash_map& operator=(hash_map&&);
-#endif
 
 private:
   /// hash function, thread-safe
@@ -78,12 +69,7 @@ private:
 
 private:
   std::size_t m_mask; // == (1 << m_logsz) - 1
-  
-#ifndef BOOST_HAS_RVALUE_REFS
   boost::scoped_array<bucket_t> m_array;
-#else
-  std::unique_ptr<bucket_t[]> m_array;
-#endif
 
   std::size_t m_logsz;
 };
