@@ -9,5 +9,6 @@
 #include "mmethod/declare/register.hpp"
 #include "mmethod/declare/helper.hpp"
 #include "mmethod/declare/traits.hpp"
+#include "mmethod/declare/call.hpp"
 
 #endif

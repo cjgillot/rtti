@@ -8,6 +8,8 @@
 
 #include "mmethod/export/hash_map.hpp"
 
+#include "mmethod/rttifwd.hpp"
+
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/is_const.hpp>
@@ -25,8 +27,7 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
-//! function pointer generic type
-typedef void(*invoker_t)();
+using rtti::invoker_t;
 BOOST_STATIC_ASSERT_MSG( sizeof(invoker_t) <= sizeof(uintptr_t), "Platform not supported" );
 
 //! useful typedefs
