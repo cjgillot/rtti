@@ -8,14 +8,11 @@
 
 #include "mmethod/declare/helper.hpp"
 
-#include "mmethod/export/table.hpp"
-
 namespace rtti { namespace mmethod {
 
 template<typename Tag, typename Sig>
 struct mmethod_register
-: detail::register_base<Tag>
-, detail::make_declare<Tag, Sig>::type {
+: detail::make_declare<Tag, Sig>::type {
 private:
   typedef typename detail::make_declare<Tag, Sig>::type decl_maker;
 

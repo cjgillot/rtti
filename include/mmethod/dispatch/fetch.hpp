@@ -36,7 +36,7 @@ template<>
 struct get_poles_map<true> {
   template<typename Tag, std::size_t J>
   static poles_map_type& get()
-  { return Tag::template poles<J>::array; }
+  { return get_register<Tag>::template poles<J>::array; }
 };
 
 template<bool OK>
@@ -107,7 +107,7 @@ struct fetch_poles {
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
   static invoker_t eval(uintptr_t spec) {
-    return Tag::invoker_table[spec / 2];
+    return get_register<Tag>::invoker_table[spec / 2];
   }
 };
 template<typename Tag, std::size_t BTS>

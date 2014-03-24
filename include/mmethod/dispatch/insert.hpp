@@ -34,7 +34,7 @@ template<typename Tag, typename Ret>
 void dispatch<Tag,Ret>::initialize() {
   enum { arity = access::traits<Tag>::vsize };
 
-  detail::init_table(arity, Tag::invoker_table);
+  detail::init_table(arity, get_register<Tag>::invoker_table);
 }
 
 namespace {
@@ -109,7 +109,7 @@ void dispatch<Tag,Ret>::insert(F const& f) {
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
-  detail::inse_table(arity, Tag::invoker_table, inv, hiers);
+  detail::inse_table(arity, get_register<Tag>::invoker_table, inv, hiers);
 }
 
 namespace {
@@ -143,11 +143,11 @@ void dispatch<Tag,Ret>::seal() {
   };
 
   poles_map_type* poles [ arity ];
-  seal_table_type seal_table = { Tag::invoker_table, poles };
+  seal_table_type seal_table = { get_register<Tag>::invoker_table, poles };
 
   seal_poles<arity, Tag, btset>::template eval<0>( poles );
 
-  detail::seal_table(arity, Tag::invoker_table, seal_table);
+  detail::seal_table(arity, get_register<Tag>::invoker_table, seal_table);
 }
 
 }}} // namespace rtti::mmethod::detail
