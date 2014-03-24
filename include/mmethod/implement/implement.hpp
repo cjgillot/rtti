@@ -27,7 +27,6 @@ struct tag::overload<ret sig>                                   \
   static ret call sig;                                          \
   overload() {}                                                 \
 };                                                              \
-template struct tag::overload<ret sig>;                         \
 ret tag::overload<ret sig>                                      \
   ::call sig /* definition here */
 
