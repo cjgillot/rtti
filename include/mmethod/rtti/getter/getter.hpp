@@ -10,6 +10,11 @@
 #include "mmethod/traits/pointer_traits.hpp"
 #include "mmethod/detail/attribute.hpp"
 
+#ifndef BOOST_NO_EXCEPTIONS
+#include <stdexcept>
+#include <typeinfo>
+#endif
+
 #include <utility>
 #include <boost/config.hpp>
 
