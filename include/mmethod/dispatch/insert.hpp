@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_DYNAMIC_HPP
-#define RTTI_MMETHOD_DYNAMIC_HPP
+#ifndef RTTI_MMETHOD_DISPATCH_INSERT_HPP
+#define RTTI_MMETHOD_DISPATCH_INSERT_HPP
 
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/dispatch/fetch.hpp"
@@ -21,21 +21,9 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform_view.hpp>
 
-namespace rtti { namespace mmethod { namespace detail {
-
-template<typename Tag>
-invoker_table_type register_base<Tag>::invoker_table;
-
-template<typename Tag>
-template<std::size_t J>
-poles_map_type register_base<Tag>::poles<J>::array;
-
-template<typename Tag, typename Ret>
-void dispatch<Tag,Ret>::initialize() {
-  enum { arity = access::traits<Tag>::vsize };
-
-  detail::init_table(arity, get_register<Tag>::invoker_table);
-}
+namespace rtti {
+namespace mmethod {
+namespace detail {
 
 namespace {
 
@@ -63,8 +51,7 @@ struct save_poles_once {
     typedef typename rtti::traits_detail::remove_all<first_raw>::type first;
     enum { J = first::value };
 
-    typedef typename boost::mpl::at_c<U, 1>::type second_raw;
-    typedef typename rtti::traits_detail::remove_all<second_raw>::type second;
+    typedef typename boost::mpl::at_c<U, 1>::type second;
 
     enum { ok = (BTS >> J) & 1 };
     if( ok ) {
@@ -110,44 +97,6 @@ void dispatch<Tag,Ret>::insert(F const& f) {
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
   detail::inse_table(arity, get_register<Tag>::invoker_table, inv, hiers);
-}
-
-namespace {
-
-template<std::size_t Arity, typename Tag, std::size_t BTS>
-struct seal_poles {
-  template<std::size_t J>
-  static void eval(poles_map_type** p) {
-    enum { ok = BTS & 1 };
-    if( ok ) {
-      *p = &get_poles_map<ok>::template get<Tag, J>();
-      ++p;
-    }
-
-    seal_poles<Arity, Tag, (BTS>>1)>::template eval<J+1>(p);
-  }
-};
-template<std::size_t Arity, typename Tag>
-struct seal_poles<Arity, Tag, 0> {
-  template<std::size_t J>
-  static void eval(poles_map_type**) {}
-};
-
-} // namespace <>
-
-template<typename Tag, typename Ret>
-void dispatch<Tag,Ret>::seal() {
-  enum {
-    arity = access::traits<Tag>::vsize,
-    btset = access::traits<Tag>::type_bitset
-  };
-
-  poles_map_type* poles [ arity ];
-  seal_table_type seal_table = { get_register<Tag>::invoker_table, poles };
-
-  seal_poles<arity, Tag, btset>::template eval<0>( poles );
-
-  detail::seal_table(arity, get_register<Tag>::invoker_table, seal_table);
 }
 
 }}} // namespace rtti::mmethod::detail

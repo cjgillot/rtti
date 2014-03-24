@@ -22,7 +22,9 @@
 #include <boost/fusion/include/at_c.hpp>
 #include <boost/fusion/include/accumulate.hpp>
 
-namespace rtti { namespace mmethod { namespace detail {
+namespace rtti {
+namespace mmethod {
+namespace detail {
 
 namespace {
 
