@@ -13,9 +13,13 @@
 
   This library implements open multi-methods in ISO C++.
   
-  The external interface fits in two files :
+  The external interface fits in three files :
   - \c mmethod.hpp
+  - \c declare.hpp
   - \c implement.hpp
+  
+  \c declare.hpp exports everything needed to declare mmethods.
+  It does not provide code used for calling those. \see declare.hpp
   
   \c mmethod.hpp exports everything needed to declare
   and invoke mmethods. \see mmethod.hpp
@@ -25,7 +29,7 @@
 
 */
 
-/*! \file mmethod.hpp
+/*! \file declare.hpp
 
   The declaration of a mmethod passes by the \c MMETHOD_DECLARE macro.
   It takes following arguments :
@@ -33,7 +37,7 @@
   - the return type
   - the argument list
 
-  The argument list uses \c rtti::tags::virtual_ to discriminate between the arguments
+  The argument list uses \c rtti::tags::_v to discriminate between the arguments
   involved in the runtime dispatch and the others. This tag should appear directly on
   the polymorphic class type.
   All class types used as virtual in mmethod must be RTTI-enabled. \see rtti.hpp
@@ -46,23 +50,24 @@ class bar
   // unspecified
 ;
 
-template<typename T> using v_ = rtti::tags::virtual_<T>;
+using rtti::tags::_v;
 
 // f1 is unary : only the first argument, of type [foo*], is used in resolution
-MMETHOD_DECLARE(f1, void, (v_<foo>*, bar&));
+MMETHOD_DECLARE(f1, void, (_v<foo*>, bar&));
 
 // f2 is binary : both arguments are used in resolution
-MMETHOD_DECLARE(f2, int, (v_<foo>*, v_<bar>&));
+MMETHOD_DECLARE(f2, int, (_v<foo*>, _v<bar&>));
 
-// f3 does not compile : the tag must be directly on [foo]
-// MMETHOD_DECLARE(f3, float, (v_<foo*> ));
+// f3 does not compile : the tag must be the outmost template
+// MMETHOD_DECLARE(f3, float, (_v<foo>* ));
   \endcode
 
   Arguments to a mmethod may be pointer or references.
   In the future, a traits template will be provided to
   use other pointer-like types.
-  
+
   Then, the defined mmethod may be called like regular functions.
+  You need to include \see mmethod.hpp if you want those calls to be inlined.
   \code
   foo f; bar b;
   
@@ -70,6 +75,13 @@ MMETHOD_DECLARE(f2, int, (v_<foo>*, v_<bar>&));
   f2(&f, b);
   \endcode
 
+ */
+
+/*! \file mmethod.hpp
+
+  This file loads the necessary includes to call mmethods efficiently.
+
+  \see declare.hpp for information about declaring mmethods.
  */
 
 /*! \file implement.hpp
@@ -92,10 +104,10 @@ class bar
   // unspecified, inherits from foo
 ;
 
-template<typename T> using v_ = rtti::tags::virtual_<T>;
+template<typename T> using _v = rtti::tags::virtual_<T>;
 
 // f1 is unary
-MMETHOD_DECLARE(f1, void, (v_<foo>* ));
+MMETHOD_DECLARE(f1, void, (_v<foo>* ));
 
 // first case
 MMETHOD_IMPLEMENT(f1, void, (foo* a)) { a->do_something(); }
