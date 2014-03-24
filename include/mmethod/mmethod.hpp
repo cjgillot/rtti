@@ -7,6 +7,7 @@
 #define RTTI_MMETHOD_HPP
 
 #include "mmethod/declare/declare.hpp"
+#include "mmethod/dispatch/dispatch.hpp"
 
 /*! \page RTTI.MMethod library
 
