@@ -6,17 +6,9 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FETCH_HPP
 #define RTTI_MMETHOD_DISPATCH_FETCH_HPP
 
-#include "mmethod/dispatch/forward.hpp"
-#include "mmethod/dispatch/arity_loop.hpp"
-
-#include "mmethod/detail/access.hpp"
-
-#include "mmethod/export/table.hpp"
-
-#include "mmethod/rtti/getter.hpp"
+#include "mmethod/dispatch/common.hpp"
 
 #include <functional>
-
 #include <boost/assert.hpp>
 #include <boost/fusion/include/at_c.hpp>
 
@@ -25,12 +17,6 @@ namespace mmethod {
 namespace detail {
 
 namespace {
-
-struct get_poles_map {
-  template<typename Tag, std::size_t J>
-  static poles_map_type* get()
-  { return &get_register<Tag>::template poles<J>::array; }
-};
 
 /// fetch_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data
 /// equivalent pseudo-code :

@@ -6,11 +6,7 @@
 #ifndef RTTI_MMETHOD_DISPATCH_INITIALIZE_HPP
 #define RTTI_MMETHOD_DISPATCH_INITIALIZE_HPP
 
-#include "mmethod/dispatch/forward.hpp"
-
-#include "mmethod/detail/access.hpp"
-
-#include "mmethod/export/table.hpp"
+#include "mmethod/dispatch/common.hpp"
 
 namespace rtti {
 namespace mmethod {

@@ -6,13 +6,7 @@
 #ifndef RTTI_MMETHOD_DISPATCH_INSERT_HPP
 #define RTTI_MMETHOD_DISPATCH_INSERT_HPP
 
-#include "mmethod/dispatch/forward.hpp"
-#include "mmethod/dispatch/fetch.hpp"
-#include "mmethod/dispatch/arity_loop.hpp"
-
-#include "mmethod/detail/access.hpp"
-
-#include "mmethod/export/table.hpp"
+#include "mmethod/dispatch/common.hpp"
 
 #include <boost/mpl/at.hpp>
 
