@@ -3,7 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/export/bad_dispatch.hpp"
+#include "mmethod/export/exception.hpp"
+
+#include "early.hpp"
 
 #include <boost/config.hpp>
 #include <cstdlib>
@@ -15,6 +17,10 @@ void rtti::_rtti_bad_dispatch() {
   std::abort();
 #endif
 }
+
+rtti::bad_rtti::bad_rtti()
+: std::runtime_error("Invalid pointer passed to rtti::get_node") {}
+rtti::bad_rtti::~bad_rtti() BOOST_NOEXCEPT_OR_NOTHROW {}
 
 rtti::bad_dispatch::bad_dispatch()
 : std::runtime_error("Unresolved call for mmethod") {}

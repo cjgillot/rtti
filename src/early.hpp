@@ -7,7 +7,7 @@
 #define EARLY_HPP
 
 #include "mmethod/export/table.hpp"
-#include "mmethod/export/bad_dispatch.hpp"
+#include "mmethod/export/exception.hpp"
 
 #include <vector>
 
@@ -20,6 +20,10 @@ struct early_bindings_type {
   std::size_t arity;
   std::vector<binding_type> vector;
 };
+
+namespace rtti {
+  void _rtti_bad_dispatch();
+}
 
 #define BAD_DISPATCH (rtti::_rtti_bad_dispatch)
 
