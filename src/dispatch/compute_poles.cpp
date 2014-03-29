@@ -75,17 +75,17 @@ hierarchy_t::pole_init(klass_t* k) {
 
 //!\brief Pseudo-closest algorithm (Fig 9)
 std::size_t
-hierarchy_t::pseudo_closest(const klass_t* k, const klass_t*& pole)
+hierarchy_t::pseudo_closest(const klass_t* klass, const klass_t*& pole)
 {
   // compute candidates
   std::vector<klass_t const*> candidates;
-  candidates.reserve(k->bases.size());
+  candidates.reserve(klass->bases.size());
 
-  BOOST_FOREACH(klass_t const* base, k->bases)
+  BOOST_FOREACH(klass_t const* base, klass->bases)
     if(base->pole)
       candidates.push_back(base->pole);
 
-  if(candidates.size() == 0)
+  if(candidates.empty())
     return 0;
 
   if(candidates.size() == 1) {
