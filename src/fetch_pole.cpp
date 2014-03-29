@@ -47,7 +47,7 @@ rtti::hash::detail::do_fetch_pole(
     if(BOOST_LIKELY( !it->empty() )) {
 
       const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
-#if MMETHOD_USE_DEEP_CACHE
+#ifdef MMETHOD_USE_DEEP_CACHE
       for(rtti_node const* rt2 = rtti_get_base(rt0); rt2 != rt; rt2 = rtti_get_base(rt2))
         const_cast<hash_map&>(map).insert( rtti_get_id(rt2), it->value() );
 #endif
