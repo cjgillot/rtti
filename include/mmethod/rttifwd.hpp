@@ -21,7 +21,7 @@ namespace rtti {
 namespace detail {
 
 //! \brief RTTI id type
-typedef void* rtti_type;
+typedef void const* rtti_type;
 
 //! \brief RTTI node type
 //! POD class holding a hierarchy bottom-up
