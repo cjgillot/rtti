@@ -27,12 +27,11 @@ struct tag::overload<ret sig>                                   \
   static ret call sig;                                          \
   overload() {}                                                 \
 };                                                              \
-template struct tag::overload<ret sig>;                         \
 ret tag::overload<ret sig>                                      \
   ::call sig /* definition here */
 
 #define IMPLEMENT_MMETHOD(name, ret, sig) \
-  IMPLEMENTATION_MMETHOD(__MMETHOD_TAG(name), ret, sig)
+  IMPLEMENTATION_MMETHOD(MMETHOD_TAG(name), ret, sig)
 
 }} // namespace rtti::mmethod
 

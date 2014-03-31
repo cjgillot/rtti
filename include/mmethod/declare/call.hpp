@@ -9,7 +9,7 @@
 #include "mmethod/declare/traits.hpp"
 #include "mmethod/declare/trampoline.hpp"
 
-#include "mmethod/dispatch/dispatch.hpp"
+#include "mmethod/dispatch/forward.hpp"
 
 #include "mmethod/detail/iterate.hpp"
 

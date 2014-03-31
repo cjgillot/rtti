@@ -7,7 +7,10 @@
 #define RTTI_MMETHOD_DISPATCH_HPP
 
 #include "mmethod/dispatch/forward.hpp"
+
+#include "mmethod/dispatch/initialize.hpp"
 #include "mmethod/dispatch/insert.hpp"
 #include "mmethod/dispatch/fetch.hpp"
+#include "mmethod/dispatch/seal.hpp"
 
 #endif

@@ -3,12 +3,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_DECLARE_HPP
-#define RTTI_MMETHOD_DECLARE_HPP
+#ifndef RTTI_MMETHOD_TABLE_HPP
+#define RTTI_MMETHOD_TABLE_HPP
 
-#include "mmethod/declare/register.hpp"
-#include "mmethod/declare/helper.hpp"
-#include "mmethod/declare/traits.hpp"
-#include "mmethod/declare/call.hpp"
+#include "mmethod/export/table/table.hpp"
+#include "mmethod/export/table/generate.hpp"
+#include "mmethod/export/table/fetch_pole.hpp"
 
 #endif

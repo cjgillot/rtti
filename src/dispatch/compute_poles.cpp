@@ -5,7 +5,10 @@
 
 #include "hierarchy.hpp"
 
-#include <boost/foreach.hpp>
+#include "foreach.hpp"
+
+#include <boost/unordered_map.hpp>
+#include <boost/assert.hpp>
 #include <deque>
 
 /* Implementation of pole computation algorithm from [1]
@@ -39,18 +42,27 @@ struct select_second {
 //! \arg seq : vector of poles in the hierarchy
 void
 hierarchy_t::shrink(std::vector<klass_t const*>& seq) {
-  BOOST_FOREACH(klass_t const* p0, seq) {
-    BOOST_ASSERT(p0->pole == p0);
+  foreach(klass_t const* pole0, seq) {
+    BOOST_ASSERT(pole0->pole == pole0);
 
-    klass_t* p = const_cast<klass_t*>(p0);
-    BOOST_FOREACH(klass_t const*& b, p->bases)
-      b = b->pole;
+    klass_t* pole = const_cast<klass_t*>(pole0);
 
-    std::sort(p->bases.begin(), p->bases.end());
-    p->bases.erase( std::unique(p->bases.begin(), p->bases.end()), p->bases.end() );
-    p->bases.erase( std::remove(p->bases.begin(), p->bases.end(), (klass_t const*)NULL), p->bases.end() );
+    // shortcut non-poles
+    foreach(klass_t const*& base, pole->bases)
+      base = base->pole;
+
+    // cleanup bases array
+    typedef klass_t::bases_type::iterator iterator_t;
+    iterator_t // iterator pair representing valid slice of the array
+      base_begin = pole->bases.begin()
+    , base_end   = pole->bases.end();
+
+    std::sort(base_begin, base_end);
+    base_end = std::unique(base_begin, base_end);
+    base_end = std::remove(base_begin, base_end, static_cast<klass_t const*>(NULL));
+    pole->bases.erase(base_end, pole->bases.end());
   }
-  
+
   std::sort(seq.begin(), seq.end(), rank_compare());
 }
 
@@ -63,7 +75,7 @@ hierarchy_t::pole_init(klass_t* k) {
   if(k->subtype.size() <= r)
     k->subtype.resize(1+r);
 
-  BOOST_FOREACH(klass_t const* b, k->bases) {
+  foreach(klass_t const* b, k->bases) {
     if(b->subtype.size() <= r)
       const_cast<klass_t*>(b)->subtype.resize(1+r);
 
@@ -75,34 +87,39 @@ hierarchy_t::pole_init(klass_t* k) {
 
 //!\brief Pseudo-closest algorithm (Fig 9)
 std::size_t
-hierarchy_t::pseudo_closest(const klass_t* klass, const klass_t*& pole)
-{
+hierarchy_t::pseudo_closest(const klass_t* klass, const klass_t* *out_pole) {
+  BOOST_ASSERT(pole);
+
   // compute candidates
   std::vector<klass_t const*> candidates;
   candidates.reserve(klass->bases.size());
 
-  BOOST_FOREACH(klass_t const* base, klass->bases)
+  foreach(klass_t const* base, klass->bases)
     if(base->pole)
       candidates.push_back(base->pole);
 
+  // trivial cases
   if(candidates.empty())
     return 0;
 
   if(candidates.size() == 1) {
-    pole = candidates.front();
+    *out_pole = candidates.front();
     return 1;
   }
 
+  // compare to maximal element
   klass_t const* const maxK = *std::max_element(
     candidates.begin(), candidates.end(),
     rank_compare()
   );
 
-  BOOST_FOREACH(klass_t const* k, candidates)
-    if( !klass_t::subtypes()(*k, *maxK) )
+  foreach(klass_t const* k, candidates)
+    // degenerate case
+    if( !klass_t::is_subtype_of()(*maxK, *k) )
       return 2;
 
-  pole = maxK;
+  // assign and return
+  *out_pole = maxK;
   return 1;
 }
 
@@ -113,7 +130,9 @@ namespace {
 //! to the most derived type
 struct wanderer_t {
   std::deque<klass_t*> stack;
+  boost::unordered_map<klass_t const*, bool> visited;
 
+  explicit
   wanderer_t(std::size_t) {}
 
   typedef klass_t* value_type;
@@ -121,12 +140,13 @@ struct wanderer_t {
   // is_pole is used as a traversal flag
   void push_back(klass_t const* k) {
     klass_t* next = const_cast<klass_t*>(k);
-    next->is_pole() = false;
+    visited[next] = false;
     stack.push_back(next);
   }
 
   klass_t* pop() {
     for(;;) {
+      // exit condition
       if(stack.empty())
         return NULL;
 
@@ -135,20 +155,11 @@ struct wanderer_t {
       stack.pop_back();
 
       // already traversed ?
-      if(top->is_pole() )
+      if( visited[top] )
         continue;
 
       // inject base classes
-      bool need_upcast = false;
-      BOOST_FOREACH(klass_t const* base, top->get_bases()) {
-        klass_t* next = const_cast<klass_t*>(base);
-
-        // not visited yet
-        if(! next->is_pole() ) {
-          stack.push_back(next);
-          need_upcast = true;
-        }
-      }
+      bool const need_upcast = reinject_bases(top);
 
       // retry if a base has been injected
       if(need_upcast) {
@@ -157,12 +168,30 @@ struct wanderer_t {
       }
 
       // mark as traversed
-      top->is_pole() = true;
+      visited[top] = true;
 
       return top;
     }
   }
+
   bool empty() const { return stack.empty(); }
+
+private:
+  bool reinject_bases(klass_t* top_pole) {
+    bool need_upcast = false;
+
+    foreach(klass_t const* base, top_pole->get_bases()) {
+      klass_t* next = const_cast<klass_t*>(base);
+
+      // not visited yet
+      if(! visited[next] ) {
+        stack.push_back(next);
+        need_upcast = true;
+      }
+    }
+
+    return need_upcast;
+  }
 };
 
 } // namespace <>
@@ -176,7 +205,7 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
 
 #ifndef NDEBUG
   // assert structure
-  BOOST_FOREACH(klass_t const* k, wanderer.stack)
+  foreach(klass_t const* k, wanderer.stack)
     if(k->is_pole())
       BOOST_ASSERT( k->pole == k );
     else
@@ -199,7 +228,7 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
 
       // compute
       klass_t const* pole;
-      std::size_t const sz = pseudo_closest(top, pole);
+      std::size_t const sz = pseudo_closest(top, &pole);
 
       if(sz == 0)
         top->pole = NULL;

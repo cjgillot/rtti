@@ -5,8 +5,9 @@
 
 #include "forward.hpp"
 
+#include "foreach.hpp"
+
 #include <vector>
-#include <boost/foreach.hpp>
 
 void rtti_dispatch::process_declaration(early_bindings_type const& decl, seal_table_type& output)
 {
@@ -17,7 +18,7 @@ void rtti_dispatch::process_declaration(early_bindings_type const& decl, seal_ta
 
   /// parsing input
   overloads_t overloads; overloads.reserve( decl.vector.size() );
-  BOOST_FOREACH(binding_type const& over, decl.vector) {
+  foreach(binding_type const& over, decl.vector) {
     signature_type const& h = over.first;
 
     overloads.push_back( overload_t(make_signature(h, hierarchies), over.second) );
@@ -33,8 +34,8 @@ void rtti_dispatch::process_declaration(early_bindings_type const& decl, seal_ta
 
   /// prepare poles for output : link each pole to a signature in which it appears
   /// \warning This code must be after any change to \c overloads
-  BOOST_FOREACH(const overload_t& sig, overloads)
-    BOOST_FOREACH(const klass_t* k, sig.first.array())
+  foreach(const overload_t& sig, overloads)
+    foreach(const klass_t* k, sig.first.array())
       const_cast<signature_t const*&>( k->sig ) = &sig.first;
 
   /// output

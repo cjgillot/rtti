@@ -3,11 +3,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/table/fetch_pole.hpp"
+#include "mmethod/export/table.hpp"
 
 #include "mmethod/rtti/holder/node.hpp"
 
 #include <boost/assert.hpp>
+#include <boost/config.hpp>
 
 using rtti::rtti_type;
 

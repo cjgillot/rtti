@@ -14,6 +14,9 @@
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/reverse_fold.hpp>
 
+#include <boost/config.hpp>
+#include <boost/static_assert.hpp>
+
 namespace rtti {
 namespace mmethod {
 namespace detail {

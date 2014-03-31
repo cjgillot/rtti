@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_BAD_DISPATCH_HPP
 #define RTTI_MMETHOD_BAD_DISPATCH_HPP
 
+#include <exception>
 #include <stdexcept>
 
 #include <boost/config.hpp>
@@ -16,13 +17,17 @@
 
 namespace rtti {
 
+struct bad_rtti
+: std::runtime_error {
+  bad_rtti();
+  virtual ~bad_rtti() BOOST_NOEXCEPT_OR_NOTHROW;
+};
+
 struct bad_dispatch
 : std::runtime_error {
   bad_dispatch();
   virtual ~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW;
 };
-
-void _rtti_bad_dispatch();
 
 } // namespace rtti
 
