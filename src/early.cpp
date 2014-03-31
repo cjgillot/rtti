@@ -5,6 +5,8 @@
 
 #include "early.hpp"
 
+#include <boost/assert.hpp>
+
 void
 rtti::mmethod::detail::init_table(
   std::size_t arity

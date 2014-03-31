@@ -20,6 +20,9 @@
 namespace rtti {
 namespace detail {
 
+//! function pointer generic type
+typedef void(*invoker_t)();
+
 //! \brief RTTI id type
 typedef void const* rtti_type;
 
@@ -39,6 +42,9 @@ inline rtti_node const* MMETHOD_ATTRIBUTE_PURE rtti_get_base(rtti_node const* n,
 inline std::size_t      MMETHOD_ATTRIBUTE_PURE rtti_get_base_arity(rtti_node const* n);
 
 } // namespace detail
+
+// FIXME We should not export this
+using detail::invoker_t;
 
 using detail::rtti_type;
 using detail::rtti_node;

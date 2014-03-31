@@ -6,14 +6,15 @@
 #ifndef RTTI_HOLDER_HPP
 #define RTTI_HOLDER_HPP
 
+#include "mmethod/rttifwd.hpp"
+#include "mmethod/rtti/holder/node.hpp"
+
+#include <boost/config.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_volatile.hpp>
-
-#include "mmethod/rttifwd.hpp"
-#include "mmethod/rtti/holder/node.hpp"
 
 namespace rtti {
 namespace detail {

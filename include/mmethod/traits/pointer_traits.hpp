@@ -24,7 +24,7 @@ template<typename T>
 struct remove_all<T&>
 : remove_all<T> {};
 
-#ifdef BOOST_HAS_RVALUE_REFS
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template<typename T>
 struct remove_all<T&&>
 : remove_all<T> {};

@@ -6,11 +6,15 @@
 #ifndef RTTI_GETTER_HPP
 #define RTTI_GETTER_HPP
 
-#include <utility>
-
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/traits/pointer_traits.hpp"
 #include "mmethod/detail/attribute.hpp"
+
+#include "mmethod/export/exception.hpp"
+
+#include <utility>
+#include <boost/assert.hpp>
+#include <boost/config.hpp>
 
 namespace rtti {
 namespace detail {
@@ -54,9 +58,13 @@ MMETHOD_ATTRIBUTE_PURE
 get_node(U& x)
 {
   typedef rtti::pointer_traits<U&> traits;
-#if __EXCEPTIONS__
-  if(! traits::valid(x)) throw std::bad_typeid();
+  if(! traits::valid(x)) {
+#ifndef BOOST_NO_EXCEPTIONS
+    throw bad_rtti();
+#else
+    std::abort();
 #endif
+  }
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
 
@@ -67,9 +75,13 @@ MMETHOD_ATTRIBUTE_PURE
 get_node(U const& x)
 {
   typedef rtti::pointer_traits<U const&> traits;
-#if __EXCEPTIONS__
-  if(! traits::valid(x)) throw std::bad_typeid();
+  if(! traits::valid(x)) {
+#ifndef BOOST_NO_EXCEPTIONS
+    throw bad_rtti();
+#else
+    std::abort();
 #endif
+  }
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
 

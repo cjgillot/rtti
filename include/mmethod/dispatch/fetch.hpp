@@ -6,54 +6,17 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FETCH_HPP
 #define RTTI_MMETHOD_DISPATCH_FETCH_HPP
 
-#include "mmethod/dispatch/forward.hpp"
-
-#include "mmethod/detail/access.hpp"
-
-#include "mmethod/table/table.hpp"
-#include "mmethod/table/fetch_pole.hpp"
-
-#include "mmethod/rtti/getter.hpp"
+#include "mmethod/dispatch/common.hpp"
 
 #include <functional>
-
-#include <boost/mpl/range_c.hpp>
-#include <boost/fusion/include/zip.hpp>
+#include <boost/assert.hpp>
 #include <boost/fusion/include/at_c.hpp>
-#include <boost/fusion/include/accumulate.hpp>
 
-namespace rtti { namespace mmethod { namespace detail {
+namespace rtti {
+namespace mmethod {
+namespace detail {
 
 namespace {
-
-template<bool OK>
-struct get_poles_map {
-  template<typename Tag, std::size_t J>
-  static poles_map_type& get();
-};
-
-template<>
-struct get_poles_map<true> {
-  template<typename Tag, std::size_t J>
-  static poles_map_type& get()
-  { return Tag::template poles<J>::array; }
-};
-
-template<bool OK>
-struct get_node {
-  template<typename T>
-  static rtti_hierarchy get(T const&);
-};
-
-template<>
-struct get_node<true> {
-  template<typename T>
-  static rtti_hierarchy get(T const& t)
-  { return ::rtti::get_node(t); }
-  template<typename T>
-  static rtti_hierarchy get(T& t)
-  { return ::rtti::get_node(t); }
-};
 
 /// fetch_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data
 /// equivalent pseudo-code :
@@ -63,49 +26,39 @@ struct get_node<true> {
 ///   if arg is virtual
 ///     i += arg->pole->data
 /// \endcode
-template<typename Tag, std::size_t BTS>
+template<typename Tag, typename Tuple>
 struct fetch_poles_once {
-  typedef uintptr_t result_type;
+  uintptr_t& m;
+  Tuple const& tuple;
 
-  template<typename U>
-  uintptr_t operator()(uintptr_t m, U const& x) const {
-    typedef typename boost::fusion::result_of::at_c<U, 0>::type first_raw;
-    typedef typename rtti::traits_detail::remove_all<first_raw>::type first;
-    enum { J = first::value };
+  template<std::size_t J>
+  void apply() const {
+    poles_map_type* map = get_poles_map::get<Tag, J>();
 
-    typedef typename boost::fusion::result_of::at_c<U, 1>::type second;
-    second arg = boost::fusion::at_c<1>(x);
+    rtti_hierarchy const h  = ::rtti::get_node(
+      boost::fusion::at_c<J>(tuple)
+    );
 
-    enum { ok = (BTS >> J) & 1 };
-    if( ok ) {
-      poles_map_type& map = get_poles_map<ok>::template get<Tag, J>();
-
-      rtti_hierarchy const h  = get_node<ok>::get(arg);
-      m += fetch_pole(map, h);
-    }
-
-    return m;
+    m += fetch_pole(*map, h);
   }
 };
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_poles {
   template<typename Tuple>
-  static void eval(uintptr_t& m, Tuple const& args) {
-    fetch_poles_once<Tag, BTS> fetcher;
-    
-    enum { TSize = boost::mpl::size<Tuple>::value };
-    m = boost::fusion::accumulate(
-      boost::fusion::zip( boost::mpl::range_c<std::size_t, 0, TSize>(), args)
-    , uintptr_t(0)
-    , fetcher
-    );
+  static uintptr_t eval(Tuple const& args) {
+    uintptr_t result = 0;
+
+    fetch_poles_once<Tag, Tuple> fetcher = { result, args };
+    arity_loop<BTS>::apply(fetcher);
+
+    return result;
   }
 };
 
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
   static invoker_t eval(uintptr_t spec) {
-    return Tag::invoker_table[spec / 2];
+    return get_register<Tag>::invoker_table[spec / 2];
   }
 };
 template<typename Tag, std::size_t BTS>
@@ -128,10 +81,8 @@ invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
     btset = access::traits<Tag>::type_bitset
   };
 
-  uintptr_t spec = 0;
-  fetch_poles<arity, Tag, btset>::eval( spec, args );
-
-  invoker_t ret = fetch_invoker<arity, Tag, btset>::eval( spec );
+  uintptr_t spec = fetch_poles  <arity, Tag, btset>::eval( args );
+  invoker_t ret  = fetch_invoker<arity, Tag, btset>::eval( spec );
   BOOST_ASSERT(ret);
 
   return ret;

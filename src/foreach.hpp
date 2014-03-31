@@ -3,12 +3,20 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_DECLARE_HPP
-#define RTTI_MMETHOD_DECLARE_HPP
+#ifndef FOREACH_HPP
+#define FOREACH_HPP
 
-#include "mmethod/declare/register.hpp"
-#include "mmethod/declare/helper.hpp"
-#include "mmethod/declare/traits.hpp"
-#include "mmethod/declare/call.hpp"
+#include <boost/config.hpp>
+
+#ifdef BOOST_NO_CXX11_RANGE_BASED_FOR
+
+#  include <boost/foreach.hpp>
+#  define foreach BOOST_FOREACH
+
+#else
+
+#  define foreach(a,b) for(a : b)
+
+#endif
 
 #endif

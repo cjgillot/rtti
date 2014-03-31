@@ -6,8 +6,8 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BASE_IPP
 #define RTTI_MMETHOD_HASH_MAP_BASE_IPP
 
-#include "mmethod/table/hash_map/hash_map.hpp"
-#include "mmethod/table/hash_map/bucket.ipp"
+#include "mmethod/export/hash_map/hash_map.hpp"
+#include "mmethod/export/hash_map/bucket.ipp"
 
 #include "mmethod/rtti/holder/node.hpp"
 

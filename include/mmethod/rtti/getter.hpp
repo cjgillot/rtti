@@ -6,15 +6,14 @@
 #ifndef RTTI_INTERFACE_HPP
 #define RTTI_INTERFACE_HPP
 
-#include <boost/static_assert.hpp>
-
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-
 #include "mmethod/rtti/getter/getter.hpp"
 #include "mmethod/rtti/getter/getter.ipp"
 
 #include "mmethod/detail/attribute.hpp"
+
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
 
 /*
  * In this file, the [pure] attribute is

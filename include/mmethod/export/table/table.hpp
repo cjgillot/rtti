@@ -6,8 +6,14 @@
 #ifndef RTTI_MMETHOD_TABLE_TABLE_HPP
 #define RTTI_MMETHOD_TABLE_TABLE_HPP
 
-#include "mmethod/table/hash_map.hpp"
+#include "mmethod/export/hash_map.hpp"
 
+#include "mmethod/rttifwd.hpp"
+
+#include <boost/type_traits/is_volatile.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/is_class.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/config.hpp>
 
@@ -21,8 +27,7 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
-//! function pointer generic type
-typedef void(*invoker_t)();
+using rtti::invoker_t;
 BOOST_STATIC_ASSERT_MSG( sizeof(invoker_t) <= sizeof(uintptr_t), "Platform not supported" );
 
 //! useful typedefs
@@ -32,6 +37,12 @@ typedef invoker_t* invoker_table_type;
 //! structure holding tables
 template<typename Tag>
 struct register_base {
+  BOOST_STATIC_ASSERT_MSG(
+    boost::is_class<Tag>::value
+  && !boost::is_const<Tag>::value
+  && !boost::is_volatile<Tag>::value
+  , "Invalid use of register_base<>"
+  );
 
   template<std::size_t> struct poles {
     static detail::poles_map_type array;
@@ -40,6 +51,13 @@ struct register_base {
   static detail::invoker_table_type invoker_table;
 
 };
+
+//! structure holding tables
+template<typename Tag>
+struct get_register
+: register_base<
+    typename boost::remove_cv<Tag>::type
+> {};
 
 }}} // namespace rtti::mmethod::detail
 
