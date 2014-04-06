@@ -5,6 +5,8 @@
 
 #include "multifile.hpp"
 
+#include "mmethod/mmethod.hpp"
+
 int main() {
   foo* f = make_foo();
   foo* r = make_bar();

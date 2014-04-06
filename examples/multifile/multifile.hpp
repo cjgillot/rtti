@@ -7,7 +7,7 @@
 #define MULTIFILE_HPP
 
 #include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
+#include "mmethod/declare.hpp"
 
 using namespace rtti;
 
