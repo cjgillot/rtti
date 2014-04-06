@@ -5,8 +5,6 @@
 
 #include "mmethod/export/hash_map.hpp"
 
-#include <boost/assert.hpp>
-
 using rtti::rtti_type;
 using rtti::detail::rtti_node;
 using rtti::hash::detail::bucket_t;

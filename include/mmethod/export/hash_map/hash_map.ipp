@@ -6,14 +6,13 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BASE_IPP
 #define RTTI_MMETHOD_HASH_MAP_BASE_IPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/export/hash_map/hash_map.hpp"
 #include "mmethod/export/hash_map/bucket.ipp"
 
 #include "mmethod/rtti/holder/node.hpp"
 
 #include <boost/type_traits/alignment_of.hpp>
-
-#include <boost/config.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX

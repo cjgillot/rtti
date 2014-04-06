@@ -6,6 +6,7 @@
 #ifndef RTTI_MIXIN_MIXIN_HPP
 #define RTTI_MIXIN_MIXIN_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rtti/mixin/mixin_node.hpp"
 #include "mmethod/rtti/getter.hpp"
 
@@ -13,8 +14,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/transform.hpp>
-
-#include <boost/static_assert.hpp>
 
 #include <boost/utility/declval.hpp>
 

@@ -6,10 +6,8 @@
 #ifndef RTTI_HOLDER_NODE_HPP
 #define RTTI_HOLDER_NODE_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
-
-#include <boost/assert.hpp>
-#include <boost/config.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX

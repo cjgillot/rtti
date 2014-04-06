@@ -6,15 +6,13 @@
 #ifndef RTTI_GETTER_HPP
 #define RTTI_GETTER_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/traits/pointer_traits.hpp"
-#include "mmethod/detail/attribute.hpp"
 
 #include "mmethod/export/exception.hpp"
 
 #include <utility>
-#include <boost/assert.hpp>
-#include <boost/config.hpp>
 
 namespace rtti {
 namespace detail {

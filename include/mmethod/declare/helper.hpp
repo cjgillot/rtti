@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_DECLARE_HELPER_HPP
 #define RTTI_MMETHOD_DECLARE_HELPER_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/declare/call.hpp"
 #include "mmethod/declare/traits.hpp"
 

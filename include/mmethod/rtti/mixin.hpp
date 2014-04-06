@@ -6,6 +6,7 @@
 #ifndef RTTI_MIXIN_HPP
 #define RTTI_MIXIN_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rtti/mixin/mixin.hpp"
 
 #include <boost/mpl/vector.hpp>

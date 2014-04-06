@@ -6,6 +6,8 @@
 #ifndef RTTI_TRAITS_HPP
 #define RTTI_TRAITS_HPP
 
+#include "mmethod/config.hpp"
+
 #include <boost/mpl/if.hpp>
 
 #include <boost/type_traits.hpp>

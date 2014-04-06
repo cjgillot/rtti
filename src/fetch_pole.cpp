@@ -7,9 +7,6 @@
 
 #include "mmethod/rtti/holder/node.hpp"
 
-#include <boost/assert.hpp>
-#include <boost/config.hpp>
-
 using rtti::rtti_type;
 
 using rtti::detail::rtti_node;

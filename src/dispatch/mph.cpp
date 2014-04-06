@@ -8,7 +8,6 @@
 
 #include "foreach.hpp"
 
-#include <boost/assert.hpp>
 #include <numeric>
 
 typedef boost::unordered_map<klass_t const*, uintptr_t> hash_table_type;

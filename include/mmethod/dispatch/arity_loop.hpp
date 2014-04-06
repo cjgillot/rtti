@@ -6,6 +6,8 @@
 #ifndef RTTI_MMETHOD_DISPATCH_ARITY_LOOP_HPP
 #define RTTI_MMETHOD_DISPATCH_ARITY_LOOP_HPP
 
+#include "mmethod/config.hpp"
+
 namespace rtti {
 namespace mmethod {
 namespace detail {

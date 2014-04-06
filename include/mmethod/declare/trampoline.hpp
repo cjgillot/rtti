@@ -6,6 +6,8 @@
 #ifndef RTTI_MMETHOD_TRAMPOLINE_HPP
 #define RTTI_MMETHOD_TRAMPOLINE_HPP
 
+#include "mmethod/config.hpp"
+
 #include "mmethod/traits/pointer_traits.hpp"
 #include "mmethod/traits/call_traits.hpp"
 

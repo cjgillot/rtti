@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 #define RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/detail/access.hpp"
 #include "mmethod/declare/trampoline.hpp"
 

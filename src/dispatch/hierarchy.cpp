@@ -9,7 +9,6 @@
 
 #include "foreach.hpp"
 
-#include <boost/assert.hpp>
 #include <vector>
 #include <stack>
 

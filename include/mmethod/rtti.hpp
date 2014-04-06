@@ -6,6 +6,7 @@
 #ifndef RTTI_HPP
 #define RTTI_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rtti/getter.hpp"
 #include "mmethod/rtti/mixin.hpp"
 

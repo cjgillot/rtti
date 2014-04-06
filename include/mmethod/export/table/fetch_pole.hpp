@@ -6,11 +6,8 @@
 #ifndef RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 #define RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/export/table/table.hpp"
-
-#include "mmethod/detail/attribute.hpp"
-
-#include <boost/config.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX

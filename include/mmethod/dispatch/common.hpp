@@ -6,6 +6,8 @@
 #ifndef RTTI_MMETHOD_DISPATCH_COMMON_HPP
 #define RTTI_MMETHOD_DISPATCH_COMMON_HPP
 
+#include "mmethod/config.hpp"
+
 #include "mmethod/dispatch/forward.hpp"
 #include "mmethod/dispatch/arity_loop.hpp"
 

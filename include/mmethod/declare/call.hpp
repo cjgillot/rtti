@@ -6,6 +6,8 @@
 #ifndef RTTI_MMETHOD_DECLARE_CALL_HPP
 #define RTTI_MMETHOD_DECLARE_CALL_HPP
 
+#include "mmethod/config.hpp"
+
 #include "mmethod/declare/traits.hpp"
 #include "mmethod/declare/trampoline.hpp"
 

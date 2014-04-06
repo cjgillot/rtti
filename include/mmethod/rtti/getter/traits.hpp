@@ -6,10 +6,9 @@
 #ifndef RTTI_GETTER_TRAITS_HPP
 #define RTTI_GETTER_TRAITS_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rtti/getter/getter.hpp"
 #include "mmethod/rtti/mixin/mixin_node.hpp"
-
-#include <boost/config.hpp>
 
 namespace rtti {
 namespace detail {

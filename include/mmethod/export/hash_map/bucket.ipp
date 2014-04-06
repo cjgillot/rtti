@@ -6,9 +6,8 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
 #define RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/export/hash_map/bucket.hpp"
-
-#include <boost/config.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX

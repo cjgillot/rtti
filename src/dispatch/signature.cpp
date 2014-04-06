@@ -7,7 +7,6 @@
 
 #include <boost/functional/hash.hpp>
 #include <boost/optional.hpp>
-#include <boost/assert.hpp>
 
 #include <functional>
 #include <algorithm>

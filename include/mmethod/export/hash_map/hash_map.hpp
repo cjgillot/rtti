@@ -6,17 +6,14 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BASE_HPP
 #define RTTI_MMETHOD_HASH_MAP_BASE_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
-
-#define MMETHOD_INLINE_DO_FIND
 
 #include <memory>
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_array.hpp>
 
 #include "mmethod/export/hash_map/bucket.hpp"
-
-#include <boost/config.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX

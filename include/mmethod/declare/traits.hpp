@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_DECLARE_TRAITS_HPP
 #define RTTI_MMETHOD_DECLARE_TRAITS_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/traits/tags.hpp"
 
 #include <boost/mpl/next.hpp>
@@ -13,9 +14,6 @@
 #include <boost/mpl/size_t.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/reverse_fold.hpp>
-
-#include <boost/config.hpp>
-#include <boost/static_assert.hpp>
 
 namespace rtti {
 namespace mmethod {

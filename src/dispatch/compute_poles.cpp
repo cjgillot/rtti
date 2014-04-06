@@ -8,7 +8,6 @@
 #include "foreach.hpp"
 
 #include <boost/unordered_map.hpp>
-#include <boost/assert.hpp>
 #include <deque>
 
 /* Implementation of pole computation algorithm from [1]

@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_DECLARE_REGISTER_HPP
 #define RTTI_MMETHOD_DECLARE_REGISTER_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/declare/helper.hpp"
 
 namespace rtti { namespace mmethod {
@@ -27,8 +28,6 @@ public:
 };
 
 }} // namespace rtti::mmethod
-
-#include <boost/config.hpp>
 
 #define MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
 

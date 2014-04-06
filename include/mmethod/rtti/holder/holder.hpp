@@ -6,11 +6,10 @@
 #ifndef RTTI_HOLDER_HPP
 #define RTTI_HOLDER_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/rtti/holder/node.hpp"
 
-#include <boost/config.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>

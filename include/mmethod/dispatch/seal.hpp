@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_DISPATCH_SEAL_HPP
 #define RTTI_MMETHOD_DISPATCH_SEAL_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/dispatch/common.hpp"
 
 namespace rtti {

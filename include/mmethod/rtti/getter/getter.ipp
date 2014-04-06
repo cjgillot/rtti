@@ -6,14 +6,13 @@
 #ifndef RTTI_GETTER_IPP
 #define RTTI_GETTER_IPP
 
+#include "mmethod/config.hpp"
+
 #include "mmethod/rtti/getter/getter.hpp"
 #include "mmethod/rtti/getter/traits.hpp"
 
 #include "mmethod/rtti/holder/holder.hpp"
 #include "mmethod/rtti/mixin/mixin_node.hpp"
-
-#include <boost/static_assert.hpp>
-#include <boost/config.hpp>
 
 namespace rtti {
 namespace detail {

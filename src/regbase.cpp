@@ -7,7 +7,6 @@
 
 #include "early.hpp"
 
-#include <boost/config.hpp>
 #include <cstdlib>
 
 void rtti::_rtti_bad_dispatch() {

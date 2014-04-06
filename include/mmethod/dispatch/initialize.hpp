@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_DISPATCH_INITIALIZE_HPP
 #define RTTI_MMETHOD_DISPATCH_INITIALIZE_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/dispatch/common.hpp"
 
 namespace rtti {

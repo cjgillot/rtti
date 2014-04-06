@@ -6,7 +6,7 @@
 #ifndef FOREACH_HPP
 #define FOREACH_HPP
 
-#include <boost/config.hpp>
+#include "mmethod/config.hpp"
 
 #ifdef BOOST_NO_CXX11_RANGE_BASED_FOR
 

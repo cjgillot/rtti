@@ -6,10 +6,10 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FETCH_HPP
 #define RTTI_MMETHOD_DISPATCH_FETCH_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/dispatch/common.hpp"
 
 #include <functional>
-#include <boost/assert.hpp>
 #include <boost/fusion/include/at_c.hpp>
 
 namespace rtti {
