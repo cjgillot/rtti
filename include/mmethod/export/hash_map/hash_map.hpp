@@ -6,14 +6,14 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BASE_HPP
 #define RTTI_MMETHOD_HASH_MAP_BASE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
 
 #include <memory>
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_array.hpp>
 
-#include "mmethod/export/hash_map/bucket.hpp"
+#include "boost/mmethod/export/hash_map/bucket.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -22,9 +22,9 @@
 // All functions declared in this file
 // are defined in rtti/mmethod/hash_map.cpp
 
-namespace rtti {
-namespace hash {
-namespace detail {
+namespace boost {
+namespace mmethod {
+namespace hash_detail {
 
 class hash_map
 : private boost::noncopyable
@@ -71,7 +71,7 @@ private:
   std::size_t m_logsz;
 };
 
-}}} // namespace rtti::hash::detail
+}}} // namespace boost::mmethod::hash_detail
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

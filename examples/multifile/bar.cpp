@@ -5,7 +5,7 @@
 
 #include "multifile.hpp"
 
-#include "mmethod/implement.hpp"
+#include "boost/mmethod/implement.hpp"
 
 #include <boost/mpl/vector.hpp>
 

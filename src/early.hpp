@@ -6,13 +6,13 @@
 #ifndef EARLY_HPP
 #define EARLY_HPP
 
-#include "mmethod/export/table.hpp"
-#include "mmethod/export/exception.hpp"
+#include "boost/mmethod/export/table.hpp"
+#include "boost/mmethod/export/exception.hpp"
 
 #include <vector>
 
-using namespace rtti;
-using rtti::mmethod::detail::invoker_t;
+using namespace boost::mmethod;
+using boost::mmethod::detail::invoker_t;
 
 typedef std::vector<rtti_hierarchy> signature_type;
 typedef std::pair<signature_type, invoker_t> binding_type;
@@ -21,18 +21,17 @@ struct early_bindings_type {
   std::vector<binding_type> vector;
 };
 
-namespace rtti {
-  void _rtti_bad_dispatch();
-}
+using boost::mmethod::detail::poles_map_type;
+using boost::mmethod::detail::seal_table_type;
 
-#define BAD_DISPATCH (rtti::_rtti_bad_dispatch)
+namespace boost_mmethod_dispatch {
+  // regbase.cpp
+  extern void _rtti_bad_dispatch();
 
-using rtti::mmethod::detail::poles_map_type;
-using rtti::mmethod::detail::seal_table_type;
-
-namespace rtti_dispatch {
   // dispatch/mmethod.cpp
   extern void process_declaration(early_bindings_type const&, seal_table_type&);
 }
+
+#define BAD_DISPATCH (boost_mmethod_dispatch::_rtti_bad_dispatch)
 
 #endif

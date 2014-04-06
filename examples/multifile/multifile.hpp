@@ -6,10 +6,10 @@
 #ifndef MULTIFILE_HPP
 #define MULTIFILE_HPP
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/declare.hpp"
+#include "boost/mmethod/rtti.hpp"
+#include "boost/mmethod/declare.hpp"
 
-using namespace rtti;
+using namespace boost::mmethod;
 
 struct foo
 : base_rtti<foo> {

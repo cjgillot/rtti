@@ -6,8 +6,8 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_HPP
 #define RTTI_MMETHOD_HASH_MAP_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/export/hash_map/hash_map.hpp"
-#include "mmethod/export/hash_map/hash_map.ipp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/export/hash_map/hash_map.hpp"
+#include "boost/mmethod/export/hash_map/hash_map.ipp"
 
 #endif

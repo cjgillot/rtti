@@ -6,7 +6,7 @@
 #include "early.hpp"
 
 void
-rtti::mmethod::detail::init_table(
+boost::mmethod::detail::init_table(
   std::size_t arity
 , invoker_table_type& tbl
 ) {
@@ -17,7 +17,7 @@ rtti::mmethod::detail::init_table(
 }
 
 void
-rtti::mmethod::detail::inse_table(
+boost::mmethod::detail::inse_table(
   std::size_t arity
 , invoker_table_type& table
 , invoker_t inv
@@ -35,7 +35,7 @@ rtti::mmethod::detail::inse_table(
 }
 
 void
-rtti::mmethod::detail::seal_table(
+boost::mmethod::detail::seal_table(
   std::size_t /*arity*/
 , invoker_table_type table
 , seal_table_type& seal
@@ -44,7 +44,7 @@ rtti::mmethod::detail::seal_table(
   // we assume this function is called strictly after [inse_table] finished on the same [table]
   early_bindings_type* eb = reinterpret_cast<early_bindings_type*>(table);
 
-  rtti_dispatch::process_declaration(*eb, seal);
+  boost_mmethod_dispatch::process_declaration(*eb, seal);
 
   delete eb;
 }

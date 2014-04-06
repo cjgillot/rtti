@@ -6,12 +6,12 @@
 #ifndef RTTI_MMETHOD_DISPATCH_HPP
 #define RTTI_MMETHOD_DISPATCH_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/dispatch/forward.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/dispatch/forward.hpp"
 
-#include "mmethod/dispatch/initialize.hpp"
-#include "mmethod/dispatch/insert.hpp"
-#include "mmethod/dispatch/fetch.hpp"
-#include "mmethod/dispatch/seal.hpp"
+#include "boost/mmethod/dispatch/initialize.hpp"
+#include "boost/mmethod/dispatch/insert.hpp"
+#include "boost/mmethod/dispatch/fetch.hpp"
+#include "boost/mmethod/dispatch/seal.hpp"
 
 #endif

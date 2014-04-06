@@ -163,7 +163,7 @@ void output_device::output_pole_tables(
   }
 }
 
-void rtti_dispatch::output_tables(
+void boost_mmethod_dispatch::output_tables(
   seal_table_type& f,
   const pole_table_t& pole_table,
   const dispatch_t& dispatch,

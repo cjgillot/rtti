@@ -6,10 +6,10 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FORWARD_HPP
 #define RTTI_MMETHOD_DISPATCH_FORWARD_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -48,6 +48,6 @@ private:
   static void seal();
 };
 
-}}} // rtti::mmethod::detail
+}}} // boost::mmethod::detail
 
 #endif

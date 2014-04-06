@@ -3,11 +3,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/detail/prefix.hpp"
+#include "boost/mmethod/detail/prefix.hpp"
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
-namespace detail {
 namespace call_detail {
 
 template<>
@@ -18,14 +17,14 @@ struct make_declare_call_base<
 template<typename Tag, typename Ret, typename Args>
 struct apply {
 protected: // traits_type
-  typedef make_declare_traits<Ret, Args> traits_type;
+  typedef detail::make_declare_traits<Ret, Args> traits_type;
 
 private:
   typedef typename traits_type::unwrapped_args unwrapped_args;
   typedef typename traits_type::type_tags      type_tags;
 
 protected: // trampoline_type
-  typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;
+  typedef detail::make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;
   typedef typename trampoline_type::sig_t func_t;
 
 private:   // dispatch_type
@@ -69,6 +68,6 @@ protected:
 
 }; // make_declare_call_base
 
-}}}} // namespace rtti::mmethod::detail::call_detail
+}}} // namespace boost::mmethod::call_detail
 
-#include "mmethod/detail/suffix.hpp"
+#include "boost/mmethod/detail/suffix.hpp"

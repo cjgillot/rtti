@@ -76,7 +76,7 @@ static void dispatch_one(
   dispatch_t &dispatch
 );
 
-void rtti_dispatch::dispatch(
+void boost_mmethod_dispatch::dispatch(
   dispatch_t &dispatch,
   overloads_t& overloads,
   const pole_table_t &pole_table

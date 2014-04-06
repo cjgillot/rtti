@@ -6,7 +6,7 @@
 #ifndef RTTI_MMETHOD_BAD_DISPATCH_HPP
 #define RTTI_MMETHOD_BAD_DISPATCH_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
 #include <exception>
 #include <stdexcept>
@@ -15,7 +15,8 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 
 struct bad_rtti
 : std::runtime_error {
@@ -29,7 +30,7 @@ struct bad_dispatch
   virtual ~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW;
 };
 
-} // namespace rtti
+}} // namespace boost::mmethod
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

@@ -14,6 +14,6 @@
 
 #define MMETHOD_VIRTUAL_INHERITANCE
 
-#include "mmethod/detail/attribute.hpp"
+#include "boost/mmethod/detail/attribute.hpp"
 
 #endif

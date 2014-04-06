@@ -3,24 +3,24 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/export/exception.hpp"
+#include "boost/mmethod/export/exception.hpp"
 
 #include "early.hpp"
 
 #include <cstdlib>
 
-void rtti::_rtti_bad_dispatch() {
+void boost_mmethod_dispatch::_rtti_bad_dispatch() {
 #ifndef BOOST_NO_EXCEPTIONS
-  throw bad_dispatch();
+  throw boost::mmethod::bad_dispatch();
 #else
   std::abort();
 #endif
 }
 
-rtti::bad_rtti::bad_rtti()
-: std::runtime_error("Invalid pointer passed to rtti::get_node") {}
-rtti::bad_rtti::~bad_rtti() BOOST_NOEXCEPT_OR_NOTHROW {}
+boost::mmethod::bad_rtti::bad_rtti()
+: std::runtime_error("Invalid pointer passed to boost::mmethod::get_node") {}
+boost::mmethod::bad_rtti::~bad_rtti() BOOST_NOEXCEPT_OR_NOTHROW {}
 
-rtti::bad_dispatch::bad_dispatch()
+boost::mmethod::bad_dispatch::bad_dispatch()
 : std::runtime_error("Unresolved call for mmethod") {}
-rtti::bad_dispatch::~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW {}
+boost::mmethod::bad_dispatch::~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW {}

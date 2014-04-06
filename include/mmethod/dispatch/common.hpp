@@ -6,18 +6,18 @@
 #ifndef RTTI_MMETHOD_DISPATCH_COMMON_HPP
 #define RTTI_MMETHOD_DISPATCH_COMMON_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
-#include "mmethod/dispatch/forward.hpp"
-#include "mmethod/dispatch/arity_loop.hpp"
+#include "boost/mmethod/dispatch/forward.hpp"
+#include "boost/mmethod/dispatch/arity_loop.hpp"
 
-#include "mmethod/detail/access.hpp"
+#include "boost/mmethod/detail/access.hpp"
 
-#include "mmethod/export/table.hpp"
+#include "boost/mmethod/export/table.hpp"
 
-#include "mmethod/rtti/getter.hpp"
+#include "boost/mmethod/rtti/getter.hpp"
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -27,6 +27,6 @@ struct get_poles_map {
   { return &get_register<Tag>::template poles<J>::array; }
 };
 
-}}} // rtti::mmethod::detail
+}}} // boost::mmethod::detail
 
 #endif

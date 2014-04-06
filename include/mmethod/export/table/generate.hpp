@@ -6,14 +6,14 @@
 #ifndef RTTI_MMETHOD_TABLE_GENERATE_HPP
 #define RTTI_MMETHOD_TABLE_GENERATE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/export/table/table.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/export/table/table.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -27,7 +27,7 @@ void init_table(std::size_t arity, detail::invoker_table_type& tbl);
 void inse_table(std::size_t arity, invoker_table_type& table, invoker_t inv, rtti_hierarchy* hiers);
 void seal_table(std::size_t arity, invoker_table_type  table, seal_table_type& seal);
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

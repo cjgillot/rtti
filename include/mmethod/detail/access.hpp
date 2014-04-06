@@ -6,9 +6,11 @@
 #ifndef RTTI_MMETHOD_DECLARE_ACCESS_HPP
 #define RTTI_MMETHOD_DECLARE_ACCESS_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
-namespace rtti { namespace mmethod { namespace detail {
+namespace boost {
+namespace mmethod {
+namespace detail {
 
 struct access {
   
@@ -24,6 +26,6 @@ struct access {
 
 };
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

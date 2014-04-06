@@ -6,7 +6,7 @@
 #ifndef RTTI_DECLARE_HPP
 #define RTTI_DECLARE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/declare/declare.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/declare/declare.hpp"
 
 #endif

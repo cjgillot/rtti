@@ -3,22 +3,22 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/export/table.hpp"
+#include "boost/mmethod/export/table.hpp"
 
-#include "mmethod/rtti/holder/node.hpp"
+#include "boost/mmethod/rtti/holder/node.hpp"
 
-using rtti::rtti_type;
+using boost::mmethod::rtti_type;
 
-using rtti::detail::rtti_node;
-using rtti::detail::rtti_hierarchy;
+using boost::mmethod::detail::rtti_node;
+using boost::mmethod::detail::rtti_hierarchy;
 
-using rtti::hash::detail::bucket_t;
-using rtti::hash::detail::hash_map;
-using rtti::hash::detail::value_type;
+using boost::mmethod::hash_detail::bucket_t;
+using boost::mmethod::hash_detail::hash_map;
+using boost::mmethod::hash_detail::value_type;
 
 // can be moved as non-member
 value_type
-rtti::hash::detail::do_fetch_pole(
+boost::mmethod::hash_detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0
 , hash_map::iterator it0

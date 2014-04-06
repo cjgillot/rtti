@@ -6,8 +6,8 @@
 #ifndef RTTI_MMETHOD_DECLARE_TRAITS_HPP
 #define RTTI_MMETHOD_DECLARE_TRAITS_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/traits/tags.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/traits/tags.hpp"
 
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/times.hpp>
@@ -15,7 +15,7 @@
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/reverse_fold.hpp>
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -39,6 +39,6 @@ struct make_declare_traits
   BOOST_STATIC_ASSERT_MSG( (vsize > 0), "At least one virtual parameter must be provided." );
 };
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

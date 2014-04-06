@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/rtti.hpp"
+#include "boost/mmethod/rtti.hpp"
 
 #include <iostream>
 #include <boost/mpl/vector.hpp>
@@ -19,7 +19,7 @@
  * \c baz inherits from both \c foo and \c bar
  */
 
-using namespace rtti;
+using namespace boost::mmethod;
 using boost::mpl::vector;
 
 struct foo

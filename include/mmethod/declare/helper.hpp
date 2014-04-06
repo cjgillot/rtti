@@ -6,14 +6,16 @@
 #ifndef RTTI_MMETHOD_DECLARE_HELPER_HPP
 #define RTTI_MMETHOD_DECLARE_HELPER_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/declare/call.hpp"
-#include "mmethod/declare/traits.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/declare/call.hpp"
+#include "boost/mmethod/declare/traits.hpp"
 
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 
-namespace rtti { namespace mmethod { namespace detail {
+namespace boost {
+namespace mmethod {
+namespace detail {
 
 // detail/access.hpp
 struct access;
@@ -30,7 +32,7 @@ protected:
   typedef typename call_helper::trampoline_type trampoline_type;
 
 private:
-  friend struct rtti::mmethod::detail::access;
+  friend struct boost::mmethod::detail::access;
 
 protected:
   typedef make_declare_helper decl_maker;
@@ -53,6 +55,6 @@ public:
   typedef make_declare_helper<Tag, result, args> type;
 };
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

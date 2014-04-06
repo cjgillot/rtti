@@ -6,9 +6,9 @@
 #ifndef RTTI_MMETHOD_TABLE_HPP
 #define RTTI_MMETHOD_TABLE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/export/table/table.hpp"
-#include "mmethod/export/table/generate.hpp"
-#include "mmethod/export/table/fetch_pole.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/export/table/table.hpp"
+#include "boost/mmethod/export/table/generate.hpp"
+#include "boost/mmethod/export/table/fetch_pole.hpp"
 
 #endif

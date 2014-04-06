@@ -6,16 +6,16 @@
 #ifndef RTTI_HOLDER_NODE_HPP
 #define RTTI_HOLDER_NODE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
-namespace detail {
-namespace holder_ {
+namespace boost {
+namespace mmethod {
+namespace holder_detail {
 
 template<size_t N>
 struct rtti_node_var {
@@ -27,18 +27,18 @@ struct rtti_node_var<0> {
   std::size_t __arity;
 };
 
-}}} // namespace rtti::detail::holder_
+}}} // namespace boost::mmethod::holder_detail
 
-struct rtti::detail::rtti_node {
-  detail::holder_::rtti_node_var<1> self;
+struct boost::mmethod::detail::rtti_node {
+  holder_detail::rtti_node_var<1> self;
 };
 
-inline rtti::rtti_type
-rtti::detail::rtti_get_id(rtti_node const* n)
+inline boost::mmethod::rtti_type
+boost::mmethod::detail::rtti_get_id(rtti_node const* n)
 { return static_cast<rtti_type>(n); }
 
-inline rtti::rtti_node const*
-rtti::detail::rtti_get_base(rtti_node const* n, std::size_t k)
+inline boost::mmethod::rtti_node const*
+boost::mmethod::detail::rtti_get_base(rtti_node const* n, std::size_t k)
 {
   BOOST_ASSERT(n);
   BOOST_ASSERT(k < n->self.__arity);
@@ -46,7 +46,7 @@ rtti::detail::rtti_get_base(rtti_node const* n, std::size_t k)
 }
 
 inline std::size_t
-rtti::detail::rtti_get_base_arity(rtti_node const* n)
+boost::mmethod::detail::rtti_get_base_arity(rtti_node const* n)
 {
   BOOST_ASSERT(n);
   return n->self.__arity;

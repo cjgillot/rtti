@@ -6,16 +6,16 @@
 #ifndef RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 #define RTTI_MMETHOD_HASH_FETCH_POLE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/export/table/table.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/export/table/table.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
-namespace hash {
-namespace detail {
+namespace boost {
+namespace mmethod {
+namespace hash_detail {
 
 extern value_type
 do_fetch_pole(
@@ -41,7 +41,7 @@ fetch_pole(
   return do_fetch_pole(map, rt, it0);
 }
 
-}}} // namespace rtti::hash::detail
+}}} // namespace boost::mmethod::holder_detail
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

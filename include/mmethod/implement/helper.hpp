@@ -6,14 +6,14 @@
 #ifndef RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 #define RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/detail/access.hpp"
-#include "mmethod/declare/trampoline.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/detail/access.hpp"
+#include "boost/mmethod/declare/trampoline.hpp"
 
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -45,6 +45,6 @@ public:
   typedef make_implement_helper<Tag, Over, result, args> type;
 };
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

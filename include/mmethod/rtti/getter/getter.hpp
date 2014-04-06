@@ -6,15 +6,16 @@
 #ifndef RTTI_GETTER_HPP
 #define RTTI_GETTER_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
-#include "mmethod/traits/pointer_traits.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
+#include "boost/mmethod/traits/pointer_traits.hpp"
 
-#include "mmethod/export/exception.hpp"
+#include "boost/mmethod/export/exception.hpp"
 
 #include <utility>
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 namespace detail {
 
 //! \brief Friend structure for in-class rtti access
@@ -36,12 +37,14 @@ struct rtti_getter {
 
 } // namespace detail
 
+using detail::rtti_getter;
+
 //! \brief Get static node
 template<class T>
 inline BOOST_CONSTEXPR rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 static_node() BOOST_NOEXCEPT_OR_NOTHROW {
-  typedef rtti::pointer_traits<T> traits;
+  typedef boost::mmethod::pointer_traits<T> traits;
   return detail::rtti_getter::static_node<typename traits::class_type>();
 }
 
@@ -50,7 +53,7 @@ template<class T>
 inline BOOST_CONSTEXPR rtti_type
 MMETHOD_ATTRIBUTE_PURE
 static_id() BOOST_NOEXCEPT_OR_NOTHROW
-{ return detail::rtti_get_id( rtti::static_node<T>() ); }
+{ return detail::rtti_get_id( boost::mmethod::static_node<T>() ); }
 
 //! \brief Get pointer node
 template<class U>
@@ -58,7 +61,7 @@ inline rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 get_node(U& x)
 {
-  typedef rtti::pointer_traits<U&> traits;
+  typedef boost::mmethod::pointer_traits<U&> traits;
   if(! traits::valid(x)) {
 #ifndef BOOST_NO_EXCEPTIONS
     throw bad_rtti();
@@ -75,7 +78,7 @@ inline rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 get_node(U const& x)
 {
-  typedef rtti::pointer_traits<U const&> traits;
+  typedef boost::mmethod::pointer_traits<U const&> traits;
   if(! traits::valid(x)) {
 #ifndef BOOST_NO_EXCEPTIONS
     throw bad_rtti();
@@ -91,15 +94,15 @@ template<class U>
 inline rtti_type
 MMETHOD_ATTRIBUTE_PURE
 get_id(U& x) BOOST_NOEXCEPT_OR_NOTHROW
-{ return detail::rtti_get_id( rtti::get_node(x) ); }
+{ return detail::rtti_get_id( boost::mmethod::get_node(x) ); }
 
 //! \brief Get object id
 template<class U>
 inline rtti_type
 MMETHOD_ATTRIBUTE_PURE
 get_id(U const& x) BOOST_NOEXCEPT_OR_NOTHROW
-{ return detail::rtti_get_id( rtti::get_node(x) ); }
+{ return detail::rtti_get_id( boost::mmethod::get_node(x) ); }
 
-} // namespace rtti
+}} // namespace boost::mmethod
 
 #endif

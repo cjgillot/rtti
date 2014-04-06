@@ -5,7 +5,7 @@
 
 #include "multifile.hpp"
 
-#include "mmethod/implement.hpp"
+#include "boost/mmethod/implement.hpp"
 
 int foo::f() { return 5; }
 foo* make_foo() { return new foo; }

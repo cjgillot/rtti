@@ -6,13 +6,13 @@
 #ifndef RTTI_MMETHOD_DISPATCH_FETCH_HPP
 #define RTTI_MMETHOD_DISPATCH_FETCH_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/dispatch/common.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/dispatch/common.hpp"
 
 #include <functional>
 #include <boost/fusion/include/at_c.hpp>
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -35,7 +35,7 @@ struct fetch_poles_once {
   void apply() const {
     poles_map_type* map = get_poles_map::get<Tag, J>();
 
-    rtti_hierarchy const h  = ::rtti::get_node(
+    rtti_hierarchy const h  = boost::mmethod::get_node(
       boost::fusion::at_c<J>(tuple)
     );
 
@@ -88,6 +88,6 @@ invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
   return ret;
 }
 
-}}} // rtti::mmethod::detail
+}}} // boost::mmethod::detail
 
 #endif

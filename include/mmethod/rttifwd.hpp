@@ -9,13 +9,14 @@
 #include <stdint.h>
 #include <cstddef>
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 namespace detail {
 
 //! function pointer generic type
@@ -52,7 +53,7 @@ using detail::rtti_get_id;
 using detail::rtti_get_base;
 using detail::rtti_get_base_arity;
 
-} // namespace rtti
+}} // namespace boost::mmethod
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

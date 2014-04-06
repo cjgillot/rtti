@@ -3,9 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
-#include "mmethod/implement.hpp"
+#include "boost/mmethod/rtti.hpp"
+#include "boost/mmethod/mmethod.hpp"
+#include "boost/mmethod/implement.hpp"
 
 #include <iostream>
 #include <boost/shared_ptr.hpp>
@@ -13,7 +13,7 @@
 
 #include <boost/cast.hpp>
 
-using namespace rtti;
+using namespace boost::mmethod;
 using boost::mpl::vector;
 
 struct foo
@@ -43,7 +43,8 @@ struct lap
 
 #define PTR(T) boost::shared_ptr< T >
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 
 template<typename T>
 struct pointer_traits<PTR(T)> {
@@ -53,15 +54,15 @@ struct pointer_traits<PTR(T)> {
   static bool valid(PTR(T) const& v) { return bool(v); }
 
   template<typename U>
-  static typename rtti::traits_detail::remove_all<U>::type
+  static typename boost::mmethod::traits_detail::remove_all<U>::type
   cast(PTR(T) v) {
-    typedef typename rtti::traits_detail::remove_all<U>::type Uclass;
+    typedef typename boost::mmethod::traits_detail::remove_all<U>::type Uclass;
     typedef typename Uclass::element_type O;
     return Uclass(v, boost::polymorphic_downcast<O*>(v.get()));
   }
 };
 
-} // namespace rtti
+}} // namespace boos::mmethod
 
 using tags::_v;
 DECLARE_MMETHOD(f1, int, (_v<PTR(foo) const&>));

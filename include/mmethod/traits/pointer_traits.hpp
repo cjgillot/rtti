@@ -6,14 +6,15 @@
 #ifndef RTTI_TRAITS_HPP
 #define RTTI_TRAITS_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
 #include <boost/mpl/if.hpp>
 
 #include <boost/type_traits.hpp>
 #include <boost/type_traits/is_virtual_base_of.hpp>
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 namespace traits_detail {
 
 template<typename T>
@@ -133,6 +134,6 @@ template<typename T>
 struct pointer_traits<T const volatile&>
 : pointer_traits<T volatile> {};
 
-} // namespace rtti
+}} // namespace boost::mmethod
 
 #endif

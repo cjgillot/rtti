@@ -6,18 +6,18 @@
 #ifndef RTTI_HOLDER_HPP
 #define RTTI_HOLDER_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
-#include "mmethod/rtti/holder/node.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
+#include "boost/mmethod/rtti/holder/node.hpp"
 
 #include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 
-namespace rtti {
-namespace detail {
-namespace holder_ {
+namespace boost {
+namespace mmethod {
+namespace holder_detail {
 
 //! \brief Structure holding class-wide rtti information
 //! \note Arguments must be const-qualified to avoid unnecessary instanciations
@@ -100,10 +100,10 @@ template<class T>
 rtti_node_var<holder<T>::Arity>
   holder<T>::node;
 
-} // namespace holder_
+} // namespace holder_detail
 
-using holder_::get_holder;
+using holder_detail::get_holder;
 
-}} // namespace rtti::detail
+}} // namespace boost::mmethod
 
 #endif

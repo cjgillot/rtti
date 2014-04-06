@@ -5,7 +5,7 @@
 
 #include "multifile.hpp"
 
-#include "mmethod/mmethod.hpp"
+#include "boost/mmethod/mmethod.hpp"
 
 int main() {
   foo* f = make_foo();

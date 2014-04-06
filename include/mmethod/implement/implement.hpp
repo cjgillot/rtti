@@ -6,10 +6,10 @@
 #ifndef RTTI_MMETHOD_IMPLEMENT_HPP
 #define RTTI_MMETHOD_IMPLEMENT_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/implement/helper.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/implement/helper.hpp"
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 
 template<typename Tag, typename Sig>
@@ -24,7 +24,7 @@ protected:
 #define IMPLEMENTATION_MMETHOD(tag, ret, sig)                   \
 template<>                                                      \
 struct tag::overload<ret sig>                                   \
-: ::rtti::mmethod::mmethod_implementation<tag, ret sig> {       \
+: ::boost::mmethod::mmethod_implementation<tag, ret sig> {      \
   static ret call sig;                                          \
   overload() {}                                                 \
 };                                                              \
@@ -34,6 +34,6 @@ ret tag::overload<ret sig>                                      \
 #define IMPLEMENT_MMETHOD(name, ret, sig) \
   IMPLEMENTATION_MMETHOD(MMETHOD_TAG(name), ret, sig)
 
-}} // namespace rtti::mmethod
+}} // namespace boost::mmethod
 
 #endif

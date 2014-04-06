@@ -6,9 +6,9 @@
 #ifndef RTTI_MIXIN_MIXIN_HPP
 #define RTTI_MIXIN_MIXIN_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rtti/mixin/mixin_node.hpp"
-#include "mmethod/rtti/getter.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rtti/mixin/mixin_node.hpp"
+#include "boost/mmethod/rtti/getter.hpp"
 
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/vector.hpp>
@@ -20,7 +20,8 @@
 #include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 
 template<
   typename Derived
@@ -28,7 +29,7 @@ template<
 , typename Declare
 >
 struct mixin
-: public detail::mixin_node::base<
+: public mixin_detail::mixin_node::base<
     Declare::value
   , mixin<Derived, Supers, Declare>
   , Derived
@@ -46,14 +47,14 @@ private:
   struct arity_type { unsigned char __dummy [ 1+arity ]; };
   BOOST_STATIC_ASSERT( sizeof(arity_type) == 1+arity );
 
-  static detail::mixin_node_holder const&
+  static mixin_detail::mixin_node_holder const&
   fetch_node_holder(mixin const& x) {
     Derived const& d = static_cast<Derived const&>(x);
-    return detail::mixin_node::fetch_node_holder(d);
+    return mixin_detail::mixin_node::fetch_node_holder(d);
   }
 
 public:
-  friend struct detail::mixin_node;
+  friend struct mixin_detail::mixin_node;
   friend struct detail::rtti_getter;
   friend arity_type rtti_parents_size_1p(Derived const volatile*) {
     // dummy body : we don't want any call to this
@@ -69,13 +70,14 @@ public:
 
 protected:
   mixin() BOOST_NOEXCEPT_OR_NOTHROW {
-    detail::mixin_node_holder const& nh = mixin::fetch_node_holder(*this);
-    const_cast<detail::mixin_node_holder&>(nh).rtti_node_value
-      = rtti::static_node<Derived>();
+    using mixin_detail::mixin_node_holder;
+    mixin_node_holder const& nh = mixin::fetch_node_holder(*this);
+    const_cast<mixin_node_holder&>(nh).rtti_node_value
+      = boost::mmethod::static_node<Derived>();
   }
   ~mixin() BOOST_NOEXCEPT_OR_NOTHROW {}
 };
 
-} // namespace rtti
+}} // namespace boost::method
 
 #endif

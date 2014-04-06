@@ -6,11 +6,11 @@
 #ifndef RTTI_MMETHOD_HASH_MAP_BASE_IPP
 #define RTTI_MMETHOD_HASH_MAP_BASE_IPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/export/hash_map/hash_map.hpp"
-#include "mmethod/export/hash_map/bucket.ipp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/export/hash_map/hash_map.hpp"
+#include "boost/mmethod/export/hash_map/bucket.ipp"
 
-#include "mmethod/rtti/holder/node.hpp"
+#include "boost/mmethod/rtti/holder/node.hpp"
 
 #include <boost/type_traits/alignment_of.hpp>
 
@@ -18,16 +18,16 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
-namespace hash {
-namespace detail {
+namespace boost {
+namespace mmethod {
+namespace hash_detail {
 
 inline hash_map::hash_map()
 : m_mask(0), m_logsz(0) {}
 
 inline index_type         hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
   uintptr_t v = uintptr_t(a);
-  v /= boost::alignment_of<rtti::rtti_node>::value;
+  v /= boost::alignment_of<boost::mmethod::rtti_node>::value;
   return index_type( v & m_mask );
 }
 
@@ -61,7 +61,7 @@ inline hash_map::iterator hash_map::do_find(key_type key) const BOOST_NOEXCEPT_O
 }
 #endif
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::hash_detail
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

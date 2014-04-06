@@ -6,11 +6,11 @@
 #ifndef RTTI_MMETHOD_DECLARE_HPP
 #define RTTI_MMETHOD_DECLARE_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
-#include "mmethod/declare/register.hpp"
-#include "mmethod/declare/helper.hpp"
-#include "mmethod/declare/traits.hpp"
-#include "mmethod/declare/call.hpp"
+#include "boost/mmethod/declare/register.hpp"
+#include "boost/mmethod/declare/helper.hpp"
+#include "boost/mmethod/declare/traits.hpp"
+#include "boost/mmethod/declare/call.hpp"
 
 #endif

@@ -5,7 +5,7 @@
 
 #include "hierarchy.hpp"
 
-#include "mmethod/rtti/holder/node.hpp"
+#include "boost/mmethod/rtti/holder/node.hpp"
 
 #include "foreach.hpp"
 

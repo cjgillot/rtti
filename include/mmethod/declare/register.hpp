@@ -6,10 +6,11 @@
 #ifndef RTTI_MMETHOD_DECLARE_REGISTER_HPP
 #define RTTI_MMETHOD_DECLARE_REGISTER_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/declare/helper.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/declare/helper.hpp"
 
-namespace rtti { namespace mmethod {
+namespace boost {
+namespace mmethod {
 
 template<typename Tag, typename Sig>
 struct mmethod_register
@@ -27,13 +28,13 @@ public:
   using decl_maker::generate;
 };
 
-}} // namespace rtti::mmethod
+}} // namespace boost::mmethod
 
 #define MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
 
 #define DECLARE_MMETHOD(name, ret, sig) \
 struct MMETHOD_TAG(name)                \
-: rtti::mmethod::mmethod_register<      \
+: boost::mmethod::mmethod_register<     \
   MMETHOD_TAG(name)                     \
 , ret sig   > {                         \
   template<typename> struct overload;   \

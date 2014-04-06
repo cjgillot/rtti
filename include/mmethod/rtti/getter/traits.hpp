@@ -6,11 +6,12 @@
 #ifndef RTTI_GETTER_TRAITS_HPP
 #define RTTI_GETTER_TRAITS_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rtti/getter/getter.hpp"
-#include "mmethod/rtti/mixin/mixin_node.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rtti/getter/getter.hpp"
+#include "boost/mmethod/rtti/mixin/mixin_node.hpp"
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 namespace detail {
 
 template<class M>
@@ -20,7 +21,7 @@ private:
 
 public:
   template<typename D>
-  static mixin_node_holder const&
+  static mixin_detail::mixin_node_holder const&
   get_mixin_node(D const& d) {
     return rtti_get_mixin(d);
   }
@@ -33,6 +34,6 @@ public:
   }
 };
 
-}} // namespace rtti::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

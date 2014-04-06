@@ -8,16 +8,16 @@
 
 #include <stdint.h>
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
-namespace hash {
-namespace detail {
+namespace boost {
+namespace mmethod {
+namespace hash_detail {
 
 typedef rtti_type    key_type;
 typedef uintptr_t  value_type;
@@ -45,7 +45,7 @@ public:
   void reset() BOOST_NOEXCEPT_OR_NOTHROW;
 };
 
-}}} // namespace rtti::hash::detail
+}}} // namespace boost::mmethod::hash_detail
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

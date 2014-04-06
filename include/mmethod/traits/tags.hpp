@@ -6,12 +6,14 @@
 #ifndef RTTI_SHARED_TAGS_HPP
 #define RTTI_SHARED_TAGS_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/count_if.hpp>
 
 // tag templates -> mark dispatch-guilty types (virtual) and the others
-namespace rtti { namespace tags {
+namespace boost {
+namespace mmethod {
+namespace tags {
 
 template<typename T> struct _v { typedef T type; };
 template<typename T> struct _s { typedef T type; };
@@ -63,6 +65,6 @@ template<typename Types>
 struct virtual_size
 : boost::mpl::count_if<Types, is_virtual> {};
 
-}} // namespace rtti::tags
+}}} // namespace boost::mmethod::tags
 
 #endif

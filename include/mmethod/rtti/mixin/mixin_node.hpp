@@ -6,14 +6,15 @@
 #ifndef RTTI_MIXIN_NODE_HPP
 #define RTTI_MIXIN_NODE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
 
-namespace rtti {
-namespace detail {
+namespace boost {
+namespace mmethod {
+namespace mixin_detail {
 
 struct mixin_node_holder {
-  rtti::rtti_node const* rtti_node_value;
+  rtti_node const* rtti_node_value;
 };
 
 #ifdef MMETHOD_VIRTUAL_INHERITANCE
@@ -25,7 +26,7 @@ struct mixin_node {
   {
     friend struct mixin_node;
 
-    friend detail::mixin_node_holder const&
+    friend mixin_node_holder const&
     rtti_get_mixin(Derived const& d) {
       Mixin const& m = static_cast<Mixin const&>(d);
       base const& b = static_cast<base const&>(m);
@@ -61,7 +62,7 @@ struct mixin_node::base<true, Mixin, Derived>
 {
   friend struct mixin_node;
 
-  friend detail::mixin_node_holder const&
+  friend mixin_node_holder const&
   rtti_get_mixin(Derived const& d) {
     return static_cast<base const&>(d);
   }
@@ -69,6 +70,6 @@ struct mixin_node::base<true, Mixin, Derived>
 
 #endif
 
-}} // namespace rtti::detail
+}}} // namespace boost::mmethod::mixin_detail
 
 #endif

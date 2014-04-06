@@ -6,10 +6,10 @@
 #ifndef RTTI_MMETHOD_DISPATCH_SEAL_HPP
 #define RTTI_MMETHOD_DISPATCH_SEAL_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/dispatch/common.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/dispatch/common.hpp"
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -51,6 +51,6 @@ void dispatch<Tag,Ret>::seal() {
   detail::seal_table(arity, get_register<Tag>::invoker_table, seal_table);
 }
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

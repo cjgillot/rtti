@@ -6,15 +6,16 @@
 #ifndef RTTI_GETTER_IPP
 #define RTTI_GETTER_IPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
-#include "mmethod/rtti/getter/getter.hpp"
-#include "mmethod/rtti/getter/traits.hpp"
+#include "boost/mmethod/rtti/getter/getter.hpp"
+#include "boost/mmethod/rtti/getter/traits.hpp"
 
-#include "mmethod/rtti/holder/holder.hpp"
-#include "mmethod/rtti/mixin/mixin_node.hpp"
+#include "boost/mmethod/rtti/holder/holder.hpp"
+#include "boost/mmethod/rtti/mixin/mixin_node.hpp"
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 namespace detail {
 
 template<class T>
@@ -32,6 +33,6 @@ rtti_getter::get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW {
   return *traits::get_mixin_node(x).rtti_node_value;
 }
 
-}} // namespace rtti::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

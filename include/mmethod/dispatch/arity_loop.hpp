@@ -6,9 +6,9 @@
 #ifndef RTTI_MMETHOD_DISPATCH_ARITY_LOOP_HPP
 #define RTTI_MMETHOD_DISPATCH_ARITY_LOOP_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -35,6 +35,6 @@ struct arity_loop {
   }
 };
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

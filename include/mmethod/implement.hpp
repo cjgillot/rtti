@@ -6,8 +6,8 @@
 #ifndef RTTI_MMETHOD_TPP
 #define RTTI_MMETHOD_TPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/dispatch/dispatch.hpp"
-#include "mmethod/implement/implement.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/dispatch/dispatch.hpp"
+#include "boost/mmethod/implement/implement.hpp"
 
 #endif

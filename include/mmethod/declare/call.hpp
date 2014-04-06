@@ -6,35 +6,34 @@
 #ifndef RTTI_MMETHOD_DECLARE_CALL_HPP
 #define RTTI_MMETHOD_DECLARE_CALL_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
-#include "mmethod/declare/traits.hpp"
-#include "mmethod/declare/trampoline.hpp"
+#include "boost/mmethod/declare/traits.hpp"
+#include "boost/mmethod/declare/trampoline.hpp"
 
-#include "mmethod/dispatch/forward.hpp"
+#include "boost/mmethod/dispatch/forward.hpp"
 
-#include "mmethod/detail/iterate.hpp"
+#include "boost/mmethod/detail/iterate.hpp"
 
 #include <boost/mpl/size.hpp>
 #include <boost/fusion/tuple.hpp>
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
-namespace detail {
 namespace call_detail {
 
 template<std::size_t Arity>
 struct make_declare_call_base;
 
-}}}} // namespace rtti::mmethod::detail::call_detail
+}}} // namespace boost::mmethod::call_detail
 
-#define BOOST_PP_FILENAME_1 "mmethod/declare/call_template.hpp"
+#define BOOST_PP_FILENAME_1 "boost/mmethod/declare/call_template.hpp"
 #define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
 #include BOOST_PP_ITERATE()
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -46,6 +45,6 @@ struct make_declare_call
   Tag, Ret, Args
 > {};
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

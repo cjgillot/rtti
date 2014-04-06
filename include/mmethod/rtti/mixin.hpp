@@ -6,12 +6,13 @@
 #ifndef RTTI_MIXIN_HPP
 #define RTTI_MIXIN_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rtti/mixin/mixin.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rtti/mixin/mixin.hpp"
 
 #include <boost/mpl/vector.hpp>
 
-namespace rtti {
+namespace boost {
+namespace mmethod {
 
 //! \brief Base case
 template<typename klass>
@@ -29,6 +30,6 @@ struct implement_rtti
 , boost::false_type
 > {};
 
-} // namespace rtti
+}} // namespace boost::mmethod
 
 #endif

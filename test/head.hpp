@@ -1,13 +1,13 @@
 #ifndef HEAD_HPP
 #define HEAD_HPP
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
+#include "boost/mmethod/rtti.hpp"
+#include "boost/mmethod/mmethod.hpp"
 
 #include <memory>
 #include <boost/mpl/vector.hpp>
 
-using namespace rtti;
+using namespace boost::mmethod;
 using boost::mpl::vector;
 
 struct foo

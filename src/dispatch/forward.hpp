@@ -11,7 +11,7 @@
 #include "dispatch/hierarchy.hpp"
 #include "dispatch/overloads.hpp"
 
-namespace rtti_dispatch {
+namespace boost_mmethod_dispatch {
 
 
 // from dispatch.cpp
@@ -35,6 +35,6 @@ extern void output_tables(
   const early_bindings_type& decl
 );
 
-} // namespace rtti_dispatch
+} // namespace boost_mmethod_dispatch
 
 #endif

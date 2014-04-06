@@ -6,12 +6,12 @@
 #ifndef RTTI_MMETHOD_DISPATCH_INSERT_HPP
 #define RTTI_MMETHOD_DISPATCH_INSERT_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/dispatch/common.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/dispatch/common.hpp"
 
 #include <boost/mpl/at.hpp>
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -25,7 +25,7 @@ struct save_poles_once {
   void apply() {
     typedef typename boost::mpl::at_c<Tuple, J>::type arg_type;
 
-    *h = ::rtti::static_node< arg_type >();
+    *h = boost::mmethod::static_node< arg_type >();
     ++h;
   }
 };
@@ -57,6 +57,6 @@ void dispatch<Tag,Ret>::insert(F const& f) {
   detail::inse_table(arity, get_register<Tag>::invoker_table, inv, hiers);
 }
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

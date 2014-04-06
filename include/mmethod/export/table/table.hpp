@@ -6,9 +6,9 @@
 #ifndef RTTI_MMETHOD_TABLE_TABLE_HPP
 #define RTTI_MMETHOD_TABLE_TABLE_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
-#include "mmethod/export/hash_map.hpp"
+#include "boost/mmethod/config.hpp"
+#include "boost/mmethod/rttifwd.hpp"
+#include "boost/mmethod/export/hash_map.hpp"
 
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
@@ -21,15 +21,15 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
-using rtti::invoker_t;
+using boost::mmethod::invoker_t;
 BOOST_STATIC_ASSERT_MSG( sizeof(invoker_t) <= sizeof(uintptr_t), "Platform not supported" );
 
 //! useful typedefs
-typedef hash::detail::hash_map poles_map_type;
+typedef hash_detail::hash_map poles_map_type;
 typedef invoker_t* invoker_table_type;
 
 //! structure holding tables
@@ -57,7 +57,7 @@ struct get_register
     typename boost::remove_cv<Tag>::type
 > {};
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

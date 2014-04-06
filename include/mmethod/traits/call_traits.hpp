@@ -6,7 +6,7 @@
 #ifndef MMETHOD_CALL_TRAITS_HPP
 #define MMETHOD_CALL_TRAITS_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 #include <boost/call_traits.hpp>
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES

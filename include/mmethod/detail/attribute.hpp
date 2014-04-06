@@ -5,7 +5,7 @@
 
 // allow room for some optimizations
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
 #ifndef MMETHOD_ATTRIBUTE_PURE
 #if defined(__GNUC__)

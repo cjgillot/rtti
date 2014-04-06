@@ -6,18 +6,17 @@
 #ifndef RTTI_MMETHOD_TRAMPOLINE_HPP
 #define RTTI_MMETHOD_TRAMPOLINE_HPP
 
-#include "mmethod/config.hpp"
+#include "boost/mmethod/config.hpp"
 
-#include "mmethod/traits/pointer_traits.hpp"
-#include "mmethod/traits/call_traits.hpp"
+#include "boost/mmethod/traits/pointer_traits.hpp"
+#include "boost/mmethod/traits/call_traits.hpp"
 
-#include "mmethod/detail/iterate.hpp"
+#include "boost/mmethod/detail/iterate.hpp"
 
 #include <boost/mpl/size.hpp>
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
-namespace detail {
 namespace trampoline_detail {
 
 template<typename In>
@@ -40,15 +39,15 @@ struct caster
 template<std::size_t Arity>
 struct trampoline_base;
 
-}}}} // namespace rtti::mmethod::detail::trampoline_detail
+}}} // namespace boost::mmethod::trampoline_detail
 
-#define BOOST_PP_FILENAME_1 "mmethod/declare/trampoline_template.hpp"
+#define BOOST_PP_FILENAME_1 "boost/mmethod/declare/trampoline_template.hpp"
 #define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
 #include BOOST_PP_ITERATE()
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
 namespace detail {
 
@@ -60,6 +59,6 @@ struct make_trampoline
     TAG, Ret, Types, Tags
 > {};
 
-}}} // namespace rtti::mmethod::detail
+}}} // namespace boost::mmethod::detail
 
 #endif

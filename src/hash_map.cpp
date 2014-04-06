@@ -3,14 +3,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/export/hash_map.hpp"
+#include "boost/mmethod/export/hash_map.hpp"
 
-using rtti::rtti_type;
-using rtti::detail::rtti_node;
-using rtti::hash::detail::bucket_t;
-using rtti::hash::detail::hash_map;
-using rtti::hash::detail::key_type;
-using rtti::hash::detail::value_type;
+using boost::mmethod::rtti_type;
+using boost::mmethod::detail::rtti_node;
+using boost::mmethod::hash_detail::bucket_t;
+using boost::mmethod::hash_detail::hash_map;
+using boost::mmethod::hash_detail::key_type;
+using boost::mmethod::hash_detail::value_type;
 
 #define BADBUCKET (&(m_array[m_mask + 1]))
 

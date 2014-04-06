@@ -9,7 +9,7 @@
 
 #include <vector>
 
-void rtti_dispatch::process_declaration(early_bindings_type const& decl, seal_table_type& output)
+void boost_mmethod_dispatch::process_declaration(early_bindings_type const& decl, seal_table_type& output)
 {
   std::size_t arity = decl.arity;
 

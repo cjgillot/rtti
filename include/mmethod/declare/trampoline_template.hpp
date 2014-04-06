@@ -3,11 +3,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/detail/prefix.hpp"
+#include "boost/mmethod/detail/prefix.hpp"
 
-namespace rtti {
+namespace boost {
 namespace mmethod {
-namespace detail {
 namespace trampoline_detail {
 
 template<>
@@ -58,6 +57,6 @@ Over
   ::apply<Over, Ret2, Types2>
   ::over;
 
-}}}} // namespace rtti::mmethod::detail::trampoline_detail
+}}} // namespace boost::mmethod::trampoline_detail
 
-#include "mmethod/detail/suffix.hpp"
+#include "boost/mmethod/detail/suffix.hpp"
