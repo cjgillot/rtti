@@ -17,7 +17,7 @@ struct mixin_node_holder {
   rtti_node const* rtti_node_value;
 };
 
-#ifdef MMETHOD_VIRTUAL_INHERITANCE
+#ifdef BOOST_MMETHOD_VIRTUAL_INHERITANCE
 
 struct mixin_node {
   template<bool Declare, typename Mixin, typename Derived>

@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_HASH_FETCH_POLE_HPP
-#define RTTI_MMETHOD_HASH_FETCH_POLE_HPP
+#ifndef BOOST_MMETHOD_HASH_FETCH_POLE_HPP
+#define BOOST_MMETHOD_HASH_FETCH_POLE_HPP
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/export/table/table.hpp"
@@ -25,7 +25,7 @@ do_fetch_pole(
 ) BOOST_NOEXCEPT_OR_NOTHROW;
 
 inline value_type
-MMETHOD_ATTRIBUTE_PURE
+BOOST_MMETHOD_ATTRIBUTE_PURE
 fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt

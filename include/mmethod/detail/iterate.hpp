@@ -11,4 +11,4 @@
 
 #include "boost/mmethod/traits/call_traits.hpp"
 
-#define MMETHOD_MAX_ITERATION 2
+#define BOOST_MMETHOD_MAX_ITERATION 2

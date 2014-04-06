@@ -10,4 +10,4 @@
 int foo::f() { return 5; }
 foo* make_foo() { return new foo; }
 
-IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return a.f(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo& a)) { return a.f(); }

@@ -4,13 +4,13 @@
 
 #include <cstdio>
 
-IMPLEMENT_MMETHOD(vf1, void, (foo*,int)) {}
-IMPLEMENT_MMETHOD(vf1, void, (baz*,int)) {}
-IMPLEMENT_MMETHOD(vf1, void, (bar*,int)) {}
+BOOST_MMETHOD_IMPLEMENT(vf1, void, (foo*,int)) {}
+BOOST_MMETHOD_IMPLEMENT(vf1, void, (baz*,int)) {}
+BOOST_MMETHOD_IMPLEMENT(vf1, void, (bar*,int)) {}
 
-IMPLEMENT_MMETHOD(vf2, void, (foo*, foo&)) {}
-IMPLEMENT_MMETHOD(vf2, void, (baz*, bar&)) {}
-IMPLEMENT_MMETHOD(vf2, void, (baz*, baz&)) {}
+BOOST_MMETHOD_IMPLEMENT(vf2, void, (foo*, foo&)) {}
+BOOST_MMETHOD_IMPLEMENT(vf2, void, (baz*, bar&)) {}
+BOOST_MMETHOD_IMPLEMENT(vf2, void, (baz*, baz&)) {}
 
 foo::~foo() {}
 

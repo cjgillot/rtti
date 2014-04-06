@@ -39,16 +39,16 @@ struct lap
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo&>));
+BOOST_MMETHOD_DECLARE(f1, int, (_v<foo&>));
 
-IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return a.f(); }
-IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return a.g(); }
-IMPLEMENT_MMETHOD(f1, int, (baz& a)) { return 2 * a.f(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo& a)) { return a.f(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (bar& a)) { return a.g(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (baz& a)) { return 2 * a.f(); }
 
 int main() {
   lap l;
 
-  typedef MMETHOD_TAG(f1)::function_type func_t;
+  typedef BOOST_MMETHOD_TAG(f1)::function_type func_t;
   func_t fp = f1.fetch(l);
 
   std::cout << fp(l) << std::endl; // prints 42

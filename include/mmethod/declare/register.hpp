@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_DECLARE_REGISTER_HPP
-#define RTTI_MMETHOD_DECLARE_REGISTER_HPP
+#ifndef BOOST_MMETHOD_DECLARE_REGISTER_HPP
+#define BOOST_MMETHOD_DECLARE_REGISTER_HPP
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/declare/helper.hpp"
@@ -30,15 +30,15 @@ public:
 
 }} // namespace boost::mmethod
 
-#define MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
+#define BOOST_MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
 
-#define DECLARE_MMETHOD(name, ret, sig) \
-struct MMETHOD_TAG(name)                \
+#define BOOST_MMETHOD_DECLARE(name, ret, sig) \
+struct BOOST_MMETHOD_TAG(name)          \
 : boost::mmethod::mmethod_register<     \
-  MMETHOD_TAG(name)                     \
+  BOOST_MMETHOD_TAG(name)               \
 , ret sig   > {                         \
   template<typename> struct overload;   \
 }; \
-static MMETHOD_TAG(name) name /* ; */
+static BOOST_MMETHOD_TAG(name) name /* ; */
 
 #endif

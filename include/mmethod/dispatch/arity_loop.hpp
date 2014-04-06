@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_DISPATCH_ARITY_LOOP_HPP
-#define RTTI_MMETHOD_DISPATCH_ARITY_LOOP_HPP
+#ifndef BOOST_MMETHOD_DISPATCH_ARITY_LOOP_HPP
+#define BOOST_MMETHOD_DISPATCH_ARITY_LOOP_HPP
 
 #include "boost/mmethod/config.hpp"
 

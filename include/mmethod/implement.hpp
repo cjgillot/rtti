@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_TPP
-#define RTTI_MMETHOD_TPP
+#ifndef BOOST_MMETHOD_TPP
+#define BOOST_MMETHOD_TPP
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/dispatch/dispatch.hpp"

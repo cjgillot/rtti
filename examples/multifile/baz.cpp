@@ -16,4 +16,4 @@ struct baz
 
 foo* make_baz() { return new baz; }
 
-IMPLEMENT_MMETHOD(f1, int, (baz& a)) { return 2 * a.f(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (baz& a)) { return 2 * a.f(); }

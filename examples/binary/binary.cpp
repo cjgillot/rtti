@@ -47,15 +47,15 @@ struct bar3
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo1&>, _v<bar1&>));
+BOOST_MMETHOD_DECLARE(f1, int, (_v<foo1&>, _v<bar1&>));
 
-IMPLEMENT_MMETHOD(f1, int, (foo1& a, bar1& b)) { return 0; }
-IMPLEMENT_MMETHOD(f1, int, (foo2& a, bar2& b)) { return 13; }
-IMPLEMENT_MMETHOD(f1, int, (foo3& a, bar1& b)) { return 8; }
-IMPLEMENT_MMETHOD(f1, int, (foo1& a, bar2& b)) { return 42; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1& a, bar1& b)) { return 0; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo2& a, bar2& b)) { return 13; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo3& a, bar1& b)) { return 8; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1& a, bar2& b)) { return 42; }
 
 // foo3-bar2 is ambiguous : foo3-bar1 and foo1-bar2 are equally good matches
-IMPLEMENT_MMETHOD(f1, int, (foo3& a, bar2& b)) { return 255; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo3& a, bar2& b)) { return 255; }
 
 int main() {
   foo1 a; foo2 b; foo3 c;

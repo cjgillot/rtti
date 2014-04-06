@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_DISPATCH_FORWARD_HPP
-#define RTTI_MMETHOD_DISPATCH_FORWARD_HPP
+#ifndef BOOST_MMETHOD_DISPATCH_FORWARD_HPP
+#define BOOST_MMETHOD_DISPATCH_FORWARD_HPP
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/rttifwd.hpp"
@@ -26,7 +26,7 @@ struct dispatch {
   }
 
   template<typename Tuple>
-  invoker_t MMETHOD_ATTRIBUTE_PURE fetch(Tuple const& args) const;
+  invoker_t BOOST_MMETHOD_ATTRIBUTE_PURE fetch(Tuple const& args) const;
 
   template<typename K, typename F>
   void insert(F const& f);

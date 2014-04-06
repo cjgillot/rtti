@@ -95,29 +95,29 @@ struct Girrafe: public Prey_abstract
 //----------------------
 using boost::mmethod::tags::_v;
 
-DECLARE_MMETHOD(huntor, ResultType, (_v<Predator_abstract const&>, _v<Prey_abstract const&>));
+BOOST_MMETHOD_DECLARE(huntor, ResultType, (_v<Predator_abstract const&>, _v<Prey_abstract const&>));
 
-IMPLEMENT_MMETHOD(huntor, ResultType, ( Lion const&, Gazelle const& ))
+BOOST_MMETHOD_IMPLEMENT(huntor, ResultType, ( Lion const&, Gazelle const& ))
 {
   std::cout<<"Lion jumps on Gazelle and bites its neck.\n";
 }
  
-IMPLEMENT_MMETHOD(huntor, ResultType, ( Lion const&, Girrafe const& ))
+BOOST_MMETHOD_IMPLEMENT(huntor, ResultType, ( Lion const&, Girrafe const& ))
 {
   std::cout<<"Lion jumps on Girrafe and bites its ass.\n";
 }
 
-IMPLEMENT_MMETHOD(huntor, ResultType, ( Anaconda const&, Gazelle const& ))
+BOOST_MMETHOD_IMPLEMENT(huntor, ResultType, ( Anaconda const&, Gazelle const& ))
 {
   std::cout<<"Anaconda injects venom into Gazelle.\n";
 }
 
-IMPLEMENT_MMETHOD(huntor, ResultType, ( Anaconda const&, Girrafe const& ))
+BOOST_MMETHOD_IMPLEMENT(huntor, ResultType, ( Anaconda const&, Girrafe const& ))
 {
   std::cout<<"Anaconda ignores Girraffe.\n";
 }
 
-IMPLEMENT_MMETHOD(huntor, ResultType, ( Bear const&, Prey_abstract const& prey ))
+BOOST_MMETHOD_IMPLEMENT(huntor, ResultType, ( Bear const&, Prey_abstract const& prey ))
 {
   std::cout<<"Bear mauls "<<prey.i_am_a()<<"\n";
 }

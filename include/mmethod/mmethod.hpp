@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_HPP
-#define RTTI_MMETHOD_HPP
+#ifndef BOOST_MMETHOD_HPP
+#define BOOST_MMETHOD_HPP
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/declare/declare.hpp"
@@ -32,7 +32,7 @@
 
 /*! \file declare.hpp
 
-  The declaration of a mmethod passes by the \c MMETHOD_DECLARE macro.
+  The declaration of a mmethod passes by the \c BOOST_MMETHOD_DECLARE macro.
   It takes following arguments :
   - the name of the mmethod
   - the return type
@@ -54,13 +54,13 @@ class bar
 using rtti::tags::_v;
 
 // f1 is unary : only the first argument, of type [foo*], is used in resolution
-MMETHOD_DECLARE(f1, void, (_v<foo*>, bar&));
+BOOST_MMETHOD_DECLARE(f1, void, (_v<foo*>, bar&));
 
 // f2 is binary : both arguments are used in resolution
-MMETHOD_DECLARE(f2, int, (_v<foo*>, _v<bar&>));
+BOOST_MMETHOD_DECLARE(f2, int, (_v<foo*>, _v<bar&>));
 
 // f3 does not compile : the tag must be the outmost template
-// MMETHOD_DECLARE(f3, float, (_v<foo>* ));
+// BOOST_MMETHOD_DECLARE(f3, float, (_v<foo>* ));
   \endcode
 
   Arguments to a mmethod may be pointer or references.
@@ -87,7 +87,7 @@ MMETHOD_DECLARE(f2, int, (_v<foo*>, _v<bar&>));
 
 /*! \file implement.hpp
 
-  The definition of a mmethod passes by the \c MMETHOD_IMPLEMENT macro.
+  The definition of a mmethod passes by the \c BOOST_MMETHOD_IMPLEMENT macro.
   It takes following arguments :
   - the name of the mmethod
   - the return type
@@ -95,7 +95,7 @@ MMETHOD_DECLARE(f2, int, (_v<foo*>, _v<bar&>));
   
   and it expects the function body to follow.
 
-  The argument list must not be tagged as in \c MMETHOD_DECLARE.
+  The argument list must not be tagged as in \c BOOST_MMETHOD_DECLARE.
 
   \code
 class foo
@@ -108,13 +108,13 @@ class bar
 template<typename T> using _v = rtti::tags::virtual_<T>;
 
 // f1 is unary
-MMETHOD_DECLARE(f1, void, (_v<foo>* ));
+BOOST_MMETHOD_DECLARE(f1, void, (_v<foo>* ));
 
 // first case
-MMETHOD_IMPLEMENT(f1, void, (foo* a)) { a->do_something(); }
+BOOST_MMETHOD_IMPLEMENT(f1, void, (foo* a)) { a->do_something(); }
 
 // second case
-MMETHOD_IMPLEMENT(f1, void, (bar* a)) { a->do_something_else(); }
+BOOST_MMETHOD_IMPLEMENT(f1, void, (bar* a)) { a->do_something_else(); }
   \endcode
   
   MMethod implement may be spread across translation units.

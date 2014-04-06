@@ -41,28 +41,28 @@ protected:
 
 protected:
 
-#define MMETHOD_TRAMPOLINE_FUNC_ARGS \
-    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
+#define BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS \
+    BOOST_PP_ENUM(BOOST_PP_ITERATION(), BOOST_MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
 
   inline func_t fetch(
-    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+    BOOST_MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
     typedef boost::fusion::tuple<
-      MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(unwrapped_args)
+      BOOST_MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(unwrapped_args)
     > tuple_type;
-    invoker_t inv = m_dispatch.fetch( tuple_type(MMETHOD_TRAMPOLINE_FUNC_ARGS) );
+    invoker_t inv = m_dispatch.fetch( tuple_type(BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS) );
     return reinterpret_cast<func_t>(inv);
   }
   inline Ret operator()(
-    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+    BOOST_MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
-    func_t f = this->fetch(MMETHOD_TRAMPOLINE_FUNC_ARGS);
-    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    func_t f = this->fetch(BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    return (Ret) (*f)(BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
-#undef MMETHOD_TRAMPOLINE_FUNC_ARGS
+#undef BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS
 
 }; // apply
 

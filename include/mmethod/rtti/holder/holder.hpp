@@ -47,13 +47,13 @@ public:
 
   static inline
   const rtti_node*
-  MMETHOD_ATTRIBUTE_PURE
+  BOOST_MMETHOD_ATTRIBUTE_PURE
   get_node() BOOST_NOEXCEPT_OR_NOTHROW
   { initializer.touch(); return reinterpret_cast<rtti_node*>(&node); }
 
   static inline
   rtti_type
-  MMETHOD_ATTRIBUTE_PURE
+  BOOST_MMETHOD_ATTRIBUTE_PURE
   get_id() BOOST_NOEXCEPT_OR_NOTHROW
   { return rtti_get_id( get_node() ); }
 };

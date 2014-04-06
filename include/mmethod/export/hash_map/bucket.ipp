@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
-#define RTTI_MMETHOD_HASH_MAP_BUCKET_IPP
+#ifndef BOOST_MMETHOD_HASH_MAP_BUCKET_IPP
+#define BOOST_MMETHOD_HASH_MAP_BUCKET_IPP
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/export/hash_map/bucket.hpp"

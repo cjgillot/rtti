@@ -65,11 +65,11 @@ struct pointer_traits<PTR(T)> {
 }} // namespace boos::mmethod
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<PTR(foo) const&>));
+BOOST_MMETHOD_DECLARE(f1, int, (_v<PTR(foo) const&>));
 
-IMPLEMENT_MMETHOD(f1, int, (PTR(foo) const& a)) { return a->f(); }
-IMPLEMENT_MMETHOD(f1, int, (PTR(bar) a)) { return a->g(); }
-IMPLEMENT_MMETHOD(f1, int, (PTR(baz) a)) { return 2 * a->f(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (PTR(foo) const& a)) { return a->f(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (PTR(bar) a)) { return a->g(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (PTR(baz) a)) { return 2 * a->f(); }
 
 int main() {
   PTR(foo) f ( new foo );

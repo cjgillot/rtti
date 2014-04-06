@@ -18,32 +18,32 @@ template<typename TAG, typename Ret, typename Types, typename Tags>
 struct callback {
   typedef Ret return_type;
 
-#define MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D)      \
+#define BOOST_MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D)      \
     trampoline_detail::caster<                  \
-      MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Tags)    \
-    , MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types)   \
+      BOOST_MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Tags)    \
+    , BOOST_MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types)   \
     >::template cast<                           \
-      MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2)  \
-    >( MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,D) )
+      BOOST_MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2)  \
+    >( BOOST_MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,D) )
 
-#define MMETHOD_TRAMPOLINE_FUNC_ARGS \
-    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_CAST_ARG, BOOST_PP_EMPTY)
+#define BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS \
+    BOOST_PP_ENUM(BOOST_PP_ITERATION(), BOOST_MMETHOD_TRAMPOLINE_FUNC_CAST_ARG, BOOST_PP_EMPTY)
 
-  typedef Ret (*sig_t)(MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(Types));
+  typedef Ret (*sig_t)(BOOST_MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(Types));
 
   template<typename Over, typename Ret2, typename Types2>
   struct apply {
     static Over over;
     static Ret call(
-      MMETHOD_TRAMPOLINE_FUNC_PARMS(Types)
-    ) MMETHOD_ATTRIBUTE_ALIGNED
+      BOOST_MMETHOD_TRAMPOLINE_FUNC_PARMS(Types)
+    ) BOOST_MMETHOD_ATTRIBUTE_ALIGNED
     {
-      return over.call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+      return over.call(BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS);
     }
   };
 
-#undef MMETHOD_TRAMPOLINE_FUNC_ARGS
-#undef MMETHOD_TRAMPOLINE_FUNC_CAST_ARG
+#undef BOOST_MMETHOD_TRAMPOLINE_FUNC_ARGS
+#undef BOOST_MMETHOD_TRAMPOLINE_FUNC_CAST_ARG
 
 }; // struct callback
 

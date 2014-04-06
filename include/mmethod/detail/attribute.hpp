@@ -7,18 +7,18 @@
 
 #include "boost/mmethod/config.hpp"
 
-#ifndef MMETHOD_ATTRIBUTE_PURE
+#ifndef BOOST_MMETHOD_ATTRIBUTE_PURE
 #if defined(__GNUC__)
-#define MMETHOD_ATTRIBUTE_PURE __attribute__((pure))
+#define BOOST_MMETHOD_ATTRIBUTE_PURE __attribute__((pure))
 #else
-#define MMETHOD_ATTRIBUTE_PURE
+#define BOOST_MMETHOD_ATTRIBUTE_PURE
 #endif
 #endif
 
-#ifndef MMETHOD_ATTRIBUTE_ALIGNED
+#ifndef BOOST_MMETHOD_ATTRIBUTE_ALIGNED
 #ifdef __GNUC__
-#define MMETHOD_ATTRIBUTE_ALIGNED __attribute__((aligned(2)))
+#define BOOST_MMETHOD_ATTRIBUTE_ALIGNED __attribute__((aligned(2)))
 #else
-#define MMETHOD_ATTRIBUTE_ALIGNED
+#define BOOST_MMETHOD_ATTRIBUTE_ALIGNED
 #endif
 #endif

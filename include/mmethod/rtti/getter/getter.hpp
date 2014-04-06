@@ -42,7 +42,7 @@ using detail::rtti_getter;
 //! \brief Get static node
 template<class T>
 inline BOOST_CONSTEXPR rtti_node const*
-MMETHOD_ATTRIBUTE_PURE
+BOOST_MMETHOD_ATTRIBUTE_PURE
 static_node() BOOST_NOEXCEPT_OR_NOTHROW {
   typedef boost::mmethod::pointer_traits<T> traits;
   return detail::rtti_getter::static_node<typename traits::class_type>();
@@ -51,14 +51,14 @@ static_node() BOOST_NOEXCEPT_OR_NOTHROW {
 //! \brief Get static id
 template<class T>
 inline BOOST_CONSTEXPR rtti_type
-MMETHOD_ATTRIBUTE_PURE
+BOOST_MMETHOD_ATTRIBUTE_PURE
 static_id() BOOST_NOEXCEPT_OR_NOTHROW
 { return detail::rtti_get_id( boost::mmethod::static_node<T>() ); }
 
 //! \brief Get pointer node
 template<class U>
 inline rtti_node const*
-MMETHOD_ATTRIBUTE_PURE
+BOOST_MMETHOD_ATTRIBUTE_PURE
 get_node(U& x)
 {
   typedef boost::mmethod::pointer_traits<U&> traits;
@@ -75,7 +75,7 @@ get_node(U& x)
 //! \brief Get pointer node
 template<class U>
 inline rtti_node const*
-MMETHOD_ATTRIBUTE_PURE
+BOOST_MMETHOD_ATTRIBUTE_PURE
 get_node(U const& x)
 {
   typedef boost::mmethod::pointer_traits<U const&> traits;
@@ -92,14 +92,14 @@ get_node(U const& x)
 //! \brief Get object id
 template<class U>
 inline rtti_type
-MMETHOD_ATTRIBUTE_PURE
+BOOST_MMETHOD_ATTRIBUTE_PURE
 get_id(U& x) BOOST_NOEXCEPT_OR_NOTHROW
 { return detail::rtti_get_id( boost::mmethod::get_node(x) ); }
 
 //! \brief Get object id
 template<class U>
 inline rtti_type
-MMETHOD_ATTRIBUTE_PURE
+BOOST_MMETHOD_ATTRIBUTE_PURE
 get_id(U const& x) BOOST_NOEXCEPT_OR_NOTHROW
 { return detail::rtti_get_id( boost::mmethod::get_node(x) ); }
 

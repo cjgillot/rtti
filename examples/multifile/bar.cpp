@@ -19,4 +19,4 @@ struct bar
 int bar::g() { return 42; }
 foo* make_bar() { return new bar; }
 
-IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return a.g(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (bar& a)) { return a.g(); }

@@ -10,9 +10,9 @@
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
 
-#define MMETHOD_INLINE_DO_FIND
+#define BOOST_MMETHOD_INLINE_DO_FIND
 
-#define MMETHOD_VIRTUAL_INHERITANCE
+#define BOOST_MMETHOD_VIRTUAL_INHERITANCE
 
 #include "boost/mmethod/detail/attribute.hpp"
 

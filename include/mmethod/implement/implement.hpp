@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_IMPLEMENT_HPP
-#define RTTI_MMETHOD_IMPLEMENT_HPP
+#ifndef BOOST_MMETHOD_IMPLEMENT_HPP
+#define BOOST_MMETHOD_IMPLEMENT_HPP
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/implement/helper.hpp"
@@ -21,7 +21,7 @@ protected:
   mmethod_implementation() BOOST_NOEXCEPT_OR_NOTHROW {}
 };
 
-#define IMPLEMENTATION_MMETHOD(tag, ret, sig)                   \
+#define BOOST_MMETHOD_IMPLEMENTATION(tag, ret, sig)             \
 template<>                                                      \
 struct tag::overload<ret sig>                                   \
 : ::boost::mmethod::mmethod_implementation<tag, ret sig> {      \
@@ -31,8 +31,8 @@ struct tag::overload<ret sig>                                   \
 ret tag::overload<ret sig>                                      \
   ::call sig /* definition here */
 
-#define IMPLEMENT_MMETHOD(name, ret, sig) \
-  IMPLEMENTATION_MMETHOD(MMETHOD_TAG(name), ret, sig)
+#define BOOST_MMETHOD_IMPLEMENT(name, ret, sig) \
+  BOOST_MMETHOD_IMPLEMENTATION(BOOST_MMETHOD_TAG(name), ret, sig)
 
 }} // namespace boost::mmethod
 

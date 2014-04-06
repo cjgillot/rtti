@@ -53,11 +53,11 @@ struct lap
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo1&>));
+BOOST_MMETHOD_DECLARE(f1, int, (_v<foo1&>));
 
-IMPLEMENT_MMETHOD(f1, int, (foo1&a)) { return 5; }
-IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return 7; }
-IMPLEMENT_MMETHOD(f1, int, (lap& a)) { return 15; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1&a)) { return 5; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (bar& a)) { return 7; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (lap& a)) { return 15; }
 
 int main() {
   foo1 f; bar r; baz z; lap l;
