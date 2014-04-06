@@ -21,6 +21,9 @@ namespace detail {
 
 //! \brief Friend structure for in-class rtti access
 struct rtti_getter {
+  //! \brief Traits structure
+  template<class M>
+  struct traits;
 
   //! \brief Get static node
   template<class T>
