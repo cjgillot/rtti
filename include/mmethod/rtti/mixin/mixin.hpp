@@ -28,7 +28,12 @@ template<
 , typename Declare
 >
 struct mixin
-: private virtual detail::mixin_node {
+: public detail::mixin_node::base<
+    Declare::value
+  , mixin<Derived, Supers, Declare>
+  , Derived
+  >
+{
 
 private:
   // parent classes manipulation
@@ -41,11 +46,15 @@ private:
   struct arity_type { unsigned char __dummy [ 1+arity ]; };
   BOOST_STATIC_ASSERT( sizeof(arity_type) == 1+arity );
 
-public:
-  friend struct detail::rtti_getter;
-  friend mixin const& rtti_get_mixin(Derived const& d) {
-    return static_cast<mixin const&>(d);
+  static detail::mixin_node_holder const&
+  fetch_node_holder(mixin const& x) {
+    Derived const& d = static_cast<Derived const&>(x);
+    return detail::mixin_node::fetch_node_holder(d);
   }
+
+public:
+  friend struct detail::mixin_node;
+  friend struct detail::rtti_getter;
   friend arity_type rtti_parents_size_1p(Derived const volatile*) {
     // dummy body : we don't want any call to this
     return boost::declval<arity_type>();
@@ -60,7 +69,9 @@ public:
 
 protected:
   mixin() BOOST_NOEXCEPT_OR_NOTHROW {
-    this->detail::mixin_node::rtti_node_value = rtti::static_node<Derived>();
+    detail::mixin_node_holder const& nh = mixin::fetch_node_holder(*this);
+    const_cast<detail::mixin_node_holder&>(nh).rtti_node_value
+      = rtti::static_node<Derived>();
   }
   ~mixin() BOOST_NOEXCEPT_OR_NOTHROW {}
 };

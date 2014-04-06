@@ -20,7 +20,7 @@ private:
 
 public:
   template<typename D>
-  static mixin_node const&
+  static mixin_node_holder const&
   get_mixin_node(D const& d) {
     return rtti_get_mixin(d);
   }
