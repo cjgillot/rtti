@@ -10,6 +10,8 @@
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
 
+#define BOOST_MMETHOD_MAX_ITERATION 2
+
 #define BOOST_MMETHOD_INLINE_DO_FIND
 
 #define BOOST_MMETHOD_VIRTUAL_INHERITANCE
