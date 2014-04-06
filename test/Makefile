@@ -1,6 +1,6 @@
 CXX=g++
 BUILDDIR=../build/mmethod/
-CXXFLAGS+=-g -std=c++11 -I../include -DNDEBUG -fno-exceptions -fno-rtti -O3 -march=corei7 -mtune=corei7 -pedantic -fomit-frame-pointer
+CXXFLAGS+=-g -std=c++11 -I../include -DNDEBUG -fno-exceptions -fno-rtti -O3 -march=corei7 -mtune=corei7 -pedantic -fomit-frame-pointer -O3 -fexpensive-optimizations
 LDFLAGS+=-L../build/src/ -lrtti -fwhole-program 
 EXE=./exe
 
@@ -27,7 +27,7 @@ clean:
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 %.s: %.cpp
-	$(CXX) -S $< -o $@ $(CXXFLAGS) -fverbose-asm -g
+	$(CXX) -S $< -o $@ $(CXXFLAGS) -g0
 
 asm: $(ASM)
 
