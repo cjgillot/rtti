@@ -5,7 +5,7 @@
 
 #include "mmethod/rtti.hpp"
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
 /*!\example multiple.cpp
@@ -21,6 +21,8 @@
 
 using namespace rtti;
 using boost::mpl::vector;
+
+namespace {
 
 struct foo
 : base_rtti<foo> {
@@ -39,18 +41,12 @@ struct baz
 , implement_rtti<baz, vector<foo, bar> >
 {};
 
-int main() {
+} // namespace
+
+BOOST_AUTO_TEST_CASE(multiple) {
   foo f; bar r; baz z;
 
-  std::cout << "Classes IDs :" << std::endl;
-  std::cout << "- [foo] " << static_id<foo>() << std::endl;
-  std::cout << "- [bar] " << static_id<bar>() << std::endl;
-  std::cout << "- [baz] " << static_id<baz>() << std::endl;
-
-  std::cout << "Objects IDs :" << std::endl;
-  std::cout << "- [foo] " << get_id(f) << std::endl;
-  std::cout << "- [bar] " << get_id(r) << std::endl;
-  std::cout << "- [baz] " << get_id(z) << std::endl;
-
-  return 0;
+  BOOST_CHECK_EQUAL( static_id<foo>(), get_id(f) );
+  BOOST_CHECK_EQUAL( static_id<bar>(), get_id(r) );
+  BOOST_CHECK_EQUAL( static_id<baz>(), get_id(z) );
 }
