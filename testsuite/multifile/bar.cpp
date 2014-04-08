@@ -9,6 +9,8 @@
 
 #include <boost/mpl/vector.hpp>
 
+namespace test_multifile {
+
 struct bar
 : foo
 , implement_rtti<bar, boost::mpl::vector<foo> >
@@ -20,3 +22,5 @@ int bar::g() { return 42; }
 foo* make_bar() { return new bar; }
 
 IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return a.g(); }
+
+} // namespace test_multifile

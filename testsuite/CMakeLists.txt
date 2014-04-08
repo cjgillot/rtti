@@ -15,11 +15,9 @@ add_subdirectory(diamond)
 add_subdirectory(prefetch)
 add_subdirectory(multifile)
 add_subdirectory(smart_ptr)
-add_subdirectory(predator_prey)
 
 # TESTSUITE
 file(GLOB_RECURSE tests *.cpp)
 
 add_executable(testsuite ${tests})
-target_link_libraries(testsuite rtti)
-target_link_libraries(testsuite -static boost_unit_test_framework)
+target_link_libraries(testsuite rtti boost_unit_test_framework)

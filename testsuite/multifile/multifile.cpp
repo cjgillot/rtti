@@ -7,18 +7,20 @@
 
 #include "mmethod/mmethod.hpp"
 
-int main() {
+#include <boost/test/unit_test.hpp>
+
+using namespace test_multifile;
+
+BOOST_AUTO_TEST_CASE(multifile) {
   foo* f = make_foo();
   foo* r = make_bar();
   foo* z = make_baz();
 
-  std::cout << f1(*f) << std::endl; // prints 5
-  std::cout << f1(*r) << std::endl; // prints 42
-  std::cout << f1(*z) << std::endl; // prints 10
+  BOOST_CHECK_EQUAL( f1(*f), 5  );
+  BOOST_CHECK_EQUAL( f1(*r), 42 );
+  BOOST_CHECK_EQUAL( f1(*z), 10 );
 
   delete f;
   delete r;
   delete z;
-
-  return 0;
 }

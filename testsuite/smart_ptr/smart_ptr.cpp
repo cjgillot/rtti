@@ -7,14 +7,37 @@
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/vector.hpp>
-
 #include <boost/cast.hpp>
 
 using namespace rtti;
 using boost::mpl::vector;
+
+#define PTR(T) boost::shared_ptr< T >
+
+namespace rtti {
+
+template<typename T>
+struct pointer_traits<PTR(T)> {
+  typedef typename boost::remove_cv<T>::type class_type;
+
+  static T& get(PTR(T) const& v) { return *v; }
+  static bool valid(PTR(T) const& v) { return bool(v); }
+
+  template<typename U>
+  static typename rtti::traits_detail::remove_all<U>::type
+  cast(PTR(T) v) {
+    typedef typename rtti::traits_detail::remove_all<U>::type Uclass;
+    typedef typename Uclass::element_type O;
+    return Uclass(v, boost::polymorphic_downcast<O*>(v.get()));
+  }
+};
+
+} // namespace rtti
+
+namespace {
 
 struct foo
 : base_rtti<foo> {
@@ -41,28 +64,6 @@ struct lap
 , implement_rtti<lap, vector<bar> >
 {};
 
-#define PTR(T) boost::shared_ptr< T >
-
-namespace rtti {
-
-template<typename T>
-struct pointer_traits<PTR(T)> {
-  typedef typename boost::remove_cv<T>::type class_type;
-
-  static T& get(PTR(T) const& v) { return *v; }
-  static bool valid(PTR(T) const& v) { return bool(v); }
-
-  template<typename U>
-  static typename rtti::traits_detail::remove_all<U>::type
-  cast(PTR(T) v) {
-    typedef typename rtti::traits_detail::remove_all<U>::type Uclass;
-    typedef typename Uclass::element_type O;
-    return Uclass(v, boost::polymorphic_downcast<O*>(v.get()));
-  }
-};
-
-} // namespace rtti
-
 using tags::_v;
 DECLARE_MMETHOD(f1, int, (_v<PTR(foo) const&>));
 
@@ -70,16 +71,16 @@ IMPLEMENT_MMETHOD(f1, int, (PTR(foo) const& a)) { return a->f(); }
 IMPLEMENT_MMETHOD(f1, int, (PTR(bar) a)) { return a->g(); }
 IMPLEMENT_MMETHOD(f1, int, (PTR(baz) a)) { return 2 * a->f(); }
 
-int main() {
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(smart_ptr) {
   PTR(foo) f ( new foo );
   PTR(bar) r ( new bar );
   PTR(baz) z ( new baz );
   PTR(lap) l ( new lap );
 
-  std::cout << f1(f) << std::endl; // prints 5
-  std::cout << f1(r) << std::endl; // prints 42
-  std::cout << f1(z) << std::endl; // prints 10
-  std::cout << f1(l) << std::endl; // prints 42 (lap is-a bar)
-  
-  return 0;
+  BOOST_CHECK_EQUAL( f1(f),  5 );
+  BOOST_CHECK_EQUAL( f1(r), 42 );
+  BOOST_CHECK_EQUAL( f1(z), 10 );
+  BOOST_CHECK_EQUAL( f1(l), 42 ); // (lap is-a bar)
 }

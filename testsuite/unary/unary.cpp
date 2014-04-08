@@ -7,11 +7,13 @@
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
 using namespace rtti;
 using boost::mpl::vector;
+
+namespace {
 
 struct foo
 : base_rtti<foo>
@@ -46,13 +48,13 @@ IMPLEMENT_MMETHOD(f1, int, (foo const& a)) { return a.f(); }
 IMPLEMENT_MMETHOD(f1, int, (bar const& a)) { return a.g(); }
 IMPLEMENT_MMETHOD(f1, int, (baz const& a)) { return 2 * a.f(); }
 
-int main() {
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(unary) {
   foo f; bar r; baz z; lap l;
 
-  std::cout << f1(f) << std::endl; // prints 5
-  std::cout << f1(r) << std::endl; // prints 42
-  std::cout << f1(z) << std::endl; // prints 10
-  std::cout << f1(l) << std::endl; // prints 42 (lap is-a bar)
-  
-  return 0;
+  BOOST_CHECK_EQUAL( f1(f),  5 );
+  BOOST_CHECK_EQUAL( f1(r), 42 );
+  BOOST_CHECK_EQUAL( f1(z), 10 );
+  BOOST_CHECK_EQUAL( f1(l), 42 ); // (lap is-a bar)
 }

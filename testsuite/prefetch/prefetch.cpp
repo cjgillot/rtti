@@ -7,11 +7,13 @@
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
 using namespace rtti;
 using boost::mpl::vector;
+
+namespace {
 
 struct foo
 : base_rtti<foo> {
@@ -39,19 +41,21 @@ struct lap
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo&>));
+DECLARATION_MMETHOD(f1_t, int, (_v<foo&>));
 
-IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return a.f(); }
-IMPLEMENT_MMETHOD(f1, int, (bar& a)) { return a.g(); }
-IMPLEMENT_MMETHOD(f1, int, (baz& a)) { return 2 * a.f(); }
+IMPLEMENTATION_MMETHOD(f1_t, int, (foo& a)) { return a.f(); }
+IMPLEMENTATION_MMETHOD(f1_t, int, (bar& a)) { return a.g(); }
+IMPLEMENTATION_MMETHOD(f1_t, int, (baz& a)) { return 2 * a.f(); }
 
-int main() {
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(prefetch) {
+  f1_t f1;
+
   lap l;
 
-  typedef MMETHOD_TAG(f1)::function_type func_t;
+  typedef f1_t::function_type func_t;
   func_t fp = f1.fetch(l);
 
-  std::cout << fp(l) << std::endl; // prints 42
-
-  return 0;
+  BOOST_CHECK_EQUAL( fp(l), 42 );
 }
