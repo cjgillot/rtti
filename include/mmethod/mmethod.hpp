@@ -8,7 +8,7 @@
 
 #include "mmethod/config.hpp"
 #include "mmethod/declare/declare.hpp"
-#include "mmethod/dispatch/dispatch.hpp"
+#include "mmethod/dispatch.hpp"
 
 /*! \page RTTI.MMethod library
 

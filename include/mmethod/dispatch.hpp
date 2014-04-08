@@ -9,7 +9,7 @@
 #include "mmethod/config.hpp"
 #include "mmethod/dispatch/forward.hpp"
 
-#include "mmethod/dispatch/initialize.hpp"
+#include "mmethod/dispatch/generate.hpp"
 #include "mmethod/dispatch/insert.hpp"
 #include "mmethod/dispatch/fetch.hpp"
 #include "mmethod/dispatch/seal.hpp"

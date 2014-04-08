@@ -11,43 +11,28 @@
 
 namespace rtti {
 namespace mmethod {
-namespace detail {
 
 /// main dispatch function
 template<typename Tag, typename Ret>
 struct dispatch {
-  dispatch() {
-    struct initializer_t {
-      initializer_t() { dispatch::initialize(); };
-      void touch() {}
-    }
-    static initializer;
-    initializer.touch();
-  }
+  inline dispatch();
 
   template<typename Tuple>
-  invoker_t MMETHOD_ATTRIBUTE_PURE fetch(Tuple const& args) const;
+  inline invoker_t MMETHOD_ATTRIBUTE_PURE fetch(Tuple const& args) const;
 
   template<typename K, typename F>
-  void insert(F const& f);
+  inline void insert(F const& f);
 
-  void generate() const {
-    struct sealer_t {
-      sealer_t() { dispatch::seal(); };
-      void touch() {}
-    }
-    static sealer;
-    sealer.touch();
-  }
+  inline void generate() const;
 
 private:
   // must only be called by ctor
-  static void initialize();
+  inline static void initialize();
 
   // must only be called by generate
-  static void seal();
+  inline static void seal();
 };
 
-}}} // rtti::mmethod::detail
+}} // rtti::mmethod
 
 #endif

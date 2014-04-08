@@ -50,6 +50,13 @@ struct register_base {
 
 };
 
+template<typename Tag>
+invoker_table_type register_base<Tag>::invoker_table;
+
+template<typename Tag>
+template<std::size_t J>
+poles_map_type register_base<Tag>::poles<J>::array;
+
 //! structure holding tables
 template<typename Tag>
 struct get_register

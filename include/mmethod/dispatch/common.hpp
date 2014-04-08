@@ -19,7 +19,10 @@
 
 namespace rtti {
 namespace mmethod {
-namespace detail {
+namespace dispatch_detail {
+
+using detail::poles_map_type;
+using detail::get_register;
 
 struct get_poles_map {
   template<typename Tag, std::size_t J>
@@ -27,6 +30,6 @@ struct get_poles_map {
   { return &get_register<Tag>::template poles<J>::array; }
 };
 
-}}} // rtti::mmethod::detail
+}}} // rtti::mmethod::dispatch_detail
 
 #endif
