@@ -9,11 +9,19 @@
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/dispatch/common.hpp"
 
+#include "mmethod/export/table.hpp"
+
 namespace boost {
 namespace mmethod {
-namespace detail {
 
-namespace {
+template<typename Tag, typename Ret>
+void dispatch<Tag,Ret>::initialize() {
+  enum { arity = detail::access::traits<Tag>::vsize };
+
+  detail::init_table(arity, detail::get_register<Tag>::invoker_table);
+}
+
+namespace dispatch_detail {
 
 template<typename Tag>
 struct seal_poles_once {
@@ -34,23 +42,23 @@ struct seal_poles {
   }
 };
 
-} // namespace <>
+} // namespace dispatch_detail
 
 template<typename Tag, typename Ret>
 void dispatch<Tag,Ret>::seal() {
   enum {
-    arity = access::traits<Tag>::vsize
-  , btset = access::traits<Tag>::type_bitset
+    arity = detail::access::traits<Tag>::vsize
+  , btset = detail::access::traits<Tag>::type_bitset
   };
 
-  poles_map_type* poles [ arity ];
-  seal_table_type seal_table = { get_register<Tag>::invoker_table, poles };
+  detail::poles_map_type* poles [ arity ];
+  detail::seal_table_type seal_table = { detail::get_register<Tag>::invoker_table, poles };
 
-  seal_poles<Tag, btset>::eval( poles );
+  dispatch_detail::seal_poles<Tag, btset>::eval( poles );
 
-  detail::seal_table(arity, get_register<Tag>::invoker_table, seal_table);
+  detail::seal_table(arity, detail::get_register<Tag>::invoker_table, seal_table);
 }
 
-}}} // namespace boost::mmethod::detail
+}} // namespace boost::mmethod
 
 #endif

@@ -7,7 +7,7 @@
 #define BOOST_MMETHOD_TPP
 
 #include "boost/mmethod/config.hpp"
-#include "boost/mmethod/dispatch/dispatch.hpp"
+#include "boost/mmethod/dispatch.hpp"
 #include "boost/mmethod/implement/implement.hpp"
 
 #endif

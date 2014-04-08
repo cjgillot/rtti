@@ -7,7 +7,7 @@
 #include "boost/mmethod/mmethod.hpp"
 #include "boost/mmethod/implement.hpp"
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
 using namespace boost::mmethod;
@@ -24,6 +24,8 @@ using boost::mpl::vector;
  * \c bar has a statically defined id \c bar_id
  * \c baz and \c lap respectively inherit from \c foo and \c bar
  */
+
+namespace {
 
 struct foo1
 : base_rtti<foo1> {
@@ -55,17 +57,17 @@ struct lap
 using tags::_v;
 BOOST_MMETHOD_DECLARE(f1, int, (_v<foo1&>));
 
-BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1&a)) { return 5; }
-BOOST_MMETHOD_IMPLEMENT(f1, int, (bar& a)) { return 7; }
-BOOST_MMETHOD_IMPLEMENT(f1, int, (lap& a)) { return 15; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1&)) { return 5; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (bar &)) { return 7; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (lap &)) { return 15; }
 
-int main() {
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(diamond) {
   foo1 f; bar r; baz z; lap l;
 
-  std::cout << f1(f) << std::endl; // prints 5
-  std::cout << f1(r) << std::endl; // prints 7
-  std::cout << f1(z) << std::endl; // prints 5
-  std::cout << f1(l) << std::endl; // prints 15
-  
-  return 0;
+  BOOST_CHECK_EQUAL( f1(f), 5  );
+  BOOST_CHECK_EQUAL( f1(r), 7  );
+  BOOST_CHECK_EQUAL( f1(z), 5  );
+  BOOST_CHECK_EQUAL( f1(l), 15 );
 }

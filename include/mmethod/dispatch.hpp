@@ -9,7 +9,7 @@
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/dispatch/forward.hpp"
 
-#include "boost/mmethod/dispatch/initialize.hpp"
+#include "boost/mmethod/dispatch/generate.hpp"
 #include "boost/mmethod/dispatch/insert.hpp"
 #include "boost/mmethod/dispatch/fetch.hpp"
 #include "boost/mmethod/dispatch/seal.hpp"

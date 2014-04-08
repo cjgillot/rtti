@@ -3,11 +3,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "multifile.hpp"
-
-#include "boost/mmethod/implement.hpp"
-
-int foo::f() { return 5; }
-foo* make_foo() { return new foo; }
-
-BOOST_MMETHOD_IMPLEMENT(f1, int, (foo& a)) { return a.f(); }
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>

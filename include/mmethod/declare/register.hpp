@@ -32,13 +32,16 @@ public:
 
 #define BOOST_MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
 
-#define BOOST_MMETHOD_DECLARE(name, ret, sig) \
-struct BOOST_MMETHOD_TAG(name)          \
-: boost::mmethod::mmethod_register<     \
-  BOOST_MMETHOD_TAG(name)               \
-, ret sig   > {                         \
-  template<typename> struct overload;   \
-}; \
+#define BOOST_MMETHOD_DECLARATION(tag, ret, sig)        \
+struct tag                                              \
+: boost::mmethod::mmethod_register<                     \
+  tag                                                   \
+, ret sig   > {                                         \
+  template<typename> struct overload;                   \
+} /* ; */
+
+#define BOOST_MMETHOD_DECLARE(name, ret, sig)                   \
+BOOST_MMETHOD_DECLARATION(BOOST_MMETHOD_TAG(name), ret, sig);   \
 static BOOST_MMETHOD_TAG(name) name /* ; */
 
 #endif

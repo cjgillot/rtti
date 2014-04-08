@@ -9,14 +9,15 @@
 
 #include <boost/mpl/vector.hpp>
 
-struct bar
+namespace test_multifile {
+
+struct baz
 : foo
-, implement_rtti<bar, boost::mpl::vector<foo> >
-{
-  int g();
-};
+, implement_rtti<baz, boost::mpl::vector<foo> >
+{};
 
-int bar::g() { return 42; }
-foo* make_bar() { return new bar; }
+foo* make_baz() { return new baz; }
 
-BOOST_MMETHOD_IMPLEMENT(f1, int, (bar& a)) { return a.g(); }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (baz& a)) { return 2 * a.f(); }
+
+} // namespace test_multifile

@@ -8,7 +8,7 @@
 
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/declare/declare.hpp"
-#include "boost/mmethod/dispatch/dispatch.hpp"
+#include "boost/mmethod/dispatch.hpp"
 
 /*! \page RTTI.MMethod library
 

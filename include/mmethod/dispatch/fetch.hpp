@@ -14,9 +14,8 @@
 
 namespace boost {
 namespace mmethod {
-namespace detail {
 
-namespace {
+namespace dispatch_detail {
 
 /// fetch_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data
 /// equivalent pseudo-code :
@@ -68,7 +67,7 @@ struct fetch_invoker<1, Tag, BTS> {
   }
 };
 
-} // namespace <>
+} // namespace dispatch_detail
 
 /// main dispatch function
 template<typename Tag, typename Ret>
@@ -77,17 +76,17 @@ invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
   this->generate();
 
   enum {
-    arity = access::traits<Tag>::vsize,
-    btset = access::traits<Tag>::type_bitset
+    arity = detail::access::traits<Tag>::vsize,
+    btset = detail::access::traits<Tag>::type_bitset
   };
 
-  uintptr_t spec = fetch_poles  <arity, Tag, btset>::eval( args );
-  invoker_t ret  = fetch_invoker<arity, Tag, btset>::eval( spec );
+  uintptr_t spec = dispatch_detail::fetch_poles  <arity, Tag, btset>::eval( args );
+  invoker_t ret  = dispatch_detail::fetch_invoker<arity, Tag, btset>::eval( spec );
   BOOST_ASSERT(ret);
 
   return ret;
 }
 
-}}} // boost::mmethod::detail
+}} // boost::mmethod
 
 #endif

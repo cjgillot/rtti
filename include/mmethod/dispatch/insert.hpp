@@ -13,9 +13,8 @@
 
 namespace boost {
 namespace mmethod {
-namespace detail {
 
-namespace {
+namespace dispatch_detail {
 
 template<typename Tag, typename Tuple>
 struct save_poles_once {
@@ -39,24 +38,24 @@ struct save_poles {
   }
 };
 
-} // namespace <>
+} // namespace dispatch_detail
 
 template<typename Tag, typename Ret>
 template<typename K, typename F>
 void dispatch<Tag,Ret>::insert(F const& f) {
   enum {
-    arity = access::traits<Tag>::vsize
-  , btset = access::traits<Tag>::type_bitset
+    arity = detail::access::traits<Tag>::vsize
+  , btset = detail::access::traits<Tag>::type_bitset
   };
   rtti_hierarchy hiers [ arity ];
 
-  save_poles<Tag, btset>::eval( hiers, static_cast<K*>(NULL) );
+  dispatch_detail::save_poles<Tag, btset>::eval( hiers, static_cast<K*>(NULL) );
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
-  detail::inse_table(arity, get_register<Tag>::invoker_table, inv, hiers);
+  detail::inse_table(arity, dispatch_detail::get_register<Tag>::invoker_table, inv, hiers);
 }
 
-}}} // namespace boost::mmethod::detail
+}} // namespace boost::mmethod
 
 #endif

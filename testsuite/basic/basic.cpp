@@ -5,7 +5,7 @@
 
 #include "boost/mmethod/rtti.hpp"
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
 /*!\example basic.cpp
@@ -22,6 +22,8 @@
 
 using namespace boost::mmethod;
 using boost::mpl::vector;
+
+namespace {
 
 struct foo
 : base_rtti<foo> {
@@ -44,20 +46,13 @@ struct lap
 , implement_rtti<lap, vector<bar> >
 {};
 
-int main() {
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(basic) {
   foo f; bar r; baz z; lap l;
 
-  std::cout << "Classes IDs :" << std::endl;
-  std::cout << "- [foo] " << static_id<foo>() << std::endl;
-  std::cout << "- [bar] " << static_id<bar>() << std::endl;
-  std::cout << "- [baz] " << static_id<baz>() << std::endl;
-  std::cout << "- [lap] " << static_id<lap>() << std::endl;
-
-  std::cout << "Objects IDs :" << std::endl;
-  std::cout << "- [foo] " << get_id(f) << std::endl;
-  std::cout << "- [bar] " << get_id(r) << std::endl;
-  std::cout << "- [baz] " << get_id(z) << std::endl;
-  std::cout << "- [lap] " << get_id(l) << std::endl;
-
-  return 0;
+  BOOST_CHECK_EQUAL( static_id<foo>(), get_id(f) );
+  BOOST_CHECK_EQUAL( static_id<bar>(), get_id(r) );
+  BOOST_CHECK_EQUAL( static_id<baz>(), get_id(z) );
+  BOOST_CHECK_EQUAL( static_id<lap>(), get_id(l) );
 }

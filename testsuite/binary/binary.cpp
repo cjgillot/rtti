@@ -7,12 +7,13 @@
 #include "boost/mmethod/mmethod.hpp"
 #include "boost/mmethod/implement.hpp"
 
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
 using namespace boost::mmethod;
 using boost::mpl::vector;
 
-#include <iostream>
+namespace {
 
 struct foo1
 : base_rtti<foo1> {
@@ -49,27 +50,27 @@ struct bar3
 using tags::_v;
 BOOST_MMETHOD_DECLARE(f1, int, (_v<foo1&>, _v<bar1&>));
 
-BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1& a, bar1& b)) { return 0; }
-BOOST_MMETHOD_IMPLEMENT(f1, int, (foo2& a, bar2& b)) { return 13; }
-BOOST_MMETHOD_IMPLEMENT(f1, int, (foo3& a, bar1& b)) { return 8; }
-BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1& a, bar2& b)) { return 42; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1&, bar1&)) { return 0; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo2&, bar2&)) { return 13; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo3&, bar1&)) { return 8; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1&, bar2&)) { return 42; }
 
 // foo3-bar2 is ambiguous : foo3-bar1 and foo1-bar2 are equally good matches
-BOOST_MMETHOD_IMPLEMENT(f1, int, (foo3& a, bar2& b)) { return 255; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo3&, bar2&)) { return 255; }
 
-int main() {
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(binary) {
   foo1 a; foo2 b; foo3 c;
   bar1 x; bar2 y; bar3 z;
 
-  std::cout << f1(a, x) << std::endl; // prints 0    (1-1 case)
-  std::cout << f1(a, y) << std::endl; // prints 42   (1-2 case)
-  std::cout << f1(a, z) << std::endl; // prints 0    (1-1 case)
-  std::cout << f1(b, x) << std::endl; // prints 0    (1-1 case)
-  std::cout << f1(b, y) << std::endl; // prints 13   (2-2 case)
-  std::cout << f1(b, z) << std::endl; // prints 0    (1-1 case)
-  std::cout << f1(c, x) << std::endl; // prints 8    (3-1 case)
-  std::cout << f1(c, y) << std::endl; // prints 255  (3-2 case)
-  std::cout << f1(c, z) << std::endl; // prints 8    (3-1 case)
-
-  return 0;
+  BOOST_CHECK_EQUAL( f1(a, x), 0   ); // (1-1 case)
+  BOOST_CHECK_EQUAL( f1(a, y), 42  ); // (1-2 case)
+  BOOST_CHECK_EQUAL( f1(a, z), 0   ); // (1-1 case)
+  BOOST_CHECK_EQUAL( f1(b, x), 0   ); // (1-1 case)
+  BOOST_CHECK_EQUAL( f1(b, y), 13  ); // (2-2 case)
+  BOOST_CHECK_EQUAL( f1(b, z), 0   ); // (1-1 case)
+  BOOST_CHECK_EQUAL( f1(c, x), 8   ); // (3-1 case)
+  BOOST_CHECK_EQUAL( f1(c, y), 255 ); // (3-2 case)
+  BOOST_CHECK_EQUAL( f1(c, z), 8   ); // (3-1 case)
 }

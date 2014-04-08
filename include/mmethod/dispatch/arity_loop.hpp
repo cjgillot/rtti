@@ -10,7 +10,7 @@
 
 namespace boost {
 namespace mmethod {
-namespace detail {
+namespace dispatch_detail {
 
 template<std::size_t J, std::size_t BTS>
 struct arity_loop_helper {
@@ -35,6 +35,6 @@ struct arity_loop {
   }
 };
 
-}}} // namespace boost::mmethod::detail
+}}} // namespace boost::mmethod::dispatch_detail
 
 #endif

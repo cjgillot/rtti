@@ -11,11 +11,13 @@
 
 using namespace boost::mmethod;
 
+namespace test_multifile {
+
 struct foo
 : base_rtti<foo> {
 public:
   virtual ~foo() {}
-  
+
   int f();
 };
 
@@ -25,5 +27,7 @@ BOOST_MMETHOD_DECLARE(f1, int, (_v<foo&>));
 foo* make_foo();
 foo* make_bar();
 foo* make_baz();
+
+} // namespace test_multifile
 
 #endif

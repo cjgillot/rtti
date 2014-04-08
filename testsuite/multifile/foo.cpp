@@ -7,13 +7,11 @@
 
 #include "boost/mmethod/implement.hpp"
 
-#include <boost/mpl/vector.hpp>
+namespace test_multifile {
 
-struct baz
-: foo
-, implement_rtti<baz, boost::mpl::vector<foo> >
-{};
+int foo::f() { return 5; }
+foo* make_foo() { return new foo; }
 
-foo* make_baz() { return new baz; }
+BOOST_MMETHOD_IMPLEMENT(f1, int, (foo& a)) { return a.f(); }
 
-BOOST_MMETHOD_IMPLEMENT(f1, int, (baz& a)) { return 2 * a.f(); }
+} // namespace test_multifile

@@ -5,7 +5,7 @@
 
 #include "boost/mmethod/rtti.hpp"
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
 /*!\example hierarchy.cpp
@@ -24,13 +24,13 @@
 using namespace boost::mmethod;
 using boost::mpl::vector;
 
+namespace {
+
 struct foo
 : base_rtti<foo> {
 public:
   virtual ~foo() {}
 };
-
-const int bar_id = 6;
 
 struct bar
 : foo
@@ -42,34 +42,26 @@ struct baz
 , implement_rtti<baz, vector<bar> >
 {};
 
-int main() {
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(hierarchy) {
   baz z;
 
-  std::cout << "Nodes :" << std::endl;
-  std::cout << "- [foo] : " << static_node<foo>() << " id = " << static_id<foo>() << std::endl;
-  std::cout << "- [bar] : " << static_node<bar>() << " id = " << static_id<bar>() << std::endl;
-  std::cout << "- [baz] : " << static_node<baz>() << " id = " << static_id<baz>() << std::endl;
-
   // static_id<> is a shorhand for static_node<>()->id
-  BOOST_ASSERT( rtti_get_id( static_node<foo>() ) == static_id<foo>() );
+  BOOST_REQUIRE_EQUAL( rtti_get_id( static_node<foo>() ), static_id<foo>() );
 
-  // explore hierarchy
+  // sanity
   rtti_hierarchy h = get_node(z);
+  BOOST_CHECK_EQUAL( h, static_node<baz>()       );
+  BOOST_REQUIRE_EQUAL( rtti_get_base_arity(h), 1 );
 
-  // the node is inlined in baz
-  BOOST_ASSERT( h                == static_node<baz>()       );
-  BOOST_ASSERT( rtti_get_id  (h) == rtti_get_id  (static_node<baz>()) );
-  BOOST_ASSERT( rtti_get_base(h) == rtti_get_base(static_node<baz>()) );
+  // verify hierarchy
+  h = rtti_get_base(h, 0);
+  BOOST_CHECK_EQUAL( h, static_node<bar>() );
+  BOOST_REQUIRE_EQUAL( rtti_get_base_arity(h), 1 );
 
-  // hierarchy traversal
-  for(int k = 0;; ++k) {
-    std::cout << "Level " << k << " : " << rtti_get_id(h) << std::endl;
-    
-    if(rtti_get_base_arity(h))
-      h = rtti_get_base(h);
-    else
-      break;
-  }
-
-  return 0;
+  // second argument to get_base is defaulted to 0
+  h = rtti_get_base(h);
+  BOOST_CHECK_EQUAL( h, static_node<foo>() );
+  BOOST_REQUIRE_EQUAL( rtti_get_base_arity(h), 0 );
 }
