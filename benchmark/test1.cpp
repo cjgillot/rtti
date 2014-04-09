@@ -46,8 +46,6 @@ double time(F&& fnc, char const* s) {
   return t1;
 }
 
-static void u() {}
-
 void test(foo* f, std::size_t N) {
   f->func();
 
