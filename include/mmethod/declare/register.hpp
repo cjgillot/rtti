@@ -9,7 +9,7 @@
 #include "mmethod/config.hpp"
 #include "mmethod/declare/helper.hpp"
 
-#include "mmethod/ambiguity/null_policy.hpp"
+#include "mmethod/policy/default_policy.hpp"
 
 namespace rtti { namespace mmethod {
 
@@ -43,7 +43,7 @@ struct tag                                      \
 } /* ; */
 
 #define DECLARATION_MMETHOD(tag, ret, sig)      \
-DECLARATION_MMETHOD_POLICY(tag, ret, sig, rtti::mmethod::ambiguity::null_policy)
+DECLARATION_MMETHOD_POLICY(tag, ret, sig, rtti::mmethod::ambiguity::default_policy)
 
 #define DECLARE_MMETHOD_POLICY(name, ret, sig, policy)          \
 DECLARATION_MMETHOD_POLICY(MMETHOD_TAG(name), ret, sig, policy);       \
