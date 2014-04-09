@@ -17,10 +17,13 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
+typedef void (*ambiguity_handler_t)(size_t n, rtti_type const[]);
+
 //! structure used for table generation
 struct seal_table_type {
   invoker_table_type& table;
   poles_map_type** poles;
+  ambiguity_handler_t ambiguity_handler;
 };
 
 void init_table(std::size_t arity, detail::invoker_table_type& tbl);

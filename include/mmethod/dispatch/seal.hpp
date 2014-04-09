@@ -52,7 +52,11 @@ void dispatch<Tag,Ret>::seal() {
   };
 
   detail::poles_map_type* poles [ arity ];
-  detail::seal_table_type seal_table = { detail::get_register<Tag>::invoker_table, poles };
+  detail::seal_table_type seal_table = {
+    detail::get_register<Tag>::invoker_table
+  , poles
+  , detail::access::traits<Tag>::policy::get_ambiguity_handler()
+  };
 
   dispatch_detail::seal_poles<Tag, btset>::eval( poles );
 

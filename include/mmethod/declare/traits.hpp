@@ -19,7 +19,7 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
-template<typename Ret, typename Args>
+template<typename Ret, typename Policy, typename Args>
 struct make_declare_traits
 {
   typedef typename boost::mpl::transform<Args, tags::unwrap>::type unwrapped_args;
@@ -35,6 +35,8 @@ struct make_declare_traits
       >
     >::type::value
   ));
+
+  typedef Policy policy;
 
   BOOST_STATIC_ASSERT_MSG( (vsize > 0), "At least one virtual parameter must be provided." );
 };
