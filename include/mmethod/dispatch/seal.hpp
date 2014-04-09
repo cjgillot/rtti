@@ -11,6 +11,8 @@
 
 #include "mmethod/export/table.hpp"
 
+#include "mmethod/ambiguity/utils.hpp"
+
 namespace rtti {
 namespace mmethod {
 
@@ -52,7 +54,19 @@ void dispatch<Tag,Ret>::seal() {
   };
 
   detail::poles_map_type* poles [ arity ];
-  detail::seal_table_type seal_table = { detail::get_register<Tag>::invoker_table, poles };
+
+  typedef typename detail::access::traits<Tag>::policy policy_type;
+  typedef typename detail::access::trampoline<Tag>::sig_t fp_t;
+  detail::ambiguity_policy_t policy = {
+    ambiguity::get_fpointers<policy_type>::get_ambiguity_handler()
+  , ambiguity::get_fpointers<policy_type>::template get_bad_dispatch<fp_t>()
+  };
+
+  detail::seal_table_type seal_table = {
+    detail::get_register<Tag>::invoker_table
+  , poles
+  , policy
+  };
 
   dispatch_detail::seal_poles<Tag, btset>::eval( poles );
 

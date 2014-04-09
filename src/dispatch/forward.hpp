@@ -18,7 +18,8 @@ namespace rtti_dispatch {
 extern void dispatch(
   dispatch_t &dispatch,
   overloads_t& overloads,
-  const pole_table_t &pole_table
+  const pole_table_t &pole_table,
+  ambiguity_handler_t ahndl
 );
 
 // from order_poles.cpp

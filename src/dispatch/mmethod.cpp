@@ -30,7 +30,7 @@ void rtti_dispatch::process_declaration(early_bindings_type const& decl, seal_ta
 
   /// fill up dispatch table
   dispatch_t dispatch_table;
-  dispatch(dispatch_table, overloads, pole_table);
+  dispatch(dispatch_table, overloads, pole_table, output.ambiguity_policy.ahndl);
 
   /// prepare poles for output : link each pole to a signature in which it appears
   /// \warning This code must be after any change to \c overloads
