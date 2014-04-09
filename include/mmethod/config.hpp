@@ -14,6 +14,8 @@
 
 #define MMETHOD_VIRTUAL_INHERITANCE
 
+#define MMETHOD_MAX_ITERATION 10
+
 #include "mmethod/detail/attribute.hpp"
 
 #endif
