@@ -27,10 +27,10 @@ struct dispatch {
 
 private:
   // must only be called by ctor
-  inline static void initialize();
+  static void initialize();
 
   // must only be called by generate
-  inline static void seal();
+  static void seal();
 };
 
 }} // rtti::mmethod

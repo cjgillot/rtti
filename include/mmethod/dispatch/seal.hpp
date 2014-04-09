@@ -17,6 +17,7 @@ namespace rtti {
 namespace mmethod {
 
 template<typename Tag, typename Ret>
+BOOST_NOINLINE
 void dispatch<Tag,Ret>::initialize() {
   enum { arity = detail::access::traits<Tag>::vsize };
 
@@ -47,6 +48,7 @@ struct seal_poles {
 } // namespace dispatch_detail
 
 template<typename Tag, typename Ret>
+BOOST_NOINLINE
 void dispatch<Tag,Ret>::seal() {
   enum {
     arity = detail::access::traits<Tag>::vsize
