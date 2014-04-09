@@ -9,15 +9,17 @@ namespace boost {
 namespace mmethod {
 namespace call_detail {
 
+using detail::make_declare_traits;
+
 template<>
 struct make_declare_call_base<
   BOOST_PP_ITERATION()
 > {
 
-template<typename Tag, typename Ret, typename Args>
+template<typename Tag, typename Policy, typename Ret, typename Args>
 struct apply {
 protected: // traits_type
-  typedef detail::make_declare_traits<Ret, Args> traits_type;
+  typedef make_declare_traits<Ret, Policy, Args> traits_type;
 
 private:
   typedef typename traits_type::unwrapped_args unwrapped_args;

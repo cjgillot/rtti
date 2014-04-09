@@ -23,15 +23,11 @@ struct early_bindings_type {
 
 using boost::mmethod::detail::poles_map_type;
 using boost::mmethod::detail::seal_table_type;
+using boost::mmethod::detail::ambiguity_handler_t;
 
 namespace boost_mmethod_dispatch {
-  // regbase.cpp
-  extern void _rtti_bad_dispatch();
-
   // dispatch/mmethod.cpp
   extern void process_declaration(early_bindings_type const&, seal_table_type&);
 }
-
-#define BAD_DISPATCH (boost_mmethod_dispatch::_rtti_bad_dispatch)
 
 #endif

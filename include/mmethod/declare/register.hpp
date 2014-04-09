@@ -9,14 +9,16 @@
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/declare/helper.hpp"
 
+#include "mmethod/ambiguity/null_policy.hpp"
+
 namespace boost {
 namespace mmethod {
 
-template<typename Tag, typename Sig>
+template<typename Tag, typename Sig, typename Policy>
 struct mmethod_register
-: detail::make_declare<Tag, Sig>::type {
+: detail::make_declare<Tag, Policy, Sig>::type {
 private:
-  typedef typename detail::make_declare<Tag, Sig>::type decl_maker;
+  typedef typename detail::make_declare<Tag, Policy, Sig>::type decl_maker;
 
 public:
   typedef typename decl_maker::func_t function_type;
@@ -32,16 +34,24 @@ public:
 
 #define BOOST_MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
 
-#define BOOST_MMETHOD_DECLARATION(tag, ret, sig)        \
-struct tag                                              \
-: boost::mmethod::mmethod_register<                     \
-  tag                                                   \
-, ret sig   > {                                         \
-  template<typename> struct overload;                   \
+#define BOOST_MMETHOD_DECLARATION_POLICY(tag, ret, sig, policy) \
+struct tag                                      \
+: boost::mmethod::mmethod_register<             \
+  tag                                           \
+, ret sig                                       \
+, policy > {                                    \
+  template<typename> struct overload;           \
 } /* ; */
 
-#define BOOST_MMETHOD_DECLARE(name, ret, sig)                   \
-BOOST_MMETHOD_DECLARATION(BOOST_MMETHOD_TAG(name), ret, sig);   \
+#define BOOST_MMETHOD_DECLARATION(tag, ret, sig)        \
+BOOST_MMETHOD_DECLARATION_POLICY(tag, ret, sig, boost::mmethod::ambiguity::null_policy)
+
+#define BOOST_MMETHOD_DECLARE_POLICY(name, ret, sig, policy)    \
+BOOST_MMETHOD_DECLARATION_POLICY(BOOST_MMETHOD_TAG(name), ret, sig, policy);    \
+static BOOST_MMETHOD_TAG(name) name /* ; */
+
+#define BOOST_MMETHOD_DECLARE(name, ret, sig)                 \
+BOOST_MMETHOD_DECLARATION(BOOST_MMETHOD_TAG(name), ret, sig); \
 static BOOST_MMETHOD_TAG(name) name /* ; */
 
 #endif

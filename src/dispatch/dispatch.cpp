@@ -73,13 +73,15 @@ product_deref(product_t& p)
 static void dispatch_one(
   const signature_t& sig,
   const pole_table_t &pole_table,
-  dispatch_t &dispatch
+  dispatch_t &dispatch,
+  ambiguity_handler_t ahndl
 );
 
 void boost_mmethod_dispatch::dispatch(
   dispatch_t &dispatch,
   overloads_t& overloads,
-  const pole_table_t &pole_table
+  const pole_table_t &pole_table,
+  ambiguity_handler_t ahndl
 ) {
   // insert known overloads
   foreach(overload_t const& s, overloads)
@@ -93,7 +95,7 @@ void boost_mmethod_dispatch::dispatch(
   // each base is dispatched before any of its derived
   do {
     signature_t sig ( product_deref(p) );
-    dispatch_one(sig, pole_table, dispatch);
+    dispatch_one(sig, pole_table, dispatch, ahndl);
   }
   while( product_incr(p, pole_table) );
 }
@@ -121,7 +123,8 @@ static void filter_insert(max_set_type& max_set, overload_t const* up);
 static void dispatch_one(
   const signature_t& sig,
   const pole_table_t &pole_table,
-  dispatch_t &dispatch
+  dispatch_t &dispatch,
+  ambiguity_handler_t ahndl
 ) {
   // already registered
   if(dispatch.find(sig) != dispatch.end())
@@ -152,6 +155,14 @@ static void dispatch_one(
   else {
     //FIXME : diagnose
     dispatch.insert(std::make_pair( sig, overload_t(sig, NULL) ));
+
+    if(ahndl) {
+      std::vector<rtti_type> amb; amb.resize(arity);
+
+      for(std::size_t k = 0; k < arity; ++k)
+        amb[k] = sig.array()[k]->get_id();
+
+      ahndl(arity, amb.data());
 //     if(max_set.size() == 0) {
 //       std::cerr << "No overload found for signature : ";
 //       PRINT_SIG(sig);
@@ -169,6 +180,7 @@ static void dispatch_one(
 //       }
 //       std::cerr << std::endl;
 //     }
+    }
   }
 }
 

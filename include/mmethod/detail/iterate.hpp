@@ -10,3 +10,5 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 
 #include "boost/mmethod/traits/call_traits.hpp"
+
+#define MMETHOD_MAX_ITERATION 10
