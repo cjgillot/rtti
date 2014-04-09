@@ -11,4 +11,4 @@
 
 #include "mmethod/traits/call_traits.hpp"
 
-#define MMETHOD_MAX_ITERATION 2
+#define MMETHOD_MAX_ITERATION 10

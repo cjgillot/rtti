@@ -6,6 +6,7 @@
 #include "mmethod/rtti.hpp"
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
+#include <mmethod/ambiguity/noreturn_policy.hpp>
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
@@ -40,9 +41,12 @@ struct bar2
 {};
 
 static bool found_ambiguous = false;
+static bool called_ambiguous = false;
 
-struct check_policy {
-  static void apply(std::size_t n, rtti_type const* types) {
+struct check_policy
+: public rtti::mmethod::ambiguity::noreturn_policy<check_policy>
+{
+  static void ambiguity_handler(std::size_t n, rtti_type const* types) {
     BOOST_CHECK_EQUAL(n, 2);
     BOOST_CHECK_EQUAL(types[0], rtti::static_id<foo2>());
     BOOST_CHECK_EQUAL(types[1], rtti::static_id<bar2>());
@@ -51,8 +55,10 @@ struct check_policy {
     found_ambiguous = true;
   }
 
-  static ambiguity_handler_t get_ambiguity_handler()
-  { return &apply; }
+  static void bad_dispatch() {
+    called_ambiguous = true;
+    throw rtti::bad_dispatch();
+  }
 };
 
 using tags::_v;
@@ -77,5 +83,11 @@ BOOST_AUTO_TEST_CASE(policy) {
   BOOST_CHECK_EQUAL( f1(a, x),  0  ); // (1-1 case)
   BOOST_CHECK_EQUAL( f1(a, y),  8  ); // (1-2 case)
   BOOST_CHECK_EQUAL( f1(b, x), 13  ); // (2-1 case)
-//   BOOST_CHECK_EQUAL( f1(b, y), 13  ); // (2-2 case)
+
+  try {
+    (void) f1(b, y);
+  }
+  catch(rtti::bad_dispatch&) {}
+
+  BOOST_CHECK_EQUAL( called_ambiguous, true );
 }

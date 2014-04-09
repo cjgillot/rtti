@@ -19,14 +19,19 @@ namespace detail {
 
 typedef void (*ambiguity_handler_t)(size_t n, rtti_type const[]);
 
+struct ambiguity_policy_t {
+  ambiguity_handler_t   ahndl;
+  invoker_t             bad_dispatch;
+};
+
 //! structure used for table generation
 struct seal_table_type {
   invoker_table_type& table;
   poles_map_type** poles;
-  ambiguity_handler_t ambiguity_handler;
+  ambiguity_policy_t& ambiguity_policy;
 };
 
-void init_table(std::size_t arity, detail::invoker_table_type& tbl);
+void init_table(std::size_t arity, invoker_table_type& tbl);
 void inse_table(std::size_t arity, invoker_table_type& table, invoker_t inv, rtti_hierarchy* hiers);
 void seal_table(std::size_t arity, invoker_table_type  table, seal_table_type& seal);
 

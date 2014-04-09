@@ -13,6 +13,8 @@
 typedef boost::unordered_map<klass_t const*, uintptr_t> hash_table_type;
 
 class output_device {
+  seal_table_type& output;
+
   hash_table_type ht;
   std::size_t max_index;
 
@@ -20,22 +22,20 @@ class output_device {
   dispatch_t   const& dispatch;
 
 public:
-  output_device(pole_table_t const& p, dispatch_t const& d)
-  : poles(p), dispatch(d) {}
+  output_device(seal_table_type& o, pole_table_t const& p, dispatch_t const& d)
+  : output(o), poles(p), dispatch(d) {}
 
   void output_pole_tables(
-    seal_table_type& output
-  , early_bindings_type const& decl
+    early_bindings_type const& decl
   );
   void output_dispatch_table(
-    seal_table_type& output
-  , const early_bindings_type& decl
+    const early_bindings_type& decl
   );
 
   void rerank(
     const early_bindings_type& decl
   );
-  
+
 private:
   void rerank_unary();
   void rerank_other();
@@ -57,7 +57,7 @@ void output_device::rerank_unary() {
       dispatch_t::mapped_type const& target = dispatch.at( *k->sig );
       invoker_t ptr = target.second;
 
-      uintptr_t value = reinterpret_cast<uintptr_t>(ptr ? ptr : &BAD_DISPATCH);
+      uintptr_t value = reinterpret_cast<uintptr_t>(ptr ? ptr : output.ambiguity_policy.bad_dispatch);
       ht.insert(std::make_pair(k, value));
     }
   }
@@ -112,16 +112,15 @@ make_assignment(
 }
 
 void output_device::output_dispatch_table(
-  seal_table_type& f
-, const early_bindings_type& decl
+  const early_bindings_type& decl
 ) {
   if(decl.arity == 1)
     return;
 
   invoker_t* const table = new invoker_t [ max_index ];
-  f.table = table;
+  output.table = table;
 
-  std::fill_n(table, max_index, BAD_DISPATCH);
+  std::fill_n(table, max_index, output.ambiguity_policy.bad_dispatch);
 
   // assign dispatch table
   foreach(dispatch_t::const_reference p, dispatch) {
@@ -150,8 +149,7 @@ static void fill_map(
 }
 
 void output_device::output_pole_tables(
-  seal_table_type& output
-, early_bindings_type const& decl
+  early_bindings_type const& decl
 ) {
   std::size_t const arity = decl.arity;
 
@@ -169,9 +167,9 @@ void rtti_dispatch::output_tables(
   const dispatch_t& dispatch,
   const early_bindings_type& decl
 ) {
-  output_device dev ( pole_table, dispatch );
+  output_device dev ( f, pole_table, dispatch );
 
   dev.rerank(decl);
-  dev.output_dispatch_table(f, decl);
-  dev.output_pole_tables(f, decl);
+  dev.output_dispatch_table(decl);
+  dev.output_pole_tables(decl);
 }
