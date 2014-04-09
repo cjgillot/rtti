@@ -11,6 +11,7 @@ add_subdirectory(hierarchy)
 # MMETHOD
 add_subdirectory(unary)
 add_subdirectory(binary)
+add_subdirectory(policy)
 add_subdirectory(diamond)
 add_subdirectory(prefetch)
 add_subdirectory(multifile)

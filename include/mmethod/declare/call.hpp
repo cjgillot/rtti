@@ -38,12 +38,12 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
-template<typename Tag, typename Ret, typename Args>
+template<typename Tag, typename Policy, typename Ret, typename Args>
 struct make_declare_call
 : protected call_detail::make_declare_call_base<
     boost::mpl::size<Args>::value
 >::template apply<
-  Tag, Ret, Args
+  Tag, Policy, Ret, Args
 > {};
 
 }}} // namespace rtti::mmethod::detail

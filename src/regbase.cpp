@@ -9,14 +9,6 @@
 
 #include <cstdlib>
 
-void rtti::_rtti_bad_dispatch() {
-#ifndef BOOST_NO_EXCEPTIONS
-  throw bad_dispatch();
-#else
-  std::abort();
-#endif
-}
-
 rtti::bad_rtti::bad_rtti()
 : std::runtime_error("Invalid pointer passed to rtti::get_node") {}
 rtti::bad_rtti::~bad_rtti() BOOST_NOEXCEPT_OR_NOTHROW {}
