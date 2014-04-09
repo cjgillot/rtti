@@ -41,9 +41,7 @@ struct bar2
 static bool found_ambiguous = false;
 static bool called_ambiguous = false;
 
-struct check_policy
-: public rtti::mmethod::ambiguity::noreturn_policy<check_policy>
-{
+struct wildcard_policy {
   static void ambiguity_handler(std::size_t n, rtti_type const* types) {
     BOOST_CHECK_EQUAL(n, 2);
     BOOST_CHECK_EQUAL(types[0], rtti::static_id<foo2>());
@@ -53,14 +51,14 @@ struct check_policy
     found_ambiguous = true;
   }
 
-  static void bad_dispatch() {
+  static int bad_dispatch(foo1&, bar1&) {
     called_ambiguous = true;
-    throw rtti::bad_dispatch();
+    return 42;
   }
 };
 
 using tags::_v;
-DECLARE_MMETHOD_POLICY(f1, int, (_v<foo1&>, _v<bar1&>), check_policy);
+DECLARE_MMETHOD_POLICY(f1, int, (_v<foo1&>, _v<bar1&>), wildcard_policy);
 
 IMPLEMENT_MMETHOD(f1, int, (foo1&, bar1&)) { return 0; }
 IMPLEMENT_MMETHOD(f1, int, (foo2&, bar1&)) { return 13; }
@@ -70,7 +68,7 @@ IMPLEMENT_MMETHOD(f1, int, (foo1&, bar2&)) { return 8; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(policy) {
+BOOST_AUTO_TEST_CASE(wildcard) {
   foo1 a; foo2 b;
   bar1 x; bar2 y;
 
@@ -78,14 +76,10 @@ BOOST_AUTO_TEST_CASE(policy) {
 
   BOOST_CHECK_EQUAL(found_ambiguous, true);
 
-  BOOST_CHECK_EQUAL( f1(a, x),  0  ); // (1-1 case)
-  BOOST_CHECK_EQUAL( f1(a, y),  8  ); // (1-2 case)
-  BOOST_CHECK_EQUAL( f1(b, x), 13  ); // (2-1 case)
+  BOOST_CHECK_EQUAL( f1(a, x),  0 ); // (1-1 case)
+  BOOST_CHECK_EQUAL( f1(a, y),  8 ); // (1-2 case)
+  BOOST_CHECK_EQUAL( f1(b, x), 13 ); // (2-1 case)
 
-  try {
-    (void) f1(b, y);
-  }
-  catch(rtti::bad_dispatch&) {}
-
+  BOOST_CHECK_EQUAL( f1(b, y), 42 ); // (2-2 case : ambiguous)
   BOOST_CHECK_EQUAL( called_ambiguous, true );
 }

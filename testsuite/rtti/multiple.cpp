@@ -22,6 +22,9 @@
 using namespace rtti;
 using boost::mpl::vector;
 
+// MMETHOD_VIRTUAL_INHERITANCE is required for this testcase
+#ifdef MMETHOD_VIRTUAL_INHERITANCE
+
 namespace {
 
 struct foo
@@ -50,3 +53,5 @@ BOOST_AUTO_TEST_CASE(multiple) {
   BOOST_CHECK_EQUAL( static_id<bar>(), get_id(r) );
   BOOST_CHECK_EQUAL( static_id<baz>(), get_id(z) );
 }
+
+#endif

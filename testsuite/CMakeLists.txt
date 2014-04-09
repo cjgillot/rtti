@@ -3,18 +3,11 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-# RTTI
-add_subdirectory(basic)
-add_subdirectory(multiple)
-add_subdirectory(hierarchy)
-
-# MMETHOD
-add_subdirectory(unary)
-add_subdirectory(binary)
-add_subdirectory(policy)
-add_subdirectory(diamond)
-add_subdirectory(prefetch)
+add_subdirectory(rtti)
+add_subdirectory(mmethod)
 add_subdirectory(multifile)
+
+add_subdirectory(policy)
 add_subdirectory(smart_ptr)
 
 # TESTSUITE
