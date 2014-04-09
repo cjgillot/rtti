@@ -47,7 +47,7 @@ struct noreturn_policy<Policy, void> {
 
 #define MMETHOD_NOOP(z,I,D)                                     \
   template<BOOST_PP_ENUM_PARAMS_Z(z, I, class T)>               \
-  static void apply(BOOST_PP_ENUM_PARAMS_Z(z, I, T)) {          \
+  static void bad_dispatch(BOOST_PP_ENUM_PARAMS_Z(z, I, T)) {   \
     Policy::bad_dispatch();                                     \
   }
   BOOST_PP_REPEAT_FROM_TO(1, MMETHOD_MAX_ITERATION, MMETHOD_NOOP, ~)
