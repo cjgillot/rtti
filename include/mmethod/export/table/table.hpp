@@ -58,11 +58,21 @@ template<std::size_t J>
 poles_map_type register_base<Tag>::poles<J>::array;
 
 //! structure holding tables
-template<typename Tag>
-struct get_register
-: register_base<
-    typename boost::remove_cv<Tag>::type
-> {};
+template<typename Type>
+struct get_register {
+private:
+  typedef typename boost::remove_cv<Type>::type Tag;
+  typedef register_base<Tag> base;
+  BOOST_STATIC_CONSTANT(std::size_t, arity = access::traits<Tag>::vsize);
+
+public:
+  template<std::size_t J>
+  static BOOST_CONSTEXPR poles_map_type& poles() {
+    BOOST_STATIC_ASSERT(J < arity);
+    return base::template poles<J>::array;
+  }
+  static BOOST_CONSTEXPR invoker_table_type& table() { return base::invoker_table; }
+};
 
 }}} // namespace rtti::mmethod::detail
 
