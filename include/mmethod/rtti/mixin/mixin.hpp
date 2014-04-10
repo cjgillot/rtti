@@ -26,11 +26,12 @@ template<
   typename Derived
 , typename Supers
 , typename Declare
+, typename MixinNode
 >
 struct mixin
-: public detail::mixin_node::base<
+: public MixinNode::template base<
     Declare::value
-  , mixin<Derived, Supers, Declare>
+  , mixin<Derived, Supers, Declare, MixinNode>
   , Derived
   >
 {
@@ -49,11 +50,14 @@ private:
   static detail::mixin_node_holder const&
   fetch_node_holder(mixin const& x) {
     Derived const& d = static_cast<Derived const&>(x);
-    return detail::mixin_node::fetch_node_holder(d);
+    return rtti_get_mixin(d);
+  }
+
+  friend MixinNode rtti_mixin_node_type(Derived const volatile*) {
+    return boost::declval<MixinNode>();
   }
 
 public:
-  friend struct detail::mixin_node;
   friend struct detail::rtti_getter;
   friend arity_type rtti_parents_size_1p(Derived const volatile*) {
     // dummy body : we don't want any call to this

@@ -8,7 +8,7 @@
 
 #include "mmethod/export/table.hpp"
 
-#include "mmethod/ambiguity/noreturn_policy.hpp"
+#include "mmethod/policy/noreturn_policy.hpp"
 
 #include <cstdlib>
 
@@ -18,8 +18,8 @@ namespace ambiguity {
 
 using detail::ambiguity_handler_t;
 
-struct null_policy
-: noreturn_policy<null_policy>
+struct default_policy
+: noreturn_policy<default_policy>
 {
 
   BOOST_CONSTEXPR static ambiguity_handler_t
