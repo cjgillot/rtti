@@ -6,8 +6,7 @@
 #ifndef MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
 #define MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
 
-#include "mmethod/export/table.hpp"
-
+#include "mmethod/export/exception.hpp"
 #include "mmethod/policy/noreturn_policy.hpp"
 
 #include <cstdlib>
@@ -16,18 +15,16 @@ namespace rtti {
 namespace mmethod {
 namespace ambiguity {
 
-using detail::ambiguity_handler_t;
-
 struct default_policy
 : noreturn_policy<default_policy>
 {
 
-  BOOST_CONSTEXPR static ambiguity_handler_t
-  get_ambiguity_handler() noexcept
-  { return NULL; }
-
   static void bad_dispatch() {
+#ifndef BOOST_NO_EXCEPTIONS
+    throw rtti::bad_dispatch();
+#else
     std::abort();
+#endif
   }
 
 };
