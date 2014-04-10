@@ -25,7 +25,7 @@ template<std::size_t J, std::size_t BTS>
 struct arity_loop_helper<J, BTS, false> {
   template<typename Func>
   static void apply(Func& f) {
-    arity_loop_helper<J, (BTS>>1)>::apply(f);
+    arity_loop_helper<J+1, (BTS>>1)>::apply(f);
   }
 };
 

@@ -63,15 +63,15 @@ struct get_register {
 private:
   typedef typename boost::remove_cv<Type>::type Tag;
   typedef register_base<Tag> base;
-  BOOST_STATIC_CONSTANT(std::size_t, arity = access::traits<Tag>::vsize);
 
 public:
   template<std::size_t J>
   static BOOST_CONSTEXPR poles_map_type& poles() {
-    BOOST_STATIC_ASSERT(J < arity);
     return base::template poles<J>::array;
   }
-  static BOOST_CONSTEXPR invoker_table_type& table() { return base::invoker_table; }
+  static BOOST_CONSTEXPR invoker_table_type& table() {
+    return base::invoker_table;
+  }
 };
 
 }}} // namespace rtti::mmethod::detail
