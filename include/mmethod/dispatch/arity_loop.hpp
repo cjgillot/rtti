@@ -12,7 +12,7 @@ namespace rtti {
 namespace mmethod {
 namespace dispatch_detail {
 
-template<std::size_t J, std::size_t BTS>
+template<std::size_t J, std::size_t BTS, bool Virt = BTS & 1>
 struct arity_loop_helper {
   template<typename Func>
   static void apply(Func& f) {
@@ -21,8 +21,16 @@ struct arity_loop_helper {
   }
 };
 
+template<std::size_t J, std::size_t BTS>
+struct arity_loop_helper<J, BTS, false> {
+  template<typename Func>
+  static void apply(Func& f) {
+    arity_loop_helper<J, (BTS>>1)>::apply(f);
+  }
+};
+
 template<std::size_t J>
-struct arity_loop_helper<J, 0> {
+struct arity_loop_helper<J, 0, false> {
   template<typename Func>
   static void apply(Func&) {}
 };
