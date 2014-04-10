@@ -6,7 +6,7 @@
 #include "mmethod/rtti.hpp"
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
-#include <mmethod/ambiguity/noreturn_policy.hpp>
+#include "mmethod/policy/noreturn_policy.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>

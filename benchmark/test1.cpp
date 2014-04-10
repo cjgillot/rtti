@@ -47,10 +47,8 @@ double time(F&& fnc, char const* s) {
 }
 
 void test(foo* f, std::size_t N) {
-  f->func();
-
-  vf1(f, 0);
-  vf2(f, *f);
+  vf1.generate();
+  vf2.generate();
 
   double t1, t2;
   std::printf("Calling functions %u times :\n", N); std::fflush(stdout);

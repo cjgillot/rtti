@@ -11,7 +11,7 @@
 
 #include "mmethod/export/table.hpp"
 
-#include "mmethod/ambiguity/utils.hpp"
+#include "mmethod/policy/utils.hpp"
 
 namespace rtti {
 namespace mmethod {
