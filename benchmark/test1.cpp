@@ -26,9 +26,9 @@ int main(int argc, char** argv) {
 #include <cstdio>
 #include <ctime>
 
-void loop_virt(foo* f, size_t N);
-void loop_mm1 (foo* f, size_t N);
-void loop_mm2 (foo* f, foo* g, size_t N);
+void loop_virt(foo& f, size_t N);
+void loop_mm1 (foo& f, size_t N);
+void loop_mm2 (foo& f, foo& g, size_t N);
 
 template<typename F>
 double time(F&& fnc, char const* s) {
@@ -46,8 +46,6 @@ double time(F&& fnc, char const* s) {
   return t1;
 }
 
-static void u() {}
-
 void test(foo* f, std::size_t N) {
   vf1.generate();
   vf2.generate();
@@ -55,11 +53,11 @@ void test(foo* f, std::size_t N) {
   double t1, t2;
   std::printf("Calling functions %u times :\n", N); std::fflush(stdout);
 
-  t1 = time([=](){ loop_virt(f, N); }, "virtual");
+  t1 = time([=](){ loop_virt(*f, N); }, "virtual");
 
-  t2 = time([=](){ loop_mm1 (f, N); }, "mmethod1");
+  t2 = time([=](){ loop_mm1 (*f, N); }, "mmethod1");
   std::printf("ratio : %f\n", t2 / t1);
 
-  t2 = time([=](){ loop_mm2 (f, f, N); }, "mmethod2");
+  t2 = time([=](){ loop_mm2 (*f, *f, N); }, "mmethod2");
   std::printf("ratio : %f\n", t2 / t1);
 }

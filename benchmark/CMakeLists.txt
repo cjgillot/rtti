@@ -6,6 +6,7 @@
 file(GLOB_RECURSE source *.cpp)
 
 add_definitions(-DNDEBUG -fno-exceptions -fno-rtti -march=corei7 -mtune=corei7 -pedantic -fomit-frame-pointer -O3 -fexpensive-optimizations)
+add_definitions(-g -std=c++11)
 
 add_executable(benchmark ${source})
 target_link_libraries(benchmark rtti)
