@@ -25,19 +25,16 @@ using boost::mpl::vector;
  * \c baz and \c lap respectively inherit from \c foo and \c bar
  */
 
-// BOOST_MMETHOD_VIRTUAL_INHERITANCE is required for this testcase
-#ifdef BOOST_MMETHOD_VIRTUAL_INHERITANCE
-
 namespace {
 
 struct foo1
-: base_rtti<foo1> {
+: base_rtti<foo1, virtual_mixin_node> {
 public:
   virtual ~foo1() {}
 };
 
 struct foo2
-: base_rtti<foo2> {
+: base_rtti<foo2, virtual_mixin_node> {
 public:
   virtual ~foo2() {}
 };
@@ -74,5 +71,3 @@ BOOST_AUTO_TEST_CASE(diamond) {
   BOOST_CHECK_EQUAL( f1(z), 5  );
   BOOST_CHECK_EQUAL( f1(l), 15 );
 }
-
-#endif

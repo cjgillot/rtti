@@ -9,6 +9,8 @@
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/rttifwd.hpp"
 
+#include <boost/type_traits/alignment_of.hpp>
+
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
@@ -27,18 +29,20 @@ struct rtti_node_var<0> {
   std::size_t __arity;
 };
 
-}}} // namespace boost::mmethod::holder_detail
+} // namespace holder_detail
 
-struct boost::mmethod::detail::rtti_node {
+struct detail::rtti_node {
+  struct alignment;
+
   holder_detail::rtti_node_var<1> self;
 };
 
-inline boost::mmethod::rtti_type
-boost::mmethod::detail::rtti_get_id(rtti_node const* n)
+inline rtti_type
+detail::rtti_get_id(rtti_node const* n)
 { return static_cast<rtti_type>(n); }
 
-inline boost::mmethod::rtti_node const*
-boost::mmethod::detail::rtti_get_base(rtti_node const* n, std::size_t k)
+inline rtti_node const*
+detail::rtti_get_base(rtti_node const* n, std::size_t k)
 {
   BOOST_ASSERT(n);
   BOOST_ASSERT(k < n->self.__arity);
@@ -46,11 +50,17 @@ boost::mmethod::detail::rtti_get_base(rtti_node const* n, std::size_t k)
 }
 
 inline std::size_t
-boost::mmethod::detail::rtti_get_base_arity(rtti_node const* n)
+detail::rtti_get_base_arity(rtti_node const* n)
 {
   BOOST_ASSERT(n);
   return n->self.__arity;
 }
+
+struct detail::rtti_node::alignment
+: boost::alignment_of<holder_detail::rtti_node_var<0> >
+{};
+
+}} // namespace boost::mmethod
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

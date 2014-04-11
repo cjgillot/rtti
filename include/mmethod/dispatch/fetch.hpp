@@ -32,13 +32,13 @@ struct fetch_poles_once {
 
   template<std::size_t J>
   void apply() const {
-    poles_map_type* map = get_poles_map::get<Tag, J>();
+    poles_map_type& map = get_register<Tag>::template poles<J>();
 
     rtti_hierarchy const h  = boost::mmethod::get_node(
       boost::fusion::at_c<J>(tuple)
     );
 
-    m += fetch_pole(*map, h);
+    m += hash_detail::fetch_pole(map, h);
   }
 };
 template<std::size_t Arity, typename Tag, std::size_t BTS>
@@ -57,7 +57,7 @@ struct fetch_poles {
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
   static invoker_t eval(uintptr_t spec) {
-    return get_register<Tag>::invoker_table[spec / 2];
+    return get_register<Tag>::table()[spec / 2];
   }
 };
 template<typename Tag, std::size_t BTS>

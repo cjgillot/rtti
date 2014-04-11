@@ -9,7 +9,7 @@
 #include "boost/mmethod/config.hpp"
 #include "boost/mmethod/declare/helper.hpp"
 
-#include "mmethod/ambiguity/null_policy.hpp"
+#include "mmethod/policy/default_policy.hpp"
 
 namespace boost {
 namespace mmethod {
@@ -44,7 +44,7 @@ struct tag                                      \
 } /* ; */
 
 #define BOOST_MMETHOD_DECLARATION(tag, ret, sig)        \
-BOOST_MMETHOD_DECLARATION_POLICY(tag, ret, sig, boost::mmethod::ambiguity::null_policy)
+BOOST_MMETHOD_DECLARATION_POLICY(tag, ret, sig, boost::mmethod::ambiguity::default_policy)
 
 #define BOOST_MMETHOD_DECLARE_POLICY(name, ret, sig, policy)    \
 BOOST_MMETHOD_DECLARATION_POLICY(BOOST_MMETHOD_TAG(name), ret, sig, policy);    \

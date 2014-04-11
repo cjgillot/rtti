@@ -6,9 +6,8 @@
 #ifndef BOOST_MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
 #define BOOST_MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
 
-#include "boost/mmethod/export/table.hpp"
-
-#include "boost/mmethod/ambiguity/noreturn_policy.hpp"
+#include "boost/mmethod/export/exception.hpp"
+#include "boost/mmethod/policy/noreturn_policy.hpp"
 
 #include <cstdlib>
 
@@ -16,18 +15,16 @@ namespace boost {
 namespace mmethod {
 namespace ambiguity {
 
-using detail::ambiguity_handler_t;
-
-struct null_policy
-: noreturn_policy<null_policy>
+struct default_policy
+: noreturn_policy<default_policy>
 {
 
-  BOOST_CONSTEXPR static ambiguity_handler_t
-  get_ambiguity_handler() noexcept
-  { return NULL; }
-
   static void bad_dispatch() {
+#ifndef BOOST_NO_EXCEPTIONS
+    throw boost::mmethod::bad_dispatch();
+#else
     std::abort();
+#endif
   }
 
 };

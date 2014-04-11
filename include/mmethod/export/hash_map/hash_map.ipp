@@ -27,7 +27,7 @@ inline hash_map::hash_map()
 
 inline index_type         hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
   uintptr_t v = uintptr_t(a);
-  v /= boost::alignment_of<boost::mmethod::rtti_node>::value;
+  v /= boost::mmethod::rtti_node::alignment::value;
   return index_type( v & m_mask );
 }
 

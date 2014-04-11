@@ -36,7 +36,7 @@ struct baz
 
 using tags::_v;
 
-BOOST_MMETHOD_DECLARE(vf1, void, (_v<foo*>, int));
-BOOST_MMETHOD_DECLARE(vf2, void, (_v<foo*>, _v<foo&>));
+BOOST_MMETHOD_DECLARE(vf1, void, (_v<foo&>, int));
+BOOST_MMETHOD_DECLARE(vf2, void, (_v<foo&>, _v<foo&>));
 
 #endif

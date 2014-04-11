@@ -21,14 +21,9 @@ namespace boost {
 namespace mmethod {
 namespace dispatch_detail {
 
+using detail::invoker_table_type;
 using detail::poles_map_type;
 using detail::get_register;
-
-struct get_poles_map {
-  template<typename Tag, std::size_t J>
-  static poles_map_type* get()
-  { return &get_register<Tag>::template poles<J>::array; }
-};
 
 }}} // boost::mmethod::dispatch_detail
 

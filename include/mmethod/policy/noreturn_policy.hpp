@@ -6,6 +6,8 @@
 #ifndef BOOST_MMETHOD_AMBIGUITY_NORETURN_HANDLER_HPP
 #define BOOST_MMETHOD_AMBIGUITY_NORETURN_HANDLER_HPP
 
+#include "boost/mmethod/detail/iterate.hpp"
+
 #include <cstdlib>
 #include <boost/function_types/result_type.hpp>
 
@@ -25,14 +27,14 @@ struct noreturn_policy {
     typedef noreturn_policy<Policy, R2> other;
   };
 
-#define MMETHOD_NOOP(z,I,D)                                     \
+#define BOOST_MMETHOD_NOOP(z,I,D)                               \
   template<BOOST_PP_ENUM_PARAMS_Z(z, I, class T)>               \
   static Ret bad_dispatch(BOOST_PP_ENUM_PARAMS_Z(z, I, T)) {    \
     Policy::bad_dispatch();                                     \
     return *(Ret*)NULL;                                         \
   }
-  BOOST_PP_REPEAT_FROM_TO(1, MMETHOD_MAX_ITERATION, MMETHOD_NOOP, ~)
-#undef MMETHOD_NOOP
+  BOOST_PP_REPEAT_FROM_TO(1, BOOST_MMETHOD_MAX_ITERATION, BOOST_MMETHOD_NOOP, ~)
+#undef BOOST_MMETHOD_NOOP
 
 };
 
@@ -45,13 +47,13 @@ struct noreturn_policy<Policy, void> {
     typedef noreturn_policy<Policy, R2> other;
   };
 
-#define MMETHOD_NOOP(z,I,D)                                     \
+#define BOOST_MMETHOD_NOOP(z,I,D)                                     \
   template<BOOST_PP_ENUM_PARAMS_Z(z, I, class T)>               \
   static void bad_dispatch(BOOST_PP_ENUM_PARAMS_Z(z, I, T)) {   \
     Policy::bad_dispatch();                                     \
   }
-  BOOST_PP_REPEAT_FROM_TO(1, MMETHOD_MAX_ITERATION, MMETHOD_NOOP, ~)
-#undef MMETHOD_NOOP
+  BOOST_PP_REPEAT_FROM_TO(1, BOOST_MMETHOD_MAX_ITERATION, BOOST_MMETHOD_NOOP, ~)
+#undef BOOST_MMETHOD_NOOP
 
 };
 
