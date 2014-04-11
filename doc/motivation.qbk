@@ -1,0 +1,22 @@
+[/
+          Copyright Camille Gillot 2012 - 2014.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:motivation Motivation]
+
+__mmethod__ aims at providing efficient multiple dispatch semantics,
+with little code alteration.
+Although being implementation of the same concept, unary __multimethods__
+and n-ary __multimethods__ have completely different semantics.
+
+The former provides a way to extend an existing class with new methods,
+without modifying the class definition.
+The latter gives a solution to the classical binary method problem
+and its generalizations.
+
+[heading ]
+
+[endsect]

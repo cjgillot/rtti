@@ -1,0 +1,34 @@
+[/
+          Copyright Camille Gillot 2012 - 2014.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[library MMethod
+  [quickbook 1.3]
+  [version 1.0]
+  [authors [Gillot, Camille]]
+  [copyright 2012-2014 Camille Gillot]
+  [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at 
+        [@http://www.boost.org/LICENSE_1_0.txt])
+  ]
+  [purpose C++ library for open multiple dispatch]
+  [category text]
+]
+
+[def __mmethod__ [*MMethod]]
+[def __rtti__ [*MMethod.Rtti]]
+
+[def __rtti_ns__ [^rtti]]
+[def __mmethod_ns__ [^rtti::mmethod]]
+[def __mmethod_macro__ [^MMETHOD]]
+
+[def __multimethod__ ['multi-method]]
+[def __multimethods__ ['multi-methods]]
+
+[include overview.qbk]
+[include intro.qbk]
+[include motivation.qbk]
