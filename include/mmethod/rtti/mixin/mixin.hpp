@@ -6,6 +6,7 @@
 #ifndef RTTI_MIXIN_MIXIN_HPP
 #define RTTI_MIXIN_MIXIN_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rtti/mixin/mixin_node.hpp"
 #include "mmethod/rtti/getter.hpp"
 
@@ -13,8 +14,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/transform.hpp>
-
-#include <boost/static_assert.hpp>
 
 #include <boost/utility/declval.hpp>
 
@@ -27,9 +26,15 @@ template<
   typename Derived
 , typename Supers
 , typename Declare
+, typename MixinNode
 >
 struct mixin
-: private virtual detail::mixin_node {
+: public MixinNode::template base<
+    Declare::value
+  , mixin<Derived, Supers, Declare, MixinNode>
+  , Derived
+  >
+{
 
 private:
   // parent classes manipulation
@@ -42,11 +47,18 @@ private:
   struct arity_type { unsigned char __dummy [ 1+arity ]; };
   BOOST_STATIC_ASSERT( sizeof(arity_type) == 1+arity );
 
+  static detail::mixin_node_holder const&
+  fetch_node_holder(mixin const& x) {
+    Derived const& d = static_cast<Derived const&>(x);
+    return rtti_get_mixin(d);
+  }
+
+  friend MixinNode rtti_mixin_node_type(Derived const volatile*) {
+    return boost::declval<MixinNode>();
+  }
+
 public:
   friend struct detail::rtti_getter;
-  friend mixin const& rtti_get_mixin(Derived const& d) {
-    return static_cast<mixin const&>(d);
-  }
   friend arity_type rtti_parents_size_1p(Derived const volatile*) {
     // dummy body : we don't want any call to this
     return boost::declval<arity_type>();
@@ -61,7 +73,9 @@ public:
 
 protected:
   mixin() BOOST_NOEXCEPT_OR_NOTHROW {
-    this->detail::mixin_node::rtti_node_value = rtti::static_node<Derived>();
+    detail::mixin_node_holder const& nh = mixin::fetch_node_holder(*this);
+    const_cast<detail::mixin_node_holder&>(nh).rtti_node_value
+      = rtti::static_node<Derived>();
   }
   ~mixin() BOOST_NOEXCEPT_OR_NOTHROW {}
 };

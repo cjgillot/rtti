@@ -3,15 +3,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <vector>
-
-#include <algorithm>
-#include <functional>
+#include "signature.hpp"
 
 #include <boost/functional/hash.hpp>
 #include <boost/optional.hpp>
 
-#include "signature.hpp"
+#include <functional>
+#include <algorithm>
+#include <vector>
 
 namespace {
 
@@ -38,9 +37,9 @@ bool signature_t::subtypes::operator()(const signature_t& a, const signature_t& 
   BOOST_ASSERT(a.sig.size() == b.sig.size());
   // return true if [b] is better overload than [a]
   // ie. if [\forall i, a_i <: b_i \and \exists_i, \not(b_i <: a_i)]
-  klass_t::subtypes f;
+  klass_t::is_subtype_of f;
   bool notallbase = false;
-  
+
   typedef sig_type::const_iterator it_type;
   for(it_type it1 = a.sig.begin(),
               it2 = b.sig.begin(),
@@ -51,11 +50,18 @@ bool signature_t::subtypes::operator()(const signature_t& a, const signature_t& 
   {
     BOOST_ASSERT(it2 != en2); (void)en2;
 
-    bool isder = f(**it1, **it2);
-    bool isbase = f(**it2, **it1);
-    if(!isder)
-      return false;
+    klass_t const* const klass1 = *it1;
+    klass_t const* const klass2 = *it2;
+
+    bool const isder  = f(*klass1, *klass2);
+    bool const isbase = f(*klass2, *klass1);
+
+    // \forall_i a_i <: b_i
+    if(!isder) return false;
+
+    // \exists_i \not(b_i <: a_i)
     notallbase |= !isbase;
   }
+
   return notallbase;
 }

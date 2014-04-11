@@ -5,13 +5,14 @@
 
 #include "forward.hpp"
 
+#include "foreach.hpp"
+
 #include <list>
 
 #include <boost/range/adaptor/transformed.hpp>
 
 #include <boost/range/begin.hpp>
 #include <boost/optional.hpp>
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 /* Implementation of pole computation algorithm from [2]
@@ -72,16 +73,18 @@ product_deref(product_t& p)
 static void dispatch_one(
   const signature_t& sig,
   const pole_table_t &pole_table,
-  dispatch_t &dispatch
+  dispatch_t &dispatch,
+  ambiguity_handler_t ahndl
 );
 
 void rtti_dispatch::dispatch(
   dispatch_t &dispatch,
   overloads_t& overloads,
-  const pole_table_t &pole_table
+  const pole_table_t &pole_table,
+  ambiguity_handler_t ahndl
 ) {
   // insert known overloads
-  BOOST_FOREACH(overload_t const& s, overloads)
+  foreach(overload_t const& s, overloads)
     dispatch.insert(std::make_pair( s.first, s ));
 
   product_t p;
@@ -92,7 +95,7 @@ void rtti_dispatch::dispatch(
   // each base is dispatched before any of its derived
   do {
     signature_t sig ( product_deref(p) );
-    dispatch_one(sig, pole_table, dispatch);
+    dispatch_one(sig, pole_table, dispatch, ahndl);
   }
   while( product_incr(p, pole_table) );
 }
@@ -113,10 +116,15 @@ struct sig_upcaster {
 
 } // namespace <>
 
+typedef std::list<overload_t> max_set_type;
+
+static void filter_insert(max_set_type& max_set, overload_t const* up);
+
 static void dispatch_one(
   const signature_t& sig,
   const pole_table_t &pole_table,
-  dispatch_t &dispatch
+  dispatch_t &dispatch,
+  ambiguity_handler_t ahndl
 ) {
   // already registered
   if(dispatch.find(sig) != dispatch.end())
@@ -127,7 +135,6 @@ static void dispatch_one(
   sig_upcaster upcast ( sig, arity, dispatch );
 
   // set of candidates
-  typedef std::list<overload_t> max_set_type;
   max_set_type max_set;
 
   for(;;) {
@@ -138,31 +145,8 @@ static void dispatch_one(
     if(!up)
       break;
 
-    // poll max_set
-    bool dominated = false;
-    {
-      max_set_type::iterator it = max_set.begin(), en = max_set.end();
-      for(; it != en;)
-      {
-        overload_t const& e = *it;
-
-        // [*up] is better match, remove [it]
-        if( signature_t::subtypes()(e.first, up->first) )
-          it = max_set.erase(it);
-
-        // [it] is better match, don't insert [s2]
-        else if( signature_t::subtypes()(up->first, e.first) )
-        { dominated = true; break; }
-
-        // continue
-        else
-          ++it;
-      }
-    }
-
-    // none of [max_set] is better
-    if( !dominated )
-      max_set.push_back(*up);
+    // insert in max_set
+    filter_insert(max_set, up);
   }
 
   if(max_set.size() == 1)
@@ -171,6 +155,14 @@ static void dispatch_one(
   else {
     //FIXME : diagnose
     dispatch.insert(std::make_pair( sig, overload_t(sig, NULL) ));
+
+    if(ahndl) {
+      std::vector<rtti_type> amb; amb.resize(arity);
+
+      for(std::size_t k = 0; k < arity; ++k)
+        amb[k] = sig.array()[k]->get_id();
+
+      ahndl(arity, amb.data());
 //     if(max_set.size() == 0) {
 //       std::cerr << "No overload found for signature : ";
 //       PRINT_SIG(sig);
@@ -188,6 +180,7 @@ static void dispatch_one(
 //       }
 //       std::cerr << std::endl;
 //     }
+    }
   }
 }
 
@@ -225,4 +218,39 @@ sig_upcaster::operator()() BOOST_NOEXCEPT_OR_NOTHROW
 
     return &bound;
   }
+}
+
+static void filter_insert(
+  max_set_type& max_set
+, overload_t const* up
+) {
+  signature_t::subtypes subtypes;
+
+  // poll max_set
+  bool dominated = false;
+  {
+    max_set_type::iterator
+      iter = max_set.begin()
+    , endl = max_set.end();
+
+    while(iter != endl) {
+      overload_t const& e = *iter;
+
+      // [*up] is better match, remove [it]
+      if( subtypes(e.first, up->first) )
+        iter = max_set.erase(iter);
+
+      // [it] is better match, don't insert [s2]
+      else if( subtypes(up->first, e.first) )
+      { dominated = true; break; }
+
+      // continue
+      else
+        ++iter;
+    }
+  }
+
+  // none of [max_set] is better
+  if( !dominated )
+    max_set.push_back(*up);
 }

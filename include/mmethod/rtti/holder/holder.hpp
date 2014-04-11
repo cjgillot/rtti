@@ -6,14 +6,14 @@
 #ifndef RTTI_HOLDER_HPP
 #define RTTI_HOLDER_HPP
 
-#include <boost/static_assert.hpp>
+#include "mmethod/config.hpp"
+#include "mmethod/rttifwd.hpp"
+#include "mmethod/rtti/holder/node.hpp"
+
 #include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_volatile.hpp>
-
-#include "mmethod/rttifwd.hpp"
-#include "mmethod/rtti/holder/node.hpp"
 
 namespace rtti {
 namespace detail {
@@ -31,7 +31,9 @@ private:
   , "rtti::detail::holder_::holder<> must not be accessed directly"
   );
 
-  BOOST_STATIC_CONSTANT(std::size_t, Arity = sizeof( rtti_parents_size_1p((T*)NULL) ) - 1);
+  typedef rtti_getter::traits<T> traits;
+
+  BOOST_STATIC_CONSTANT(std::size_t, Arity = traits::parents_size);
 
   struct initializer_t {
     struct register_one;
@@ -87,7 +89,7 @@ holder<T>::initializer_t::initializer_t() {
   holder::node.__arity = Arity;
 
   register_one reg = { 0 };
-  rtti_parents_foreach(reg, (T*)NULL);
+  traits::parents_foreach(reg);
 }
 
 template<class T>

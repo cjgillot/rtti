@@ -6,19 +6,11 @@
 #ifndef RTTI_MMETHOD_DECLARE_HPP
 #define RTTI_MMETHOD_DECLARE_HPP
 
+#include "mmethod/config.hpp"
+
 #include "mmethod/declare/register.hpp"
 #include "mmethod/declare/helper.hpp"
 #include "mmethod/declare/traits.hpp"
-
-#define __MMETHOD_TAG(name) BOOST_JOIN(__rtti_mmethod_tags__, name)
-
-#define DECLARE_MMETHOD(name, ret, sig) \
-struct __MMETHOD_TAG(name)              \
-: rtti::mmethod::mmethod_register<      \
-  __MMETHOD_TAG(name)                   \
-, ret sig   > {                         \
-  template<typename> struct overload;   \
-}; \
-static __MMETHOD_TAG(name) name /* ; */
+#include "mmethod/declare/call.hpp"
 
 #endif

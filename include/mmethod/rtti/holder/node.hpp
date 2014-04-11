@@ -6,10 +6,10 @@
 #ifndef RTTI_HOLDER_NODE_HPP
 #define RTTI_HOLDER_NODE_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
 
-#include <boost/assert.hpp>
-#include <boost/config.hpp>
+#include <boost/type_traits/alignment_of.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -32,12 +32,14 @@ struct rtti_node_var<0> {
 }}} // namespace rtti::detail::holder_
 
 struct rtti::detail::rtti_node {
+  struct alignment;
+
   detail::holder_::rtti_node_var<1> self;
 };
 
 inline rtti::rtti_type
 rtti::detail::rtti_get_id(rtti_node const* n)
-{ return (void*)n; }
+{ return static_cast<rtti_type>(n); }
 
 inline rtti::rtti_node const*
 rtti::detail::rtti_get_base(rtti_node const* n, std::size_t k)
@@ -53,6 +55,10 @@ rtti::detail::rtti_get_base_arity(rtti_node const* n)
   BOOST_ASSERT(n);
   return n->self.__arity;
 }
+
+struct rtti::detail::rtti_node::alignment
+: boost::alignment_of<holder_::rtti_node_var<0> >
+{};
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

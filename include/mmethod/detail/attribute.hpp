@@ -5,6 +5,8 @@
 
 // allow room for some optimizations
 
+#include "mmethod/config.hpp"
+
 #ifndef MMETHOD_ATTRIBUTE_PURE
 #if defined(__GNUC__)
 #define MMETHOD_ATTRIBUTE_PURE __attribute__((pure))

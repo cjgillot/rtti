@@ -6,6 +6,7 @@
 #ifndef RTTI_MMETHOD_DECLARE_HELPER_HPP
 #define RTTI_MMETHOD_DECLARE_HELPER_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/declare/call.hpp"
 #include "mmethod/declare/traits.hpp"
 
@@ -17,12 +18,12 @@ namespace rtti { namespace mmethod { namespace detail {
 // detail/access.hpp
 struct access;
 
-template<typename Tag, typename Ret, typename Args>
+template<typename Tag, typename Policy, typename Ret, typename Args>
 struct make_declare_helper
-: protected make_declare_call<Tag, Ret, Args>
+: protected make_declare_call<Tag, Policy, Ret, Args>
 {
 private:
-  typedef make_declare_call<Tag, Ret, Args> call_helper;
+  typedef make_declare_call<Tag, Policy, Ret, Args> call_helper;
 
 protected:
   typedef typename call_helper::traits_type traits_type;
@@ -42,14 +43,14 @@ protected:
   using call_helper::operator();
 };
 
-template<typename Tag, typename Sig>
+template<typename Tag, typename Policy, typename Sig>
 struct make_declare {
 private:
   typedef typename boost::function_types::result_type<Sig>::type result;
   typedef typename boost::function_types::parameter_types<Sig>::type args;
 
 public:
-  typedef make_declare_helper<Tag, result, args> type;
+  typedef make_declare_helper<Tag, Policy, result, args> type;
 };
 
 }}} // namespace rtti::mmethod::detail

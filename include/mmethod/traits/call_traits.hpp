@@ -6,9 +6,10 @@
 #ifndef MMETHOD_CALL_TRAITS_HPP
 #define MMETHOD_CALL_TRAITS_HPP
 
+#include "mmethod/config.hpp"
 #include <boost/call_traits.hpp>
 
-#if __cplusplus >= 201103L
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 
 namespace boost {
   template<typename T>

@@ -6,10 +6,8 @@
 #ifndef EARLY_HPP
 #define EARLY_HPP
 
-#include "mmethod/table/table.hpp"
-#include "mmethod/table/generate.hpp"
-
-#include "mmethod/shared/bad_dispatch.hpp"
+#include "mmethod/export/table.hpp"
+#include "mmethod/export/exception.hpp"
 
 #include <vector>
 
@@ -23,10 +21,9 @@ struct early_bindings_type {
   std::vector<binding_type> vector;
 };
 
-#define BAD_DISPATCH (rtti::_rtti_bad_dispatch)
-
 using rtti::mmethod::detail::poles_map_type;
 using rtti::mmethod::detail::seal_table_type;
+using rtti::mmethod::detail::ambiguity_handler_t;
 
 namespace rtti_dispatch {
   // dispatch/mmethod.cpp

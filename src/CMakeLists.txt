@@ -9,7 +9,6 @@ file(GLOB_RECURSE src *.cpp)
 
 include_directories(.)
 
-# add_definitions(-O3 -fexpensive-optimizations -DNDEBUG -fomit-frame-pointer)
-# add_definitions(-fno-rtti -fexceptions -funroll-loops -pedantic -march=corei7 -mtune=corei7)
-# add_definitions(-Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn)
-add_library(rtti ${src})
+add_definitions(-O3 -fexpensive-optimizations -DNDEBUG -fomit-frame-pointer)
+add_definitions(-funroll-loops -pedantic -march=corei7 -mtune=corei7)
+add_library(rtti SHARED ${src})

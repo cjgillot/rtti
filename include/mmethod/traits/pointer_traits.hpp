@@ -6,6 +6,8 @@
 #ifndef RTTI_TRAITS_HPP
 #define RTTI_TRAITS_HPP
 
+#include "mmethod/config.hpp"
+
 #include <boost/mpl/if.hpp>
 
 #include <boost/type_traits.hpp>
@@ -24,7 +26,7 @@ template<typename T>
 struct remove_all<T&>
 : remove_all<T> {};
 
-#ifdef BOOST_HAS_RVALUE_REFS
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 template<typename T>
 struct remove_all<T&&>
 : remove_all<T> {};

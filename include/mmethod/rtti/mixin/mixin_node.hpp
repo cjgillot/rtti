@@ -6,12 +6,13 @@
 #ifndef RTTI_MIXIN_NODE_HPP
 #define RTTI_MIXIN_NODE_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
 
 namespace rtti {
 namespace detail {
 
-struct mixin_node {
+struct mixin_node_holder {
   rtti::rtti_node const* rtti_node_value;
 };
 

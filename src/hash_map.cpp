@@ -3,10 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/table/hash_map.hpp"
-#include "mmethod/table/hash_map.ipp"
-
-#include <boost/assert.hpp>
+#include "mmethod/export/hash_map.hpp"
 
 using rtti::rtti_type;
 using rtti::detail::rtti_node;
@@ -29,8 +26,6 @@ inline void bucket_t::set(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW {
 
 /// hash_map implementation
 //@{
-hash_map::~hash_map() {}
-
 void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
   BOOST_ASSERT( this != &o );
 

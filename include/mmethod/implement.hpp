@@ -6,6 +6,8 @@
 #ifndef RTTI_MMETHOD_TPP
 #define RTTI_MMETHOD_TPP
 
+#include "mmethod/config.hpp"
+#include "mmethod/dispatch.hpp"
 #include "mmethod/implement/implement.hpp"
 
 #endif

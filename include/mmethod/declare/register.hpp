@@ -6,18 +6,18 @@
 #ifndef RTTI_MMETHOD_DECLARE_REGISTER_HPP
 #define RTTI_MMETHOD_DECLARE_REGISTER_HPP
 
+#include "mmethod/config.hpp"
 #include "mmethod/declare/helper.hpp"
 
-#include "mmethod/table/table.hpp"
+#include "mmethod/policy/default_policy.hpp"
 
 namespace rtti { namespace mmethod {
 
-template<typename Tag, typename Sig>
+template<typename Tag, typename Sig, typename Policy>
 struct mmethod_register
-: detail::register_base<Tag>
-, detail::make_declare<Tag, Sig>::type {
+: detail::make_declare<Tag, Policy, Sig>::type {
 private:
-  typedef typename detail::make_declare<Tag, Sig>::type decl_maker;
+  typedef typename detail::make_declare<Tag, Policy, Sig>::type decl_maker;
 
 public:
   typedef typename decl_maker::func_t function_type;
@@ -30,5 +30,27 @@ public:
 };
 
 }} // namespace rtti::mmethod
+
+#define MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
+
+#define DECLARATION_MMETHOD_POLICY(tag, ret, sig, policy)      \
+struct tag                                      \
+: rtti::mmethod::mmethod_register<              \
+  tag                                           \
+, ret sig                                       \
+, policy > {                                    \
+  template<typename> struct overload;           \
+} /* ; */
+
+#define DECLARATION_MMETHOD(tag, ret, sig)      \
+DECLARATION_MMETHOD_POLICY(tag, ret, sig, rtti::mmethod::ambiguity::default_policy)
+
+#define DECLARE_MMETHOD_POLICY(name, ret, sig, policy)          \
+DECLARATION_MMETHOD_POLICY(MMETHOD_TAG(name), ret, sig, policy);       \
+static MMETHOD_TAG(name) name /* ; */
+
+#define DECLARE_MMETHOD(name, ret, sig)                 \
+DECLARATION_MMETHOD(MMETHOD_TAG(name), ret, sig);       \
+static MMETHOD_TAG(name) name /* ; */
 
 #endif

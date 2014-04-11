@@ -9,9 +9,7 @@
 #include <stdint.h>
 #include <cstddef>
 
-#include "mmethod/detail/attribute.hpp"
-
-#include <boost/config.hpp>
+#include "mmethod/config.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -20,8 +18,11 @@
 namespace rtti {
 namespace detail {
 
+//! function pointer generic type
+typedef void(*invoker_t)();
+
 //! \brief RTTI id type
-typedef void* rtti_type;
+typedef void const* rtti_type;
 
 //! \brief RTTI node type
 //! POD class holding a hierarchy bottom-up
@@ -39,6 +40,9 @@ inline rtti_node const* MMETHOD_ATTRIBUTE_PURE rtti_get_base(rtti_node const* n,
 inline std::size_t      MMETHOD_ATTRIBUTE_PURE rtti_get_base_arity(rtti_node const* n);
 
 } // namespace detail
+
+// FIXME We should not export this
+using detail::invoker_t;
 
 using detail::rtti_type;
 using detail::rtti_node;

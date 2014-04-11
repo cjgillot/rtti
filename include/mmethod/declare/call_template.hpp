@@ -15,10 +15,10 @@ struct make_declare_call_base<
   BOOST_PP_ITERATION()
 > {
 
-template<typename Tag, typename Ret, typename Args>
+template<typename Tag, typename Policy, typename Ret, typename Args>
 struct apply {
 protected: // traits_type
-  typedef make_declare_traits<Ret, Args> traits_type;
+  typedef make_declare_traits<Ret, Policy, Args> traits_type;
 
 private:
   typedef typename traits_type::unwrapped_args unwrapped_args;
@@ -29,7 +29,7 @@ protected: // trampoline_type
   typedef typename trampoline_type::sig_t func_t;
 
 private:   // dispatch_type
-  typedef detail::dispatch<Tag,Ret> dispatch_type;
+  typedef dispatch<Tag,Ret> dispatch_type;
   dispatch_type m_dispatch;
 
 protected:

@@ -6,9 +6,10 @@
 #ifndef RTTI_GETTER_IPP
 #define RTTI_GETTER_IPP
 
-#include "mmethod/rtti/getter/getter.hpp"
+#include "mmethod/config.hpp"
 
-#include "mmethod/traits/pointer_traits.hpp"
+#include "mmethod/rtti/getter/getter.hpp"
+#include "mmethod/rtti/getter/traits.hpp"
 
 #include "mmethod/rtti/holder/holder.hpp"
 #include "mmethod/rtti/mixin/mixin_node.hpp"
@@ -19,15 +20,16 @@ namespace detail {
 template<class T>
 BOOST_CONSTEXPR rtti_node const*
 rtti_getter::static_node() {
-  typedef typename traits_detail::remove_all<T>::type T2;
-  typedef typename get_holder<T2>::type h;
+  BOOST_STATIC_ASSERT( boost::is_class<T>::value );
+  typedef typename get_holder<T>::type h;
   return h::get_node();
 }
 
 template<class T>
 inline rtti_node const&
 rtti_getter::get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW {
-  return *rtti_get_mixin(x).detail::mixin_node::rtti_node_value;
+  typedef rtti_getter::traits<T> traits;
+  return *traits::get_mixin_node(x).rtti_node_value;
 }
 
 }} // namespace rtti::detail

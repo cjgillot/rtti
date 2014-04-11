@@ -41,7 +41,7 @@ private:
 
   void shrink(std::vector<klass_t const*>& seq);
   void pole_init(klass_t*);
-  std::size_t pseudo_closest(klass_t const* k, klass_t const* &pole);
+  std::size_t pseudo_closest(klass_t const* k, klass_t const* *out_pole);
 
 private:
   std::vector<klass_t* > klasses;

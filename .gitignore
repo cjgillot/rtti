@@ -2,3 +2,5 @@
 build/
 test/
 .kdev4/
+.codelite/
+rtti.*

@@ -6,10 +6,12 @@
 #ifndef RTTI_MMETHOD_DECLARE_CALL_HPP
 #define RTTI_MMETHOD_DECLARE_CALL_HPP
 
+#include "mmethod/config.hpp"
+
 #include "mmethod/declare/traits.hpp"
 #include "mmethod/declare/trampoline.hpp"
 
-#include "mmethod/dispatch/dispatch.hpp"
+#include "mmethod/dispatch/forward.hpp"
 
 #include "mmethod/detail/iterate.hpp"
 
@@ -36,12 +38,12 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
-template<typename Tag, typename Ret, typename Args>
+template<typename Tag, typename Policy, typename Ret, typename Args>
 struct make_declare_call
 : protected call_detail::make_declare_call_base<
     boost::mpl::size<Args>::value
 >::template apply<
-  Tag, Ret, Args
+  Tag, Policy, Ret, Args
 > {};
 
 }}} // namespace rtti::mmethod::detail

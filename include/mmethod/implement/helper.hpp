@@ -6,10 +6,9 @@
 #ifndef RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 #define RTTI_MMETHOD_IMPLEMENT_HELPER_HPP
 
-#include "mmethod/declare/traits.hpp"
-#include "mmethod/declare/trampoline.hpp"
-
+#include "mmethod/config.hpp"
 #include "mmethod/detail/access.hpp"
+#include "mmethod/declare/trampoline.hpp"
 
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
