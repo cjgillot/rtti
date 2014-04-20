@@ -1,0 +1,47 @@
+[/
+          Copyright Camille Gillot 2012 - 2014.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:mmethod The __mmethod__ library]
+
+The __mmethod__ library provides necessary
+code to write and invoke __multimethods__ painlessly
+in C++.
+
+[heading Accessing the library]
+
+In order to use the __mmethod__ library, you need to include this file :
+
+``
+    #include "mmethod/mmethod.hpp"
+``
+
+All code resides in the __mmethod_ns__ namespace. So we will suppose having
+issued the following using directive :
+
+``
+    using namespace __mmethod_ns__;
+``
+
+Since __mmethod__ relies heavily on __rtti__, we will also assume
+that this code is present.
+
+``
+    #include "mmethod/rtti.hpp"
+    using namespace __rtti_ns__;
+``
+
+[heading Declaring __multimethods__]
+
+[import ../testsuite/mmethod/unary.cpp]
+[un_unary]
+
+[heading Using __multimethod__ type]
+
+[import ../testsuite/mmethod/prefetch.cpp]
+[pr_prefetch]
+
+[endsect]

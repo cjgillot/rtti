@@ -20,14 +20,13 @@
 ]
 
 [def __boost__ [*Boost]]
-[def __sequence__ [@http://www.boost.org/doc/libs/1_55_0/libs/mpl/doc/refmanual/forward-sequence.html ['Boost.MPL Forward-Sequence']]]
+[def __sequence__ [@http://www.boost.org/doc/libs/1_55_0/libs/mpl/doc/refmanual/forward-sequence.html ['Boost.MPL Forward-Sequence]]]
 
 [def __mmethod__ [*MMethod]]
 [def __rtti__ [*MMethod.Rtti]]
 
 [def __rtti_ns__ [^rtti]]
 [def __mmethod_ns__ [^rtti::mmethod]]
-[def __mmethod_macro__ [^MMETHOD]]
 
 [def __multimethod__ ['multi-method]]
 [def __multimethods__ ['multi-methods]]
@@ -38,3 +37,4 @@
 [include intro.qbk]
 [include motivation.qbk]
 [include rtti.qbk]
+[include multimethod.qbk]
