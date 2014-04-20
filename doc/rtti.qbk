@@ -5,7 +5,7 @@
           http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section:tutorial The __rtti__ library]
+[section:rtti The __rtti__ library]
 
 The __rtti__ sublibrary is meant to provide
 runtime reflexion to your C++ classes.
@@ -16,14 +16,16 @@ a unique id and the set of its base classes.
 
 In order to use the __rtti__ library, you need to include this file :
 
-[c++]
+``
     #include "mmethod/rtti.hpp"
+``
 
 All code resides in the __rtti_ns__ namespace. So we will suppose having
 issued the following using directive :
 
-[c++]
+``
     using namespace __rtti_ns__;
+``
 
 [heading Basic usage]
 
