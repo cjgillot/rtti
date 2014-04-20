@@ -19,6 +19,8 @@
   [category text]
 ]
 
+[def __boost__ [*Boost]]
+
 [def __mmethod__ [*MMethod]]
 [def __rtti__ [*MMethod.Rtti]]
 

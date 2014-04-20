@@ -61,7 +61,7 @@ namespace detail {
     klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
     { return a1.add(a0); }
   };
-} // namespace <>
+} // namespace detail
 
 template<typename R0, typename R1>
 signature_t make_signature(R0 const& r0, R1& r1) {
@@ -73,7 +73,7 @@ signature_t make_signature(R0 const& r0, R1& r1) {
 
     ret.array_ref().begin(),
 
-    detail::hierarchy_adder()
+    ::detail::hierarchy_adder()
   );
 
   return ret;

@@ -55,6 +55,6 @@ BOOST_AUTO_TEST_CASE(mixed) {
 
   BOOST_CHECK_EQUAL( f1(1, f),  6 );
   BOOST_CHECK_EQUAL( f1(2, r), 44 );
-  BOOST_CHECK_EQUAL( f1(3, z), 30 );
+  BOOST_CHECK_EQUAL( f1(3, z), 15 );
   BOOST_CHECK_EQUAL( f1(9, l), 51 ); // (lap is-a bar)
 }

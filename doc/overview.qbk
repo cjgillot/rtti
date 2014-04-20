@@ -21,6 +21,7 @@ include the master library header:
 
 
     #include <mmethod/mmethod.hpp>
+    using namespace rtti;
 
 
 which includes all the other headers in turn.
