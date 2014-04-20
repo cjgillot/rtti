@@ -10,6 +10,7 @@
 #include "mmethod/policy/noreturn_policy.hpp"
 
 #include <cstdlib>
+#include <boost/throw_exception.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -20,11 +21,7 @@ struct default_policy
 {
 
   static void bad_dispatch() {
-#ifndef BOOST_NO_EXCEPTIONS
-    throw rtti::bad_dispatch();
-#else
-    std::abort();
-#endif
+    boost::throw_exception( rtti::bad_dispatch() );
   }
 
 };

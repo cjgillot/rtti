@@ -55,7 +55,7 @@ struct check_policy
 
   static void bad_dispatch() {
     called_ambiguous = true;
-    throw rtti::bad_dispatch();
+    boost::throw_exception( rtti::bad_dispatch() );
   }
 };
 

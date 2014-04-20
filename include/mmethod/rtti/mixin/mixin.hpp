@@ -7,17 +7,15 @@
 #define RTTI_MIXIN_MIXIN_HPP
 
 #include "mmethod/config.hpp"
+#include "mmethod/rtti/implement_traits.hpp"
 #include "mmethod/rtti/mixin/mixin_node.hpp"
 #include "mmethod/rtti/getter.hpp"
 
-#include <boost/mpl/size.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
-#include <boost/mpl/transform.hpp>
 
 #include <boost/utility/declval.hpp>
 
-#include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 
 namespace rtti {
@@ -37,15 +35,9 @@ struct mixin
 {
 
 private:
-  // parent classes manipulation
-  typedef typename boost::mpl::transform<
-    Supers
-  , boost::add_cv<boost::mpl::_>
-  >::type parents;
-
-  BOOST_STATIC_CONSTANT(std::size_t, arity = boost::mpl::size<parents>::value);
-  struct arity_type { unsigned char __dummy [ 1+arity ]; };
-  BOOST_STATIC_ASSERT( sizeof(arity_type) == 1+arity );
+  typedef detail::implement_traits<Derived, Supers> itraits;
+  typedef typename itraits::parents parents;
+  typedef typename itraits::arity_type arity_type;
 
   static detail::mixin_node_holder const&
   fetch_node_holder(mixin const& x) {
