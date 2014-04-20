@@ -21,6 +21,7 @@
 
 [def __boost__ [*Boost]]
 [def __sequence__ [@http://www.boost.org/doc/libs/1_55_0/libs/mpl/doc/refmanual/forward-sequence.html ['Boost.MPL Forward-Sequence]]]
+[def __shared_ptr__ [@http://www.boost.org/doc/libs/1_55_0/libs/smart_ptr/shared_ptr.htm ['Boost shared_ptr]]]
 
 [def __mmethod__ [*MMethod]]
 [def __rtti__ [*MMethod.Rtti]]
@@ -38,3 +39,4 @@
 [include motivation.qbk]
 [include rtti.qbk]
 [include multimethod.qbk]
+[include smart_ptr.qbk]
