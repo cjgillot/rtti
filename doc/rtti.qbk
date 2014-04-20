@@ -1,0 +1,43 @@
+[/
+          Copyright Camille Gillot 2012 - 2014.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:tutorial The __rtti__ library]
+
+The __rtti__ sublibrary is meant to provide
+runtime reflexion to your C++ classes.
+Namely, it will register to each class
+a unique id and the set of its base classes.
+
+[heading Accessing the library]
+
+In order to use the __rtti__ library, you need to include this file :
+
+[c++]
+    #include "mmethod/rtti.hpp"
+
+All code resides in the __rtti_ns__ namespace. So we will suppose having
+issued the following using directive :
+
+[c++]
+    using namespace __rtti_ns__;
+
+[heading Basic usage]
+
+[import ../testsuite/rtti/basic.cpp]
+[ba_basic]
+
+[heading Multiple inheritance]
+
+[import ../testsuite/rtti/multiple.cpp]
+[mu_multiple]
+
+[heading Importing existing classes]
+
+[import ../testsuite/rtti/foreign.cpp]
+[fo_foreign]
+
+[endsect]
