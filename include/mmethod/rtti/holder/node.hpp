@@ -9,6 +9,8 @@
 #include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
 
+#include <boost/type_traits/alignment_of.hpp>
+
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
@@ -30,6 +32,8 @@ struct rtti_node_var<0> {
 }}} // namespace rtti::detail::holder_
 
 struct rtti::detail::rtti_node {
+  struct alignment;
+
   detail::holder_::rtti_node_var<1> self;
 };
 
@@ -51,6 +55,10 @@ rtti::detail::rtti_get_base_arity(rtti_node const* n)
   BOOST_ASSERT(n);
   return n->self.__arity;
 }
+
+struct rtti::detail::rtti_node::alignment
+: boost::alignment_of<holder_::rtti_node_var<0> >
+{};
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

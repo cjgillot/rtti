@@ -17,10 +17,11 @@ namespace rtti {
 namespace mmethod {
 
 template<typename Tag, typename Ret>
+BOOST_NOINLINE
 void dispatch<Tag,Ret>::initialize() {
   enum { arity = detail::access::traits<Tag>::vsize };
 
-  detail::init_table(arity, detail::get_register<Tag>::invoker_table);
+  detail::init_table(arity, detail::get_register<Tag>::table());
 }
 
 namespace dispatch_detail {
@@ -31,7 +32,7 @@ struct seal_poles_once {
 
   template<std::size_t J>
   void apply() {
-    *p = get_poles_map::get<Tag, J>();
+    *p = &get_register<Tag>::template poles<J>();
     ++p;
   }
 };
@@ -47,6 +48,7 @@ struct seal_poles {
 } // namespace dispatch_detail
 
 template<typename Tag, typename Ret>
+BOOST_NOINLINE
 void dispatch<Tag,Ret>::seal() {
   enum {
     arity = detail::access::traits<Tag>::vsize
@@ -54,6 +56,7 @@ void dispatch<Tag,Ret>::seal() {
   };
 
   detail::poles_map_type* poles [ arity ];
+  detail::invoker_table_type& table = detail::get_register<Tag>::table();
 
   typedef typename detail::access::traits<Tag>::policy policy_type;
   typedef typename detail::access::trampoline<Tag>::sig_t fp_t;
@@ -63,14 +66,14 @@ void dispatch<Tag,Ret>::seal() {
   };
 
   detail::seal_table_type seal_table = {
-    detail::get_register<Tag>::invoker_table
+    table
   , poles
   , policy
   };
 
   dispatch_detail::seal_poles<Tag, btset>::eval( poles );
 
-  detail::seal_table(arity, detail::get_register<Tag>::invoker_table, seal_table);
+  detail::seal_table(arity, table, seal_table);
 }
 
 }} // namespace rtti::mmethod

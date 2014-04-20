@@ -14,7 +14,7 @@
 
   This library creates a efficient replacement of default C++ RTTI.
 
-  Using a ISO C++ construct, RTTI provides accès to a unique integer per class in the hierarchy.
+  Using a ISO C++ construct, RTTI provides access to a unique integer per class in the hierarchy.
   For each class, its bases' ids are also exposed as a linked list. This feature
   allows dynamic introspection through the hierarchy.
   
