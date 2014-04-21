@@ -87,8 +87,6 @@ hierarchy_t::pole_init(klass_t* k) {
 //!\brief Pseudo-closest algorithm (Fig 9)
 std::size_t
 hierarchy_t::pseudo_closest(const klass_t* klass, const klass_t* *out_pole) {
-  BOOST_ASSERT(pole);
-
   // compute candidates
   std::vector<klass_t const*> candidates;
   candidates.reserve(klass->bases.size());
@@ -135,6 +133,7 @@ struct wanderer_t {
   wanderer_t(std::size_t) {}
 
   typedef klass_t* value_type;
+  typedef value_type const& const_reference;
 
   // is_pole is used as a traversal flag
   void push_back(klass_t const* k) {
@@ -201,15 +200,6 @@ void hierarchy_t::compute_poles(std::vector<klass_t const*>& seq) {
   // Prepare room -> worst case
   BOOST_ASSERT( seq.empty() );
   seq.reserve(klasses.size());
-
-#ifndef NDEBUG
-  // assert structure
-  foreach(klass_t const* k, wanderer.stack)
-    if(k->is_pole())
-      BOOST_ASSERT( k->pole == k );
-    else
-      BOOST_ASSERT( !k->pole );
-#endif
 
   // prepare traversal structure
   wanderer_t wanderer (dict.size());

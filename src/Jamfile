@@ -3,10 +3,8 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-project
-  : default-build release
-  : requirements <include>./include
+lib rtti
+  : [ glob-tree *.cpp ]
+  : <include>.
   ;
-
-build-project src ; 
 
