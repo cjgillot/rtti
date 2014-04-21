@@ -5,12 +5,15 @@
 
 //[un_unary
 /*`
+  [import ./classes.hpp]
   [un_hier]
   [un_decl]
   [un_impl]
   [un_use]
  */
 //]
+
+#include "./classes.hpp"
 
 #include "mmethod/rtti.hpp"
 #include "mmethod/mmethod.hpp"
@@ -22,40 +25,6 @@
 using namespace rtti;
 
 namespace {
-
-//[un_hier
-/*`
-  Before declaring a __multimethod__, we will need a
-  __rtti__-enabled class hierarchy.
- */
-
-using boost::mpl::vector;
-
-struct foo
-: base_rtti<foo> {
-public:
-  virtual ~foo() {}
-  
-  int f() const { return 5; }
-};
-
-struct bar
-: foo
-, implement_rtti<bar, vector<foo> >
-{
-  int g() const { return 42; }
-};
-
-struct baz
-: foo
-, implement_rtti<baz, vector<foo> >
-{};
-
-struct lap
-: bar
-, implement_rtti<lap, vector<bar> >
-{};
-//]
 
 //[un_decl
 /*`

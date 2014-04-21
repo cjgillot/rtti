@@ -24,6 +24,8 @@
  */
 //]
 
+#include "./classes.hpp"
+
 #include "mmethod/rtti.hpp"
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
@@ -35,31 +37,6 @@ using namespace rtti;
 using boost::mpl::vector;
 
 namespace {
-
-struct foo
-: base_rtti<foo> {
-public:
-  virtual ~foo() {}
-  
-  int f() { return 5; }
-};
-
-struct bar
-: foo
-, implement_rtti<bar, vector<foo> >
-{
-  int g() { return 42; }
-};
-
-struct baz
-: foo
-, implement_rtti<baz, vector<foo> >
-{};
-
-struct lap
-: bar
-, implement_rtti<lap, vector<bar> >
-{};
 
 //[pr_decl
 using tags::_v;
