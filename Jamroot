@@ -8,5 +8,11 @@ project
   : requirements <include>./include
   ;
 
+use-project /library : src ;
 build-project src ; 
+
+build-project benchmark ;
+
+explicit doc ;
+explicit testsuite ;
 

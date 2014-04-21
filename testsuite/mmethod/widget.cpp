@@ -81,7 +81,7 @@ struct WLetter
 
   void show() const { WString::show(); }
 
-  inline char get_letter() const { return get_str().front(); }
+  inline char get_letter() const { return get_str()[0]; }
 };
 //]
 
