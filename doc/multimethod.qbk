@@ -44,4 +44,9 @@ that this code is present.
 [import ../testsuite/mmethod/prefetch.cpp]
 [pr_prefetch]
 
+[heading Explicit table generation]
+
+[import ../testsuite/mmethod/generate.cpp]
+[ge_generate]
+
 [endsect]

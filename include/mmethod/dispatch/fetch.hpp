@@ -73,8 +73,6 @@ struct fetch_invoker<1, Tag, BTS> {
 template<typename Tag, typename Ret>
 template<typename Tuple>
 invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
-  this->generate();
-
   enum {
     arity = detail::access::traits<Tag>::vsize,
     btset = detail::access::traits<Tag>::type_bitset
