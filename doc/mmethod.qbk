@@ -40,3 +40,5 @@
 [include rtti.qbk]
 [include multimethod.qbk]
 [include smart_ptr.qbk]
+[include policy.qbk]
+
