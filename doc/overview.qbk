@@ -28,6 +28,6 @@ which includes all the other headers in turn.
 
 All __rtti__ functions and classes are contained in namespace __rtti_ns__.
 All __mmethod__ functions and classes are contained in namespace __mmethod_ns__.
-All __mmethod__ macros are prefixed by __mmethod_macro__.
+All __mmethod__ macros are prefixed by MMETHOD_.
 
 [endsect]
