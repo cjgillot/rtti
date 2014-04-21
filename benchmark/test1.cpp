@@ -61,3 +61,7 @@ void test(foo* f, std::size_t N) {
   t2 = time([=](){ loop_mm2 (*f, *f, N); }, "mmethod2");
   std::printf("ratio : %f\n", t2 / t1);
 }
+
+void boost::throw_exception(std::exception const&)
+{ std::abort(); }
+

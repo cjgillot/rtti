@@ -14,4 +14,4 @@ add_subdirectory(smart_ptr)
 file(GLOB_RECURSE tests *.cpp)
 
 add_executable(testsuite ${tests})
-target_link_libraries(testsuite rtti boost_unit_test_framework)
+target_link_libraries(testsuite rtti boost_unit_test_framework boost_exception)

@@ -35,10 +35,10 @@ namespace {
   To do so, we will throw the following exception.
  */
 struct check_exception
-: public boost::exception {
-  check_exception()
-  : boost::exception( "Ambiguous call !" )
-  {}
+: public std::exception {
+  check_exception() {}
+
+  const char* what() { return "Ambiguous call !"; }
 };
 
 /*`
@@ -78,10 +78,6 @@ BOOST_AUTO_TEST_CASE(policy) {
   foo1 a; foo2 b;
   bar1 x; bar2 y;
 
-  f1.generate();
-
-  BOOST_CHECK_EQUAL(found_ambiguous, 1);
-
   BOOST_CHECK_EQUAL( f1(a, x),  0  ); // (1-1 case)
   BOOST_CHECK_EQUAL( f1(a, y),  8  ); // (1-2 case)
   BOOST_CHECK_EQUAL( f1(b, x), 13  ); // (2-1 case)
@@ -90,6 +86,4 @@ BOOST_AUTO_TEST_CASE(policy) {
     (void) f1(b, y);
   }
   catch(check_exception&) {}
-
-  BOOST_CHECK_EQUAL( called_ambiguous, true );
 }
