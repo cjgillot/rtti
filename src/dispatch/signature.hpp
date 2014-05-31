@@ -41,8 +41,8 @@ public:
   {
     bool operator()(const signature_t& a, const signature_t& b) const;
   };
-  // partial subtyping order
-  struct subtypes
+  // worse match order
+  struct worse_match
   {
     bool operator()(const signature_t& a, const signature_t& b) const;
   };

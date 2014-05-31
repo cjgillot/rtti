@@ -31,12 +31,16 @@ bool signature_t::total_order::operator()(const signature_t& a, const signature_
   );
 }
 
-// partial subtyping order
-bool signature_t::subtypes::operator()(const signature_t& a, const signature_t& b) const
+// worse_match order
+bool signature_t::worse_match::operator()(const signature_t& a, const signature_t& b) const
 {
   BOOST_ASSERT(a.sig.size() == b.sig.size());
+
   // return true if [b] is better overload than [a]
-  // ie. if [\forall i, a_i <: b_i \and \exists_i, \not(b_i <: a_i)]
+  // ie. if :
+  //   \forall i, a_i <: b_i (b generalizes a)
+  // and
+  //   \exists_i, \not(b_i <: a_i) (a does not generalize b)
   klass_t::is_subtype_of f;
   bool notallbase = false;
 

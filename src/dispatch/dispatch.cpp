@@ -39,7 +39,7 @@ void rtti_dispatch::dispatch(
   product_alloc(p, pole_table);
 
   // the order given by product_incr is
-  // a topological order for signature_t::subtypes,
+  // a topological order for signature_t::worse_match,
   // each base is dispatched before any of its derived
   do {
     signature_t sig ( product_deref(p) );
@@ -110,37 +110,35 @@ static void insert_upcasts(
   }
 }
 
+// poll [max_set] and insert if good match
 static void filter_insert(
   max_set_type& max_set
 , overload_t const& up
 ) {
-  signature_t::subtypes subtypes;
+  signature_t::worse_match worse;
 
-  // poll max_set
-  bool dominated = false;
-  {
-    max_set_type::iterator
-      iter = max_set.begin()
-    , endl = max_set.end();
+  max_set_type::iterator
+    iter = max_set.begin()
+  , endl = max_set.end();
 
-    while(iter != endl) {
-      overload_t const& e = *iter;
+  while(iter != endl) {
+    overload_t const& e = *iter;
 
-      // [up] is better match, remove [it]
-      if( subtypes(e.first, up.first) )
-        iter = max_set.erase(iter);
-
-      // [it] is better match, don't insert [s2]
-      else if( subtypes(up.first, e.first) )
-      { dominated = true; break; }
-
-      // continue
-      else
-        ++iter;
+    // [up] is better match, remove [e]
+    if( worse(e.first, up.first) ) {
+      iter = max_set.erase(iter);
+      continue;
     }
+
+    // [e] is better match, don't insert [up]
+    else if( worse(up.first, e.first) ) {
+      return;
+    }
+
+    // poll next overload
+    ++iter;
   }
 
   // none of [max_set] is better
-  if( !dominated )
-    max_set.push_back(up);
+  max_set.push_back(up);
 }
