@@ -151,7 +151,8 @@ void hierarchy_t::compute_poles(input_type const& input) {
     this->add(hh);
 
   // Prepare room -> worst case
-  klasses.reserve( input.size() );
+  BOOST_ASSERT( seq.empty() );
+  seq.reserve(klasses.size());
 
   // prepare traversal structure
   wanderer_t wanderer ( input.size() );

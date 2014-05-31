@@ -37,7 +37,7 @@ protected:
   inline void insert(F const& f)
   { m_dispatch.template insert<K>(f); }
 
-  inline void generate()
+  inline void generate() const
   { m_dispatch.generate(); }
 
 protected:
@@ -45,7 +45,8 @@ protected:
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
 
-  inline func_t fetch(
+  // fast path : no check for generate()
+  inline func_t fast_fetch(
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
@@ -55,12 +56,36 @@ protected:
     invoker_t inv = m_dispatch.fetch( tuple_type(MMETHOD_TRAMPOLINE_FUNC_ARGS) );
     return reinterpret_cast<func_t>(inv);
   }
+  inline Ret fast_call(
+    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+  ) const
+  {
+    func_t f = this->fast_fetch(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+  }
+
+  // safe path : generate() first
+  inline func_t fetch(
+    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+  ) const
+  {
+    this->generate();
+    return this->fast_fetch( MMETHOD_TRAMPOLINE_FUNC_ARGS );
+  }
+  inline Ret call(
+    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+  ) const
+  {
+    this->generate();
+    return (Ret) this->fast_call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+  }
+
+  // cosmetic
   inline Ret operator()(
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
-    func_t f = this->fetch(MMETHOD_TRAMPOLINE_FUNC_ARGS);
-    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    return (Ret) this->call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
