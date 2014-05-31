@@ -39,7 +39,7 @@ struct rtti::detail::rtti_node {
 
 inline rtti::rtti_type
 rtti::detail::rtti_get_id(rtti_node const* n)
-{ return static_cast<rtti_type>(n); }
+{ return static_cast<rtti_type>( static_cast<void const*>(n) ); }
 
 inline rtti::rtti_node const*
 rtti::detail::rtti_get_base(rtti_node const* n, std::size_t k)
