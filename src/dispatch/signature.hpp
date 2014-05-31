@@ -27,6 +27,10 @@ public:
   explicit signature_t(const Range &v)
   : sig(boost::begin(v), boost::end(v)) {}
 
+  static signature_t unary(klass_t const* k) {
+    return signature_t( std::make_pair(&k, &k+1) );
+  }
+
 public:
   sig_type& array_ref() { return sig; }
   sig_type const& array() const { return sig; }

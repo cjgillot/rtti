@@ -25,18 +25,15 @@ hierarchy_t::~hierarchy_t()
 }
 
 klass_t*
-hierarchy_t::do_add(rtti_hierarchy vec) {
-  if(!vec)
-    return NULL;
-
-  rtti_type id = rtti_get_id(vec);
+hierarchy_t::add(rtti_hierarchy vec) {
+  BOOST_ASSERT(vec);
 
   { // memorized case
-    dict_t::iterator const dit = dict.find(id);
-    if(dit != dict.end()) {
+    poles_map_t::const_iterator const dit = poles.find(vec);
+    if(dit != poles.end()) {
       klass_t* k = dit->second;
 
-      BOOST_ASSERT( k->id == id );
+      BOOST_ASSERT( k->rtti == vec );
 
       return k;
     }
@@ -45,19 +42,34 @@ hierarchy_t::do_add(rtti_hierarchy vec) {
   // creation case
   std::size_t const arity = rtti_get_base_arity(vec);
 
-  klasses.push_back( new klass_t( id, arity ) );
+  klasses.push_back( new klass_t( vec ) );
   klass_t* k = klasses.back();
 
-  dict.insert(std::make_pair( id, k ));
-  for(std::size_t i = 0; i < arity; ++i)
-    k->bases[i] = do_add( rtti_get_base(vec, i) );
+  // fill base classes
+  k->bases.reserve(arity);
+  for(std::size_t i = 0; i < arity; ++i) {
+    rtti_hierarchy base = rtti_get_base(vec, i);
+
+    poles_map_t::const_iterator it = poles.find(base);
+    if(it != poles.end())
+      k->bases.push_back(it->second);
+  }
+
+  poles.insert(std::make_pair(vec, k));
 
   return k;
 }
 
+void
+hierarchy_t::remove(klass_t const* k) {
+  klasses.erase(std::remove(klasses.begin(), klasses.end(), k), klasses.end());
+  poles.erase(k->get_rtti());
+  delete k;
+}
+
 klass_t const*
-hierarchy_t::add(rtti_hierarchy vec) {
-  klass_t* base = do_add(vec);
-  base->pole = base;
-  return base;
+hierarchy_t::fetch(rtti_hierarchy hh) const {
+  klass_t const* k = poles.at(hh);
+  BOOST_ASSERT( std::find(klasses.begin(), klasses.end(), k) != klasses.end() );
+  return k;
 }

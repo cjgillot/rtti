@@ -54,7 +54,7 @@ void output_device::rerank(
 void output_device::rerank_unary() {
   foreach(pole_table_t::const_reference h, poles) {
     foreach(klass_t const* k, h) {
-      dispatch_t::mapped_type const& target = dispatch.at( *k->sig );
+      dispatch_t::mapped_type const& target = dispatch.at( signature_t::unary(k) );
       invoker_t ptr = target.second;
 
       uintptr_t value = reinterpret_cast<uintptr_t>(ptr ? ptr : output.ambiguity_policy.bad_dispatch);

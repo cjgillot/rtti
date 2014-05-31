@@ -24,8 +24,8 @@ extern void dispatch(
 
 // from order_poles.cpp
 extern void order_poles(
-  pole_table_t& pole_table,
-  std::vector<hierarchy_t>& hierarchies
+  pole_table_t& pole_table
+, std::vector<std::vector<rtti_hierarchy> > const& hierarchies
 );
 
 // from mph.cpp

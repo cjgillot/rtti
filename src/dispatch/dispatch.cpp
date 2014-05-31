@@ -23,14 +23,14 @@
  * for Multi-Methods and Open-Methods for C++.
  */
 
+// Infrastructure for topological traversal
 namespace {
 
-typedef std::vector<const klass_t*> kvector_t;
-typedef kvector_t::const_iterator   iter_t;
-typedef std::vector<kvector_t::const_iterator> product_t;
+typedef hierarchy_t::const_iterator iter_t;
+typedef std::vector<iter_t> product_t;
 
 struct beginner {
-  iter_t operator()(kvector_t const& p) const
+  iter_t operator()(hierarchy_t const& p) const
   { return p.begin(); }
 };
 

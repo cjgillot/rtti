@@ -17,14 +17,14 @@
 
 void rtti_dispatch::order_poles(
   pole_table_t& pole_table
-, std::vector<hierarchy_t>& hierarchies
+, std::vector<std::vector<rtti_hierarchy> > const& hierarchies
 ) {
   std::size_t const arity = pole_table.size();
 
   for(std::size_t i = 0; i < arity; ++i) {
     pole_table_t::reference t = pole_table[i];
-    hierarchy_t& h = hierarchies[i];
+    std::vector<rtti_hierarchy> const& h = hierarchies[i];
 
-    h.compute_poles(t);
+    t.compute_poles(h);
   }
 }
