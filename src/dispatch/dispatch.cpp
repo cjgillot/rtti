@@ -58,14 +58,16 @@ struct sig_upcaster {
   std::size_t k;
   std::size_t b;
   
-  sig_upcaster(signature_t const& s0, std::size_t a, dispatch_t const& d);
-  overload_t const* operator()() BOOST_NOEXCEPT_OR_NOTHROW;
+  sig_upcaster(signature_t const& s0, std::size_t a, dispatch_t const& d)
+  : sig0(s0), arity(a), dispatch(d)
+  , k(0), b(0) {}
 };
 
 } // namespace <>
 
 typedef std::list<overload_t> max_set_type;
 
+static overload_t const* sig_upcast(sig_upcaster&);
 static void filter_insert(max_set_type& max_set, overload_t const* up);
 
 static void dispatch_one(
@@ -80,14 +82,14 @@ static void dispatch_one(
 
   std::size_t const arity = pole_table.size();
 
-  sig_upcaster upcast ( sig, arity, dispatch );
+  sig_upcaster supcast ( sig, arity, dispatch );
 
   // set of candidates
   max_set_type max_set;
 
   for(;;) {
     // new candidate to be tested
-    overload_t const* up = upcast();
+    overload_t const* up = sig_upcast(supcast);
 
     // end loop ?
     if(!up)
@@ -114,12 +116,8 @@ static void dispatch_one(
   }
 }
 
-sig_upcaster::sig_upcaster(const signature_t& s0, std::size_t a, const dispatch_t& d)
-: sig0(s0), arity(a), dispatch(d)
-, k(0), b(0) {}
-
-overload_t const*
-sig_upcaster::operator()() BOOST_NOEXCEPT_OR_NOTHROW
+static overload_t const*
+sig_upcast()
 {
   for(;;) {
     signature_t sig = sig0;
