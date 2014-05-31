@@ -19,13 +19,13 @@ namespace detail {
 
 BOOST_CONSTEXPR inline
 bucket_t::bucket_t() BOOST_NOEXCEPT_OR_NOTHROW
-: m_key( rtti_type(0ul) ), m_value(1)
+: m_key(0ul), m_value(1ul)
 {}
 
-inline key_type   bucket_t::key()   const BOOST_NOEXCEPT_OR_NOTHROW { return m_key;   }
+inline key_type   bucket_t::key()   const BOOST_NOEXCEPT_OR_NOTHROW { return reinterpret_cast<key_type>(m_key);   }
 
 inline bool       bucket_t::empty() const BOOST_NOEXCEPT_OR_NOTHROW { return m_value & 1; }
-inline value_type bucket_t::value() const BOOST_NOEXCEPT_OR_NOTHROW { return static_cast<value_type>(m_value); }
+inline value_type bucket_t::value() const BOOST_NOEXCEPT_OR_NOTHROW { return reinterpret_cast<value_type>(m_value); }
 
 }}} // namespace rtti::hash::detail
 

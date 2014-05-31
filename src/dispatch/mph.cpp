@@ -142,9 +142,10 @@ static void fill_map(
 
   // insert expects 2-aligned values
   foreach(klass_t const* k, dynamics) {
+    rtti_type key   = k->get_id();
     uintptr_t value = ht.at(k);
+    a.insert(key, value);
     BOOST_ASSERT( (value & 1) == 0 );
-    a.insert(k->get_id(), value);
   }
 }
 

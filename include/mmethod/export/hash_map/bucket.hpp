@@ -28,7 +28,7 @@ private:
   typedef uintptr_t storage_type;
 
   // assume even values
-  key_type      m_key;
+  storage_type  m_key;
   storage_type  m_value;
 
 public:
