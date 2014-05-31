@@ -33,7 +33,6 @@ private:
 
 public:
   BOOST_CONSTEXPR bucket_t() BOOST_NOEXCEPT_OR_NOTHROW;
-  BOOST_CONSTEXPR bucket_t(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW;
 
   // access
   key_type   key()   const BOOST_NOEXCEPT_OR_NOTHROW;

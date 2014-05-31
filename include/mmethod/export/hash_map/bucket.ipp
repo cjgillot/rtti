@@ -22,11 +22,6 @@ bucket_t::bucket_t() BOOST_NOEXCEPT_OR_NOTHROW
 : m_key( rtti_type(0ul) ), m_value(1)
 {}
 
-BOOST_CONSTEXPR inline
-bucket_t::bucket_t(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW
-: m_key(k), m_value( static_cast<storage_type>(v) )
-{}
-
 inline key_type   bucket_t::key()   const BOOST_NOEXCEPT_OR_NOTHROW { return m_key;   }
 
 inline bool       bucket_t::empty() const BOOST_NOEXCEPT_OR_NOTHROW { return m_value & 1; }
