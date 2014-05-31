@@ -48,27 +48,10 @@ void rtti_dispatch::dispatch(
   while( product_incr(p, pole_table) );
 }
 
-namespace {
-
-struct sig_upcaster {
-  signature_t const& sig0;
-  std::size_t const arity;
-  dispatch_t  const& dispatch;
-  
-  std::size_t k;
-  std::size_t b;
-  
-  sig_upcaster(signature_t const& s0, std::size_t a, dispatch_t const& d)
-  : sig0(s0), arity(a), dispatch(d)
-  , k(0), b(0) {}
-};
-
-} // namespace <>
-
 typedef std::list<overload_t> max_set_type;
 
-static overload_t const* sig_upcast(sig_upcaster&);
-static void filter_insert(max_set_type& max_set, overload_t const* up);
+static void insert_upcasts(signature_t const& sig0, dispatch_t const& dispatch, max_set_type& max_set);
+static void filter_insert(max_set_type& max_set, overload_t const& up);
 
 static void dispatch_one(
   const signature_t& sig,
@@ -80,24 +63,9 @@ static void dispatch_one(
   if(dispatch.find(sig) != dispatch.end())
     return;
 
-  std::size_t const arity = pole_table.size();
-
-  sig_upcaster supcast ( sig, arity, dispatch );
-
   // set of candidates
   max_set_type max_set;
-
-  for(;;) {
-    // new candidate to be tested
-    overload_t const* up = sig_upcast(supcast);
-
-    // end loop ?
-    if(!up)
-      break;
-
-    // insert in max_set
-    filter_insert(max_set, up);
-  }
+  insert_upcasts(sig, dispatch, max_set);
 
   if(max_set.size() == 1)
     dispatch.insert(std::make_pair( sig, max_set.front() ));
@@ -106,6 +74,8 @@ static void dispatch_one(
     dispatch.insert(std::make_pair( sig, overload_t(sig, NULL) ));
 
     if(ahndl) {
+      std::size_t const arity = sig.array().size();
+
       std::vector<rtti_type> amb; amb.resize(arity);
 
       for(std::size_t k = 0; k < arity; ++k)
@@ -116,41 +86,33 @@ static void dispatch_one(
   }
 }
 
-static overload_t const*
-sig_upcast()
-{
-  for(;;) {
-    signature_t sig = sig0;
+static void insert_upcasts(
+  signature_t const& sig0,
+  dispatch_t const& dispatch,
+  max_set_type& max_set
+) {
+  std::size_t const arity = sig0.array().size();
 
-    // continue upcast on base [b] of argument [k]
-    klass_t const* nk = NULL;
-    while(!nk) {
-      // proceed to next argument
-      while( b == sig.array()[k]->get_bases().size() ) {
-        b = 0; ++k;
-        if(k == arity)
-          return NULL;
-      }
+  for(std::size_t k = 0; k < arity; ++k) {
+    klass_t const* kth = sig0.array()[k];
 
-      // select
-      nk = sig.array()[k]->get_bases()[b];
+    foreach(klass_t const* base, kth->get_bases()) {
+      // copy signature and replace
+      signature_t sig = sig0;
+      sig.array_ref()[k] = base;
 
-      // prepare for next base
-      ++b;
+      // we can safely use [dispatch.at] since all the candidates have been dispatched already
+      overload_t const& bound = dispatch.at(sig);
+
+      // call filter
+      filter_insert(max_set, bound);
     }
-
-    sig.array_ref()[k] = nk;
-
-    // we can safely use [dispatch.at] since all the candidates have been dispatched already
-    overload_t const& bound = dispatch.at(sig);
-
-    return &bound;
   }
 }
 
 static void filter_insert(
   max_set_type& max_set
-, overload_t const* up
+, overload_t const& up
 ) {
   signature_t::subtypes subtypes;
 
@@ -164,12 +126,12 @@ static void filter_insert(
     while(iter != endl) {
       overload_t const& e = *iter;
 
-      // [*up] is better match, remove [it]
-      if( subtypes(e.first, up->first) )
+      // [up] is better match, remove [it]
+      if( subtypes(e.first, up.first) )
         iter = max_set.erase(iter);
 
       // [it] is better match, don't insert [s2]
-      else if( subtypes(up->first, e.first) )
+      else if( subtypes(up.first, e.first) )
       { dominated = true; break; }
 
       // continue
@@ -180,5 +142,5 @@ static void filter_insert(
 
   // none of [max_set] is better
   if( !dominated )
-    max_set.push_back(*up);
+    max_set.push_back(up);
 }
