@@ -85,6 +85,7 @@ struct wanderer_t {
   wanderer_t(std::size_t) {}
 
   typedef rtti_hierarchy value_type;
+  typedef value_type const& const_reference;
 
   // is_pole is used as a traversal flag
   void push_back(rtti_hierarchy k) {
