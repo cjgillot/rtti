@@ -149,7 +149,6 @@ static void dispatch_one(
     dispatch.insert(std::make_pair( sig, max_set.front() ));
 
   else {
-    //FIXME : diagnose
     dispatch.insert(std::make_pair( sig, overload_t(sig, NULL) ));
 
     if(ahndl) {
@@ -159,23 +158,6 @@ static void dispatch_one(
         amb[k] = sig.array()[k]->get_id();
 
       ahndl(arity, amb.data());
-//     if(max_set.size() == 0) {
-//       std::cerr << "No overload found for signature : ";
-//       PRINT_SIG(sig);
-//       std::cerr << std::endl;
-//     }
-//     else {
-//       std::cerr << "Ambiguity found for signature : ";
-//       PRINT_SIG(sig);
-//       std::cerr << std::endl << "note : candidates are : ";
-//       size_t ind = 0;
-//       for(overload_t const& candidate : max_set) {
-//         if(ind++>0)
-//           std::cerr << " ; ";
-//         PRINT_SIG(candidate.first);
-//       }
-//       std::cerr << std::endl;
-//     }
     }
   }
 }
