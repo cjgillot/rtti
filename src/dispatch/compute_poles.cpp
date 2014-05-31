@@ -150,9 +150,6 @@ void hierarchy_t::compute_poles(input_type const& input) {
   foreach(rtti_hierarchy hh, input)
     this->add(hh);
 
-  // Prepare room -> worst case
-  klasses.reserve( input.size() );
-
   // prepare traversal structure
   wanderer_t wanderer ( input.size() );
   std::copy(

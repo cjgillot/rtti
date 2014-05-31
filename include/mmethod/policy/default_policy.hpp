@@ -19,9 +19,8 @@ namespace ambiguity {
 struct default_policy
 : noreturn_policy<default_policy>
 {
-
   static void bad_dispatch() {
-    boost::throw_exception( rtti::bad_dispatch() );
+    BOOST_THROW_EXCEPTION( rtti::bad_dispatch() );
   }
 
 };

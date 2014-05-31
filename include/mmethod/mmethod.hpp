@@ -6,9 +6,10 @@
 #ifndef RTTI_MMETHOD_HPP
 #define RTTI_MMETHOD_HPP
 
-#include "mmethod/config.hpp"
-#include "mmethod/declare/declare.hpp"
-#include "mmethod/dispatch.hpp"
+#include "mmethod/rtti.hpp"
+#include "mmethod/invoke.hpp"
+#include "mmethod/declare.hpp"
+#include "mmethod/implement.hpp"
 
 /*! \page RTTI.MMethod library
 

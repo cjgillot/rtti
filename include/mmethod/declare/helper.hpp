@@ -37,10 +37,16 @@ protected:
   typedef Ret result_type;
   typedef typename call_helper::func_t func_t;
 
+  using call_helper::fast_fetch;
+  using call_helper::fast_call;
+
   using call_helper::fetch;
+  using call_helper::call;
+
+  using call_helper::operator();
+
   using call_helper::insert;
   using call_helper::generate;
-  using call_helper::operator();
 };
 
 template<typename Tag, typename Policy, typename Sig>
