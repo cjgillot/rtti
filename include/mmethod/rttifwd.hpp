@@ -23,7 +23,7 @@ namespace detail {
 typedef void(*invoker_t)();
 
 //! \brief RTTI id type
-typedef void const* rtti_type;
+typedef struct rtti_type_struct const* rtti_type;
 
 //! \brief RTTI node type
 //! POD class holding a hierarchy bottom-up

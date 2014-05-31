@@ -12,6 +12,8 @@
 
 #include "boost/mmethod/export/exception.hpp"
 
+#include <boost/throw_exception.hpp>
+
 #include <utility>
 
 namespace boost {
@@ -62,13 +64,9 @@ BOOST_MMETHOD_ATTRIBUTE_PURE
 get_node(U& x)
 {
   typedef boost::mmethod::pointer_traits<U&> traits;
-  if(! traits::valid(x)) {
-#ifndef BOOST_NO_EXCEPTIONS
-    throw bad_rtti();
-#else
-    std::abort();
-#endif
-  }
+  if(! traits::valid(x))
+    boost::throw_exception( bad_rtti() );
+
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
 
@@ -79,13 +77,9 @@ BOOST_MMETHOD_ATTRIBUTE_PURE
 get_node(U const& x)
 {
   typedef boost::mmethod::pointer_traits<U const&> traits;
-  if(! traits::valid(x)) {
-#ifndef BOOST_NO_EXCEPTIONS
-    throw bad_rtti();
-#else
-    std::abort();
-#endif
-  }
+  if(! traits::valid(x))
+    boost::throw_exception( bad_rtti() );
+
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
 

@@ -17,15 +17,14 @@ namespace boost_mmethod_dispatch {
 // from dispatch.cpp
 extern void dispatch(
   dispatch_t &dispatch,
-  overloads_t& overloads,
   const pole_table_t &pole_table,
   ambiguity_handler_t ahndl
 );
 
 // from order_poles.cpp
 extern void order_poles(
-  pole_table_t& pole_table,
-  std::vector<hierarchy_t>& hierarchies
+  pole_table_t& pole_table
+, std::vector<std::vector<rtti_hierarchy> > const& hierarchies
 );
 
 // from mph.cpp
@@ -33,7 +32,7 @@ extern void output_tables(
   seal_table_type& f,
   const pole_table_t& pole_table,
   const dispatch_t& dispatch,
-  const early_bindings_type& decl
+  const early_bindings_struct& decl
 );
 
 } // namespace boost_mmethod_dispatch

@@ -57,7 +57,7 @@ struct fetch_poles {
 template<std::size_t Arity, typename Tag, std::size_t BTS>
 struct fetch_invoker {
   static invoker_t eval(uintptr_t spec) {
-    return get_register<Tag>::table()[spec / 2];
+    return get_register<Tag>::table()[spec];
   }
 };
 template<typename Tag, std::size_t BTS>

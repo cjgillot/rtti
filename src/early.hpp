@@ -13,10 +13,11 @@
 
 using namespace boost::mmethod;
 using boost::mmethod::detail::invoker_t;
+using boost::mmethod::detail::early_bindings_struct;
 
 typedef std::vector<rtti_hierarchy> signature_type;
 typedef std::pair<signature_type, invoker_t> binding_type;
-struct early_bindings_type {
+struct boost::mmethod::detail::early_bindings_struct {
   std::size_t arity;
   std::vector<binding_type> vector;
 };
@@ -27,7 +28,7 @@ using boost::mmethod::detail::ambiguity_handler_t;
 
 namespace boost_mmethod_dispatch {
   // dispatch/mmethod.cpp
-  extern void process_declaration(early_bindings_type const&, seal_table_type&);
+  extern void process_declaration(early_bindings_struct const&, seal_table_type&);
 }
 
 #endif

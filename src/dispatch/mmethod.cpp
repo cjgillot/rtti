@@ -9,19 +9,16 @@
 
 #include <vector>
 
-void boost_mmethod_dispatch::process_declaration(early_bindings_type const& decl, seal_table_type& output)
+void boost_mmethod_dispatch::process_declaration(early_bindings_struct const& decl, seal_table_type& output)
 {
   std::size_t arity = decl.arity;
 
   /// hierarchy stuff
-  std::vector<hierarchy_t> hierarchies ( arity );
-
-  /// parsing input
-  overloads_t overloads; overloads.reserve( decl.vector.size() );
+  std::vector<std::vector<rtti_hierarchy> > hierarchies ( arity );
   foreach(binding_type const& over, decl.vector) {
-    signature_type const& h = over.first;
-
-    overloads.push_back( overload_t(make_signature(h, hierarchies), over.second) );
+    signature_type const& s = over.first;
+    for(std::size_t i = 0; i < arity; ++i)
+      hierarchies[i].push_back( s[i] );
   }
 
   /// order poles
@@ -29,14 +26,16 @@ void boost_mmethod_dispatch::process_declaration(early_bindings_type const& decl
   order_poles(pole_table, hierarchies);
 
   /// fill up dispatch table
-  dispatch_t dispatch_table;
-  dispatch(dispatch_table, overloads, pole_table, output.ambiguity_policy.ahndl);
+  dispatch_t dispatch_table; {
+    // declared overloads
+    foreach(binding_type const& over, decl.vector) {
+      signature_type const& h = over.first;
+      signature_t sig = make_signature(h, pole_table);
 
-  /// prepare poles for output : link each pole to a signature in which it appears
-  /// \warning This code must be after any change to \c overloads
-  foreach(const overload_t& sig, overloads)
-    foreach(const klass_t* k, sig.first.array())
-      const_cast<signature_t const*&>( k->sig ) = &sig.first;
+      dispatch_table.insert(std::make_pair(sig, overload_t(sig, over.second)));
+    }
+  }
+  dispatch(dispatch_table, pole_table, output.ambiguity_policy.ahndl);
 
   /// output
   output_tables(output, pole_table, dispatch_table, decl);

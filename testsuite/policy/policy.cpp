@@ -55,7 +55,7 @@ struct check_policy
 
   static void bad_dispatch() {
     called_ambiguous = true;
-    throw boost::mmethod::bad_dispatch();
+    boost::throw_exception( boost::mmethod::bad_dispatch() );
   }
 };
 

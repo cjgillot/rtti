@@ -16,10 +16,10 @@ using boost::mmethod::hash_detail::value_type;
 
 /// bucket_t implementation
 //@{
-inline void bucket_t::reset() BOOST_NOEXCEPT_OR_NOTHROW { m_value = 1; }
+inline void bucket_t::reset() BOOST_NOEXCEPT_OR_NOTHROW { m_key = 1; }
 inline void bucket_t::set(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW {
-  m_value = static_cast<storage_type>(v);
-  m_key = k;
+  m_value = reinterpret_cast<storage_type>(v);
+  m_key   = reinterpret_cast<storage_type>(k);
   BOOST_ASSERT( !empty() );
 }
 //@}

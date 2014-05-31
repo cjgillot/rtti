@@ -21,7 +21,7 @@ BOOST_NOINLINE
 void dispatch<Tag,Ret>::initialize() {
   enum { arity = detail::access::traits<Tag>::vsize };
 
-  detail::init_table(arity, detail::get_register<Tag>::table());
+  detail::init_table(arity, detail::get_register<Tag>::early());
 }
 
 namespace dispatch_detail {
@@ -56,7 +56,8 @@ void dispatch<Tag,Ret>::seal() {
   };
 
   detail::poles_map_type* poles [ arity ];
-  detail::invoker_table_type& table = detail::get_register<Tag>::table();
+  detail::invoker_table_type&  table = detail::get_register<Tag>::table();
+  detail::early_bindings_type& early = detail::get_register<Tag>::early();
 
   typedef typename detail::access::traits<Tag>::policy policy_type;
   typedef typename detail::access::trampoline<Tag>::sig_t fp_t;
@@ -73,7 +74,7 @@ void dispatch<Tag,Ret>::seal() {
 
   dispatch_detail::seal_poles<Tag, btset>::eval( poles );
 
-  detail::seal_table(arity, table, seal_table);
+  detail::seal_table(arity, early, seal_table);
 }
 
 }} // namespace boost::mmethod

@@ -28,12 +28,11 @@ private:
   typedef uintptr_t storage_type;
 
   // assume even values
-  key_type      m_key;
+  storage_type  m_key;
   storage_type  m_value;
 
 public:
   BOOST_CONSTEXPR bucket_t() BOOST_NOEXCEPT_OR_NOTHROW;
-  BOOST_CONSTEXPR bucket_t(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW;
 
   // access
   key_type   key()   const BOOST_NOEXCEPT_OR_NOTHROW;

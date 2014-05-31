@@ -28,43 +28,51 @@ public:
   ~hierarchy_t();
 
 public:
-  //!\brief Add a new class to the hierarchy
-  //!\arg hh : \c rtti_hierarchy
-  //!\return a pointer to a klass representing \c hh in \c *this
-  const klass_t* add(rtti_hierarchy hh);
-
   //!\brief Compute poles for \c *this
-  void compute_poles(std::vector<klass_t const*>& seq);
+  //!\arg input The static arguments of mmethods
+  //!\c *this is filled with the poles
+  //!poles are sorted in reverse subtyping order :
+  //!base classes first
+  void compute_poles(std::vector<rtti_hierarchy> const& input);
+
+  //!\name Klass list access
+  //!\{
+  typedef std::vector<klass_t* >::const_iterator const_iterator;
+  const_iterator begin() const { return klasses.begin(); }
+  const_iterator end  () const { return klasses.end  (); }
+  //!\}
+
+  //!\brief Fetch klass from rtti_hierarchy
+  klass_t const* fetch(rtti_hierarchy) const;
 
 private:
-  klass_t* do_add(rtti_hierarchy hh);
+  klass_t* add(rtti_hierarchy hh);
+  void remove(klass_t const*);
 
-  void shrink(std::vector<klass_t const*>& seq);
   void pole_init(klass_t*);
-  std::size_t pseudo_closest(klass_t const* k, klass_t const* *out_pole);
 
 private:
   std::vector<klass_t* > klasses;
 
-  typedef boost::unordered_map<rtti_type, klass_t*> dict_t;
-  dict_t dict;
+  typedef boost::unordered_map<rtti_hierarchy, klass_t*> poles_map_t;
+  poles_map_t poles;
 
   std::size_t current_rank;
 };
 
-typedef std::vector<std::vector<const klass_t*> > pole_table_t;
+typedef std::vector<hierarchy_t> pole_table_t;
 
 #include "signature.hpp"
 
-namespace detail {
+namespace hierarchy_detail {
   struct hierarchy_adder {
     klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
-    { return a1.add(a0); }
+    { return a1.fetch(a0); }
   };
 } // namespace <>
 
-template<typename R0, typename R1>
-signature_t make_signature(R0 const& r0, R1& r1) {
+template<typename R0>
+signature_t make_signature(R0 const& r0, pole_table_t& r1) {
   signature_t ret ( r1.size() );
 
   std::transform(
@@ -73,7 +81,7 @@ signature_t make_signature(R0 const& r0, R1& r1) {
 
     ret.array_ref().begin(),
 
-    detail::hierarchy_adder()
+    hierarchy_detail::hierarchy_adder()
   );
 
   return ret;

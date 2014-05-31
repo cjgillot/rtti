@@ -8,24 +8,20 @@
 void
 boost::mmethod::detail::init_table(
   std::size_t arity
-, invoker_table_type& tbl
+, early_bindings_type& eb
 ) {
-  early_bindings_type* eb = new early_bindings_type();
+  eb = new early_bindings_struct();
   eb->arity = arity;
-
-  tbl = reinterpret_cast<invoker_table_type>( eb );
 }
 
 void
 boost::mmethod::detail::inse_table(
   std::size_t arity
-, invoker_table_type& table
+, early_bindings_type& eb
 , invoker_t inv
 , rtti_hierarchy* hiers
 ) {
-  BOOST_ASSERT(table);
-
-  early_bindings_type* eb = reinterpret_cast<early_bindings_type*>(table);
+  BOOST_ASSERT(eb);
 
   // this function is called at global initialization
   // no synchronization should be required
@@ -37,14 +33,11 @@ boost::mmethod::detail::inse_table(
 void
 boost::mmethod::detail::seal_table(
   std::size_t /*arity*/
-, invoker_table_type table
+, early_bindings_type& eb
 , seal_table_type& seal
 ) {
   // this function is called exactly once for each [seal]
-  // we assume this function is called strictly after [inse_table] finished on the same [table]
-  early_bindings_type* eb = reinterpret_cast<early_bindings_type*>(table);
-
+  // we assume this function is called strictly after [inse_table] finished on the same [eb]
   boost_mmethod_dispatch::process_declaration(*eb, seal);
-
-  delete eb;
+  delete eb; eb = NULL;
 }

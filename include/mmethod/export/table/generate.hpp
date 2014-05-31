@@ -24,6 +24,9 @@ struct ambiguity_policy_t {
   invoker_t             bad_dispatch;
 };
 
+//! structure holding pre-generation information
+struct early_bindings_struct;
+
 //! structure used for table generation
 struct seal_table_type {
   invoker_table_type& table;
@@ -31,9 +34,9 @@ struct seal_table_type {
   ambiguity_policy_t& ambiguity_policy;
 };
 
-void init_table(std::size_t arity, invoker_table_type& tbl);
-void inse_table(std::size_t arity, invoker_table_type& table, invoker_t inv, rtti_hierarchy* hiers);
-void seal_table(std::size_t arity, invoker_table_type  table, seal_table_type& seal);
+void init_table(std::size_t arity, early_bindings_type& ebt);
+void inse_table(std::size_t arity, early_bindings_type& ebt, invoker_t inv, rtti_hierarchy* hiers);
+void seal_table(std::size_t arity, early_bindings_type& ebt, seal_table_type& seal);
 
 }}} // namespace boost::mmethod::detail
 
