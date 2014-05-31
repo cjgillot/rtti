@@ -21,8 +21,6 @@
 
 typedef std::pair<signature_t, invoker_t> overload_t;
 
-typedef std::vector<overload_t> overloads_t;
-
 // the invoker overload_t::second is null in case of bad dispatch
 typedef boost::unordered_map<signature_t, overload_t> dispatch_t;
 

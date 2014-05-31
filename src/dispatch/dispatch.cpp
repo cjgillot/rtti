@@ -79,14 +79,10 @@ static void dispatch_one(
 
 void rtti_dispatch::dispatch(
   dispatch_t &dispatch,
-  overloads_t& overloads,
   const pole_table_t &pole_table,
   ambiguity_handler_t ahndl
 ) {
-  // insert known overloads
-  foreach(overload_t const& s, overloads)
-    dispatch.insert(std::make_pair( s.first, s ));
-
+  // prepare traversal
   product_t p;
   product_alloc(p, pole_table);
 

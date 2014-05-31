@@ -25,17 +25,17 @@ void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_
   pole_table_t pole_table ( arity );
   order_poles(pole_table, hierarchies);
 
-  /// overload list
-  overloads_t overloads; overloads.reserve( decl.vector.size() );
-  foreach(binding_type const& over, decl.vector) {
-    signature_type const& h = over.first;
-
-    overloads.push_back( overload_t(make_signature(h, pole_table), over.second) );
-  }
-
   /// fill up dispatch table
-  dispatch_t dispatch_table;
-  dispatch(dispatch_table, overloads, pole_table, output.ambiguity_policy.ahndl);
+  dispatch_t dispatch_table; {
+    // declared overloads
+    foreach(binding_type const& over, decl.vector) {
+      signature_type const& h = over.first;
+      signature_t sig = make_signature(h, pole_table);
+
+      dispatch_table.insert(std::make_pair(sig, overload_t(sig, over.second)));
+    }
+  }
+  dispatch(dispatch_table, pole_table, output.ambiguity_policy.ahndl);
 
   /// output
   output_tables(output, pole_table, dispatch_table, decl);
