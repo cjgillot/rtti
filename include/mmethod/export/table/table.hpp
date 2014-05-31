@@ -32,6 +32,9 @@ BOOST_STATIC_ASSERT_MSG( sizeof(invoker_t) <= sizeof(uintptr_t), "Platform not s
 typedef hash::detail::hash_map poles_map_type;
 typedef invoker_t* invoker_table_type;
 
+//! forward generate.hpp
+typedef struct early_bindings_struct* early_bindings_type;
+
 //! structure holding tables
 template<typename Tag>
 struct register_base {
@@ -43,15 +46,18 @@ struct register_base {
   );
 
   template<std::size_t> struct poles {
-    static detail::poles_map_type array;
+    static poles_map_type array;
   };
 
-  static detail::invoker_table_type invoker_table;
-
+  static invoker_table_type  invoker_table;
+  static early_bindings_type early_bindings;
 };
 
 template<typename Tag>
 invoker_table_type register_base<Tag>::invoker_table;
+
+template<typename Tag>
+early_bindings_type register_base<Tag>::early_bindings;
 
 template<typename Tag>
 template<std::size_t J>
@@ -71,6 +77,9 @@ public:
   }
   static BOOST_CONSTEXPR invoker_table_type& table() {
     return base::invoker_table;
+  }
+  static BOOST_CONSTEXPR early_bindings_type& early() {
+    return base::early_bindings;
   }
 };
 

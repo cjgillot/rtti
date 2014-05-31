@@ -33,7 +33,7 @@ extern void output_tables(
   seal_table_type& f,
   const pole_table_t& pole_table,
   const dispatch_t& dispatch,
-  const early_bindings_type& decl
+  const early_bindings_struct& decl
 );
 
 } // namespace rtti_dispatch

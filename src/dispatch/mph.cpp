@@ -26,14 +26,14 @@ public:
   : output(o), poles(p), dispatch(d) {}
 
   void output_pole_tables(
-    early_bindings_type const& decl
+    early_bindings_struct const& decl
   );
   void output_dispatch_table(
-    const early_bindings_type& decl
+    early_bindings_struct const& decl
   );
 
   void rerank(
-    const early_bindings_type& decl
+    early_bindings_struct const& decl
   );
 
 private:
@@ -42,7 +42,7 @@ private:
 };
 
 void output_device::rerank(
-  const early_bindings_type& decl
+  const early_bindings_struct& decl
 ) {
   if(decl.arity == 1)
     rerank_unary();
@@ -113,7 +113,7 @@ make_assignment(
 }
 
 void output_device::output_dispatch_table(
-  const early_bindings_type& decl
+  const early_bindings_struct& decl
 ) {
   if(decl.arity == 1)
     return;
@@ -150,7 +150,7 @@ static void fill_map(
 }
 
 void output_device::output_pole_tables(
-  early_bindings_type const& decl
+  early_bindings_struct const& decl
 ) {
   std::size_t const arity = decl.arity;
 
@@ -166,7 +166,7 @@ void rtti_dispatch::output_tables(
   seal_table_type& f,
   const pole_table_t& pole_table,
   const dispatch_t& dispatch,
-  const early_bindings_type& decl
+  const early_bindings_struct& decl
 ) {
   output_device dev ( f, pole_table, dispatch );
 
