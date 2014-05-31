@@ -56,8 +56,9 @@ void output_device::rerank_unary() {
     foreach(klass_t const* k, h) {
       dispatch_t::mapped_type const& target = dispatch.at( signature_t::unary(k) );
       invoker_t ptr = target.second;
+      if(!ptr) ptr = output.ambiguity_policy.bad_dispatch;
 
-      uintptr_t value = reinterpret_cast<uintptr_t>(ptr ? ptr : output.ambiguity_policy.bad_dispatch);
+      uintptr_t value = reinterpret_cast<uintptr_t>(ptr);
       ht.insert(std::make_pair(k, value));
     }
   }
@@ -71,7 +72,7 @@ void output_device::rerank_other() {
 
     foreach(klass_t const* k, h) {
       // insert expects 2-aligned values
-      ht.insert(std::make_pair(k, 2 * current));
+      ht.insert(std::make_pair(k, current));
       current += incr;
     }
 
@@ -108,7 +109,7 @@ make_assignment(
     adder
   );
 
-  table[index/2] = inv;
+  table[index] = inv;
 }
 
 void output_device::output_dispatch_table(
@@ -140,12 +141,11 @@ static void fill_map(
 
   a.create( dynamics.size() );
 
-  // insert expects 2-aligned values
+  // insert expects 2-aligned keys - ensured by node.hpp
   foreach(klass_t const* k, dynamics) {
     rtti_type key   = k->get_id();
     uintptr_t value = ht.at(k);
     a.insert(key, value);
-    BOOST_ASSERT( (value & 1) == 0 );
   }
 }
 

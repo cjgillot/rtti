@@ -10,6 +10,7 @@
 #include "mmethod/rttifwd.hpp"
 
 #include <boost/type_traits/alignment_of.hpp>
+#include <boost/type_traits/type_with_alignment.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -34,7 +35,10 @@ struct rtti_node_var<0> {
 struct rtti::detail::rtti_node {
   struct alignment;
 
-  detail::holder_::rtti_node_var<1> self;
+  union {
+    boost::type_with_alignment<2> __alignment;
+    detail::holder_::rtti_node_var<1> self;
+  };
 };
 
 inline rtti::rtti_type
@@ -59,6 +63,8 @@ rtti::detail::rtti_get_base_arity(rtti_node const* n)
 struct rtti::detail::rtti_node::alignment
 : boost::alignment_of<holder_::rtti_node_var<0> >
 {};
+
+BOOST_STATIC_ASSERT((rtti::detail::rtti_node::alignment::value >= 2) && "Broken invariant");
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX
