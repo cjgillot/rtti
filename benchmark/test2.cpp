@@ -30,13 +30,15 @@ void loop_virt(foo& f, size_t N) {
 }
 
 void loop_mm1 (foo& f, size_t N) {
+  vf1.generate();
   do
-    vf1(f,0);
+    vf1.fast_call(f,0);
   while(--N);
 }
 
 void loop_mm2 (foo& f, foo& g, size_t N) {
+  vf2.generate();
   do
-    vf2(f, g);
+    vf2.fast_call(f, g);
   while(--N);
 }

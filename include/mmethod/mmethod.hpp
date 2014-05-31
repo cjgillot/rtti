@@ -6,9 +6,10 @@
 #ifndef BOOST_MMETHOD_HPP
 #define BOOST_MMETHOD_HPP
 
-#include "boost/mmethod/config.hpp"
-#include "boost/mmethod/declare/declare.hpp"
-#include "boost/mmethod/dispatch.hpp"
+#include "boost/mmethod/rtti.hpp"
+#include "boost/mmethod/invoke.hpp"
+#include "boost/mmethod/declare.hpp"
+#include "boost/mmethod/implement.hpp"
 
 /*! \page RTTI.MMethod library
 

@@ -1,6 +1,7 @@
 *~
 build/
-test/
-.kdev4/
-.codelite/
-rtti.*
+bin/
+html/
+/.kdev4/
+/.codelite/
+/rtti.*

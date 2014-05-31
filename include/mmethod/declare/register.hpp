@@ -25,7 +25,13 @@ public:
   using typename decl_maker::result_type;
 
   using decl_maker::operator();
+
+  using decl_maker::call;
   using decl_maker::fetch;
+
+  using decl_maker::fast_call;
+  using decl_maker::fast_fetch;
+
   using decl_maker::insert;
   using decl_maker::generate;
 };

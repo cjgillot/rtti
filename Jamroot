@@ -3,5 +3,16 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-add_subdirectory(table)
-add_subdirectory(hash_map)
+project
+  : default-build release
+  : requirements <include>./include
+  ;
+
+use-project /library : src ;
+build-project src ; 
+
+build-project benchmark ;
+
+explicit doc ;
+explicit testsuite ;
+

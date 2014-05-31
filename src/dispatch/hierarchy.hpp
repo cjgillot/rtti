@@ -69,7 +69,7 @@ namespace hierarchy_detail {
     klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
     { return a1.fetch(a0); }
   };
-} // namespace <>
+} // namespace detail
 
 template<typename R0>
 signature_t make_signature(R0 const& r0, pole_table_t& r1) {

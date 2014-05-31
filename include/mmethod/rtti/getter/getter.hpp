@@ -65,7 +65,7 @@ get_node(U& x)
 {
   typedef boost::mmethod::pointer_traits<U&> traits;
   if(! traits::valid(x))
-    boost::throw_exception( bad_rtti() );
+    BOOST_THROW_EXCEPTION( bad_rtti() );
 
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
@@ -78,7 +78,7 @@ get_node(U const& x)
 {
   typedef boost::mmethod::pointer_traits<U const&> traits;
   if(! traits::valid(x))
-    boost::throw_exception( bad_rtti() );
+    BOOST_THROW_EXCEPTION( bad_rtti() );
 
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }

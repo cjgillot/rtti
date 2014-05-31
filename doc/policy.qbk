@@ -1,0 +1,45 @@
+[/
+          Copyright Camille Gillot 2012 - 2014.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section:policy Ambiguity resolution]
+
+Unlike usual virtual methods, __multimethods__ are subject to
+dispatch ambiguity. __multimethod__ mechanism in split in three parts :
+* table generation
+* dispatch resolution
+* call to the code pointer
+
+When an ambiguity exists, it is flagged first at the table generation stage.
+At this point, an /ambiguity handler/ is called, to register the case, and
+a special placeholder is inserted in the dispatch table.
+The placeholder is a pointer to a /bad dispatch/ function.
+At dispatch resolution, the dispatch algorithm will not care about
+ambiguities, thanks to the placeholder.
+At call time, the /bad dispatch/ will be called and a special action will be taken.
+
+By default, the /ambiguity handler/ does nothing,
+and the /bad dispatch/ action throws `rtti::bad_dispatch`.
+
+This behaviour can be customized using /policy/ classes,
+passed to the multimethod declaration.
+
+[import ../testsuite/policy/classes.hpp]
+
+For this section, we will use the following set of classes.
+[po_classes]
+
+[heading Customized ambiguity resolution using /policy/ class]
+
+[import ../testsuite/policy/wildcard.cpp]
+[po_wildcard]
+
+[heading Reusing policy class]
+
+[import ../testsuite/policy/policy.cpp]
+[po_policy]
+
+[endsect]

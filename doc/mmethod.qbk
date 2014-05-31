@@ -1,0 +1,44 @@
+[/
+          Copyright Camille Gillot 2012 - 2014.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[library MMethod
+  [quickbook 1.3]
+  [version 1.0]
+  [authors [Gillot, Camille]]
+  [copyright 2012-2014 Camille Gillot]
+  [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at 
+        [@http://www.boost.org/LICENSE_1_0.txt])
+  ]
+  [purpose C++ library for open multiple dispatch]
+  [category text]
+]
+
+[def __boost__ [*Boost]]
+[def __sequence__ [@http://www.boost.org/doc/libs/1_55_0/libs/mpl/doc/refmanual/forward-sequence.html ['Boost.MPL Forward-Sequence]]]
+[def __shared_ptr__ [@http://www.boost.org/doc/libs/1_55_0/libs/smart_ptr/shared_ptr.htm ['Boost shared_ptr]]]
+
+[def __mmethod__ [*MMethod]]
+[def __rtti__ [*MMethod.Rtti]]
+
+[def __rtti_ns__ [^boost::mmethod]]
+[def __mmethod_ns__ [^boost::mmethod]]
+
+[def __multimethod__ ['multi-method]]
+[def __multimethods__ ['multi-methods]]
+
+[template super[e] '''<superscript>'''[e]'''</superscript>''']
+
+[include overview.qbk]
+[include intro.qbk]
+[include motivation.qbk]
+[include rtti.qbk]
+[include multimethod.qbk]
+[include smart_ptr.qbk]
+[include policy.qbk]
+
