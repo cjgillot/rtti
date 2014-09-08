@@ -64,7 +64,7 @@ struct detail::rtti_node::alignment
 : boost::alignment_of<holder_detail::rtti_node_var<0> >
 {};
 
-BOOST_STATIC_ASSERT((detail::rtti_node::alignment::value >= 2) && "Broken invariant");
+BOOST_STATIC_ASSERT_MSG(detail::rtti_node::alignment::value >= 2, "Broken invariant");
 
 }} // namespace boost::mmethod
 
