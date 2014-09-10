@@ -14,7 +14,7 @@ using rtti::hash::detail::value_type;
 
 #define BADBUCKET (&(m_array[m_mask + 1]))
 
-/// hash_map implementation
+/// hash_map move()
 //@{
 void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
   BOOST_ASSERT( this != &o );
@@ -24,21 +24,10 @@ void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
 
   m_array.swap(o.m_array);
 }
-
-void hash_map::flush(hash_map const& o) {
-  BOOST_ASSERT( this != &o );
-
-  m_array.reset();
-
-  create(1 + o.m_logsz);
-
-  std::size_t sz = 1 << o.m_logsz;
-  for(std::size_t i = 0; i < sz; ++i)
-    if( !o.m_array[i].empty() )
-      insert(o.m_array[i].key(), o.m_array[i].value());
-}
 //@}
 
+/// table probing
+//@{
 namespace {
 // helper function for [do_find] and [insert]
 inline bucket_t*
@@ -58,30 +47,22 @@ probe_table(bucket_t* const m_array, std::size_t index, rtti_type key) BOOST_NOE
 }
 } // namespace <anonymous>
 
-#ifndef MMETHOD_INLINE_DO_FIND
+//@}
 
 /// hash_map find()
 //@{
+#ifndef MMETHOD_INLINE_DO_FIND
 hash_map::iterator
 hash_map::do_find(rtti_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   return probe_table(
     m_array.get(), hash(key), key
   );
 }
-//@}
-
 #endif
+//@}
 
 /// hash_map insert()
 //@{
-// [it] has been returned by [find(key, value)]
-void hash_map::insert_at(iterator it, key_type key, value_type value) {
-  if( it->empty() && it != BADBUCKET )
-    return const_cast<bucket_t*>(it)->set(key, value);
-
-  insert(key, value);
-}
-
 void hash_map::insert(key_type key, value_type value) {
   index_type index = hash(key);
 
@@ -94,31 +75,23 @@ void hash_map::insert(key_type key, value_type value) {
   insert_need_resize(key, value);
 }
 
-void hash_map::erase(iterator iter) {
-  bucket_t* it = const_cast<bucket_t*>(iter);
-  it->reset();
-  ++it;
-
-  for(; !it->empty(); ++it) {
-    key_type   key = it->key();
-    value_type val = it->value();
-
-    it->reset();
-    insert(key, val);
-  }
-}
-//@}
-
-/// hash_map resize()
-//@{
 void hash_map::insert_need_resize(key_type key, value_type value) {
+  std::size_t new_sz = 2 << m_logsz;
   hash_map repl;
-  repl.flush(*this);
+
+  repl.create(new_sz);
+
+  for(std::size_t i = 0; i < new_sz; ++i)
+    if( !m_array[i].empty() )
+      repl.insert(m_array[i].key(), m_array[i].value());
   repl.insert(key, value);
+
   move(repl);
 }
 //@}
 
+/// hash_map create()
+//@{
 inline static std::size_t
 nbits(std::size_t n) {
   std::size_t ret = 0;
@@ -127,8 +100,6 @@ nbits(std::size_t n) {
   return ret;
 }
 
-/// hash_map create()
-//@{
 void hash_map::create(std::size_t sz) {
   BOOST_ASSERT( !m_array );
 
@@ -142,6 +113,6 @@ void hash_map::create(std::size_t sz) {
   // use an over-sized array -> sentinel bucket
   m_array.reset( new bucket_t[sz + 1] );
 
-  BOOST_ASSERT( m_array[m_mask+1].empty() );
+  BOOST_ASSERT( BADBUCKET->empty() );
 }
 //@}

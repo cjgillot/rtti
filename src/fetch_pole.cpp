@@ -72,7 +72,6 @@ value_type
 rtti::hash::detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0
-, hash_map::iterator it0
 ) BOOST_NOEXCEPT_OR_NOTHROW {
 
   const rtti_type id0 = rtti_get_id(rt0);
@@ -97,7 +96,7 @@ rtti::hash::detail::do_fetch_pole(
     // insertion invalidates iterators
     value_type val = ret->value();
 
-    const_cast<hash_map&>(map).insert_at( it0, id0, val );
+    const_cast<hash_map&>(map).insert( id0, val );
 #ifdef MMETHOD_USE_DEEP_CACHE
     for(rtti_node const* rt2 = rtti_get_base(rt0); rt2 != rt; rt2 = rtti_get_base(rt2))
       const_cast<hash_map&>(map).insert( rtti_get_id(rt2), val );
@@ -107,7 +106,5 @@ rtti::hash::detail::do_fetch_pole(
   }
   while(false);
 
-  // fallback
-  // TODO avoid this ?
-  return map.zero()->value();
+  return map.fallback();
 }

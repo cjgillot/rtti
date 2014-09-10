@@ -22,19 +22,27 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-inline hash_map::hash_map()
-: m_mask(0), m_logsz(0) {}
+#ifndef BOOST_NO_CXX11_SMART_PTR
+BOOST_CONSTEXPR
+#endif
+inline
+hash_map::hash_map()               BOOST_NOEXCEPT_OR_NOTHROW
+: m_mask(0), m_logsz(0), m_fallback(0) {}
 
-inline index_type         hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
+inline index_type
+hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
   uintptr_t v = uintptr_t(a);
   v /= rtti::rtti_node::alignment::value;
   return index_type( v & m_mask );
 }
 
-inline std::size_t        hash_map::size()             const BOOST_NOEXCEPT_OR_NOTHROW { return 1 << m_logsz; }
+inline std::size_t
+hash_map::size()             const BOOST_NOEXCEPT_OR_NOTHROW {
+  return 1 << m_logsz;
+}
 
-inline hash_map::iterator hash_map::zero()             const BOOST_NOEXCEPT_OR_NOTHROW { return &m_array[0]; }
-inline hash_map::iterator hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
+inline hash_map::iterator
+hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   bucket_t* bucket = &m_array[ hash(key) ];
 
   if(BOOST_LIKELY( bucket->key() == key ))
@@ -44,7 +52,8 @@ inline hash_map::iterator hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_N
 }
 
 #ifdef MMETHOD_INLINE_DO_FIND
-inline hash_map::iterator hash_map::do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
+inline hash_map::iterator
+hash_map::do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   std::size_t const index = hash(key);
   bucket_t* ptr = &m_array[index];
 

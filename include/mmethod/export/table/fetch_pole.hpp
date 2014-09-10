@@ -17,11 +17,11 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
+// is to be invoked without a mutex
 extern value_type
 do_fetch_pole(
   hash_map const&
 , rtti_hierarchy rt0
-, hash_map::iterator it0
 ) BOOST_NOEXCEPT_OR_NOTHROW;
 
 inline value_type
@@ -38,7 +38,7 @@ fetch_pole(
   if(BOOST_LIKELY( it0->key() == id0 ))
     return it0->value();
 
-  return do_fetch_pole(map, rt, it0);
+  return do_fetch_pole(map, rt);
 }
 
 }}} // namespace rtti::hash::detail

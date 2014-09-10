@@ -53,39 +53,4 @@ BOOST_AUTO_TEST_CASE(hash_map) {
     BOOST_CHECK_EQUAL( it->key(),   p.first  );
     BOOST_CHECK_EQUAL( it->value(), p.second );
   }
-
-  {
-    pop_t::iterator pit = pop.lower_bound(
-      reinterpret_cast<hd::key_type>( rand() )
-    );
-
-    pair_t const& p = *pit;
-    iter_t it = map.find(p.first);
-
-    BOOST_CHECK( !it->empty() );
-    BOOST_CHECK_EQUAL( it->key(),   p.first  );
-    BOOST_CHECK_EQUAL( it->value(), p.second );
-
-    map.erase(it);
-
-    BOOST_CHECK( it->empty() );
-
-    pop.erase(pit);
-  }
-
-#if 0
-  hd::hash_map map2;
-  map2.create( rand() % (1<<20) );
-
-  map2.flush(map);
-
-  for(popit_t i = pop.begin(), e = pop.end(); i != e; ++i) {
-    pair_t const& p = *i;
-    iter_t it = map2.find(p.first);
-
-    BOOST_CHECK( !it->empty() );
-    BOOST_CHECK_EQUAL( it->key(),   p.first  );
-    BOOST_CHECK_EQUAL( it->value(), p.second );
-  }
-#endif
 }
