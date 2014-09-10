@@ -60,7 +60,7 @@ static void dispatch_one(
   ambiguity_handler_t ahndl
 ) {
   // already registered
-  if(dispatch.find(sig) != dispatch.end())
+  if(dispatch.count(sig))
     return;
 
   // set of candidates
