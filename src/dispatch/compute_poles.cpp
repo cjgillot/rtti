@@ -8,6 +8,8 @@
 #include "foreach.hpp"
 #include "wanderer.hpp"
 
+#include <boost/range/algorithm/max_element.hpp>
+
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
 #include <deque>
@@ -34,16 +36,18 @@ struct rank_compare {
 } // namespace
 
 //!\brief Pseudo-closest algorithm (Fig 9)
-static std::size_t
-pseudo_closest(klass_t const* klass, const klass_t* *out_pole) {
+std::size_t
+hierarchy_t::pseudo_closest(klass_t const* klass, const klass_t* *out_pole) {
   BOOST_ASSERT(out_pole);
 
   // compute candidates
   std::vector<klass_t const*> const& candidates = klass->get_bases();
 
   // trivial cases
-  if(candidates.empty())
+  if(candidates.empty()) {
+    *out_pole = NULL;
     return 0;
+  }
 
   if(candidates.size() == 1) {
     *out_pole = candidates.front();
@@ -51,15 +55,16 @@ pseudo_closest(klass_t const* klass, const klass_t* *out_pole) {
   }
 
   // compare to maximal element
-  klass_t const* const maxK = *std::max_element(
-    candidates.begin(), candidates.end(),
-    rank_compare()
-  );
+  klass_t const* const maxK = *boost::max_element(
+    candidates,
+    rank_compare());
 
-  foreach(klass_t const* k, candidates)
+  klass_t::is_subtype_of sub_cmp;
+  foreach(klass_t const* k, candidates) {
     // degenerate case
-    if( !klass_t::is_subtype_of()(*maxK, *k) )
+    if( !sub_cmp(*maxK, *k) )
       return 2;
+  }
 
   // assign and return
   *out_pole = maxK;
@@ -97,15 +102,17 @@ void hierarchy_t::compute_poles(input_type const& input) {
       klass_t* k = this->add(top);
 
       // compute
-      klass_t const* pole = NULL;
+      klass_t const* pole = k;
       std::size_t const sz = pseudo_closest(k, &pole);
 
       if(sz <= 1) {
         // false pole
+        BOOST_ASSERT(k != pole);
         this->remove(k, pole);
       }
       else {
         // effective pole found
+        BOOST_ASSERT(k == pole);
         this->pole_init(k);
       }
     }

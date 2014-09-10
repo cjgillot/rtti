@@ -54,6 +54,7 @@ private:
   void remove(klass_t const* k, klass_t const* replace);
 
   void pole_init(klass_t*);
+  std::size_t pseudo_closest(klass_t const*, klass_t const**);
 
 private:
   std::vector<klass_t* > klasses;
