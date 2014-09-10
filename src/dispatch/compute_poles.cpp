@@ -39,7 +39,7 @@ struct rank_compare {
 void
 hierarchy_t::add_pole(rtti_hierarchy vec, klass_t::bases_type& bases) {
   BOOST_ASSERT(vec);
-  BOOST_ASSERT(poles.find(vec) == poles.end());
+  BOOST_ASSERT(!poles.count(vec));
 
   // create object
   klasses.push_back( new klass_t( vec ) );
@@ -75,7 +75,7 @@ hierarchy_t::pseudo_closest(
 , const klass_t* *out_pole
 ) {
   BOOST_ASSERT(out_pole);
-  BOOST_ASSERT(poles.find(klass) == poles.end());
+  BOOST_ASSERT(!poles.count(klass));
 
   // trivial cases
   if(candidates.empty()) {
@@ -127,7 +127,7 @@ void hierarchy_t::compute_poles(input_type const& input) {
     klass_t::bases_type bases;
     effective_bases(top, &bases);
 
-    if(primary_poles.find(top) != primary_poles.end()) {
+    if(primary_poles.count(top)) {
       // primary pole case
       BOOST_ASSERT(std::find(input.begin(), input.end(), top) != input.end());
 
