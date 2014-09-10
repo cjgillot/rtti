@@ -10,12 +10,15 @@
 
 #include <boost/range/adaptor/transformed.hpp>
 
-typedef hierarchy_t::const_iterator iter_t;
-typedef std::vector<iter_t> product_t;
+namespace product_iteration {
+
+typedef hierarchy_t::range_type                    range_t;
+typedef boost::range_const_iterator<range_t>::type iter_t;
+typedef std::vector<iter_t>                        product_t;
 
 struct beginner {
   iter_t operator()(hierarchy_t const& p) const
-  { return p.begin(); }
+  { return p.range().begin(); }
 };
 
 void product_alloc(product_t& p, const pole_table_t &table)
@@ -32,9 +35,11 @@ bool product_incr(product_t& p, const pole_table_t &table)
 {
   for(std::size_t k = 0; k < p.size(); ++k)
   {
+    range_t const& r = table[k].range();
+
     ++p[k];
-    if( p[k] != table[k].end() ) return true;
-    p[k] = table[k].begin();
+    if( p[k] != r.end() ) return true;
+    p[k] = r.begin();
   }
   return false;
 }
@@ -52,5 +57,11 @@ product_deref(product_t& p)
   return boost::adaptors::transform(p, deref());
 }
 
+} // namespace product_iteration
+
+using product_iteration::product_t;
+using product_iteration::product_incr;
+using product_iteration::product_deref;
+using product_iteration::product_alloc;
 
 #endif

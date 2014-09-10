@@ -15,9 +15,9 @@
 #include <boost/foreach.hpp>
 
 #ifdef BOOST_NO_CXX11_RANGE_BASED_FOR
-#  define foreach BOOST_FOREACH
+#  define foreach(a,b) BOOST_FOREACH(a, (b))
 #else
-#  define foreach(a,b) for(a : b)
+#  define foreach(a,b) for(a : (b))
 #endif
 
 #define foreach_base(a,hierarchy)                                       \
