@@ -70,6 +70,9 @@ pseudo_closest(klass_t const* klass, const klass_t* *out_pole) {
   return 1;
 }
 
+/// topological sort
+//@{
+
 namespace {
 
 typedef std::vector<rtti_hierarchy> input_type;
@@ -81,70 +84,75 @@ struct wanderer_t {
   std::deque<rtti_hierarchy> stack;
   boost::unordered_map<rtti_hierarchy, bool> visited;
 
-  explicit
-  wanderer_t(std::size_t) {}
+  explicit wanderer_t(std::size_t) {}
 
   typedef rtti_hierarchy value_type;
   typedef value_type const& const_reference;
 
-  // is_pole is used as a traversal flag
-  void push_back(rtti_hierarchy k) {
-    visited[k] = false;
-    stack.push_back(k);
-  }
-
-  rtti_hierarchy pop() {
-    for(;;) {
-      // exit condition
-      if(stack.empty())
-        return NULL;
-
-      // get next element
-      rtti_hierarchy top = stack.back();
-      stack.pop_back();
-
-      // already traversed ?
-      if( visited[top] )
-        continue;
-
-      // inject base classes
-      bool const need_upcast = reinject_bases(top);
-
-      // retry if a base has been injected
-      if(need_upcast) {
-        stack.push_front(top);
-        continue;
-      }
-
-      // mark as traversed
-      visited[top] = true;
-
-      return top;
-    }
-  }
-
   bool empty() const { return stack.empty(); }
 
+  void push_back(rtti_hierarchy);
+  rtti_hierarchy pop();
+
 private:
-  bool reinject_bases(rtti_hierarchy top_pole) {
-    bool need_upcast = false;
-
-    std::size_t const arity = rtti_get_base_arity(top_pole);
-    for(std::size_t i = 0; i < arity; ++i) {
-      rtti_hierarchy next = rtti_get_base(top_pole, i);
-
-      // not visited yet
-      if(! visited[next] ) {
-        stack.push_back(next);
-        need_upcast = true;
-      }
-    }
-
-    return need_upcast;
-  }
+  bool reinject_bases(rtti_hierarchy);
 };
 
+// is_pole is used as a traversal flag
+void wanderer_t::push_back(rtti_hierarchy k) {
+  visited[k] = false;
+  stack.push_back(k);
+}
+
+rtti_hierarchy wanderer_t::pop() {
+  for(;;) {
+    // exit condition
+    if(stack.empty())
+      return NULL;
+
+    // get next element
+    rtti_hierarchy top = stack.back();
+    stack.pop_back();
+
+    // already traversed ?
+    if(visited[top])
+      continue;
+
+    // inject base classes
+    bool const need_upcast = reinject_bases(top);
+
+    // retry if a base has been injected
+    if(need_upcast) {
+      stack.push_front(top);
+      continue;
+    }
+
+    // mark as traversed
+    visited[top] = true;
+    foreach_base(rtti_hierarchy b, top)
+      BOOST_ASSERT(visited[b]);
+
+    return top;
+  }
+}
+
+bool wanderer_t::reinject_bases(rtti_hierarchy top_pole) {
+  bool need_upcast = false;
+
+  foreach_base(rtti_hierarchy next, top_pole) {
+    // not visited yet
+    if(!visited[next]) {
+      stack.push_back(next);
+      need_upcast = true;
+    }
+  }
+
+  return need_upcast;
+}
+
 } // namespace <>
+
+//@}
 
 void hierarchy_t::compute_poles(input_type const& input) {
   // primary poles
