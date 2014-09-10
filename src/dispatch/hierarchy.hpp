@@ -15,6 +15,14 @@
 
 #include <boost/unordered_map.hpp>
 
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/member.hpp>
+
+#include <boost/range/adaptor/transformed.hpp>
+
 /*!\brief Class hierarchy object
  *
  * This class acts as a factory for \c klass objects.
@@ -31,16 +39,16 @@ public:
   //!\brief Compute poles for \c *this
   //!\arg input The static arguments of mmethods
   //!\c *this is filled with the poles
-  //!poles are sorted in reverse subtyping order :
-  //!base classes first
   void compute_poles(std::vector<rtti_hierarchy> const& input);
 
-  //!\name Klass list access
-  //!\{
-  typedef std::vector<klass_t* >::const_iterator const_iterator;
-  const_iterator begin() const { return klasses.begin(); }
-  const_iterator end  () const { return klasses.end  (); }
-  //!\}
+  //!poles are sorted in reverse subtyping order :
+  //!base classes first
+  //@{
+  typedef std::vector<klass_t* > range_type;
+  range_type const& range() const {
+      return klasses;
+  }
+  //@}
 
   //!\brief Fetch klass from rtti_hierarchy
   klass_t const* fetch(rtti_hierarchy) const;

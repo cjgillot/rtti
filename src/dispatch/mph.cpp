@@ -53,7 +53,7 @@ void output_device::rerank(
 
 void output_device::rerank_unary() {
   foreach(pole_table_t::const_reference h, poles) {
-    foreach(klass_t const* k, h) {
+    foreach(klass_t const* k, h.range()) {
       dispatch_t::mapped_type const& target = dispatch.at( signature_t::unary(k) );
       invoker_t ptr = target.second;
       if(!ptr) ptr = output.ambiguity_policy.bad_dispatch;
@@ -70,7 +70,7 @@ void output_device::rerank_other() {
   foreach(pole_table_t::const_reference h, poles) {
     std::size_t current = 0;
 
-    foreach(klass_t const* k, h) {
+    foreach(klass_t const* k, h.range()) {
       // insert expects 2-aligned values
       ht.insert(std::make_pair(k, current));
       current += incr;
@@ -137,7 +137,8 @@ static void fill_map(
 , hash_table_type const& ht
 ) {
   /// split \c t between static and dynamic id
-  std::vector<klass_t const*> dynamics ( boost::begin(t), boost::end(t) );
+  hierarchy_t::range_type const& r = t.range();
+  std::vector<klass_t const*> dynamics ( boost::begin(r), boost::end(r) );
 
   a.create( dynamics.size() );
 

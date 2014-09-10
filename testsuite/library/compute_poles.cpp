@@ -22,7 +22,7 @@ order_poles(
   hierarchy_t const& hh
 , std::vector<rtti_hierarchy> &npoles
 ) {
-  foreach(klass_t* k, hh) {
+  foreach(klass_t* k, hh.range()) {
     size_t r = k->get_rank();
 
     BOOST_CHECK( r < npoles.size() );
