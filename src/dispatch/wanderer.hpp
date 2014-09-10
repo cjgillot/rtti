@@ -36,7 +36,8 @@ public:
   wanderer_t();
 
   //!\brief Add a hierarchy to the queue.
-  //! This function shall not be called once something has been popped.
+  //! This function shall not be called once
+  //! something has been popped.
   void push_back(rtti_hierarchy k);
 
   //!\brief Fetch next hierarchy.

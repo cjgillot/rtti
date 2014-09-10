@@ -55,6 +55,8 @@ wanderer_t::pop() {
 
     // mark as traversed
     visited[top] = true;
+    foreach_base(rtti_hierarchy b, top)
+      BOOST_ASSERT(visited[b]);
 
     return top;
   }
@@ -67,10 +69,7 @@ bool
 wanderer_t::reinject_bases(rtti_hierarchy top_pole) {
   bool need_upcast = false;
 
-  std::size_t const arity = rtti_get_base_arity(top_pole);
-  for(std::size_t i = 0; i < arity; ++i) {
-    rtti_hierarchy next = rtti_get_base(top_pole, i);
-
+  foreach_base(rtti_hierarchy next, top_pole) {
     // not visited yet
     if(! visited[next] ) {
       stack.push_back(next);
