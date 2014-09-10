@@ -32,23 +32,47 @@ struct rank_compare {
 
 } // namespace
 
-//!\brief Compute rank and subtypes bitset
+//!\brief Create klass_t instance, with rank and subtypes bitset
 void
-hierarchy_t::pole_init(klass_t* k) {
+hierarchy_t::add_pole(rtti_hierarchy vec, klass_t::bases_type& bases) {
+  BOOST_ASSERT(vec);
+  BOOST_ASSERT(poles.find(vec) == poles.end());
+
+  // create object
+  klasses.push_back( new klass_t( vec ) );
+  klass_t* k = klasses.back();
+
+  // fill base classes
+  k->bases.swap(bases);
+
+  // register created class
+  poles.insert(std::make_pair(vec, k));
+
+  // initialize rank
   std::size_t r = current_rank++;
   k->set_rank(r);
 }
 
+//!\brief Compute registered bases
+void
+hierarchy_t::effective_bases(rtti_hierarchy klass, klass_t::bases_type* bases) {
+  std::size_t const arity = rtti_get_base_arity(klass);
+
+  bases->reserve(arity);
+  foreach_base(rtti_hierarchy base, klass)
+    if(klass_t const* bk = fetch(base))
+      bases->push_back(bk);
+}
+
 //!\brief Pseudo-closest algorithm (Fig 9)
 std::size_t
-hierarchy_t::pseudo_closest(klass_t const* klass, const klass_t* *out_pole) {
+hierarchy_t::pseudo_closest(rtti_hierarchy klass, klass_t::bases_type const& candidates, const klass_t* *out_pole) {
   BOOST_ASSERT(out_pole);
-
-  // compute candidates
-  std::vector<klass_t const*> const& candidates = klass->get_bases();
+  BOOST_ASSERT(poles.find(klass) == poles.end());
 
   // trivial cases
   if(candidates.empty()) {
+    // set NULL to mark dead end
     *out_pole = NULL;
     return 0;
   }
@@ -134,8 +158,9 @@ rtti_hierarchy wanderer_t::pop() {
 
     // mark as traversed
     visited[top] = true;
-    foreach_base(rtti_hierarchy b, top)
-      BOOST_ASSERT(visited[b]);
+    foreach_base(rtti_hierarchy b, top) {
+      BOOST_ASSERT(visited[b]); (void)b;
+    }
 
     return top;
   }
@@ -161,8 +186,9 @@ bool wanderer_t::reinject_bases(rtti_hierarchy top_pole) {
 
 void hierarchy_t::compute_poles(input_type const& input) {
   // primary poles
-  foreach(rtti_hierarchy hh, input)
-    this->add(hh);
+  boost::unordered_set<rtti_hierarchy> primary_poles (
+    boost::begin(input), boost::end(input)
+  );
 
   // prepare traversal structure
   wanderer_t wanderer ( input.size() );
@@ -173,33 +199,30 @@ void hierarchy_t::compute_poles(input_type const& input) {
 
   // traverse
   while(rtti_hierarchy top = wanderer.pop()) {
-    poles_map_t::const_iterator pit = poles.find(top);
+    // candidate base classes
+    klass_t::bases_type bases;
+    effective_bases(top, &bases);
 
-    if( pit != poles.end() ) {
+    if(primary_poles.find(top) != primary_poles.end()) {
       // primary pole case
-      klass_t* k = pit->second;
+      BOOST_ASSERT(std::find(input.begin(), input.end(), top) != input.end());
 
-      BOOST_ASSERT( std::find(input.begin(), input.end(), k->get_rtti()) != input.end() );
-
-      this->pole_init(k);
+      add_pole(top, bases);
     }
     else {
       // non-primary pole
-      klass_t* k = this->add(top);
 
       // compute
-      klass_t const* pole = k;
-      std::size_t const sz = pseudo_closest(k, &pole);
+      klass_t const* pole;
+      std::size_t const sz = pseudo_closest(top, bases, &pole);
 
       if(sz <= 1) {
-        // false pole
-        BOOST_ASSERT(k != pole);
-        this->remove(k);
+        // save the pole
+        poles.insert(std::make_pair(top, pole));
       }
-      else {
+      if(sz > 1) {
         // effective pole found
-        BOOST_ASSERT(k == pole);
-        this->pole_init(k);
+        add_pole(top, bases);
       }
     }
   }

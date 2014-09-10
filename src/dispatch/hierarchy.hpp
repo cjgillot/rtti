@@ -54,16 +54,14 @@ public:
   klass_t const* fetch(rtti_hierarchy) const;
 
 private:
-  klass_t* add(rtti_hierarchy hh);
-  void remove(klass_t const*);
-
-  void pole_init(klass_t*);
-  std::size_t pseudo_closest(klass_t const*, klass_t const**);
+  void add_pole(rtti_hierarchy, klass_t::bases_type&);
+  void effective_bases(rtti_hierarchy, klass_t::bases_type*);
+  std::size_t pseudo_closest(rtti_hierarchy, klass_t::bases_type const&, klass_t const**);
 
 private:
-  std::vector<klass_t* > klasses;
+  std::vector<klass_t*> klasses;
 
-  typedef boost::unordered_map<rtti_hierarchy, klass_t*> poles_map_t;
+  typedef boost::unordered_map<rtti_hierarchy, klass_t const*> poles_map_t;
   poles_map_t poles;
 
   std::size_t current_rank;
@@ -76,7 +74,11 @@ typedef std::vector<hierarchy_t> pole_table_t;
 namespace hierarchy_detail {
   struct hierarchy_adder {
     klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
-    { return a1.fetch(a0); }
+    {
+      klass_t const* ret = a1.fetch(a0);
+      BOOST_ASSERT(ret);
+      return ret;
+    }
   };
 } // namespace detail
 
