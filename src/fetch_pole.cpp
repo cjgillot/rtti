@@ -21,7 +21,6 @@ value_type
 boost::mmethod::hash_detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0
-, hash_map::iterator it0
 ) BOOST_NOEXCEPT_OR_NOTHROW {
 
   const rtti_type id0 = rtti_get_id(rt0);
@@ -44,7 +43,7 @@ boost::mmethod::hash_detail::do_fetch_pole(
 
     if(BOOST_LIKELY( !it->empty() )) {
 
-      const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
+      const_cast<hash_map&>(map).insert( id0, it->value() );
 #ifdef BOOST_MMETHOD_USE_DEEP_CACHE
       for(rtti_node const* rt2 = rtti_get_base(rt0); rt2 != rt; rt2 = rtti_get_base(rt2))
         const_cast<hash_map&>(map).insert( rtti_get_id(rt2), it->value() );
@@ -54,5 +53,5 @@ boost::mmethod::hash_detail::do_fetch_pole(
     }
   }
 
-  return map.zero()->value();
+  return map.fallback();
 }

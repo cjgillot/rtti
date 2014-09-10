@@ -22,8 +22,11 @@ namespace boost {
 namespace mmethod {
 namespace hash_detail {
 
-inline hash_map::hash_map()
-: m_mask(0), m_logsz(0) {}
+#ifndef BOOST_NO_CXX11_SMART_PTR
+BOOST_CONSTEXPR
+#endif
+inline hash_map::hash_map() BOOST_NOEXCEPT_OR_NOTHROW
+: m_mask(0), m_logsz(0), m_fallback(0) {}
 
 inline index_type         hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
   uintptr_t v = uintptr_t(a);
@@ -31,7 +34,6 @@ inline index_type         hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_N
   return index_type( v & m_mask );
 }
 
-inline hash_map::iterator hash_map::zero()             const BOOST_NOEXCEPT_OR_NOTHROW { return &m_array[0]; }
 inline hash_map::iterator hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   bucket_t* bucket = &m_array[ hash(key) ];
 
