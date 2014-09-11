@@ -82,8 +82,5 @@ BOOST_AUTO_TEST_CASE(test_policy) {
   BOOST_CHECK_EQUAL( f1(a, y),  8  ); // (1-2 case)
   BOOST_CHECK_EQUAL( f1(b, x), 13  ); // (2-1 case)
 
-  try {
-    (void) f1(b, y);
-  }
-  catch(check_exception&) {}
+  BOOST_CHECK_EXCEPTION( f1(b, y), check_exception, & );
 }

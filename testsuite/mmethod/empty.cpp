@@ -12,23 +12,16 @@
 
 #include "./classes.hpp"
 
-#include "boost/mmethod/rtti.hpp"
-#include "boost/mmethod/mmethod.hpp"
-#include "boost/mmethod/implement.hpp"
-
-#include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
-
 using namespace boost::mmethod;
 
 namespace {
 
 using tags::_v;
 
-BOOST_MMETHOD_DECLARE(f1, int, (_v<foo const&>));
+BOOST_MMETHOD_DECLARE(empty, int, (_v<foo const&>));
 
 } // namespace <>
 
 BOOST_AUTO_TEST_CASE(test_empty) {
-  f1.generate();
+  empty.generate();
 }
