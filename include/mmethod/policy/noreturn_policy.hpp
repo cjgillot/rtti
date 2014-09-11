@@ -31,7 +31,7 @@ struct noreturn_policy {
   template<BOOST_PP_ENUM_PARAMS_Z(z, I, class T)>               \
   static Ret bad_dispatch(BOOST_PP_ENUM_PARAMS_Z(z, I, T)) {    \
     Policy::bad_dispatch();                                     \
-    return *(Ret*)NULL;                                         \
+    return *(Ret volatile*)NULL;                                \
   }
   BOOST_PP_REPEAT_FROM_TO(1, BOOST_MMETHOD_MAX_ITERATION, BOOST_MMETHOD_NOOP, ~)
 #undef BOOST_MMETHOD_NOOP

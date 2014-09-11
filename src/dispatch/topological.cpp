@@ -7,10 +7,6 @@
 
 #include "foreach.hpp"
 
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-#include <deque>
-
 // is_pole is used as a traversal flag
 void wanderer_t::push_back(rtti_hierarchy k) {
   stack.push_back(k);

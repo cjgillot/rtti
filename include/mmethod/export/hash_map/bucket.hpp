@@ -21,7 +21,7 @@ namespace hash_detail {
 
 typedef rtti_type    key_type;
 typedef uintptr_t  value_type;
-typedef size_t     index_type;
+typedef ptrdiff_t  index_type;
 
 struct bucket_t {
 private:

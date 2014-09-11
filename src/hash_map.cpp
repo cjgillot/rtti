@@ -11,8 +11,9 @@ using boost::mmethod::hash_detail::bucket_t;
 using boost::mmethod::hash_detail::hash_map;
 using boost::mmethod::hash_detail::key_type;
 using boost::mmethod::hash_detail::value_type;
+using boost::mmethod::hash_detail::index_type;
 
-#define BADBUCKET (&(m_array[m_mask + 1]))
+#define BADBUCKET (&(m_array[ index_type(m_mask + 1) ]))
 
 /// bucket_t implementation
 //@{
@@ -41,7 +42,7 @@ void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
 namespace {
 // helper function for [do_find] and [insert]
 inline bucket_t*
-probe_table(bucket_t* const m_array, std::size_t index, rtti_type key) BOOST_NOEXCEPT_OR_NOTHROW {
+probe_table(bucket_t* const m_array, index_type index, rtti_type key) BOOST_NOEXCEPT_OR_NOTHROW {
   // use linear probing
   bucket_t* ptr = &m_array[index];
 

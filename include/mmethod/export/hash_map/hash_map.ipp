@@ -45,7 +45,7 @@ inline hash_map::iterator hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_N
 
 #ifdef BOOST_MMETHOD_INLINE_DO_FIND
 inline hash_map::iterator hash_map::do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
-  std::size_t const index = hash(key);
+  index_type const index = hash(key);
   bucket_t* ptr = &m_array[index];
 
   // empty bucket sentinel is last of m_array -> forces stop since empty

@@ -17,7 +17,7 @@ namespace mmethod {
 template<typename Tag, typename Ret>
 dispatch<Tag, Ret>::dispatch() {
   struct initializer_t {
-    initializer_t() { dispatch::initialize(); };
+    initializer_t() { dispatch::initialize(); }
     void touch() {}
   }
   static initializer;
@@ -27,7 +27,7 @@ dispatch<Tag, Ret>::dispatch() {
 template<typename Tag, typename Ret>
 void dispatch<Tag, Ret>::generate() const {
   struct sealer_t {
-    sealer_t() { dispatch::seal(); };
+    sealer_t() { dispatch::seal(); }
     void touch() {}
   }
   static sealer;

@@ -3,14 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "hierarchy.hpp"
-
-#include "boost/mmethod/rtti/holder/node.hpp"
+#include "forward.hpp"
 
 #include "foreach.hpp"
-
-#include <vector>
-#include <stack>
 
 // ----- hierarchy ----- //
 

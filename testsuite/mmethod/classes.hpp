@@ -26,7 +26,7 @@ struct foo
 : base_rtti<foo> {
 public:
   virtual ~foo() {}
-  
+
   int f() const { return 5; }
 };
 
