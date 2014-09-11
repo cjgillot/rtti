@@ -9,13 +9,16 @@
 
 #include <numeric>
 
-typedef boost::unordered_map<klass_t const*, uintptr_t> hash_table_type;
+using boost::mmethod::hash_detail::value_type;
+
+typedef boost::unordered_map<klass_t const*, value_type> hash_table_type;
 
 class output_device {
   seal_table_type& output;
 
   hash_table_type ht;
   std::size_t max_index;
+  value_type fallback;
 
   pole_table_t const& poles;
   dispatch_t   const& dispatch;
@@ -43,11 +46,14 @@ private:
 void output_device::rerank(
   const early_bindings_struct& decl
 ) {
-  if(decl.arity == 1)
+  if(decl.arity == 1) {
+    fallback = reinterpret_cast<value_type>(output.ambiguity_policy.bad_dispatch);
     rerank_unary();
-
-  else
+  }
+  else {
+    fallback = 0;
     rerank_other();
+  }
 }
 
 void output_device::rerank_unary() {
@@ -55,9 +61,9 @@ void output_device::rerank_unary() {
     foreach(klass_t const* k, h.range()) {
       dispatch_t::mapped_type const& target = dispatch.at( signature_t::unary(k) );
       invoker_t ptr = target.second;
-      if(!ptr) ptr = output.ambiguity_policy.bad_dispatch;
+      value_type value = reinterpret_cast<value_type>(ptr);
+      if(!value) value = fallback;
 
-      uintptr_t value = reinterpret_cast<uintptr_t>(ptr);
       ht.insert(std::make_pair(k, value));
     }
   }
@@ -67,10 +73,12 @@ void output_device::rerank_other() {
   std::size_t incr = 1;
 
   foreach(pole_table_t::const_reference h, poles) {
-    std::size_t current = 0;
+    // index zero is used for fallback case
+    std::size_t current = 1;
 
     foreach(klass_t const* k, h.range()) {
       // insert expects 2-aligned values
+      BOOST_ASSERT(current != fallback);
       ht.insert(std::make_pair(k, current));
       current += incr;
     }
@@ -145,6 +153,7 @@ static void fill_map(
   foreach(klass_t const* k, dynamics) {
     rtti_type key   = k->get_id();
     uintptr_t value = ht.at(k);
+
     a.insert(key, value);
   }
 }
@@ -158,6 +167,7 @@ void output_device::output_pole_tables(
     pole_table_t::const_reference t = poles[i];
     poles_map_type& pm = *output.poles[i];
 
+    pm.set_fallback(fallback);
     fill_map(pm, t, ht);
   }
 }
