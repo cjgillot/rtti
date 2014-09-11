@@ -36,8 +36,8 @@ namespace {
   To remember the actual state,
   we will use the following global flags :
  */
-int  found_ambiguous  = 0;
-bool called_ambiguous = false;
+int found_ambiguous  = 0;
+int called_ambiguous = 0;
 
 /*`
   We can now define our policy class.
@@ -59,7 +59,7 @@ struct wildcard_policy {
 
   // call time
   static int bad_dispatch(foo1&, bar1&) {
-    called_ambiguous = true;
+    ++called_ambiguous;
 
     // default implementation
     return 42;
@@ -105,9 +105,10 @@ BOOST_AUTO_TEST_CASE(wildcard) {
   BOOST_CHECK_EQUAL( f1(a, x),  0 ); // (1-1 case)
   BOOST_CHECK_EQUAL( f1(a, y),  8 ); // (1-2 case)
   BOOST_CHECK_EQUAL( f1(b, x), 13 ); // (2-1 case)
+  BOOST_CHECK_EQUAL( called_ambiguous, 0 );
 
   // ambiguous call
   BOOST_CHECK_EQUAL( f1(b, y), 42 ); // (2-2 case : ambiguous)
-  BOOST_CHECK_EQUAL( called_ambiguous, true );
+  BOOST_CHECK_EQUAL( called_ambiguous, 1 );
   //]
 }
