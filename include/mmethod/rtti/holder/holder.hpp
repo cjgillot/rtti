@@ -38,7 +38,7 @@ private:
   struct initializer_t {
     struct register_one;
     initializer_t();
-    void touch() const {};
+    void touch() const {}
   };
   static initializer_t initializer;
 

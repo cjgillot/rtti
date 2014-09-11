@@ -3,7 +3,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "early.hpp"
 #include "forward.hpp"
 
 #include "foreach.hpp"
@@ -105,7 +104,7 @@ make_assignment(
   rankhash_adder adder = { ht };
 
   std::size_t const index = std::accumulate(
-    sig.array().begin(), sig.array().end(), 0,
+    sig.array().begin(), sig.array().end(), 0ul,
     adder
   );
 

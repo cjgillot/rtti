@@ -12,9 +12,6 @@
 
 #include "early.hpp"
 
-#define USE_SMALLARRAY 0
-
-
 void rtti_dispatch::order_poles(
   pole_table_t& pole_table
 , std::vector<std::vector<rtti_hierarchy> > const& hierarchies

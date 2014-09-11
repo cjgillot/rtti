@@ -6,7 +6,7 @@
 #ifndef MMETHOD_PRODUCT_ITERATION_HPP
 #define MMETHOD_PRODUCT_ITERATION_HPP
 
-#include "hierarchy.hpp"
+#include "forward.hpp"
 
 #include <boost/range/adaptor/transformed.hpp>
 

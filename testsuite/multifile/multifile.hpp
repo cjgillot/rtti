@@ -16,7 +16,7 @@ namespace test_multifile {
 struct foo
 : base_rtti<foo> {
 public:
-  virtual ~foo() {}
+  virtual ~foo();
 
   int f();
 };

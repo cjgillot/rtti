@@ -47,13 +47,13 @@ public:
   /// access table size -> thread-safe
   std::size_t size() const BOOST_NOEXCEPT_OR_NOTHROW;
 
-private:
-  // delete copy/assign
-  BOOST_DELETED_FUNCTION(hash_map(hash_map const&));
-  BOOST_DELETED_FUNCTION(hash_map& operator=(hash_map const&));
-
   // provide custom move operation
   void move(hash_map&) BOOST_NOEXCEPT_OR_NOTHROW;
+
+private:
+  // delete copy/assign
+  BOOST_DELETED_FUNCTION(hash_map(hash_map const&))
+  BOOST_DELETED_FUNCTION(hash_map& operator=(hash_map const&))
 
 public:
   /// fallback value

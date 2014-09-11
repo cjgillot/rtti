@@ -10,9 +10,10 @@ using rtti::detail::rtti_node;
 using rtti::hash::detail::bucket_t;
 using rtti::hash::detail::hash_map;
 using rtti::hash::detail::key_type;
+using rtti::hash::detail::index_type;
 using rtti::hash::detail::value_type;
 
-#define BADBUCKET (&(m_array[m_mask + 1]))
+#define BADBUCKET (&(m_array[ index_type(m_mask + 1) ]))
 
 /// hash_map move()
 //@{
@@ -31,7 +32,7 @@ void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
 namespace {
 // helper function for [do_find] and [insert]
 inline bucket_t*
-probe_table(bucket_t* const m_array, std::size_t index, rtti_type key) BOOST_NOEXCEPT_OR_NOTHROW {
+probe_table(bucket_t* const m_array, index_type index, rtti_type key) BOOST_NOEXCEPT_OR_NOTHROW {
   // use linear probing
   bucket_t* ptr = &m_array[index];
 

@@ -8,12 +8,6 @@
 #include "foreach.hpp"
 #include "product.hpp"
 
-#include <list>
-
-#include <boost/range/begin.hpp>
-#include <boost/optional.hpp>
-#include <boost/bind.hpp>
-
 /* Implementation of pole computation algorithm from [2]
  *
  * Algorithms are described in terms of this paper.
@@ -24,8 +18,7 @@
 
 static void dispatch_one(
   const signature_t& sig,
-  const pole_table_t &pole_table,
-  dispatch_t &dispatch,
+  dispatch_t& dispatch,
   ambiguity_handler_t ahndl
 );
 
@@ -42,7 +35,7 @@ void rtti_dispatch::dispatch(
       p.incr()
   ) {
     signature_t sig (p.deref());
-    dispatch_one(sig, pole_table, dispatch, ahndl);
+    dispatch_one(sig, dispatch, ahndl);
   }
 }
 
@@ -53,8 +46,7 @@ static void filter_insert(max_set_type& max_set, overload_t const& up);
 
 static void dispatch_one(
   const signature_t& sig,
-  const pole_table_t &pole_table,
-  dispatch_t &dispatch,
+  dispatch_t& dispatch,
   ambiguity_handler_t ahndl
 ) {
   // already registered

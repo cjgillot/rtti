@@ -51,7 +51,7 @@ void test(foo* f, std::size_t N) {
   vf2.generate();
 
   double t1, t2;
-  std::printf("Calling functions %u times :\n", N); std::fflush(stdout);
+  std::printf("Calling functions %lu times :\n", N); std::fflush(stdout);
 
   t1 = time([=](){ loop_virt(*f, N); }, "virtual");
 

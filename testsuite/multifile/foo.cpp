@@ -9,6 +9,8 @@
 
 namespace test_multifile {
 
+foo::~foo() {}
+
 int foo::f() { return 5; }
 foo* make_foo() { return new foo; }
 
