@@ -60,7 +60,7 @@ BOOST_MMETHOD_IMPLEMENT(f1, int, (foo3&, bar2&)) { return 255; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(binary) {
+BOOST_AUTO_TEST_CASE(test_binary) {
   foo1 a; foo2 b; foo3 c;
   bar1 x; bar2 y; bar3 z;
 

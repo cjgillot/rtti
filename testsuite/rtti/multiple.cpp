@@ -67,7 +67,7 @@ struct baz
 
 } // namespace
 
-BOOST_AUTO_TEST_CASE(multiple) {
+BOOST_AUTO_TEST_CASE(test_multiple) {
   foo f; bar r; baz z;
 
   BOOST_CHECK_EQUAL( static_id<foo>(), get_id(f) );

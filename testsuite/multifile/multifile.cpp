@@ -9,9 +9,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-using namespace test_multifile;
+using namespace multifile;
 
-BOOST_AUTO_TEST_CASE(multifile) {
+BOOST_AUTO_TEST_CASE(test_multifile) {
   foo* f = make_foo();
   foo* r = make_bar();
   foo* z = make_baz();

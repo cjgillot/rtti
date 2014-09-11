@@ -25,7 +25,7 @@ BOOST_MMETHOD_IMPLEMENT(f1, int, (baz const& a)) { return 2 * a.f(); }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(generate) {
+BOOST_AUTO_TEST_CASE(test_generate) {
   //[ge_generate
   /*`
     The call to the __multimethod__ `f1` automatically calls

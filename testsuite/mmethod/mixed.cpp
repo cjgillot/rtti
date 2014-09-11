@@ -50,7 +50,7 @@ BOOST_MMETHOD_IMPLEMENT(f1, int, (long n, baz const& a)) { return n * a.f(); }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(mixed) {
+BOOST_AUTO_TEST_CASE(test_mixed) {
   foo f; bar r; baz z; lap l;
 
   BOOST_CHECK_EQUAL( f1(1, f),  6 );

@@ -63,7 +63,7 @@ BOOST_MMETHOD_IMPLEMENT(f1, int, (lap &)) { return 15; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(diamond) {
+BOOST_AUTO_TEST_CASE(test_diamond) {
   foo1 f; bar r; baz z; lap l;
 
   BOOST_CHECK_EQUAL( f1(f), 5  );

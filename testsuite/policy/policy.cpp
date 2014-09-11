@@ -74,7 +74,7 @@ BOOST_MMETHOD_IMPLEMENT(f1, int, (foo1&, bar2&)) { return 8; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(policy) {
+BOOST_AUTO_TEST_CASE(test_policy) {
   foo1 a; foo2 b;
   bar1 x; bar2 y;
 

@@ -78,7 +78,7 @@ struct lap
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(basic) {
+BOOST_AUTO_TEST_CASE(test_basic) {
   //[ba_use
   foo f; bar r; baz z; lap l;
 
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(basic) {
   //]
 }
 
-BOOST_AUTO_TEST_CASE(hierarchy) {
+BOOST_AUTO_TEST_CASE(test_hierarchy) {
   lap l;
 
   //[ba_node

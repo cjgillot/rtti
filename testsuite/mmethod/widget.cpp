@@ -128,7 +128,7 @@ BOOST_MMETHOD_IMPLEMENT(count, ResultType, ( WNumber const& n ))
 }
 //]
 
-BOOST_AUTO_TEST_CASE(extending)
+BOOST_AUTO_TEST_CASE(test_widget)
 {
   //[wg_use
   WNumber wn ( 150 );

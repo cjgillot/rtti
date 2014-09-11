@@ -71,7 +71,7 @@ BOOST_MMETHOD_IMPLEMENT(f1, int, (baz const& a)) { return 2 * a.f(); }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(unary) {
+BOOST_AUTO_TEST_CASE(test_unary) {
   //[un_use
   /*`
     Our __multimethod__ can now be used as a function object,

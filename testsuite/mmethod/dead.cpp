@@ -48,7 +48,7 @@ BOOST_MMETHOD_IMPLEMENT(f1, int, (foo2&)) { return 5; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(dead_base) {
+BOOST_AUTO_TEST_CASE(test_dead) {
   root r; foo1 f; foo2 g; baz z;
 
   BOOST_CHECK_EQUAL( f1(g), 5  );

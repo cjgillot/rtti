@@ -7,7 +7,7 @@
 
 #include "boost/mmethod/implement.hpp"
 
-namespace test_multifile {
+namespace multifile {
 
 foo::~foo() {}
 
@@ -16,4 +16,4 @@ foo* make_foo() { return new foo; }
 
 BOOST_MMETHOD_IMPLEMENT(f1, int, (foo& a)) { return a.f(); }
 
-} // namespace test_multifile
+} // namespace multifile

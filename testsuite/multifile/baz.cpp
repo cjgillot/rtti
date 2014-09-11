@@ -9,7 +9,7 @@
 
 #include <boost/mpl/vector.hpp>
 
-namespace test_multifile {
+namespace multifile {
 
 struct baz
 : foo
@@ -20,4 +20,4 @@ foo* make_baz() { return new baz; }
 
 BOOST_MMETHOD_IMPLEMENT(f1, int, (baz& a)) { return 2 * a.f(); }
 
-} // namespace test_multifile
+} // namespace multifile

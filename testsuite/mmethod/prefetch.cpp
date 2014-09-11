@@ -49,7 +49,7 @@ BOOST_MMETHOD_IMPLEMENTATION(f1_t, int, (baz& a)) { return 2 * a.f(); }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(prefetch) {
+BOOST_AUTO_TEST_CASE(test_prefetch) {
   //[pr_functor
   lap l;
   f1_t f1;

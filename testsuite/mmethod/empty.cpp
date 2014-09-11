@@ -29,6 +29,6 @@ BOOST_MMETHOD_DECLARE(f1, int, (_v<foo const&>));
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(empty) {
+BOOST_AUTO_TEST_CASE(test_empty) {
   f1.generate();
 }
