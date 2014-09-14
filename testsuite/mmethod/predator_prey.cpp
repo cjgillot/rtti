@@ -7,17 +7,14 @@
 /*`
   The canonical example using __multimethods__ is the predator/prey model.
 
-  First, we need a set of predators
   [pp_predators]
-  and a set of preys
   [pp_preys]
 
-  Then we can declare a __multimethod__ [pp_mm_declaration]
-  And then implement it for selected type couples [pp_mm_implement]
+  [pp_mm_declaration]
+  [pp_mm_implement]
 
-  The `hunter` __multimethod__ object is a function object,
-  it can be called directly as a function [pp_use]
-  It may also be passed as a STL function object to STL and __boost__ wrappers [pp_bind]
+  [pp_use]
+  [pp_bind]
  */
 //]
 
@@ -37,77 +34,122 @@ using boost::mpl::vector;
 //->
 
 //[pp_predators
-// Base class for predators
-struct Predator_abstract
-: base_rtti<Predator_abstract>  // rtti hierarchy
-, boost::noncopyable
-{
-  Predator_abstract() {/**/}    // Ctor
+/*`
+  First, we need a set of predators.
 
-  virtual std::string
-  i_am_a() const = 0;           // Name of the animal
+  The root class in the predator hierarchy
+  must be registered by __rtti__.
+  For this, we just need to inherit
+  [^base_rtti<['class-name]>].
+ */
+// Base class for predators
+class Predator_abstract
+: public base_rtti<Predator_abstract>
+, private boost::noncopyable            // No need to register all the base classes
+{
+public:
+  Predator_abstract() {/**/}
+  virtual ~Predator_abstract() {/**/}
+
+  // Name of the animal
+  virtual std::string i_am_a() const = 0;
 };
 
-struct Lion
-: public Predator_abstract      // classical inheritance
-, public implement_rtti<Lion, vector<Predator_abstract> >       // declare hierarchy
+/*`
+  Then, all the derived classes must
+  inherit from [^implement_rtti<['class-name], ['bases]>].
+ */
+using boost::mpl::vector;
+
+class Lion
+: public Predator_abstract
+, public implement_rtti<Lion, vector<Predator_abstract> >
 {
+public:
   std::string i_am_a() const { return "Lion"; }
 };
 
-struct Anaconda
+class Anaconda
 : public Predator_abstract
 , public implement_rtti<Anaconda, vector<Predator_abstract> >
 {
+public:
   std::string i_am_a() const { return "Anaconda"; }
 };
 
-struct Bear
+class Bear
 : public Predator_abstract
 , public implement_rtti<Bear, vector<Predator_abstract> >
 {
+public:
   std::string i_am_a() const { return "Bear"; }
 };
 //]
 
 //[pp_preys
-struct Prey_abstract
-: base_rtti<Prey_abstract>      // rtti hierarchy declaration
-, boost::noncopyable
+/*`
+  Now we have a proper set of predators,
+  we can define a set of preys the same way.
+ */
+class Prey_abstract
+: public base_rtti<Prey_abstract>
+, private boost::noncopyable
 {
-  Prey_abstract() {/**/}        // Ctor
+public:
+  Prey_abstract() {/**/}
+  virtual ~Prey_abstract() {/**/}
 
-  virtual std::string
-  i_am_a() const = 0;           // Name of the animal
+  virtual std::string i_am_a() const = 0;
 };
 
-struct Gazelle
+class Gazelle
 : public Prey_abstract
 , public implement_rtti<Gazelle, vector<Prey_abstract> >
 {
+public:
   std::string i_am_a() const { return "Gazelle"; }
 };
 
-struct Giraffe
+class Giraffe
 : public Prey_abstract
 , public implement_rtti<Giraffe, vector<Prey_abstract> >
 {
+public:
   std::string i_am_a() const { return "Giraffe"; }
 };
 //]
 
 //[pp_mm_declaration
-typedef void ResultType; // return type declaration
+/*`
+  Then we can declare a __multimethod__.
+  This task is made simple by the use of
+  the [^BOOST_MMETHOD_DECLARE] macro,
+  taking the following arguments :
 
-using rtti::tags::_v; // tag for flagging dispatch arguments
+  * the name of the __multimethod__
+  * its return type
+  * a tagged argument list, marking the dispatched arguments
+ */
+typedef void ResultType;
+
+using tags::_v;
 
 // declare using a dedicated macro
 DECLARE_MMETHOD(hunter, ResultType, (_v<Predator_abstract const&>, _v<Prey_abstract const&>));
 //]
 
 //[pp_mm_implement
+/*`
+  A macro is also provided to implement the __multimethod__.
+  Each implementation must be made with the
+  [^BOOST_MMETHOD_IMPLEMENT] macro, taking :
+
+  * the __multimethod__ name
+  * its return type
+  * its actual argument list
+ */
 // implement using a dedicated macro
-IMPLEMENT_MMETHOD(hunter, ResultType, ( Lion const&, Gazelle const& ))
+IMPLEMENT_MMETHOD(hunter, ResultType, ( Lion const& pred, Gazelle const& prey ))
 {
   //=std::cout<<"Lion jumps on Gazelle and bites its neck.\n";
 }
@@ -127,6 +169,7 @@ IMPLEMENT_MMETHOD(hunter, ResultType, ( Anaconda const&, Giraffe const& ))
   //=std::cout<<"Anaconda ignores Giraffe.\n";
 }
 
+//` We can catch all the preys using a `Prey_abstract` argument.
 IMPLEMENT_MMETHOD(hunter, ResultType, ( Bear const&, Prey_abstract const& prey ))
 {
   //=std::cout<<"Bear mauls "<<prey.i_am_a()<<"\n";
@@ -136,6 +179,10 @@ IMPLEMENT_MMETHOD(hunter, ResultType, ( Bear const&, Prey_abstract const& prey )
 BOOST_AUTO_TEST_CASE(test_predator_prey)
 {
   //[pp_use
+  /*`
+    The `hunter` __multimethod__ object is a function object,
+    it can be called directly as a function.
+   */
   Bear bear;
   Lion lion;
   Anaconda anaconda;
@@ -151,11 +198,17 @@ BOOST_AUTO_TEST_CASE(test_predator_prey)
 
 #ifndef BOOST_NO_CXX11_AUTO_DECLARATIONS
   //[pp_bind
-  auto hunter_lion_prey=boost::bind(hunter, boost::cref(anaconda), _1);
+  /*`
+    It may also be passed as a STL function object
+    to STL and __boost__ algorithms.
+   */
+  auto hunter_lion_prey    = boost::bind(hunter, boost::cref(anaconda), _1);
   hunter_lion_prey(prey1);
-  auto hunter_lion_giraffe=boost::bind(hunter, boost::cref(bear), boost::cref(giraffe));
+
+  auto hunter_lion_giraffe = boost::bind(hunter, boost::cref(bear), boost::cref(giraffe));
   hunter_lion_giraffe();
-  auto hunter_pred_giraffe=boost::bind(hunter, _1, boost::cref(gazelle));
+
+  auto hunter_pred_giraffe = boost::bind(hunter, _1, boost::cref(gazelle));
   hunter_pred_giraffe(pred1);
   //]
 #endif

@@ -5,11 +5,21 @@
           http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section:smart_ptr __rtti__ and __mmethod__ using smart pointers]
+[section:smart_ptr Using smart pointers]
 
-Because of the growing use of smart pointers in code bases,
-we need to be able to call a __multimethod__ without unwrapping/rewrapping
-around the smart pointers.
+Modern C++ code tends to hide as much as possible
+naked pointers behind the safer and more reliable
+smart pointers.
+In order to be able to call a __multimethod__ directly with smart pointers,
+we provide extensible support for pointer-like objects,
+without need to unwrap and reconstruct the smart pointers.
+
+[heading Using __shared_ptr__]
+
+[import ../testsuite/smart_ptr/boost_shared_ptr.cpp]
+[bsp_boost_shared_ptr]
+
+[heading Adding a new smart pointer type]
 
 [import ../testsuite/smart_ptr/smart_ptr.cpp]
 [sm_smart_ptr]

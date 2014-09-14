@@ -12,11 +12,11 @@
   However, multiple inheritance support can be enabled using
   the second argument to `base_rtti`. This is called the /NodeType/.
 
-  Default /NodeType/ is `single_mixin_node`.
-  This one allows only one __rtti__ parent for each class.
-
+  Default /NodeType/ is `single_mixin_node`,
+  this is well suited for most use cases,
+  but only allows for one __rtti__-enabled parent for each class.
   The other possible /NodeType/ is `virtual_mixin_node`.
-  This value allows usage of full C++ inheritance features,
+  This type allows usage of full C++ inheritance features,
   at the expense of performance.
   [mu_decl]
 
@@ -39,6 +39,7 @@
 #include <boost/mpl/vector.hpp>
 
 using namespace rtti;
+using boost::mpl::vector;
 
 namespace {
 
@@ -57,8 +58,6 @@ public:
 //]
 
 //[mu_impl
-using boost::mpl::vector;
-
 struct baz
 : foo, bar
 , implement_rtti<baz, vector<foo, bar> >

@@ -9,17 +9,16 @@
   declare the __rtti__ hierarchy, the foreign declaration
   mechanism allows to import existing classes.
 
-  Suppose you have the following structure
+  This may come from a class hierarchy
+  in another library.
+
+  This feature requires the standard C++ RTTI `typeid`.
+  There is a project to port this feature to use __typeindex__.
+
   [fo_decl]
 
-  Given a class hierarchy rooted at class /K/,
-  you can declare it to use __rtti__ using
-  `MMETHOD_FOREIGN_DECLARE(`/K/`)` macro.
-  It will generate a repository of class types.
   [fo_import_decl]
 
-  Then, for each class /K/, with bases /Supers/,
-  you can declare it using `MMETHOD_FOREIGN_IMPLEMENT(`/K/,/Supers/`)`.
   [fo_import_impl]
 
   [note
@@ -41,6 +40,9 @@ using boost::mpl::vector;
 namespace {
 
 //[fo_decl
+/*`
+  Suppose you have the following structure.
+ */
 struct foo {
 public:
   virtual ~foo() {}
@@ -60,9 +62,20 @@ struct lap
 //]
 
 //[fo_import_decl
+/*`
+  Given a class hierarchy rooted at class /K/,
+  you can declare it to use __rtti__ using
+  [^MMETHOD_FOREIGN_DECLARE(/K/)] macro.
+  It will generate a repository of class types.
+ */
 MMETHOD_FOREIGN_DECLARE(foo)
 //]
 //[fo_import_impl
+/*`
+  Then, for each class /K/, with bases /Supers/,
+  you can declare it using [^MMETHOD_FOREIGN_IMPLEMENT(/K/, /Supers/)].
+  /Supers/ is a __sequence__, defined as-if we were inheriting `implement_rtti`.
+ */
 MMETHOD_FOREIGN_IMPLEMENT(bar, vector<foo>)
 MMETHOD_FOREIGN_IMPLEMENT(baz, vector<foo>)
 MMETHOD_FOREIGN_IMPLEMENT(lap, vector<bar>)

@@ -5,15 +5,13 @@
 
 //[un_unary
 /*`
-  [import ./classes.hpp]
-  [un_hier]
   [un_decl]
   [un_impl]
   [un_use]
  */
 //]
 
-#include "./classes.hpp"
+#include "../classes.hpp"
 
 using namespace rtti;
 
@@ -23,6 +21,7 @@ namespace {
 /*`
   The declaration of a __multimethod__ is done via
   the `DECLARE_MMETHOD` macro. This macro takes three arguments :
+
   * the __multimethod__ name
   * the return type
   * the parenthesized parameter type list
@@ -38,7 +37,7 @@ using tags::_v;
 DECLARE_MMETHOD(unary, int, (_v<foo const&>));
 
 /*`
-  Here, the sole argument is a dispatched parameter.
+  Here, the only argument is a dispatched parameter.
 
   The dependency on __rtti__ appears : all dispatched parameters
   must have been registered with __rtti__ prior to the declaration.
@@ -50,9 +49,10 @@ DECLARE_MMETHOD(unary, int, (_v<foo const&>));
   After a __multimethod__ declaration, the `IMPLEMENT_MMETHOD` macro
   can be used to provide actual code for our __multimethod__.
   The parameters are like `DECLARE_MMETHOD` :
+
   * the __multimethod__ name
   * the return type
-  * the parameter list
+  * the actual parameter list
 
   Note that unlike the `DECLARE_MMETHOD` macro,
   no tagging is required on the parameters.

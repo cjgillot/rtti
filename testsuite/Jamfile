@@ -12,5 +12,6 @@ unit-test testsuite
   : <library>/library//rtti
     <library>unit_test_framework
     <include>../src
+    <include>.
   ;
 

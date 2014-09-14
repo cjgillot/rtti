@@ -5,16 +5,23 @@
 
 //[wg_widget
 /*`
-  Unary __multimethods__ can be used to extend classes without adding new
-  virtual functions. Suppose we have a hierarchy of widgets, printing various things [wg_classes]
+  Unary __multimethods__ can be used to extend classes without adding new virtual functions,
+  providing a simple replacement to the visitor pattern,
+  the latter allowing only closed-world dispatch.
 
-  It would be gret to be able to count the number of printed characters,
+  Suppose we have a hierarchy of widgets, printing various things:
+  [wg_classes]
+
+  It could be useful to be able to count the number of printed characters,
   without having to modify the classes.
-  We then define the `count` __multimethod__ : [wg_mm_declaration]
+  We then define the `count` __multimethod__.
+  [wg_mm_declaration]
 
-  We can implement it on the several widgets [wg_mm_implement]
+  We can implement it on the several widgets.
+  [wg_mm_implement]
 
-  It can now be used as a native function on the widgets [wg_use]
+  It can now be used like any native function on the widgets.
+  [wg_use]
  */
 //]
 
@@ -39,10 +46,10 @@ struct Widget
 : base_rtti<Widget>  // rtti hierarchy
 , boost::noncopyable
 {
-  Widget() {/**/}               // Ctor
-  virtual ~Widget() {/**/}      // Dtor
+  Widget() {/**/}
+  virtual ~Widget() {/**/}
 
-  virtual void show() const = 0;// Show widget
+  virtual void show() const = 0; // Show widget
 };
 
 struct WNumber
@@ -60,10 +67,10 @@ private:
 };
 
 struct WString
-: public Widget      // classical inheritance
-, public implement_rtti<WString, vector<Widget> >       // declare hierarchy
+: public Widget
+, public implement_rtti<WString, vector<Widget> >
 {
-  explicit WString(std::string const& l): str(l) {}  // Ctor
+  explicit WString(std::string const& l): str(l) {}
 
   void show() const { std::cout << str << std::endl; }
 
@@ -74,8 +81,8 @@ private:
 };
 
 struct WLetter
-: public WString      // classical inheritance
-, public implement_rtti<WLetter, vector<WString> >       // declare hierarchy
+: public WString
+, public implement_rtti<WLetter, vector<WString> >
 {
   explicit WLetter(char l): WString(std::string(1, l)) {}  // Ctor
 
@@ -86,27 +93,25 @@ struct WLetter
 //]
 
 //[wg_mm_declaration
-typedef int ResultType; // return type declaration
-
-using rtti::tags::_v; // tag for flagging dispatch arguments
+using tags::_v; // tag for flagging dispatch arguments
 
 // declare using a dedicated macro
-DECLARE_MMETHOD(count, ResultType, (_v<Widget const&>));
+DECLARE_MMETHOD(count, int, (_v<Widget const&>));
 //]
 
 //[wg_mm_implement
 // implement using a dedicated macro
-IMPLEMENT_MMETHOD(count, ResultType, ( WString const& s ))
+IMPLEMENT_MMETHOD(count, int, ( WString const& s ))
 {
   return s.get_str().size();
 }
 
-IMPLEMENT_MMETHOD(count, ResultType, ( WLetter const& ))
+IMPLEMENT_MMETHOD(count, int, ( WLetter const& ))
 {
   return 1;
 }
 
-IMPLEMENT_MMETHOD(count, ResultType, ( WNumber const& n ))
+IMPLEMENT_MMETHOD(count, int, ( WNumber const& n ))
 {
   int k = n.get_number();
 

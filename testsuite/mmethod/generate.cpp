@@ -3,36 +3,49 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "./classes.hpp"
+#include "../classes.hpp"
 
 using namespace rtti;
 
 namespace {
 
+//[ge_generate
+/*`
+  The call to the __multimethod__ `generate` automatically calls
+  its `generate.generate()` member function.
+  This call ensures the dispatch table
+  has been correctly generated
+  before attempting to resolve a call.
+ */
 using tags::_v;
 DECLARE_MMETHOD(generate, int, (_v<foo const&>));
 
 IMPLEMENT_MMETHOD(generate, int, (foo const& a)) { return a.f(); }
 IMPLEMENT_MMETHOD(generate, int, (bar const& a)) { return a.g(); }
 IMPLEMENT_MMETHOD(generate, int, (baz const& a)) { return 2 * a.f(); }
+//` [ge_use]
+//]
 
 } // namespace <>
 
 BOOST_AUTO_TEST_CASE(test_generate) {
-  //[ge_generate
+  //[ge_use
   /*`
-    The call to the __multimethod__ `f1` automatically calls
-    `f1.generate()`. This call ensures the dispatch table
-    has been correctly generated.
+    At each call, the library will check whether
+    the dispatch table has been generated.
+    This should be a well-predicted branch,
+    but we provide a way to shortcut this verification :
 
-    __mmethod__ provides a way to shortcut this verification.
-    If `f1.generate()` has been called at a point in code :
+    First we need to call the `generate.generate()`
+    method to force the computation of the dispatch table.
+
+    Then, the following calls can be made using the `fast_call` method.
+    A `fast_fetch` method exists to retrieve the code pointer.
    */
+  // Ensure the table is generated
   generate.generate();
-  /*`
-    The following __multimethods__ calls can be made using
-    the `fast_call`/`fast_fetch` pair :
-   */
+
+  // Use the __multimethod__
   foo f; bar r; baz z; lap l;
 
   BOOST_CHECK_EQUAL( generate.fast_call(f),  5 );

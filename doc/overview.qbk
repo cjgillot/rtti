@@ -9,9 +9,9 @@
 
 __mmethod__ provides facility to implement multiple dispatch semantic.
 
+In order to work properly,
 __mmethod__ uses a low-intrusion introspection code, named __rtti__,
 attaching runtime class hierarchy representation.
-
 Given a set of __rtti__-enabled classes, __mmethod__ allows to
 create and implement multiple dispatch methods in a declarative manner.
 
@@ -19,10 +19,14 @@ In order to use the classes and functions described here, you can either include
 the specific headers specified by the descriptions of each class or function, or
 include the master library header:
 
-
+``
     #include <mmethod/mmethod.hpp>
-    using namespace rtti;
+    using namespace __mmethod_ns__;
 
+    // use Boost.MPL vector
+    #include <boost/mpl/vector.hpp>
+    using boost::mpl::vector;
+``
 
 which includes all the other headers in turn.
 
