@@ -50,7 +50,7 @@ int called_ambiguous = 0;
 struct wildcard_policy {
   // flag at generation time
   static void ambiguity_handler(std::size_t n, rtti_type const* types) {
-    BOOST_CHECK_EQUAL(n, 2);
+    BOOST_CHECK_EQUAL(n, 2u);
     BOOST_CHECK_EQUAL(types[0], static_id<foo2>());
     BOOST_CHECK_EQUAL(types[1], static_id<bar2>());
 
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(test_wildcard) {
   f1.generate();
 
   // `wildcard_policy::ambiguity_handler` has been called
-  BOOST_CHECK_EQUAL(found_ambiguous, true);
+  BOOST_CHECK_EQUAL( found_ambiguous, 1 );
 
   // regular calls
   BOOST_CHECK_EQUAL( f1(a, x),  0 ); // (1-1 case)

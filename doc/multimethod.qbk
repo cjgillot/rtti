@@ -16,7 +16,7 @@ in C++.
 In order to use the __mmethod__ library, you need to include this file :
 
 ``
-    #include "mmethod/mmethod.hpp"
+    #include <boost/mmethod/mmethod.hpp>
 ``
 
 All code resides in the __mmethod_ns__ namespace. So we will suppose having
@@ -26,18 +26,23 @@ issued the following using directive :
     using namespace __mmethod_ns__;
 ``
 
-Since __mmethod__ relies heavily on __rtti__, we will also assume
-that this code is present.
-
-``
-    #include "mmethod/rtti.hpp"
-    using namespace __rtti_ns__;
-``
+[import ../testsuite/classes.hpp]
+[hi_hier]
 
 [heading Declaring __multimethods__]
 
 [import ../testsuite/mmethod/unary.cpp]
 [un_unary]
+
+[heading Using neutral parameters]
+
+[import ../testsuite/mmethod/mixed.cpp]
+[mi_mixed]
+
+[heading Binary __multimethods__]
+
+[import ../testsuite/mmethod/binary.cpp]
+[bi_binary]
 
 [heading Using __multimethod__ type]
 

@@ -17,7 +17,7 @@ using namespace boost::mmethod;
 
 namespace mmethod_hierarchy {
 
-//[un_hier
+//[hi_hier
 /*`
   Before declaring a __multimethod__, we will need a
   __rtti__-enabled class hierarchy.
@@ -60,6 +60,6 @@ struct lap
 //]
 
 } // namespace mmethod_hierarchy
-using namespace mmethod_hierarchy; 
+using namespace mmethod_hierarchy;
 
 #endif

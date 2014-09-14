@@ -5,7 +5,7 @@
           http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[library MMethod
+[library Boost.MMethod
   [quickbook 1.3]
   [version 1.0]
   [authors [Gillot, Camille]]
@@ -22,9 +22,10 @@
 [def __boost__ [*Boost]]
 [def __sequence__ [@http://www.boost.org/doc/libs/1_55_0/libs/mpl/doc/refmanual/forward-sequence.html ['Boost.MPL Forward-Sequence]]]
 [def __shared_ptr__ [@http://www.boost.org/doc/libs/1_55_0/libs/smart_ptr/shared_ptr.htm ['Boost shared_ptr]]]
+[def __typeindex__ [@http://www.boost.org/doc/libs/1_56_0/doc/html/boost_typeindex.html ['Boost.TypeIndex]]]
 
-[def __mmethod__ [*MMethod]]
-[def __rtti__ [*MMethod.Rtti]]
+[def __mmethod__ Boost.MMethod]
+[def __rtti__ Boost.MMethod.Rtti]
 
 [def __rtti_ns__ [^boost::mmethod]]
 [def __mmethod_ns__ [^boost::mmethod]]
@@ -41,4 +42,3 @@
 [include multimethod.qbk]
 [include smart_ptr.qbk]
 [include policy.qbk]
-

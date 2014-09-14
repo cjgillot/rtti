@@ -36,6 +36,7 @@ The dispatch table computation is made at the first call to the __multimethod__.
 
 At first call, the runtime stores several helper tables
 used for later function retrieval :
+
 * the /invoker table/, storing code pointers
 * the /poles tables/, storing condensed hierarchy
 
@@ -59,5 +60,10 @@ of new derived classes, without need of any recomputation of the tables.
 The ability to define __multimethods__ for closed classes gives an interesting alternative to usual visitor design pattern.
 First, __multimethods__ can completely replace visitors as a closed extension method,
 but those can also be used to create new out-of-class functions with late binding.
+
+[heading Limitations]
+
+Due to the computation model (dynamically register overloads),
+the __multimethods__ are not safe before entering [^main()].
 
 [endsect]
