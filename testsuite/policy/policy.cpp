@@ -35,10 +35,12 @@ namespace {
   To do so, we will throw the following exception.
  */
 struct check_exception
-: public std::exception {
-  check_exception() {}
-
-  const char* what() { return "Ambiguous call !"; }
+: public std::runtime_error
+, public boost::exception
+{
+  check_exception()
+  : std::runtime_error("Ambiguous call")
+  {}
 };
 
 /*`
@@ -48,7 +50,7 @@ struct check_exception
   the policy with any arity and any return type.
  */
 struct check_policy
-: rtti::mmethod::ambiguity::noreturn_policy<check_policy>
+: mmethod::ambiguity::noreturn_policy<check_policy>
 {
   // optional ambiguity_handler()
 
