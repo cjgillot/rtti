@@ -1,0 +1,77 @@
+language: c++
+
+os:
+  - linux
+
+sudo: required
+
+compiler:
+  - gcc
+  - clang
+
+before_install:
+  - echo $LANG
+  - echo $LC_ALL
+
+matrix:
+  include:
+    - os: linux
+      env: TOOLSET=clang-3.4 VALGRIND=1
+      addons: &clang34
+        apt:
+          packages:
+            - valgrind
+            - clang-3.4
+
+    - os: linux
+      env: TOOLSET=clang-3.5 VALGRIND=1
+      addons: &clang35
+        apt:
+          packages:
+            - clang-3.5
+            - valgrind
+
+    - os: linux
+      env: TOOLSET=clang-3.6 VALGRIND=1
+      addons: &clang36
+        apt:
+          packages:
+            - clang-3.6
+            - valgrind
+
+    - os: linux
+      env: TOOLSET=clang-3.7 VALGRIND=1
+      addons: &clang37
+        apt:
+          packages:
+            - clang-3.7
+            - valgrind
+
+    - os: linux
+      env: TOOLSET=gcc-5 VALGRIND=1
+      addons: &gcc5
+        apt:
+          packages:
+            - clang-5
+            - valgrind
+
+    - os: linux
+      env: TOOLSET=gcc-5 VARIANT=analyze
+      addons: &gcc5
+        apt:
+          packages:
+            - clang-5
+            - valgrind
+
+before_install:
+  - sudo add-apt-repository ppa:boost-latest/ppa -y
+  - sudo apt-get update -q
+  - sudo apt-get install -y boost1.55
+
+before_script:
+  - (cd build && ./bootstrap.sh)
+
+script:
+  - if [ "${TOOLSET}" != "" ]; then ./build/b2 -j2 --toolset=${TOOLSET} debug-symbols=off ${VARIANT} testsuite; fi
+  - if [ "${VALGRIND}" != "" ]; then find -type f -executable | grep "\.testsuite" | xargs -i% valgrind --error-exitcode=-1 %; fi
+
