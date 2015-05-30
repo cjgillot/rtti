@@ -14,16 +14,6 @@ using rtti::hash::detail::value_type;
 
 #define BADBUCKET (&(m_array[m_mask + 1]))
 
-/// bucket_t implementation
-//@{
-inline void bucket_t::reset() BOOST_NOEXCEPT_OR_NOTHROW { m_key = 1; }
-inline void bucket_t::set(key_type k, value_type v) BOOST_NOEXCEPT_OR_NOTHROW {
-  m_value = reinterpret_cast<storage_type>(v);
-  m_key   = reinterpret_cast<storage_type>(k);
-  BOOST_ASSERT( !empty() );
-}
-//@}
-
 /// hash_map implementation
 //@{
 void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
