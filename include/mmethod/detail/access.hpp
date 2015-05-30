@@ -11,7 +11,7 @@
 namespace rtti { namespace mmethod { namespace detail {
 
 struct access {
-  
+
   template<typename Tag>
   struct traits
   : Tag::traits_type

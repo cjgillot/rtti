@@ -5,12 +5,12 @@
 
 //[sm_smart_ptr
 /*`
-  In order to demonstrate the use of smart pointers 
+  In order to demonstrate the use of smart pointers
   with __mmethod__, here is a example of dispatch through __shared_ptr__.
   [sm_specialize]
-  
+
   [sm_declare]
-  
+
   [sm_invoke]
  */
 //]
@@ -27,12 +27,12 @@ using namespace rtti;
 //[sm_specialize
 /*`
   [heading Enabling __shared_ptr__ in __rtti__]
-  
+
   Before declaring any __multimethod__, the __shared_ptr__
   type must be registered with __rtti__. This way, the __rtti__ subsystem
   will be able to retrieve the type informations and to downcast
   the __shared_ptr__.
-  
+
   This is done via a specialization of the `__rtti_ns__::pointer_traits` structure.
  */
 #include <boost/shared_ptr.hpp>
@@ -79,7 +79,7 @@ struct foo
 : base_rtti<foo> {
 public:
   virtual ~foo() {}
-  
+
   int f() { return 5; }
 };
 

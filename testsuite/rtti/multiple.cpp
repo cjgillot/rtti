@@ -8,13 +8,13 @@
   By default, __rtti__ does not support multiple inheritance.
   This design choice is inspired by a concern about performance
   of =node= retrieval.
-  
+
   However, multiple inheritance support can be enabled using
   the second argument to `base_rtti`. This is called the /NodeType/.
-  
+
   Default /NodeType/ is `single_mixin_node`.
   This one allows only one __rtti__ parent for each class.
-  
+
   The other possible /NodeType/ is `virtual_mixin_node`.
   This value allows usage of full C++ inheritance features,
   at the expense of performance.

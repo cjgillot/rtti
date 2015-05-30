@@ -8,20 +8,20 @@
   If you cannot afford to alter the class definition to
   declare the __rtti__ hierarchy, the foreign declaration
   mechanism allows to import existing classes.
-  
+
   Suppose you have the following structure
   [fo_decl]
-  
+
   Given a class hierarchy rooted at class /K/,
   you can declare it to use __rtti__ using
   `MMETHOD_FOREIGN_DECLARE(`/K/`)` macro.
   It will generate a repository of class types.
   [fo_import_decl]
-  
+
   Then, for each class /K/, with bases /Supers/,
   you can declare it using `MMETHOD_FOREIGN_IMPLEMENT(`/K/,/Supers/`)`.
   [fo_import_impl]
-  
+
   [note
     This mechanism does not support merging hierarchies
     declared using different MMETHOD_FOREIGN_DECLARE calls.

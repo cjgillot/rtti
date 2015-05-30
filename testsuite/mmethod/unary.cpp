@@ -45,7 +45,7 @@ using tags::_v;
 DECLARE_MMETHOD(f1, int, (_v<foo const&>));
 /*`
   Here, the sole argument is a dispatched parameter.
-  
+
   The dependency on __rtti__ appears : all dispatched parameters
   must have been registered with __rtti__ prior to the declaration.
  */
@@ -59,7 +59,7 @@ DECLARE_MMETHOD(f1, int, (_v<foo const&>));
   * the __multimethod__ name
   * the return type
   * the parameter list
-  
+
   Note that unlike the `DECLARE_MMETHOD` macro,
   no tagging is required on the parameters.
  */

@@ -15,9 +15,9 @@
 #include <boost/bind.hpp>
 
 /* Implementation of pole computation algorithm from [2]
- * 
+ *
  * Algorithms are described in terms of this paper.
- * 
+ *
  * [1] Pirkelbauer, Solodkyy, Stroustrup. Report on language support
  * for Multi-Methods and Open-Methods for C++.
  */

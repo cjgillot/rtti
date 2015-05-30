@@ -111,7 +111,7 @@ IMPLEMENT_MMETHOD(hunter, ResultType, ( Lion const&, Gazelle const& ))
 {
   //=std::cout<<"Lion jumps on Gazelle and bites its neck.\n";
 }
- 
+
 IMPLEMENT_MMETHOD(hunter, ResultType, ( Lion const&, Giraffe const& ))
 {
   //=std::cout<<"Lion jumps on Giraffe and bites its ass.\n";

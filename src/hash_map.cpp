@@ -90,7 +90,7 @@ void hash_map::insert(key_type key, value_type value) {
   );
   if(bucket != BADBUCKET)
     return bucket->set(key, value);
-  
+
   insert_need_resize(key, value);
 }
 

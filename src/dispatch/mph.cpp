@@ -46,7 +46,7 @@ void output_device::rerank(
 ) {
   if(decl.arity == 1)
     rerank_unary();
-  
+
   else
     rerank_other();
 }

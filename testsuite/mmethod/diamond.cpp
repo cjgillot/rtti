@@ -14,12 +14,12 @@ using namespace rtti;
 using boost::mpl::vector;
 
 /*!\example diamond.cpp
- * 
+ *
  * This example demonstrate mmethods with multiple inheritance.
- * 
+ *
  * Four classes are used : \c foo, \c bar, \c baz, \c lap
  * Their ids are then output on stdout
- * 
+ *
  * \c foo is the base class
  * \c bar has a statically defined id \c bar_id
  * \c baz and \c lap respectively inherit from \c foo and \c bar

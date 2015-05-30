@@ -8,11 +8,11 @@
   Before being used in the __rtti__ framework,
   a class needs to be declared to it.
   This is done using `base_rtti` and `implement_rtti` template classes.
-  
+
   In order to declare a new class hierarchy,
   each root class /K/ must derive from `base_rtti<` /K/ `>`.
   [ba_foo]
-  
+
   After each root class has been declared, you can
   add new classes using `implement_rtti` template.
   To extend with class /T/, it must derive
@@ -25,12 +25,12 @@
   * statically for a class /T/ using `static_id<` /T/ `>()`
   * dynamically for a object /o/ using `get_id(` /o/ `)`
   [ba_use]
-  
+
   Full information, named a __rtti__ node,
   can also be retrieved the same way,
   with `static_node` and `get_node`
   [ba_node]
-  
+
   The nodes contain full information about the class hierarchy derivation.
   Each node /n/ contains the following information :
   * the class id, using `rtti_get_id(` /n/ `)`

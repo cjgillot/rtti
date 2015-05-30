@@ -16,7 +16,7 @@
 #include <boost/unordered_map.hpp>
 
 /*!\brief Class hierarchy object
- * 
+ *
  * This class acts as a factory for \c klass objects.
  */
 class hierarchy_t

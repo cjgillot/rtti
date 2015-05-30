@@ -26,7 +26,7 @@ struct foo
 : base_rtti<foo> {
 public:
   virtual ~foo() {}
-  
+
   int f() const { return 5; }
 };
 
@@ -49,5 +49,5 @@ struct lap
 //]
 
 } // namespace mmethod_hierarchy
-using namespace mmethod_hierarchy; 
+using namespace mmethod_hierarchy;
 

@@ -14,18 +14,18 @@
 /*! \page RTTI.MMethod library
 
   This library implements open multi-methods in ISO C++.
-  
+
   The external interface fits in three files :
   - \c mmethod.hpp
   - \c declare.hpp
   - \c implement.hpp
-  
+
   \c declare.hpp exports everything needed to declare mmethods.
   It does not provide code used for calling those. \see declare.hpp
-  
+
   \c mmethod.hpp exports everything needed to declare
   and invoke mmethods. \see mmethod.hpp
-  
+
   \c implement.hpp exports everything needed to implement
   formerly declared mmethods. \see implement.hpp
 
@@ -72,7 +72,7 @@ MMETHOD_DECLARE(f2, int, (_v<foo*>, _v<bar&>));
   You need to include \see mmethod.hpp if you want those calls to be inlined.
   \code
   foo f; bar b;
-  
+
   f1(&f, b);
   f2(&f, b);
   \endcode
@@ -93,7 +93,7 @@ MMETHOD_DECLARE(f2, int, (_v<foo*>, _v<bar&>));
   - the name of the mmethod
   - the return type
   - the argument list
-  
+
   and it expects the function body to follow.
 
   The argument list must not be tagged as in \c MMETHOD_DECLARE.
@@ -117,7 +117,7 @@ MMETHOD_IMPLEMENT(f1, void, (foo* a)) { a->do_something(); }
 // second case
 MMETHOD_IMPLEMENT(f1, void, (bar* a)) { a->do_something_else(); }
   \endcode
-  
+
   MMethod implement may be spread across translation units.
   The dispatch table is generated at the first call to the mmethod,
   It can be computed earlier by a call to <tt>f1.generate()</tt>.

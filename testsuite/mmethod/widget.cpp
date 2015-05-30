@@ -13,7 +13,7 @@
   We then define the `count` __multimethod__ : [wg_mm_declaration]
 
   We can implement it on the several widgets [wg_mm_implement]
-  
+
   It can now be used as a native function on the widgets [wg_use]
  */
 //]

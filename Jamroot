@@ -9,7 +9,7 @@ project
   ;
 
 use-project /library : src ;
-build-project src ; 
+build-project src ;
 
 build-project benchmark ;
 

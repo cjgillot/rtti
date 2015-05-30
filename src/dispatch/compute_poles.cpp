@@ -12,9 +12,9 @@
 #include <deque>
 
 /* Implementation of pole computation algorithm from [1]
- * 
+ *
  * Algorithms are described in terms of this paper.
- * 
+ *
  * [1] Dujardin, Amiel, Simon. Fast Algorithms for Compressed Multi-Method
  *     Dispatch Tables Generation.
  */
