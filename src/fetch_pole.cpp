@@ -12,9 +12,60 @@ using rtti::rtti_type;
 using rtti::detail::rtti_node;
 using rtti::detail::rtti_hierarchy;
 
-using rtti::hash::detail::bucket_t;
 using rtti::hash::detail::hash_map;
 using rtti::hash::detail::value_type;
+
+static hash_map::iterator
+do_fetch_pole_recursive(
+  hash_map const& map
+, rtti_hierarchy rt
+) {
+  // the recursion is unrolled by default
+  for(;;) {
+    // common case -> we are a pole or a memoized value
+    hash_map::iterator it = map.find( rtti_get_id(rt) );
+    if(BOOST_LIKELY( !it->empty() ))
+      return it;
+
+    // exit condition
+    size_t arity = rtti_get_base_arity(rt);
+
+    if(arity == 0)
+      return NULL;
+
+    rtti_hierarchy rt0 = rtti_get_base(rt);
+    BOOST_ASSERT(rt0);
+
+    // by definition of the poles,
+    // a fork either is a pole, or has all its branches behave the same way
+    // so we only need to follow the first branch
+
+#ifndef NDEBUG
+    // use a recursive version to check for inconsistencies
+    if(arity > 1) {
+      hash_map::iterator ret = do_fetch_pole_recursive(
+        map, rt0
+      );
+
+      for(std::size_t k = 1; k < arity; ++k) {
+        rtti_hierarchy rtk = rtti_get_base(rt, k);
+        hash_map::iterator it = do_fetch_pole_recursive(
+          map, rtk
+        );
+
+        BOOST_ASSERT(ret == it);
+      }
+
+      return ret;
+    }
+#endif
+
+    // unroll the loop
+    rt = rt0;
+  }
+
+  return NULL;
+}
 
 // can be moved as non-member
 value_type
@@ -26,33 +77,34 @@ rtti::hash::detail::do_fetch_pole(
 
   const rtti_type id0 = rtti_get_id(rt0);
 
-  rtti_node const* rt = rt0;
-
-  for(;;) {
+  do {
     // exit condition
-    if( rtti_get_base_arity(rt) == 0)
+    if( rtti_get_base_arity(rt0) == 0)
       break;
 
-    // by definition of the poles,
-    // a fork either is a pole, or has all its branches behave the same way
-    rt = rtti_get_base(rt0);
-
+    rtti_hierarchy rt = rtti_get_base(rt0);
     BOOST_ASSERT(rt);
 
-    // common case
-    hash_map::iterator it = map.find( rtti_get_id(rt) );
+    hash_map::iterator ret = do_fetch_pole_recursive(
+      map, rt
+    );
 
-    if(BOOST_LIKELY( !it->empty() )) {
+    if( !ret )
+      break;
 
-      const_cast<hash_map&>(map).insert_at( it0, id0, it->value() );
+    BOOST_ASSERT( !ret->empty() );
+
+    const_cast<hash_map&>(map).insert_at( it0, id0, ret->value() );
 #ifdef MMETHOD_USE_DEEP_CACHE
-      for(rtti_node const* rt2 = rtti_get_base(rt0); rt2 != rt; rt2 = rtti_get_base(rt2))
-        const_cast<hash_map&>(map).insert( rtti_get_id(rt2), it->value() );
+    for(rtti_node const* rt2 = rtti_get_base(rt0); rt2 != rt; rt2 = rtti_get_base(rt2))
+      const_cast<hash_map&>(map).insert( rtti_get_id(rt2), ret->value() );
 #endif
 
-      return it->value();
-    }
+    return ret->value();
   }
+  while(false);
 
+  // fallback
+  // TODO avoid this ?
   return map.zero()->value();
 }
