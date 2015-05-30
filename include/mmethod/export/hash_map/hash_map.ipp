@@ -31,6 +31,8 @@ inline index_type         hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_N
   return index_type( v & m_mask );
 }
 
+inline std::size_t        hash_map::size()             const BOOST_NOEXCEPT_OR_NOTHROW { return 1 << m_logsz; }
+
 inline hash_map::iterator hash_map::zero()             const BOOST_NOEXCEPT_OR_NOTHROW { return &m_array[0]; }
 inline hash_map::iterator hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   bucket_t* bucket = &m_array[ hash(key) ];

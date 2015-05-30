@@ -40,6 +40,10 @@ private:
   index_type hash(key_type a) const BOOST_NOEXCEPT_OR_NOTHROW;
 
 public:
+  /// access table size -> thread-safe
+  std::size_t size() const BOOST_NOEXCEPT_OR_NOTHROW;
+
+public:
   /// find block -> all these are thread-safe
   //@{
   iterator zero() const BOOST_NOEXCEPT_OR_NOTHROW;
@@ -57,10 +61,9 @@ public:
   void insert_at(iterator it, key_type key, value_type value);
   void erase(iterator it);
 
-  void flush(hash_map const&);
-
 private:
   void insert_need_resize(key_type key, value_type value);
+  void flush(hash_map const&);
   void move(hash_map&) BOOST_NOEXCEPT_OR_NOTHROW;
   //@}
 
