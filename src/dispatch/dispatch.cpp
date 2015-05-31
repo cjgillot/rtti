@@ -6,7 +6,7 @@
 #include "forward.hpp"
 
 #include "foreach.hpp"
-#include "product_iteration.hpp"
+#include "product.hpp"
 
 #include <list>
 
@@ -34,18 +34,16 @@ void rtti_dispatch::dispatch(
   const pole_table_t &pole_table,
   ambiguity_handler_t ahndl
 ) {
-  // prepare traversal
-  product_t p;
-  product_alloc(p, pole_table);
-
   // the order given by product_incr is
   // a topological order for signature_t::worse_match,
   // each base is dispatched before any of its derived
-  do {
-    signature_t sig ( product_deref(p) );
+  for(product_t p (pole_table);
+      p.valid();
+      p.incr()
+  ) {
+    signature_t sig (p.deref());
     dispatch_one(sig, pole_table, dispatch, ahndl);
   }
-  while( product_incr(p, pole_table) );
 }
 
 typedef std::list<overload_t> max_set_type;
