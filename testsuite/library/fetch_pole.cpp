@@ -4,6 +4,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "mmethod/export/table.hpp"
+#include "nodeptr.hpp"
 
 #include <boost/test/unit_test.hpp>
 
@@ -14,49 +15,6 @@ using namespace rtti;
 namespace hd = hash::detail;
 
 using namespace detail;
-
-// {{{ make individual node
-struct nodeptr {
-  rtti_node* node;
-
-  explicit
-  nodeptr(size_t arity) {
-    node = (rtti_node*)::operator new(
-        sizeof(holder_::rtti_node_var<0>)
-      + sizeof(rtti_hierarchy) * arity
-    );
-
-    node->self.__arity = arity;
-  }
-
-  ~nodeptr() {
-    delete node;
-  }
-};
-
-// check size computation
-template<size_t N>
-struct check_size
-{
-  enum {
-    thsize = sizeof(size_t) + N*sizeof(rtti_hierarchy),
-    resize = sizeof(holder_::rtti_node_var<N>),
-
-    value =
-        check_size<N-1>::value &&
-        resize == thsize
-  };
-};
-template<>
-struct check_size<-1>
-{
-  enum {
-    value = true
-  };
-};
-
-BOOST_STATIC_ASSERT(check_size<5>::value);
-// }}}
 
 BOOST_AUTO_TEST_CASE(fetch_pole) {
   { // linear inheritance

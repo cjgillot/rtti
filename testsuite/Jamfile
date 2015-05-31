@@ -11,5 +11,6 @@ unit-test testsuite
   : [ glob-tree *.cpp ]
   : <library>/library//rtti
     <library>unit_test_framework
+    <include>../src
   ;
 
