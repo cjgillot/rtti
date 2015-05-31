@@ -94,13 +94,16 @@ rtti::hash::detail::do_fetch_pole(
 
     BOOST_ASSERT( !ret->empty() );
 
-    const_cast<hash_map&>(map).insert_at( it0, id0, ret->value() );
+    // insertion invalidates iterators
+    value_type val = ret->value();
+
+    const_cast<hash_map&>(map).insert_at( it0, id0, val );
 #ifdef MMETHOD_USE_DEEP_CACHE
     for(rtti_node const* rt2 = rtti_get_base(rt0); rt2 != rt; rt2 = rtti_get_base(rt2))
-      const_cast<hash_map&>(map).insert( rtti_get_id(rt2), ret->value() );
+      const_cast<hash_map&>(map).insert( rtti_get_id(rt2), val );
 #endif
 
-    return ret->value();
+    return val;
   }
   while(false);
 
