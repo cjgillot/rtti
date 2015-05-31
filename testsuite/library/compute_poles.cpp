@@ -90,6 +90,36 @@ BOOST_AUTO_TEST_CASE(compute_poles) {
       //     |
       //     o
       //    / \
+      //   x   x
+      //    \ /
+      //     o
+      //     |
+      //     x
+      std::vector<rtti_hierarchy> cs;
+      cs.push_back(c0.node);
+      cs.push_back(c2.node);
+      cs.push_back(c3.node);
+      cs.push_back(c5.node);
+
+      hierarchy_t hier;
+      hier.compute_poles(cs);
+
+      std::vector<rtti_hierarchy> npoles ( 6, NULL_node );
+      order_poles(hier, npoles);
+
+      BOOST_CHECK_EQUAL(npoles[0], c0.node);
+      BOOST_CHECK((npoles[1] == c2.node && npoles[2] == c3.node)
+               || (npoles[2] == c2.node && npoles[1] == c3.node));
+      BOOST_CHECK_EQUAL(npoles[3], c4.node);
+      BOOST_CHECK_EQUAL(npoles[4], c5.node);
+      BOOST_CHECK_EQUAL(npoles[5], NULL_node);
+    }
+
+    { // without c4 a pole
+      //     x
+      //     |
+      //     o
+      //    / \
       //   o   x
       //    \ /
       //     o
@@ -108,34 +138,6 @@ BOOST_AUTO_TEST_CASE(compute_poles) {
 
       BOOST_CHECK_EQUAL(npoles[0], c0.node);
       BOOST_CHECK_EQUAL(npoles[1], c3.node);
-      BOOST_CHECK_EQUAL(npoles[2], c4.node);
-      BOOST_CHECK_EQUAL(npoles[3], c5.node);
-      BOOST_CHECK_EQUAL(npoles[4], NULL_node);
-    }
-
-    { // without c4 a pole
-      //     x
-      //     |
-      //     x
-      //    / \
-      //   o   o
-      //    \ /
-      //     o
-      //     |
-      //     x
-      std::vector<rtti_hierarchy> cs;
-      cs.push_back(c0.node);
-      cs.push_back(c1.node);
-      cs.push_back(c5.node);
-
-      hierarchy_t hier;
-      hier.compute_poles(cs);
-
-      std::vector<rtti_hierarchy> npoles ( 6, NULL_node );
-      order_poles(hier, npoles);
-
-      BOOST_CHECK_EQUAL(npoles[0], c0.node);
-      BOOST_CHECK_EQUAL(npoles[1], c1.node);
       BOOST_CHECK_EQUAL(npoles[2], c5.node);
       BOOST_CHECK_EQUAL(npoles[3], NULL_node);
     }
@@ -150,47 +152,52 @@ BOOST_AUTO_TEST_CASE(compute_poles) {
     nodeptr c2 ( 1 );
     c2.node->self.__base[0] = c1.node;
 
-    nodeptr c3 ( 2 );
+    nodeptr c3 ( 1 );
     c3.node->self.__base[0] = c1.node;
-    c3.node->self.__base[1] = c2.node;
 
     nodeptr c4 ( 2 );
     c4.node->self.__base[0] = c2.node;
     c4.node->self.__base[1] = c3.node;
 
-    nodeptr c5 ( 1 );
-    c5.node->self.__base[0] = c4.node;
+    nodeptr c5 ( 2 );
+    c5.node->self.__base[0] = c2.node;
+    c5.node->self.__base[1] = c4.node;
+
+    nodeptr c6 ( 1 );
+    c6.node->self.__base[0] = c5.node;
 
     { // with c4 a pole
       //     x
       //     |
       //     o
       //    / \
-      //   o   \
+      //   x   x
       //   |\  |
       //   | \ |
       //   |  \|
-      //   \   x
+      //   \   o
       //    \ /
       //     o
       //     |
       //     x
       std::vector<rtti_hierarchy> cs;
       cs.push_back(c0.node);
+      cs.push_back(c2.node);
       cs.push_back(c3.node);
-      cs.push_back(c5.node);
+      cs.push_back(c6.node);
 
       hierarchy_t hier;
       hier.compute_poles(cs);
 
-      std::vector<rtti_hierarchy> npoles ( 6, NULL_node );
+      std::vector<rtti_hierarchy> npoles ( 7, NULL_node );
       order_poles(hier, npoles);
 
       BOOST_CHECK_EQUAL(npoles[0], c0.node);
-      BOOST_CHECK_EQUAL(npoles[1], c3.node);
-      BOOST_CHECK_EQUAL(npoles[2], c4.node);
-      BOOST_CHECK_EQUAL(npoles[3], c5.node);
-      BOOST_CHECK_EQUAL(npoles[4], NULL_node);
+      BOOST_CHECK((npoles[1] == c2.node && npoles[2] == c3.node)
+               || (npoles[2] == c2.node && npoles[1] == c3.node));
+      BOOST_CHECK_EQUAL(npoles[3], c4.node);
+      BOOST_CHECK_EQUAL(npoles[4], c6.node);
+      BOOST_CHECK_EQUAL(npoles[5], NULL_node);
     }
 
     { // without c4 a pole
@@ -198,7 +205,7 @@ BOOST_AUTO_TEST_CASE(compute_poles) {
       //     |
       //     o
       //    / \
-      //   x   \
+      //   x   o
       //   |\  |
       //   | \ |
       //   |  \|
@@ -212,19 +219,18 @@ BOOST_AUTO_TEST_CASE(compute_poles) {
       std::vector<rtti_hierarchy> cs;
       cs.push_back(c0.node);
       cs.push_back(c2.node);
-      cs.push_back(c5.node);
+      cs.push_back(c6.node);
 
       hierarchy_t hier;
       hier.compute_poles(cs);
 
-      std::vector<rtti_hierarchy> npoles ( 6, NULL_node );
+      std::vector<rtti_hierarchy> npoles ( 7, NULL_node );
       order_poles(hier, npoles);
 
       BOOST_CHECK_EQUAL(npoles[0], c0.node);
       BOOST_CHECK_EQUAL(npoles[1], c2.node);
-      BOOST_CHECK_EQUAL(npoles[2], c3.node);
-      BOOST_CHECK_EQUAL(npoles[3], c5.node);
-      BOOST_CHECK_EQUAL(npoles[4], NULL_node);
+      BOOST_CHECK_EQUAL(npoles[2], c6.node);
+      BOOST_CHECK_EQUAL(npoles[3], NULL_node);
     }
   }
 }
