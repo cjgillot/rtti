@@ -44,6 +44,7 @@ public:
   rtti_type         get_id()     const { return rtti_get_id(rtti);      }
   rtti_hierarchy    get_rtti()   const { return rtti;                   }
   bases_type const& get_bases()  const { return bases;                  }
+  std::size_t       get_rank()   const { return rank;                   }
 
 public:
   // total hashing order

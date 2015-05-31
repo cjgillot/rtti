@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(fetch_pole) {
       BOOST_CHECK_EQUAL(hd::fetch_pole(map, c0.node), 0);
     }
 
-    { // without c3 a pole
+    { // without c4 a pole
       hd::hash_map map;
       map.create(3);
       map.insert(rtti_get_id(c0.node), 0);
