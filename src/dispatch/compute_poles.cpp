@@ -33,13 +33,6 @@ struct rank_compare {
 
 } // namespace
 
-//!\brief Compute rank and subtypes bitset
-void
-hierarchy_t::pole_init(klass_t* k) {
-  std::size_t r = current_rank++;
-  k->set_rank(r);
-}
-
 //!\brief Pseudo-closest algorithm (Fig 9)
 static std::size_t
 pseudo_closest(klass_t const* klass, const klass_t* *out_pole) {

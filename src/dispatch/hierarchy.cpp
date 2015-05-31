@@ -10,7 +10,10 @@
 #include "foreach.hpp"
 
 #include <vector>
-#include <stack>
+
+// ASSERT macro
+#define FIND_KNOWN(k) \
+    (std::find(klasses.begin(), klasses.end(), k))
 
 // ----- hierarchy ----- //
 
@@ -67,9 +70,21 @@ hierarchy_t::remove(klass_t const* k) {
   delete k;
 }
 
+//!\brief Compute rank and subtypes bitset
+void
+hierarchy_t::pole_init(klass_t* k) {
+  BOOST_ASSERT( FIND_KNOWN(k) != klasses.end() );
+  BOOST_ASSERT( poles.find(k->get_rtti()) != poles.end() );
+
+  std::size_t r = current_rank++;
+  k->set_rank(r);
+}
+
+
 klass_t const*
 hierarchy_t::fetch(rtti_hierarchy hh) const {
+  BOOST_ASSERT( poles.find(hh) != poles.end() );
   klass_t const* k = poles.at(hh);
-  BOOST_ASSERT( std::find(klasses.begin(), klasses.end(), k) != klasses.end() );
+  BOOST_ASSERT( FIND_KNOWN(k) != klasses.end() );
   return k;
 }
