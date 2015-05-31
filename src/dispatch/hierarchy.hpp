@@ -46,8 +46,12 @@ public:
   klass_t const* fetch(rtti_hierarchy) const;
 
 private:
+  //!\brief Register new node in hierarchy.
   klass_t* add(rtti_hierarchy hh);
-  void remove(klass_t const*);
+  //!\brief Remove node from hierarchy.
+  //! If replace is not \c NULL,
+  //! replace is used as the corresponding pole for k.
+  void remove(klass_t const* k, klass_t const* replace);
 
   void pole_init(klass_t*);
 

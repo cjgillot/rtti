@@ -97,12 +97,12 @@ void hierarchy_t::compute_poles(input_type const& input) {
       klass_t* k = this->add(top);
 
       // compute
-      klass_t const* pole;
+      klass_t const* pole = NULL;
       std::size_t const sz = pseudo_closest(k, &pole);
 
       if(sz <= 1) {
         // false pole
-        this->remove(k);
+        this->remove(k, pole);
       }
       else {
         // effective pole found

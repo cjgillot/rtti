@@ -8,12 +8,14 @@
 #include "mmethod/rtti/holder/node.hpp"
 
 #include "foreach.hpp"
+#include "util.hpp"
 
 #include <vector>
 
 // ASSERT macro
 #define FIND_KNOWN(k) \
     (std::find(klasses.begin(), klasses.end(), k))
+using namespace rtti_dispatch;
 
 // ----- hierarchy ----- //
 
@@ -56,6 +58,8 @@ hierarchy_t::add(rtti_hierarchy vec) {
     poles_map_t::const_iterator it = poles.find(base);
     if(it != poles.end())
       k->bases.push_back(it->second);
+
+    make_unique_sort(k->bases);
   }
 
   poles.insert(std::make_pair(vec, k));
@@ -64,9 +68,27 @@ hierarchy_t::add(rtti_hierarchy vec) {
 }
 
 void
-hierarchy_t::remove(klass_t const* k) {
+hierarchy_t::remove(klass_t const* k, klass_t const* replace) {
   klasses.erase(std::remove(klasses.begin(), klasses.end(), k), klasses.end());
-  poles.erase(k->get_rtti());
+
+  poles_map_t::iterator dit = poles.find(k->get_rtti());
+  BOOST_ASSERT(dit != poles.end());
+  if(replace) {
+    BOOST_ASSERT( FIND_KNOWN(replace) != klasses.end() );
+    dit->second = const_cast<klass_t*>(replace);
+  }
+  else {
+    poles.erase(dit);
+  }
+
+#ifndef NDEBUG
+  // verify k has not been referenced elsewhere
+  typedef std::pair<rtti_hierarchy, klass_t*> pair_t;
+  foreach(pair_t const& p, poles) {
+    BOOST_ASSERT(p.second != k);
+  }
+#endif
+
   delete k;
 }
 
