@@ -21,7 +21,6 @@ wanderer_t::push_back(rtti_hierarchy k) {
   BOOST_ASSERT( !processing );
 #endif
 
-  visited[k] = false;
   stack.push_back(k);
 }
 
@@ -33,7 +32,7 @@ wanderer_t::pop() {
 
   for(;;) {
     // exit condition
-    if( stack.empty() )
+    if(stack.empty())
       return NULL;
 
     // get next element
@@ -41,7 +40,7 @@ wanderer_t::pop() {
     stack.pop_back();
 
     // already traversed ?
-    if( visited[top] )
+    if(visited.count(top))
       continue;
 
     // inject base classes
@@ -54,9 +53,10 @@ wanderer_t::pop() {
     }
 
     // mark as traversed
-    visited[top] = true;
-    foreach_base(rtti_hierarchy b, top)
-      BOOST_ASSERT(visited[b]);
+    visited.insert(top);
+    foreach_base(rtti_hierarchy b, top) {
+      BOOST_ASSERT(visited.count(b)); (void)b;
+    }
 
     return top;
   }
@@ -71,7 +71,7 @@ wanderer_t::reinject_bases(rtti_hierarchy top_pole) {
 
   foreach_base(rtti_hierarchy next, top_pole) {
     // not visited yet
-    if(! visited[next] ) {
+    if(!visited.count(next)) {
       stack.push_back(next);
       need_upcast = true;
     }

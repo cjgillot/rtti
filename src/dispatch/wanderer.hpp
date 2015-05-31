@@ -6,11 +6,9 @@
 #ifndef WANDERER_HPP
 #define WANDERER_HPP
 
-#include "hierarchy.hpp"
+#include "early.hpp"
 
-#include "foreach.hpp"
-
-#include <boost/unordered_map.hpp>
+#include <boost/unordered_set.hpp>
 #include <deque>
 
 namespace rtti_dispatch {
@@ -18,22 +16,11 @@ namespace rtti_dispatch {
 //!\brief Topological sort traversal functor
 //! klass objects are popped from the most general
 //! to the most derived type.
-class wanderer_t {
-private:
-  std::deque<rtti_hierarchy> stack;
-  boost::unordered_map<rtti_hierarchy, bool> visited;
+struct wanderer_t {
+  wanderer_t();
 
-#ifndef NDEBUG
-  // sanity test only in debug mode
-  bool processing;
-#endif
-
-public:
   typedef rtti_hierarchy value_type;
   typedef value_type const& const_reference;
-
-public:
-  wanderer_t();
 
   //!\brief Add a hierarchy to the queue.
   //! This function shall not be called once
@@ -48,6 +35,15 @@ public:
 
 private:
   bool reinject_bases(rtti_hierarchy top_pole);
+
+private:
+  std::deque<rtti_hierarchy> stack;
+  boost::unordered_set<rtti_hierarchy> visited;
+
+#ifndef NDEBUG
+  // sanity test only in debug mode
+  bool processing;
+#endif
 };
 
 } // namespace rtti_dispatch
