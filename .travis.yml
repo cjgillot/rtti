@@ -94,6 +94,7 @@ before_script:
   - (cd build && ./bootstrap.sh)
 
 script:
-  - if [ "${TOOLSET}" != "" ]; then ./build/b2 -j2 --toolset=${TOOLSET} debug-symbols=off ${VARIANT} testsuite; fi
-  - if [ "${VALGRIND}" != "" ]; then find -type f -executable | grep "\.testsuite" | xargs -i% valgrind --error-exitcode=-1 %; fi
+  - if [ "${VARIANT}" == "" ]; then export VARIANT=debug; fi
+  - if [ "${TOOLSET}" != "" ]; then ./build/b2 -j2 --toolset=${TOOLSET} debug-symbols=off variant=${VARIANT} testsuite; fi
+  - if [ "${VALGRIND}" != "" ]; then find -type f -executable -name testsuite | xargs -i% valgrind --error-exitcode=-1 %; fi
 
