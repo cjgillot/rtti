@@ -54,7 +54,7 @@ struct B : A {};
 // }}}
 
 // {{{ test pointer_traits
-BOOST_AUTO_TEST_CASE(smart_pointer_traits) {
+BOOST_AUTO_TEST_CASE(test_smart_pointer_traits) {
     boost::shared_ptr<A> ap ( new B );
 
     typedef pointer_traits<boost::shared_ptr<A> > ptr_tt;

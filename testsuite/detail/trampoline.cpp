@@ -64,7 +64,7 @@ struct vover {
   }
 };
 
-BOOST_AUTO_TEST_CASE(trampoline) {
+BOOST_AUTO_TEST_CASE(test_trampoline) {
   using rtti::mmethod::detail::make_trampoline;
 
   B b;

@@ -16,7 +16,7 @@ using namespace rtti_dispatch;
 
 #define NULL_node ((rtti_hierarchy)NULL)
 
-BOOST_AUTO_TEST_CASE(wanderer) {
+BOOST_AUTO_TEST_CASE(test_wanderer) {
   { // linear inheritance
     nodeptr c0 ( 0 );
 

@@ -26,13 +26,6 @@
 
 #include "./classes.hpp"
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
-#include "mmethod/implement.hpp"
-
-#include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
-
 using namespace rtti;
 using boost::mpl::vector;
 
@@ -40,26 +33,26 @@ namespace {
 
 //[pr_decl
 using tags::_v;
-DECLARATION_MMETHOD(f1_t, int, (_v<foo&>));
+DECLARATION_MMETHOD(prefetch_t, int, (_v<foo&>));
 
-IMPLEMENTATION_MMETHOD(f1_t, int, (foo& a)) { return a.f(); }
-IMPLEMENTATION_MMETHOD(f1_t, int, (bar& a)) { return a.g(); }
-IMPLEMENTATION_MMETHOD(f1_t, int, (baz& a)) { return 2 * a.f(); }
+IMPLEMENTATION_MMETHOD(prefetch_t, int, (foo& a)) { return a.f(); }
+IMPLEMENTATION_MMETHOD(prefetch_t, int, (bar& a)) { return a.g(); }
+IMPLEMENTATION_MMETHOD(prefetch_t, int, (baz& a)) { return 2 * a.f(); }
 //]
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(prefetch) {
+BOOST_AUTO_TEST_CASE(test_prefetch) {
   //[pr_functor
   lap l;
-  f1_t f1;
+  prefetch_t prefetch;
 
-  BOOST_CHECK_EQUAL( f1(l), 42 );
+  BOOST_CHECK_EQUAL( prefetch(l), 42 );
   //]
 
   //[pr_early
-  typedef f1_t::function_type func_t;   // function pointer type
-  func_t fp = f1.fetch(l);              // call dispatch mechanism
+  typedef prefetch_t::function_type func_t;   // function pointer type
+  func_t fp = prefetch.fetch(l);              // call dispatch mechanism
 
   BOOST_CHECK_EQUAL( fp(l), 42 );       // downcast `l` and call `l.bar::g()`
   //]

@@ -82,7 +82,7 @@ CHECK_REMOVE_ALL(*const volatile&&);
 // }}}
 
 // {{{ test unsafe_casting
-BOOST_AUTO_TEST_CASE(unsafe_casting) {
+BOOST_AUTO_TEST_CASE(test_unsafe_casting) {
   using traits_detail::unsafe_casting;
 
   B b;
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(unsafe_casting) {
 // }}}
 
 // {{{ test pointer_traits
-BOOST_AUTO_TEST_CASE(basic_pointer_traits) {
+BOOST_AUTO_TEST_CASE(test_basic_pointer_traits) {
   { // non-volatile test
     D d;
 

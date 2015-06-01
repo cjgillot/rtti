@@ -12,11 +12,10 @@
 #include <set>
 
 using namespace rtti;
-namespace hd = hash::detail;
-
 using namespace detail;
+using namespace hash::detail;
 
-BOOST_AUTO_TEST_CASE(fetch_pole) {
+BOOST_AUTO_TEST_CASE(test_fetch_pole) {
   { // linear inheritance
     nodeptr c0 ( 0 );
 
@@ -32,17 +31,17 @@ BOOST_AUTO_TEST_CASE(fetch_pole) {
     nodeptr c4 ( 1 );
     c4.node->self.__base[0] = c3.node;
 
-    hd::hash_map map;
+    hash_map map;
     map.create(3);
     map.insert(rtti_get_id(c0.node), 0);
     map.insert(rtti_get_id(c2.node), 2);
     map.insert(rtti_get_id(c4.node), 4);
 
-    BOOST_CHECK_EQUAL(hd::fetch_pole(map, c4.node), 4);
-    BOOST_CHECK_EQUAL(hd::fetch_pole(map, c3.node), 2);
-    BOOST_CHECK_EQUAL(hd::fetch_pole(map, c2.node), 2);
-    BOOST_CHECK_EQUAL(hd::fetch_pole(map, c1.node), 0);
-    BOOST_CHECK_EQUAL(hd::fetch_pole(map, c0.node), 0);
+    BOOST_CHECK_EQUAL(fetch_pole(map, c4.node), 4);
+    BOOST_CHECK_EQUAL(fetch_pole(map, c3.node), 2);
+    BOOST_CHECK_EQUAL(fetch_pole(map, c2.node), 2);
+    BOOST_CHECK_EQUAL(fetch_pole(map, c1.node), 0);
+    BOOST_CHECK_EQUAL(fetch_pole(map, c0.node), 0);
   }
 
   { // diamond inheritance
@@ -65,48 +64,48 @@ BOOST_AUTO_TEST_CASE(fetch_pole) {
     c5.node->self.__base[0] = c4.node;
 
     { // with c4 a pole
-      hd::hash_map map;
+      hash_map map;
       map.create(3);
       map.insert(rtti_get_id(c0.node), 0);
       map.insert(rtti_get_id(c3.node), 3);
       map.insert(rtti_get_id(c4.node), 4);
 
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c5.node), 4);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c4.node), 4);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c3.node), 3);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c2.node), 0);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c1.node), 0);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c0.node), 0);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c5.node), 4);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c4.node), 4);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c3.node), 3);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c2.node), 0);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c1.node), 0);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c0.node), 0);
     }
 
     { // without c4 a pole
-      hd::hash_map map;
+      hash_map map;
       map.create(3);
       map.insert(rtti_get_id(c0.node), 0);
       map.insert(rtti_get_id(c1.node), 1);
       map.insert(rtti_get_id(c5.node), 5);
 
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c5.node), 5);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c4.node), 1);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c3.node), 1);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c2.node), 1);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c1.node), 1);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c0.node), 0);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c5.node), 5);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c4.node), 1);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c3.node), 1);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c2.node), 1);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c1.node), 1);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c0.node), 0);
     }
 
     { // with a dead branch
-      hd::hash_map map;
+      hash_map map;
       map.create(2);
       map.set_fallback(0);
       map.insert(rtti_get_id(c3.node), 3);
       map.insert(rtti_get_id(c5.node), 5);
 
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c5.node), 5);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c4.node), 3);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c3.node), 3);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c2.node), 0);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c1.node), 0);
-      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c0.node), 0);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c5.node), 5);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c4.node), 3);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c3.node), 3);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c2.node), 0);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c1.node), 0);
+      BOOST_CHECK_EQUAL(fetch_pole(map, c0.node), 0);
     }
   }
 }

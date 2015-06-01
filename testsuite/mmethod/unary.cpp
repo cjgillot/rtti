@@ -15,13 +15,6 @@
 
 #include "./classes.hpp"
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
-#include "mmethod/implement.hpp"
-
-#include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
-
 using namespace rtti;
 
 namespace {
@@ -42,7 +35,8 @@ namespace {
   using the `tags::_v<>` template.
  */
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<foo const&>));
+DECLARE_MMETHOD(unary, int, (_v<foo const&>));
+
 /*`
   Here, the sole argument is a dispatched parameter.
 
@@ -63,14 +57,14 @@ DECLARE_MMETHOD(f1, int, (_v<foo const&>));
   Note that unlike the `DECLARE_MMETHOD` macro,
   no tagging is required on the parameters.
  */
-IMPLEMENT_MMETHOD(f1, int, (foo const& a)) { return a.f(); }
-IMPLEMENT_MMETHOD(f1, int, (bar const& a)) { return a.g(); }
-IMPLEMENT_MMETHOD(f1, int, (baz const& a)) { return 2 * a.f(); }
+IMPLEMENT_MMETHOD(unary, int, (foo const& a)) { return a.f(); }
+IMPLEMENT_MMETHOD(unary, int, (bar const& a)) { return a.g(); }
+IMPLEMENT_MMETHOD(unary, int, (baz const& a)) { return 2 * a.f(); }
 //]
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(unary) {
+BOOST_AUTO_TEST_CASE(test_unary) {
   //[un_use
   /*`
     Our __multimethod__ can now be used as a function object,
@@ -78,9 +72,9 @@ BOOST_AUTO_TEST_CASE(unary) {
    */
   foo f; bar r; baz z; lap l;
 
-  BOOST_CHECK_EQUAL( f1(f),  5 );
-  BOOST_CHECK_EQUAL( f1(r), 42 );
-  BOOST_CHECK_EQUAL( f1(z), 10 );
-  BOOST_CHECK_EQUAL( f1(l), 42 ); // (lap is-a bar)
+  BOOST_CHECK_EQUAL( unary(f),  5 );
+  BOOST_CHECK_EQUAL( unary(r), 42 );
+  BOOST_CHECK_EQUAL( unary(z), 10 );
+  BOOST_CHECK_EQUAL( unary(l), 42 ); // (lap is-a bar)
   //]
 }

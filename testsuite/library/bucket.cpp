@@ -12,7 +12,7 @@ using namespace rtti::hash::detail;
 
 #define EVEN_MASK (~(uintptr_t(1)))
 
-BOOST_AUTO_TEST_CASE(bucket) {
+BOOST_AUTO_TEST_CASE(test_bucket) {
   BOOST_STATIC_ASSERT( sizeof(value_type) >= sizeof(void(*)()) );
 
   bucket_t bucket;

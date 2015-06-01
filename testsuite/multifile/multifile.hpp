@@ -11,7 +11,7 @@
 
 using namespace rtti;
 
-namespace test_multifile {
+namespace multifile {
 
 struct foo
 : base_rtti<foo> {
@@ -28,6 +28,6 @@ foo* make_foo();
 foo* make_bar();
 foo* make_baz();
 
-} // namespace test_multifile
+} // namespace multifile
 
 #endif

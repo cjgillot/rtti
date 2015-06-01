@@ -76,7 +76,7 @@ IMPLEMENT_MMETHOD(f1, int, (foo1&, bar2&)) { return 8; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(policy) {
+BOOST_AUTO_TEST_CASE(test_policy) {
   foo1 a; foo2 b;
   bar1 x; bar2 y;
 
@@ -84,8 +84,5 @@ BOOST_AUTO_TEST_CASE(policy) {
   BOOST_CHECK_EQUAL( f1(a, y),  8  ); // (1-2 case)
   BOOST_CHECK_EQUAL( f1(b, x), 13  ); // (2-1 case)
 
-  try {
-    (void) f1(b, y);
-  }
-  catch(check_exception&) {}
+  BOOST_CHECK_EXCEPTION( f1(b, y), check_exception, & );
 }

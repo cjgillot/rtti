@@ -124,7 +124,7 @@ IMPLEMENT_MMETHOD(f1, int, (boost::shared_ptr<baz> const& a)) { return 2 * a->f(
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(smart_ptr) {
+BOOST_AUTO_TEST_CASE(test_smart_ptr) {
   //[sm_invoke
   /*`
     Invocation of the __multimethod__ is also transparent

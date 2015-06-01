@@ -70,7 +70,7 @@ MMETHOD_FOREIGN_IMPLEMENT(lap, vector<bar>)
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(foreign) {
+BOOST_AUTO_TEST_CASE(test_foreign) {
   foo f; bar r; baz z; lap l;
 
   BOOST_CHECK_EQUAL( static_id<foo>(), get_id(f) );

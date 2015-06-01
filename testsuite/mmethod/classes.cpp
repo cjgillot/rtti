@@ -3,17 +3,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "multifile.hpp"
+#include "classes.hpp"
 
-#include "mmethod/implement.hpp"
-
-namespace multifile {
+using namespace mmethod_hierarchy;
 
 foo::~foo() {}
-
-int foo::f() { return 5; }
-foo* make_foo() { return new foo; }
-
-IMPLEMENT_MMETHOD(f1, int, (foo& a)) { return a.f(); }
-
-} // namespace multifile
+bar::~bar() {}
+baz::~baz() {}
+lap::~lap() {}

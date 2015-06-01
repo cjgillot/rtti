@@ -33,7 +33,7 @@ order_poles(
   std::remove(npoles.begin(), npoles.end(), NULL_node);
 }
 
-BOOST_AUTO_TEST_CASE(compute_poles) {
+BOOST_AUTO_TEST_CASE(test_compute_poles) {
   { // linear inheritance
     nodeptr c0 ( 0 );
 

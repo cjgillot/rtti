@@ -42,18 +42,18 @@ struct baz
 {};
 
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<root&>));
+DECLARE_MMETHOD(dead, int, (_v<root&>));
 
-IMPLEMENT_MMETHOD(f1, int, (foo2&)) { return 5; }
+IMPLEMENT_MMETHOD(dead, int, (foo2&)) { return 5; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(dead_base) {
+BOOST_AUTO_TEST_CASE(test_dead) {
   root r; foo1 f; foo2 g; baz z;
 
-  BOOST_CHECK_EQUAL( f1(g), 5  );
-  BOOST_CHECK_EQUAL( f1(z), 5  );
+  BOOST_CHECK_EQUAL( dead(g), 5  );
+  BOOST_CHECK_EQUAL( dead(z), 5  );
 
-  BOOST_CHECK_THROW( f1(r), bad_dispatch );
-  BOOST_CHECK_THROW( f1(f), bad_dispatch );
+  BOOST_CHECK_EXCEPTION( dead(r), bad_dispatch, & );
+  BOOST_CHECK_EXCEPTION( dead(f), bad_dispatch, & );
 }

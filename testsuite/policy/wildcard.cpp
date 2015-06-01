@@ -87,7 +87,7 @@ IMPLEMENT_MMETHOD(f1, int, (foo1&, bar2&)) { return 8; }
 
 } // namespace <>
 
-BOOST_AUTO_TEST_CASE(wildcard) {
+BOOST_AUTO_TEST_CASE(test_wildcard) {
   foo1 a; foo2 b;
   bar1 x; bar2 y;
 

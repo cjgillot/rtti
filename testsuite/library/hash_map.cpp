@@ -9,14 +9,14 @@
 #include <map>
 
 using namespace rtti;
-namespace hd = rtti::hash::detail;
+using namespace rtti::hash::detail;
 
 #define EVEN_MASK (~(uintptr_t(1)))
 
-BOOST_AUTO_TEST_CASE(hash_map) {
-  typedef hd::hash_map::iterator iter_t;
+BOOST_AUTO_TEST_CASE(test_hash_map) {
+  typedef hash_map::iterator iter_t;
 
-  hd::hash_map map;
+  hash_map map;
 
   size_t initsz = rand() % (1<<20);
   map.create( initsz );
@@ -27,14 +27,14 @@ BOOST_AUTO_TEST_CASE(hash_map) {
   BOOST_CHECK_EQUAL( map.size() & (map.size()-1), 0 );
 
   // {{{ create sample
-  typedef std::map<hd::key_type, hd::value_type> pop_t;
+  typedef std::map<key_type, value_type> pop_t;
   typedef pop_t::const_iterator popit_t;
   typedef pop_t::value_type pair_t;
   pop_t pop;
 
   for(size_t i = 0; i < initsz; ++i) {
-    hd::key_type k = reinterpret_cast<hd::key_type>( rand() & EVEN_MASK);
-    hd::value_type v = static_cast<hd::value_type>( rand() );
+    key_type k = reinterpret_cast<key_type>( rand() & EVEN_MASK);
+    value_type v = static_cast<value_type>( rand() );
 
     pop.insert(std::make_pair(k,v));
   }

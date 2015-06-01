@@ -133,7 +133,7 @@ IMPLEMENT_MMETHOD(hunter, ResultType, ( Bear const&, Prey_abstract const& prey )
 }
 //]
 
-BOOST_AUTO_TEST_CASE(predator_prey)
+BOOST_AUTO_TEST_CASE(test_predator_prey)
 {
   //[pp_use
   Bear bear;
