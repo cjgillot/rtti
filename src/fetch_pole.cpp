@@ -7,6 +7,12 @@
 
 #include "mmethod/rtti/holder/node.hpp"
 
+#include "foreach.hpp"
+
+#include <boost/optional.hpp>
+
+using namespace rtti;
+
 using rtti::rtti_type;
 
 using rtti::detail::rtti_node;
@@ -15,96 +21,64 @@ using rtti::detail::rtti_hierarchy;
 using rtti::hash::detail::hash_map;
 using rtti::hash::detail::value_type;
 
-static hash_map::iterator
+static boost::optional<value_type>
 do_fetch_pole_recursive(
   hash_map const& map
-, rtti_hierarchy rt
+, rtti_hierarchy const rt
 ) {
-  // the recursion is unrolled by default
-  for(;;) {
-    // common case -> we are a pole or a memoized value
-    hash_map::iterator it = map.find( rtti_get_id(rt) );
-    if(BOOST_LIKELY( !it->empty() ))
-      return it;
+  // common case -> we are a pole or a memoized value
+  hash_map::iterator it = map.find( rtti_get_id(rt) );
+  if(BOOST_LIKELY( !it->empty() ))
+    return it->value();
 
-    // exit condition
-    size_t arity = rtti_get_base_arity(rt);
+  // search recursively
+  foreach_base(rtti_hierarchy base, rt) {
+    boost::optional<value_type> ret =
+      do_fetch_pole_recursive(map, base);
 
-    if(arity == 0)
-      return NULL;
-
-    rtti_hierarchy rt0 = rtti_get_base(rt);
-    BOOST_ASSERT(rt0);
-
-    // by definition of the poles,
-    // a fork either is a pole, or has all its branches behave the same way
-    // so we only need to follow the first branch
+    // propagate
+    if(ret) {
+#ifdef MMETHOD_USE_DEEP_CACHE
+      const_cast<hash_map&>(map).insert( rtti_get_id(rt), *ret );
+#endif
 
 #ifndef NDEBUG
-    // use a recursive version to check for inconsistencies
-    if(arity > 1) {
-      hash_map::iterator ret = do_fetch_pole_recursive(
-        map, rt0
-      );
-
-      for(std::size_t k = 1; k < arity; ++k) {
-        rtti_hierarchy rtk = rtti_get_base(rt, k);
-        hash_map::iterator it = do_fetch_pole_recursive(
-          map, rtk
-        );
-
-        BOOST_ASSERT(ret == it);
+      // check for inconsistency
+      foreach_base(rtti_hierarchy base, rt) {
+        boost::optional<value_type> r2 =
+          do_fetch_pole_recursive(map, base);
+        BOOST_ASSERT(!r2 || *r2 == *ret);
       }
+#endif
 
       return ret;
     }
-#endif
-
-    // unroll the loop
-    rt = rt0;
   }
 
-  return NULL;
+  return boost::none;
 }
 
-// can be moved as non-member
 value_type
 rtti::hash::detail::do_fetch_pole(
   hash_map const& map
 , rtti_hierarchy rt0
 ) BOOST_NOEXCEPT_OR_NOTHROW {
 
-  const rtti_type id0 = rtti_get_id(rt0);
+  rtti_type const id0 = rtti_get_id(rt0);
 
-  do {
-    // exit condition
-    if( rtti_get_base_arity(rt0) == 0)
-      break;
+  foreach_base(rtti_hierarchy base, rt0) {
+    boost::optional<value_type> ret =
+      do_fetch_pole_recursive(map, base);
 
-    rtti_hierarchy rt = rtti_get_base(rt0);
-    BOOST_ASSERT(rt);
-
-    hash_map::iterator ret = do_fetch_pole_recursive(
-      map, rt
-    );
-
-    if( !ret )
-      break;
-
-    BOOST_ASSERT( !ret->empty() );
-
-    // insertion invalidates iterators
-    value_type val = ret->value();
-
-    const_cast<hash_map&>(map).insert( id0, val );
-#ifdef MMETHOD_USE_DEEP_CACHE
-    for(rtti_node const* rt2 = rtti_get_base(rt0); rt2 != rt; rt2 = rtti_get_base(rt2))
-      const_cast<hash_map&>(map).insert( rtti_get_id(rt2), val );
+    if(ret) {
+      // memoize
+#ifndef MMETHOD_USE_DEEP_CACHE
+      const_cast<hash_map&>(map).insert( id0, *ret );
 #endif
 
-    return val;
+      return *ret;
+    }
   }
-  while(false);
 
   return map.fallback();
 }

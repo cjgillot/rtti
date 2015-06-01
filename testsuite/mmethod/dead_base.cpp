@@ -1,0 +1,59 @@
+//          Copyright Camille Gillot 2012 - 2014.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#include "mmethod/rtti.hpp"
+#include "mmethod/mmethod.hpp"
+#include "mmethod/implement.hpp"
+
+#include <boost/test/unit_test.hpp>
+#include <boost/mpl/vector.hpp>
+
+using namespace rtti;
+using boost::mpl::vector;
+
+/*!\example diamond.cpp
+ *
+ * Test whether do_fetch_pole can handle a dead branch.
+ */
+
+namespace {
+
+struct root
+: base_rtti<root, virtual_mixin_node> {
+public:
+  virtual ~root() {}
+};
+
+struct foo1
+: virtual root
+, implement_rtti<foo1, vector<root> >
+{};
+
+struct foo2
+: virtual root
+, implement_rtti<foo2, vector<root> >
+{};
+
+struct baz
+: foo1, foo2
+, implement_rtti<baz, vector<foo1, foo2> >
+{};
+
+using tags::_v;
+DECLARE_MMETHOD(f1, int, (_v<root&>));
+
+IMPLEMENT_MMETHOD(f1, int, (foo2&)) { return 5; }
+
+} // namespace <>
+
+BOOST_AUTO_TEST_CASE(dead_base) {
+  root r; foo1 f; foo2 g; baz z;
+
+  BOOST_CHECK_EQUAL( f1(g), 5  );
+  BOOST_CHECK_EQUAL( f1(z), 5  );
+
+  BOOST_CHECK_THROW( f1(r), bad_dispatch );
+  BOOST_CHECK_THROW( f1(f), bad_dispatch );
+}

@@ -93,6 +93,20 @@ BOOST_AUTO_TEST_CASE(fetch_pole) {
       BOOST_CHECK_EQUAL(hd::fetch_pole(map, c1.node), 1);
       BOOST_CHECK_EQUAL(hd::fetch_pole(map, c0.node), 0);
     }
+
+    { // with a dead branch
+      hd::hash_map map;
+      map.create(2);
+      map.set_fallback(0);
+      map.insert(rtti_get_id(c3.node), 3);
+      map.insert(rtti_get_id(c5.node), 5);
+
+      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c5.node), 5);
+      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c4.node), 3);
+      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c3.node), 3);
+      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c2.node), 0);
+      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c1.node), 0);
+      BOOST_CHECK_EQUAL(hd::fetch_pole(map, c0.node), 0);
+    }
   }
 }
-

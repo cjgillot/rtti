@@ -21,7 +21,7 @@ namespace detail {
 
 typedef rtti_type    key_type;
 typedef uintptr_t  value_type;
-typedef ptrdiff_t  index_type;
+typedef  intptr_t  index_type;
 
 struct bucket_t {
 private:
