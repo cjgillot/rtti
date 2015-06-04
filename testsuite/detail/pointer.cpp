@@ -118,20 +118,30 @@ BOOST_AUTO_TEST_CASE(test_basic_pointer_traits) {
     D d;
 
     D* dptr =&d;
-    typedef pointer_traits<D*> ptr_tt;
+    typedef compute_pointer_traits<D*>::type ptr_tt;
     BOOST_STATIC_ASSERT(boost::is_same<ptr_tt::class_type, D>::value);
     BOOST_CHECK(ptr_tt::valid(dptr));
     BOOST_CHECK_EQUAL(&ptr_tt::get(dptr), &d);
 
+    typedef compute_pointer_traits<D*&>::type ptrr_tt;
+    BOOST_STATIC_ASSERT(boost::is_same<ptrr_tt::class_type, D>::value);
+    BOOST_CHECK(ptrr_tt::valid(dptr));
+    BOOST_CHECK_EQUAL(&ptrr_tt::get(dptr), &d);
+
+    typedef compute_pointer_traits<D* const&>::type ptrcr_tt;
+    BOOST_STATIC_ASSERT(boost::is_same<ptrcr_tt::class_type, D>::value);
+    BOOST_CHECK(ptrcr_tt::valid(dptr));
+    BOOST_CHECK_EQUAL(&ptrcr_tt::get(dptr), &d);
+
     D& dref = d;
-    typedef pointer_traits<D&> ref_tt;
+    typedef compute_pointer_traits<D&>::type ref_tt;
     BOOST_STATIC_ASSERT(boost::is_same<ref_tt::class_type, D>::value);
     BOOST_CHECK(ref_tt::valid(dref));
     BOOST_CHECK_EQUAL(&ref_tt::get(dref), &d);
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     D&& drrf = static_cast<D&&>(d);
-    typedef pointer_traits<D&&> rrf_tt;
+    typedef compute_pointer_traits<D&&>::type rrf_tt;
     BOOST_STATIC_ASSERT(boost::is_same<rrf_tt::class_type, D>::value);
     BOOST_CHECK(rrf_tt::valid(drrf));
     BOOST_CHECK_EQUAL(&rrf_tt::get(drrf), &d);
@@ -139,23 +149,33 @@ BOOST_AUTO_TEST_CASE(test_basic_pointer_traits) {
   }
 
   { // volatile test
-    D volatile d;
+    D d;
 
-    D volatile* dptr =&d;
-    typedef pointer_traits<D volatile*> ptr_tt;
+    D* volatile dptr =&d;
+    typedef compute_pointer_traits<D* volatile>::type ptr_tt;
     BOOST_STATIC_ASSERT(boost::is_same<ptr_tt::class_type, D>::value);
     BOOST_CHECK(ptr_tt::valid(dptr));
     BOOST_CHECK_EQUAL(&ptr_tt::get(dptr), &d);
 
+    typedef compute_pointer_traits<D* volatile&>::type ptrr_tt;
+    BOOST_STATIC_ASSERT(boost::is_same<ptrr_tt::class_type, D>::value);
+    BOOST_CHECK(ptrr_tt::valid(dptr));
+    BOOST_CHECK_EQUAL(&ptrr_tt::get(dptr), &d);
+
+    typedef compute_pointer_traits<D* const volatile&>::type ptrcr_tt;
+    BOOST_STATIC_ASSERT(boost::is_same<ptrcr_tt::class_type, D>::value);
+    BOOST_CHECK(ptrcr_tt::valid(dptr));
+    BOOST_CHECK_EQUAL(&ptrcr_tt::get(dptr), &d);
+
     D volatile& dref = d;
-    typedef pointer_traits<D volatile&> ref_tt;
+    typedef compute_pointer_traits<D volatile&>::type ref_tt;
     BOOST_STATIC_ASSERT(boost::is_same<ref_tt::class_type, D>::value);
     BOOST_CHECK(ref_tt::valid(dref));
     BOOST_CHECK_EQUAL(&ref_tt::get(dref), &d);
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     D volatile&& drrf = static_cast<D volatile&&>(d);
-    typedef pointer_traits<D&&> rrf_tt;
+    typedef compute_pointer_traits<D&&>::type rrf_tt;
     BOOST_STATIC_ASSERT(boost::is_same<rrf_tt::class_type, D>::value);
     BOOST_CHECK(rrf_tt::valid(drrf));
     BOOST_CHECK_EQUAL(&rrf_tt::get(drrf), &d);

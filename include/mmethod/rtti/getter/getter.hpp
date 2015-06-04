@@ -43,7 +43,7 @@ template<class T>
 inline BOOST_CONSTEXPR rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 static_node() BOOST_NOEXCEPT_OR_NOTHROW {
-  typedef rtti::pointer_traits<T> traits;
+  typedef typename rtti::compute_pointer_traits<T>::type traits;
   return detail::rtti_getter::static_node<typename traits::class_type>();
 }
 
@@ -60,7 +60,7 @@ inline rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 get_node(U& x)
 {
-  typedef rtti::pointer_traits<U&> traits;
+  typedef typename rtti::compute_pointer_traits<U&>::type traits;
   if(! traits::valid(x))
     BOOST_THROW_EXCEPTION( bad_rtti() );
 
@@ -73,7 +73,7 @@ inline rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 get_node(U const& x)
 {
-  typedef rtti::pointer_traits<U const&> traits;
+  typedef typename rtti::compute_pointer_traits<U const&>::type traits;
   if(! traits::valid(x))
     BOOST_THROW_EXCEPTION( bad_rtti() );
 

@@ -7,6 +7,7 @@
 #define RTTI_TRAITS_HPP
 
 #include "mmethod/config.hpp"
+#include "mmethod/traits/call_traits.hpp"
 
 #include <boost/mpl/if.hpp>
 
@@ -104,34 +105,57 @@ public:
   { return unsafe_casting<U>::eval(v); }
 };
 
+struct empty_pointer_traits {};
+
 } // namespace traits_detail
 
-// base case : const reference to T
+// base case : empty class
 template<typename T>
 struct pointer_traits
-: boost::mpl::if_<
-  boost::is_pointer<T>
-, traits_detail::raw_ptr_traits<typename boost::remove_pointer<T>::type>
-, traits_detail::reference_traits<T const>
->::type
+: traits_detail::empty_pointer_traits // mark triviality
 {};
 
 template<typename T>
-struct pointer_traits<T&>
-: traits_detail::reference_traits<T> {};
-
-// swallow [const&]
-template<typename T>
-struct pointer_traits<T const&>
-: pointer_traits<T> {};
+struct pointer_traits<T*>
+: traits_detail::raw_ptr_traits<T>
+{};
 
 template<typename T>
-struct pointer_traits<T volatile&>
-: pointer_traits<T volatile> {};
+struct compute_pointer_traits
+{
+private:
+  typedef pointer_traits<T> traits_T;
+  enum {
+    trivial_T = boost::is_convertible<
+      traits_T, traits_detail::empty_pointer_traits
+    >::value
+  };
 
-template<typename T>
-struct pointer_traits<T const volatile&>
-: pointer_traits<T volatile> {};
+  typedef typename boost::remove_cv<
+    typename boost::remove_reference<T>::type
+  >::type no_cvref_t;
+  typedef pointer_traits<no_cvref_t> traits_no_cvref;
+  enum {
+    trivial_no_cvref = boost::is_convertible<
+      traits_no_cvref, traits_detail::empty_pointer_traits
+    >::value
+  };
+
+  typedef typename boost::remove_reference<
+    typename boost::call_traits<T>::param_type
+  >::type complete_no_ref_t;
+
+public:
+  typedef typename boost::mpl::if_c<
+      !trivial_T
+    , traits_T
+    , typename boost::mpl::if_c<
+        !trivial_no_cvref
+      , traits_no_cvref
+      , traits_detail::reference_traits<complete_no_ref_t>
+      >::type
+    >::type type;
+};
 
 } // namespace rtti
 

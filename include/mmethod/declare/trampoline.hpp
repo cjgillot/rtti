@@ -33,7 +33,7 @@ template<typename IsVirtual, typename In>
 struct caster
 : boost::mpl::if_<
   IsVirtual
-, pointer_traits<In>
+, typename compute_pointer_traits<In>::type
 , other_caster<In>
 >::type {};
 
