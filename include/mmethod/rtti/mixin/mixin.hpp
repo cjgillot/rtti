@@ -51,10 +51,8 @@ private:
 
 public:
   friend struct detail::rtti_getter;
-  friend arity_type rtti_parents_size_1p(Derived const volatile*) {
-    // dummy body : we don't want any call to this
-    return boost::declval<arity_type>();
-  }
+  friend arity_type rtti_parents_size_1p(Derived const volatile* k)
+  { return rtti_parents_size_1p(k); }
   template<typename F>
   friend void rtti_parents_foreach(F f, Derived const volatile*) {
     boost::mpl::for_each<

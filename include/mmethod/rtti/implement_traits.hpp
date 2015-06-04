@@ -26,6 +26,7 @@ struct implement_traits {
   >::type parents;
 
   BOOST_STATIC_CONSTANT(std::size_t, arity = boost::mpl::size<parents>::value);
+
   struct arity_type { unsigned char __dummy [ 1+arity ]; };
   BOOST_STATIC_ASSERT( sizeof(arity_type) == 1+arity );
 };
