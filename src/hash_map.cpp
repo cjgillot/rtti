@@ -77,12 +77,13 @@ void hash_map::insert(key_type key, value_type value) {
 }
 
 void hash_map::insert_need_resize(key_type key, value_type value) {
-  std::size_t new_sz = 2 << m_logsz;
+  std::size_t old_sz = 1 << m_logsz;
+  std::size_t new_sz = 2 * old_sz;
   hash_map repl;
 
   repl.create(new_sz);
 
-  for(std::size_t i = 0; i < new_sz; ++i)
+  for(std::size_t i = 0; i < old_sz; ++i)
     if( !m_array[i].empty() )
       repl.insert(m_array[i].key(), m_array[i].value());
   repl.insert(key, value);

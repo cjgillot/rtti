@@ -8,6 +8,21 @@ project
   : requirements <include>./include
   ;
 
+variant asan : debug :
+  <cxxflags>"-fsanitize=address -fsanitize-blacklist=san-blacklist.txt"
+  <linkflags>"-fsanitize=address -fsanitize-blacklist=san-blacklist.txt"
+  ;
+
+variant usan : debug :
+  <cxxflags>"-fsanitize=undefined -fsanitize-blacklist=san-blacklist.txt"
+  <linkflags>"-fsanitize=undefined -fsanitize-blacklist=san-blacklist.txt"
+  ;
+
+variant coverage : debug :
+  <cxxflags>"--coverage -ftest-coverage -fprofile-arcs"
+  <linkflags>"--coverage -ftest-coverage -fprofile-arcs"
+  ;
+
 use-project /library : src ;
 build-project src ;
 

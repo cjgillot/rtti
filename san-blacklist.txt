@@ -1,0 +1,5 @@
+### UBSAN blacklist
+# Ignore type check in mixin
+# it requires a static_cast on a non-constructed object
+src:include/mmethod/rtti/mixin/mixin.hpp
+fun:*rtti*mixin*fetch_node_holder*
