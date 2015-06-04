@@ -84,14 +84,14 @@ get_node(U const& x)
 template<class U>
 inline rtti_type
 MMETHOD_ATTRIBUTE_PURE
-get_id(U& x) BOOST_NOEXCEPT_OR_NOTHROW
+get_id(U& x)
 { return detail::rtti_get_id( rtti::get_node(x) ); }
 
 //! \brief Get object id
 template<class U>
 inline rtti_type
 MMETHOD_ATTRIBUTE_PURE
-get_id(U const& x) BOOST_NOEXCEPT_OR_NOTHROW
+get_id(U const& x)
 { return detail::rtti_get_id( rtti::get_node(x) ); }
 
 } // namespace rtti

@@ -12,6 +12,7 @@
   [ba_foo]
   [ba_bar]
   [ba_use]
+  [ba_exn]
   [ba_node]
   [ba_hie]
  */
@@ -86,6 +87,21 @@ BOOST_AUTO_TEST_CASE(test_basic) {
   BOOST_CHECK_EQUAL( static_id<bar>(), get_id(r) );
   BOOST_CHECK_EQUAL( static_id<baz>(), get_id(z) );
   BOOST_CHECK_EQUAL( static_id<lap>(), get_id(l) );
+  //]
+
+  //[ba_exn
+  /*`
+    The behaviour is meant to mimick `typeid`:
+    when the passed pointer is NULL,
+    the `get_id` function throws
+    an exception of type `bad_rtti`.
+   */
+  foo* fp = NULL;
+  BOOST_CHECK_THROW( rtti_type _ = get_id(fp), bad_rtti );
+  //<-
+  bar* const bp = NULL;
+  BOOST_CHECK_THROW( rtti_type _ = get_id(bp), bad_rtti );
+  //->
   //]
 }
 
