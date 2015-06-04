@@ -5,10 +5,6 @@ os:
 
 sudo: required
 
-compiler:
-  - gcc
-  - clang
-
 before_install:
   - echo $LANG
   - echo $LC_ALL
@@ -18,77 +14,38 @@ matrix:
     - os: linux
       env: TOOLSET=clang-3.4 VALGRIND=1
       addons: &clang34
-        apt:
-          packages:
-            - clang-3.4
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       env: TOOLSET=clang-3.5 VALGRIND=1
       addons: &clang35
-        apt:
-          packages:
-            - clang-3.5
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       env: TOOLSET=clang-3.6 VALGRIND=1
       addons: &clang36
-        apt:
-          packages:
-            - clang-3.6
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       env: TOOLSET=clang-3.7 VALGRIND=1
       addons: &clang37
-        apt:
-          packages:
-            - clang-3.7
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       env: TOOLSET=gcc-4.8 VALGRIND=1
       addons: &gcc48
-        apt:
-          packages:
-            - g++-4.8
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       env: TOOLSET=gcc-4.9 VALGRIND=1
       addons: &gcc49
-        apt:
-          packages:
-            - g++-4.9
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       env: TOOLSET=gcc-5 VALGRIND=1
       addons: &gcc5
-        apt:
-          packages:
-            - g++-5
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
 
 before_install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo add-apt-repository ppa:boost-latest/ppa -y
   - sudo apt-get update -q
   - sudo apt-get install -y boost1.55
+  - sudo apt-get install -y ${TOOLSET}
+  - sudo apt-get install -y valgrind
 
 before_script:
   - (cd build && ./bootstrap.sh)
@@ -97,4 +54,3 @@ script:
   - if [ "${VARIANT}" == "" ]; then export VARIANT=debug; fi
   - if [ "${TOOLSET}" != "" ]; then ./build/b2 -j2 --toolset=${TOOLSET} debug-symbols=off variant=${VARIANT} testsuite; fi
   - if [ "${VALGRIND}" != "" ]; then find -type f -executable -name testsuite | xargs -i% valgrind --error-exitcode=-1 %; fi
-
