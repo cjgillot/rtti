@@ -41,6 +41,14 @@ hash_map::size()             const BOOST_NOEXCEPT_OR_NOTHROW {
   return m_size;
 }
 
+inline value_type
+hash_map::fallback()         const BOOST_NOEXCEPT_OR_NOTHROW
+{ return m_fallback; }
+
+inline void
+hash_map::set_fallback(value_type v)
+{ m_fallback = v; }
+
 inline hash_map::iterator
 hash_map::find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
   bucket_t* bucket = &m_array[ hash(key) ];

@@ -58,8 +58,8 @@ private:
 public:
   /// fallback value
   //@{
-  value_type fallback() const { return m_fallback; }
-  void   set_fallback(value_type v) { m_fallback = v; }
+  value_type fallback() const BOOST_NOEXCEPT_OR_NOTHROW;
+  void   set_fallback(value_type v);
   //@}
 
 public:
