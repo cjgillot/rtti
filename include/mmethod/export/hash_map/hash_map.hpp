@@ -68,7 +68,7 @@ public:
   iterator find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
 
 private:
-  iterator do_find(key_type key) const BOOST_NOEXCEPT_OR_NOTHROW;
+  iterator do_find(key_type key, iterator from) const BOOST_NOEXCEPT_OR_NOTHROW;
   //@}
 
 public:

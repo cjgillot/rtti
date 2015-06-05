@@ -54,7 +54,7 @@ probe_table(bucket_t* const m_array, index_type index, rtti_type key) BOOST_NOEX
 //@{
 #ifndef MMETHOD_INLINE_DO_FIND
 hash_map::iterator
-hash_map::do_find(rtti_type key) const BOOST_NOEXCEPT_OR_NOTHROW {
+hash_map::do_find(rtti_type key, iterator) const BOOST_NOEXCEPT_OR_NOTHROW {
   return probe_table(
     m_array.get(), hash(key), key
   );
