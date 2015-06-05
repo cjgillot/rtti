@@ -27,7 +27,7 @@ BOOST_CONSTEXPR
 #endif
 inline
 hash_map::hash_map()               BOOST_NOEXCEPT_OR_NOTHROW
-: m_mask(0), m_logsz(0), m_fallback(0) {}
+: m_mask(0), m_size(0), m_fallback(0) {}
 
 inline index_type
 hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
@@ -38,7 +38,7 @@ hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
 
 inline std::size_t
 hash_map::size()             const BOOST_NOEXCEPT_OR_NOTHROW {
-  return 1 << m_logsz;
+  return m_size;
 }
 
 inline hash_map::iterator

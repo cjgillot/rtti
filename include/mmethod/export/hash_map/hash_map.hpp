@@ -19,8 +19,8 @@
 #  include BOOST_ABI_PREFIX
 #endif
 
-// All functions declared in this file
-// are defined in rtti/mmethod/hash_map.cpp
+// Inline functions declared in this file
+// are defined in rtti/mmethod/hash_map.ipp
 
 namespace rtti {
 namespace hash {
@@ -87,10 +87,10 @@ private:
   typedef std::unique_ptr<bucket_t[]> array_type;
 #endif
 
-  std::size_t m_mask; // == (1 << m_logsz) - 1
+  std::size_t m_mask; // == m_size - 1
   array_type  m_array;
 
-  std::size_t m_logsz;
+  std::size_t m_size;
 
   value_type  m_fallback;
 };

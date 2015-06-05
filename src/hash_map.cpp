@@ -13,7 +13,7 @@ using rtti::hash::detail::key_type;
 using rtti::hash::detail::index_type;
 using rtti::hash::detail::value_type;
 
-#define BADBUCKET (&(m_array[ index_type(m_mask + 1) ]))
+#define BADBUCKET (&(m_array[ m_size ]))
 
 /// hash_map move()
 //@{
@@ -21,7 +21,7 @@ void hash_map::move(hash_map& o) BOOST_NOEXCEPT_OR_NOTHROW {
   BOOST_ASSERT( this != &o );
 
   m_mask = o.m_mask;
-  m_logsz= o.m_logsz;
+  m_size = o.m_size ;
 
   m_array.swap(o.m_array);
 }
@@ -77,7 +77,7 @@ void hash_map::insert(key_type key, value_type value) {
 }
 
 void hash_map::insert_need_resize(key_type key, value_type value) {
-  std::size_t old_sz = 1 << m_logsz;
+  std::size_t old_sz = m_size;
   std::size_t new_sz = 2 * old_sz;
   hash_map repl;
 
@@ -109,7 +109,7 @@ void hash_map::create(std::size_t sz) {
   std::size_t const logsz = 1 + nbits(sz);
   sz  = 1 << logsz;
 
-  m_logsz = logsz;
+  m_size = sz;
   m_mask  = sz - 1;
 
   // use an over-sized array -> sentinel bucket
