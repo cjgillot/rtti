@@ -1,56 +1,40 @@
-language: c++
+language: cpp
 
 os:
   - linux
 
 sudo: required
 
-before_install:
-  - echo $LANG
-  - echo $LC_ALL
-
 matrix:
   include:
-    - os: linux
+    - compiler: clang
       env: TOOLSET=clang-3.4 VALGRIND=1
-      addons: &clang34
-
-    - os: linux
+    - compiler: clang
       env: TOOLSET=clang-3.5 VALGRIND=1
-      addons: &clang35
-
-    - os: linux
+    - compiler: clang
       env: TOOLSET=clang-3.6 VALGRIND=1
-      addons: &clang36
-
-    - os: linux
-      env: TOOLSET=clang-3.7 VALGRIND=1
-      addons: &clang37
-
-    - os: linux
+    - compiler: gcc
+      env: TOOLSET=gcc-4.7 VALGRIND=1
+    - compiler: gcc
       env: TOOLSET=gcc-4.8 VALGRIND=1
-      addons: &gcc48
-
-    - os: linux
+    - compiler: gcc
       env: TOOLSET=gcc-4.9 VALGRIND=1
-      addons: &gcc49
+    - compiler: gcc
+      env: TOOLSET=gcc-5.1 VALGRIND=1
 
-    - os: linux
-      env: TOOLSET=gcc-5 VALGRIND=1
-      addons: &gcc5
+before_install: wget "https://raw.githubusercontent.com/boostorg/regression/develop/ci/src/script.py"
 
-before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+install:
+  - python script.py install
   - sudo add-apt-repository ppa:boost-latest/ppa -y
-  - sudo apt-get update -q
-  - sudo apt-get install -y boost1.55
-  - sudo apt-get install -y ${TOOLSET}
-  - sudo apt-get install -y valgrind
-
-before_script:
-  - (cd build && ./bootstrap.sh)
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq -y valgrind boost1.55
 
 script:
   - if [ "${VARIANT}" == "" ]; then export VARIANT=debug; fi
-  - if [ "${TOOLSET}" != "" ]; then ./build/b2 -j2 --toolset=${TOOLSET} debug-symbols=off variant=${VARIANT} testsuite; fi
+  - if [ "${TOOLSET}" != "" ]; then b2 toolset=${TOOLSET} debug-symbols=off variant=${VARIANT} testsuite; fi
   - if [ "${VALGRIND}" != "" ]; then find -type f -executable -name testsuite | xargs -i% valgrind --error-exitcode=-1 %; fi
+
+after_success: python script.py after_success
+after_failure: python script.py after_failure
+after_script: python script.py after_script

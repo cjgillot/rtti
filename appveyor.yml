@@ -1,0 +1,32 @@
+platform:
+  - x86
+  - x64
+
+skip_tags: true
+
+environment:
+  matrix:
+  - TOOLSET: vs-2008
+  - TOOLSET: vs-2010
+  - TOOLSET: vs-2012
+  - TOOLSET: vs-2013
+  - TOOLSET: vs-2014
+
+init:
+  - cd %APPVEYOR_BUILD_FOLDER%/..
+  - appveyor DownloadFile "https://raw.githubusercontent.com/boostorg/regression/develop/ci/src/script.py"
+  - dir
+  - cd %APPVEYOR_BUILD_FOLDER%
+
+install: python ../script.py install
+before_build: python ../script.py before_build
+build_script: python ../script.py build_script
+after_build: python ../script.py after_build
+
+before_test:
+test_script: "C:\boost-build\bin\b2.exe" testsuite toolset=%TOOLSET%
+
+after_test: python ../script.py after_test
+on_success: python ../script.py on_success
+on_failure: python ../script.py on_failure
+on_finish: python ../script.py on_finish
