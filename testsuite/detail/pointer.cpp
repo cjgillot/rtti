@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(test_basic_pointer_traits) {
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     D volatile&& drrf = static_cast<D volatile&&>(d);
-    typedef compute_pointer_traits<D&&>::type rrf_tt;
+    typedef compute_pointer_traits<D volatile&&>::type rrf_tt;
     BOOST_STATIC_ASSERT(boost::is_same<rrf_tt::class_type, D>::value);
     BOOST_CHECK(rrf_tt::valid(drrf));
     BOOST_CHECK_EQUAL(&rrf_tt::get(drrf), &d);

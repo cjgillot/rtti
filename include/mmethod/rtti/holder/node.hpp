@@ -37,8 +37,10 @@ struct rtti::detail::rtti_node {
 
   union {
     boost::type_with_alignment<2> __alignment;
-    detail::holder_::rtti_node_var<1> self;
+    detail::holder_::rtti_node_var<3> self;
   };
+
+  BOOST_DELETED_FUNCTION( rtti_node() );
 };
 
 inline rtti::rtti_type

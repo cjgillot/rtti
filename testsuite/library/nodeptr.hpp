@@ -42,10 +42,14 @@ struct check_size
   };
 };
 template<>
-struct check_size<-1>
+struct check_size<0>
 {
   enum {
-    value = true
+    thsize = sizeof(size_t),
+    resize = sizeof(holder_::rtti_node_var<0>),
+
+    value =
+        resize == thsize
   };
 };
 
