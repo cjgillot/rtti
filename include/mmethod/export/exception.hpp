@@ -17,12 +17,6 @@
 
 namespace rtti {
 
-struct bad_rtti
-: std::runtime_error {
-  bad_rtti();
-  virtual ~bad_rtti() BOOST_NOEXCEPT_OR_NOTHROW;
-};
-
 struct bad_dispatch
 : std::runtime_error {
   bad_dispatch();

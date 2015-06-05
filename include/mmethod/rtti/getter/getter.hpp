@@ -58,11 +58,11 @@ static_id() BOOST_NOEXCEPT_OR_NOTHROW
 template<class U>
 inline rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
-get_node(U& x)
+get_node(U& x) BOOST_NOEXCEPT_OR_NOTHROW
 {
   typedef typename rtti::compute_pointer_traits<U&>::type traits;
   if(! traits::valid(x))
-    BOOST_THROW_EXCEPTION( bad_rtti() );
+    return NULL;
 
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
@@ -71,11 +71,11 @@ get_node(U& x)
 template<class U>
 inline rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
-get_node(U const& x)
+get_node(U const& x) BOOST_NOEXCEPT_OR_NOTHROW
 {
   typedef typename rtti::compute_pointer_traits<U const&>::type traits;
   if(! traits::valid(x))
-    BOOST_THROW_EXCEPTION( bad_rtti() );
+    return NULL;
 
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
@@ -84,14 +84,14 @@ get_node(U const& x)
 template<class U>
 inline rtti_type
 MMETHOD_ATTRIBUTE_PURE
-get_id(U& x)
+get_id(U& x) BOOST_NOEXCEPT_OR_NOTHROW
 { return detail::rtti_get_id( rtti::get_node(x) ); }
 
 //! \brief Get object id
 template<class U>
 inline rtti_type
 MMETHOD_ATTRIBUTE_PURE
-get_id(U const& x)
+get_id(U const& x) BOOST_NOEXCEPT_OR_NOTHROW
 { return detail::rtti_get_id( rtti::get_node(x) ); }
 
 } // namespace rtti

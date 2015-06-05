@@ -73,6 +73,11 @@ struct lap
 
 } // namespace <>
 
+template<typename T>
+void consume_value(T v); /* {
+  *(T volatile*)NULL = v;
+} */
+
 BOOST_AUTO_TEST_CASE(test_basic) {
   //[ba_use
   /*`
@@ -91,16 +96,14 @@ BOOST_AUTO_TEST_CASE(test_basic) {
 
   //[ba_exn
   /*`
-    The behaviour is meant to mimick `typeid`:
-    when the passed pointer is NULL,
-    the `get_id` function throws
-    an exception of type `bad_rtti`.
+    When the passed pointer is NULL,
+    the `get_id` function returns NULL.
    */
   foo* fp = NULL;
-  BOOST_CHECK_THROW( rtti_type _ = get_id(fp), bad_rtti );
+  BOOST_CHECK( !get_id(fp) );
   //<-
   bar* const bp = NULL;
-  BOOST_CHECK_THROW( rtti_type _ = get_id(bp), bad_rtti );
+  BOOST_CHECK( !get_id(bp) );
   //->
   //]
 }
