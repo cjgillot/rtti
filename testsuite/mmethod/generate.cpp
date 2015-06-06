@@ -11,18 +11,19 @@ namespace {
 
 //[ge_generate
 /*`
-  The call to the __multimethod__ `generate` automatically calls
-  its `generate.generate()` member function.
+  Any __multimethod__ must initialize its dispatch table at load time.
+  This is normally done automatically at first call,
+  via the `generate()` member function.
   This call ensures the dispatch table
   has been correctly generated
   before attempting to resolve a call.
  */
 using tags::_v;
-DECLARE_MMETHOD(generate, int, (_v<foo const&>));
+DECLARE_MMETHOD(shortcut, int, (_v<foo const&>));
 
-IMPLEMENT_MMETHOD(generate, int, (foo const& a)) { return a.f(); }
-IMPLEMENT_MMETHOD(generate, int, (bar const& a)) { return a.g(); }
-IMPLEMENT_MMETHOD(generate, int, (baz const& a)) { return 2 * a.f(); }
+IMPLEMENT_MMETHOD(shortcut, int, (foo const& a)) { return a.f(); }
+IMPLEMENT_MMETHOD(shortcut, int, (bar const& a)) { return a.g(); }
+IMPLEMENT_MMETHOD(shortcut, int, (baz const& a)) { return 2 * a.f(); }
 //` [ge_use]
 //]
 
@@ -34,23 +35,30 @@ BOOST_AUTO_TEST_CASE(test_generate) {
     At each call, the library will check whether
     the dispatch table has been generated.
     This should be a well-predicted branch,
-    but we provide a way to shortcut this verification :
+    but we provide a way to shortcut this verification:
 
-    First we need to call the `generate.generate()`
+    First we need to call the `shortcut.generate()`
     method to force the computation of the dispatch table.
 
     Then, the following calls can be made using the `fast_call` method.
     A `fast_fetch` method exists to retrieve the code pointer.
    */
   // Ensure the table is generated
-  generate.generate();
+  shortcut.generate();
 
   // Use the __multimethod__
   foo f; bar r; baz z; lap l;
 
-  BOOST_CHECK_EQUAL( generate.fast_call(f),  5 );
-  BOOST_CHECK_EQUAL( generate.fast_call(r), 42 );
-  BOOST_CHECK_EQUAL( generate.fast_call(z), 10 );
-  BOOST_CHECK_EQUAL( generate.fast_call(l), 42 ); // (lap is-a bar)
+  BOOST_CHECK_EQUAL( shortcut.fast_call(f),  5 );
+  BOOST_CHECK_EQUAL( shortcut.fast_call(r), 42 );
+  BOOST_CHECK_EQUAL( shortcut.fast_call(z), 10 );
+  BOOST_CHECK_EQUAL( shortcut.fast_call(l), 42 ); // (lap is-a bar)
+  /*`
+    [warning
+      If the table has not been generated,
+      the `fast_call` and `fast_fetch` method will fail miserably,
+      and most probably crash the program.
+    ]
+   */
   //]
 }

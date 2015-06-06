@@ -9,22 +9,16 @@
   declare the __rtti__ hierarchy, the foreign declaration
   mechanism allows to import existing classes.
 
-  This may come from a class hierarchy
-  in another library.
+  For example, the non-modifiable class structure
+  may come from a class hierarchy in another library.
 
   This feature requires the standard C++ RTTI `typeid`.
   There is a project to port this feature to use __typeindex__.
 
   [fo_decl]
-
   [fo_import_decl]
-
   [fo_import_impl]
-
-  [note
-    This mechanism does not support merging hierarchies
-    declared using different MMETHOD_FOREIGN_DECLARE calls.
-  ]
+  [fo_use]
  */
 //]
 
@@ -74,20 +68,41 @@ MMETHOD_FOREIGN_DECLARE(foo)
 /*`
   Then, for each class /K/, with bases /Supers/,
   you can declare it using [^MMETHOD_FOREIGN_IMPLEMENT(/K/, /Supers/)].
-  /Supers/ is a __sequence__, defined as-if we were inheriting `implement_rtti`.
+  /Supers/ is a __sequence__,
+  defined the same way than for `implement_rtti`.
  */
 MMETHOD_FOREIGN_IMPLEMENT(bar, vector<foo>)
 MMETHOD_FOREIGN_IMPLEMENT(baz, vector<foo>)
 MMETHOD_FOREIGN_IMPLEMENT(lap, vector<bar>)
+/*`
+  [note
+    This mechanism does not support merging hierarchies
+    declared using different MMETHOD_FOREIGN_DECLARE calls.
+  ]
+ */
 //]
 
 } // namespace <>
 
 BOOST_AUTO_TEST_CASE(test_foreign) {
+  //[fo_use
+  /*`
+    Then, the imported class hierarchy works
+     as-if it were a native __rtti__ hierarchy.
+   */
   foo f; bar r; baz z; lap l;
 
   BOOST_CHECK_EQUAL( static_id<foo>(), get_id(f) );
   BOOST_CHECK_EQUAL( static_id<bar>(), get_id(r) );
   BOOST_CHECK_EQUAL( static_id<baz>(), get_id(z) );
   BOOST_CHECK_EQUAL( static_id<lap>(), get_id(l) );
+  /*`
+    [note
+      Performance however is different.
+      The foreign mechanism relies on associative container lookup,
+      while the native behaviour just makes one memory access
+      to get the node.
+    ]
+   */
+  //]
 }

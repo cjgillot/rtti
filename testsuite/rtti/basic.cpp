@@ -32,7 +32,7 @@ namespace {
   In order to declare a new class hierarchy,
   each root class /K/ must derive from [^base_rtti</K/>].
   It creates all the necessary code in order
-  to have __rtti__ work properly.
+  to have everything work properly.
  */
 struct foo
 : base_rtti<foo> {
@@ -47,7 +47,7 @@ public:
   add new classes using `implement_rtti` template.
   To extend with class /T/, it must derive
   from [^implement_rtti</T/, /Bases/>] where /Bases/
-  is a __sequence__ modelling the inherited classes.
+  is a __sequence__ listing the inherited classes.
   We will use a `boost::mpl::vector` in the present guide.
  */
 using boost::mpl::vector;
@@ -67,21 +67,23 @@ struct lap
 , implement_rtti<lap, vector<bar> >
 {};
 /*`
-  [important `implement_rtti` must come last in the base class list]
+  [important All the classes appearing in /Bases/
+     must appear before `implement_rtti`
+     in the base class list.
+     Base classes that do not appear in /Bases/
+     (for example implementation helpers)
+     can come anywhere in the list.
+  ]
  */
 //]
 
 } // namespace <>
 
-template<typename T>
-void consume_value(T v); /* {
-  *(T volatile*)NULL = v;
-} */
-
 BOOST_AUTO_TEST_CASE(test_basic) {
   //[ba_use
   /*`
-    Then, an id can be retrieved :
+    __rtti__ provides each class an identifier of type
+    `rtti_type`. This id can be retrieved :
 
     * statically for a class /T/ using [^static_id</T/>()]
     * dynamically for a object /obj/ using [^get_id(/obj/)]
@@ -97,7 +99,8 @@ BOOST_AUTO_TEST_CASE(test_basic) {
   //[ba_exn
   /*`
     When the passed pointer is NULL,
-    the `get_id` function returns NULL.
+    the `get_id` function returns
+    an identifier evaluating to false.
    */
   foo* fp = NULL;
   BOOST_CHECK( !get_id(fp) );
@@ -113,18 +116,23 @@ BOOST_AUTO_TEST_CASE(test_hierarchy) {
 
   //[ba_node
   /*`
-    Full information, called a node,
-    can also be retrieved.
-    It provides further information
-    about the hierarchy,
+    More thorough information can be asked
+    from __rtti__ using the nodes.
+    Each class is associated a node,
+    which can be retrieved either at compile time or at run time.
+    It provides an object of type `rtti_hierarchy`,
+    containing further information about the hierarchy,
     and can be used for runtime reflection.
     The access primitives are `static_node` and `get_node`.
    */
   rtti_hierarchy h = get_node(l);
   BOOST_CHECK_EQUAL( h, static_node<lap>()       );
 
-  // static_id<> is a shorhand for static_node<>()->id
-  BOOST_CHECK_EQUAL( rtti_get_id( static_node<foo>() ), static_id<foo>() );
+  // get_id() is a shorhand for rtti_get_id( get_node() )
+  BOOST_CHECK_EQUAL( rtti_get_id(h), get_id(l) );
+
+  // likewise, static_id<> is a shorhand for rtti_get_id( static_node<>() )
+  BOOST_CHECK_EQUAL( rtti_get_id(static_node<foo>()), static_id<foo>() );
   //]
 
   //[ba_hie
@@ -144,7 +152,7 @@ BOOST_AUTO_TEST_CASE(test_hierarchy) {
   BOOST_CHECK_EQUAL( h, static_node<bar>() );
   BOOST_REQUIRE_EQUAL( rtti_get_base_arity(h), 1 );
 
-  // second argument to get_base is defaulted to 0
+  // second argument to get_base is 0 by default
   h = rtti_get_base(h);
   BOOST_CHECK_EQUAL( h, static_node<foo>() );
   BOOST_REQUIRE_EQUAL( rtti_get_base_arity(h), 0 );

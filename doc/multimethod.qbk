@@ -39,6 +39,11 @@ issued the following using directive :
 [import ../testsuite/mmethod/mixed.cpp]
 [mi_mixed]
 
+[heading Using covariant return types]
+
+[import ../testsuite/mmethod/covariant.cpp]
+[cov_covariant]
+
 [heading Binary __multimethods__]
 
 [import ../testsuite/mmethod/binary.cpp]

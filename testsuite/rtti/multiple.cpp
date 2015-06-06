@@ -5,9 +5,9 @@
 
 //[mu_multiple
 /*`
-  By default, __rtti__ does not support multiple inheritance.
+  The default behaviour of __rtti__ does not support multiple inheritance.
   This design choice is inspired by a concern about performance
-  of =node= retrieval.
+  of node retrieval.
 
   However, multiple inheritance support can be enabled using
   the second argument to `base_rtti`. This is called the /NodeType/.

@@ -41,11 +41,13 @@ using boost::mpl::vector;
   must be registered by __rtti__.
   For this, we just need to inherit
   [^base_rtti<['class-name]>].
+  The `base_rtti` template will inject the necessary code
+  to have __rtti__ understand the new class hierarchy.
  */
 // Base class for predators
 class Predator_abstract
-: public base_rtti<Predator_abstract>
-, private boost::noncopyable            // No need to register all the base classes
+: public base_rtti<Predator_abstract> // Register class hierarchy
+, private boost::noncopyable          // Make non-copyable objects
 {
 public:
   Predator_abstract() {/**/}
@@ -58,6 +60,12 @@ public:
 /*`
   Then, all the derived classes must
   inherit from [^implement_rtti<['class-name], ['bases]>].
+  /bases/ is a __sequence__ of classes
+  that are already registered with __rtti__.
+
+  The `implement_rtti` class will fetch
+  the configuration options given to the actual base classes,
+  and register the new class into the hierarchy.
  */
 using boost::mpl::vector;
 
@@ -121,10 +129,10 @@ public:
 
 //[pp_mm_declaration
 /*`
-  Then we can declare a __multimethod__.
+  We are ready to declare our first __multimethod__.
   This task is made simple by the use of
-  the [^BOOST_MMETHOD_DECLARE] macro,
-  taking the following arguments :
+  the [^DECLARE_MMETHOD] macro,
+  taking the following arguments:
 
   * the name of the __multimethod__
   * its return type
@@ -132,24 +140,29 @@ public:
  */
 typedef void ResultType;
 
+// Tag marking the arguments whose type
+// will dictate the dispatch.
 using tags::_v;
 
-// declare using a dedicated macro
+// Declare using a dedicated macro
 DECLARE_MMETHOD(hunter, ResultType, (_v<Predator_abstract const&>, _v<Prey_abstract const&>));
 //]
 
 //[pp_mm_implement
 /*`
-  A macro is also provided to implement the __multimethod__.
+  A macro is provided to implement the __multimethod__.
   Each implementation must be made with the
-  [^BOOST_MMETHOD_IMPLEMENT] macro, taking :
+  [^IMPLEMENT_MMETHOD] macro, taking :
 
-  * the __multimethod__ name
+  * the __multimethod__ name (the name given to [^DECLARE_MMETHOD])
   * its return type
-  * its actual argument list
+  * its argument list
+
+  The types appearing in the argument list are the actual types
+  expected by the __multimethod__ implementation.
  */
 // implement using a dedicated macro
-IMPLEMENT_MMETHOD(hunter, ResultType, ( Lion const& pred, Gazelle const& prey ))
+IMPLEMENT_MMETHOD(hunter, ResultType, ( Lion const&, Gazelle const& ))
 {
   //=std::cout<<"Lion jumps on Gazelle and bites its neck.\n";
 }
@@ -171,7 +184,7 @@ IMPLEMENT_MMETHOD(hunter, ResultType, ( Anaconda const&, Giraffe const& ))
 
 //` We can catch all the preys using a `Prey_abstract` argument.
 IMPLEMENT_MMETHOD(hunter, ResultType, ( Bear const&, Prey_abstract const& prey ))
-{
+{ /*<-*/(void)prey;/*->*/
   //=std::cout<<"Bear mauls "<<prey.i_am_a()<<"\n";
 }
 //]
@@ -180,7 +193,7 @@ BOOST_AUTO_TEST_CASE(test_predator_prey)
 {
   //[pp_use
   /*`
-    The `hunter` __multimethod__ object is a function object,
+    The `hunter` __multimethod__ is a function object,
     it can be called directly as a function.
    */
   Bear bear;

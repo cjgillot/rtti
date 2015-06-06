@@ -6,49 +6,87 @@
 //[sm_smart_ptr
 /*`
   In order to demonstrate the use of smart pointers
-  with __mmethod__, here is a example of dispatch through __shared_ptr__.
+  with __mmethod__, here is a example of dispatch through
+  a custom smart pointer.
+
+  [sm_pointer]
   [sm_specialize]
-
   [sm_declare]
-
   [sm_invoke]
  */
 //]
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
-#include "mmethod/implement.hpp"
+#include "../classes.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
-using namespace rtti;
+using namespace rtti::mmethod;
+
+//[sm_pointer
+/*`
+  In this section, we will register a toy smart pointer
+  for use with __rtti__.
+  The pointer type is given here:
+ */
+template<typename T>
+class noop_pointer {
+public:
+  // Constructor taking pointer
+  noop_pointer(): px(NULL) {}
+  noop_pointer(T* p): px(p) {}
+
+  // Destructor: do nothing (no-op pointer)
+  ~noop_pointer() {/**/}
+
+  // Copy
+  noop_pointer(noop_pointer const& p)
+  : px(p.px) {}
+  noop_pointer& operator=(noop_pointer const& p) {
+    px = p.px;
+    return *this;
+  }
+
+  // Access
+  typedef T element_type;
+  bool valid()    const { return !!px; }
+
+  T* get()        const { return   px; }
+  T& operator* () const { return  *px; }
+  T* operator->() const { return   px; }
+
+  // Destruction
+  void destroy() {
+    delete px;
+    px = NULL;
+  }
+
+private:
+  T* px;
+};
+//]
 
 //[sm_specialize
 /*`
-  [heading Enabling __shared_ptr__ in __rtti__]
-
-  Before declaring any __multimethod__, the __shared_ptr__
+  Before declaring any __multimethod__, the `noop_pointer`
   type must be registered with __rtti__. This way, the __rtti__ subsystem
   will be able to retrieve the type informations and to downcast
-  the __shared_ptr__.
+  the `noop_pointer`.
 
   This is done via a specialization of the `__rtti_ns__::pointer_traits` structure.
  */
-#include <boost/shared_ptr.hpp>
 #include <boost/cast.hpp>
 
 namespace rtti {
 
 // begin partial specialization
 template<typename T>
-struct pointer_traits<boost::shared_ptr<T> > {
-  typedef boost::shared_ptr<T> pointer_type;                    // pointer being manipulated
+struct pointer_traits<noop_pointer<T> > {
+  typedef noop_pointer<T> pointer_type;                           // pointer being manipulated
 
-  typedef typename boost::remove_cv<T>::type class_type;        // class being pointed to
+  typedef typename boost::remove_cv<T>::type class_type;          // class being pointed to
 
-  static T&     get(pointer_type const& v) { return *v; }       // fetch the pointed value
-  static bool valid(pointer_type const& v) { return bool(v); }  // check the pointer validity
+  static T&     get(pointer_type const& v) { return *v; }         // fetch the pointed value
+  static bool valid(pointer_type const& v) { return v.valid(); }  // check the pointer validity
 
   /*`
     The following method is used by the __mmethod__ system
@@ -64,7 +102,7 @@ struct pointer_traits<boost::shared_ptr<T> > {
   cast(pointer_type const& v) {
     typedef typename rtti::traits_detail::remove_all<U>::type Uclass;
     typedef typename Uclass::element_type O;
-    return Uclass(v, boost::polymorphic_downcast<O*>(v.get()));
+    return Uclass(boost::polymorphic_downcast<O*>(v.get()));
   }
 };
 
@@ -73,40 +111,13 @@ struct pointer_traits<boost::shared_ptr<T> > {
 
 namespace {
 
-using boost::mpl::vector;
-
-struct foo
-: base_rtti<foo> {
-public:
-  virtual ~foo() {}
-
-  int f() { return 5; }
-};
-
-struct bar
-: foo
-, implement_rtti<bar, vector<foo> >
-{
-  int g() { return 42; }
-};
-
-struct baz
-: foo
-, implement_rtti<baz, vector<foo> >
-{};
-
-struct lap
-: bar
-, implement_rtti<lap, vector<bar> >
-{};
-
 //[sm_declare
 /*`
   The __shared_ptr__ type can now be used as a dispatched
   parameter, without further alteration of the __multimethod__ syntax.
  */
 using tags::_v;
-DECLARE_MMETHOD(f1, int, (_v<boost::shared_ptr<foo> const&>));
+DECLARE_MMETHOD(smp, int, (_v<noop_pointer<foo> const&>));
 
 /*`
   The __shared_ptr__ type can also be used on the specialized function.
@@ -117,9 +128,9 @@ DECLARE_MMETHOD(f1, int, (_v<boost::shared_ptr<foo> const&>));
     to the `pointer_traits<>::cast<>()` function.
   ]
  */
-IMPLEMENT_MMETHOD(f1, int, (boost::shared_ptr<foo> const& a)) { return a->f(); }
-IMPLEMENT_MMETHOD(f1, int, (boost::shared_ptr<bar> const& a)) { return a->g(); }
-IMPLEMENT_MMETHOD(f1, int, (boost::shared_ptr<baz> const& a)) { return 2 * a->f(); }
+IMPLEMENT_MMETHOD(smp, int, (noop_pointer<foo> const& a)) { return a->f(); }
+IMPLEMENT_MMETHOD(smp, int, (noop_pointer<bar> const& a)) { return a->g(); }
+IMPLEMENT_MMETHOD(smp, int, (noop_pointer<baz> const& a)) { return 2 * a->f(); }
 //]
 
 } // namespace <>
@@ -130,14 +141,19 @@ BOOST_AUTO_TEST_CASE(test_smart_ptr) {
     Invocation of the __multimethod__ is also transparent
     for the user.
    */
-  boost::shared_ptr<foo> f ( new foo );
-  boost::shared_ptr<bar> r ( new bar );
-  boost::shared_ptr<baz> z ( new baz );
-  boost::shared_ptr<lap> l ( new lap );
+  noop_pointer<foo> f ( new foo );
+  noop_pointer<foo> r ( new bar );
+  noop_pointer<foo> z ( new baz );
+  noop_pointer<foo> l ( new lap );
 
-  BOOST_CHECK_EQUAL( f1(f),  5 );
-  BOOST_CHECK_EQUAL( f1(r), 42 );
-  BOOST_CHECK_EQUAL( f1(z), 10 );
-  BOOST_CHECK_EQUAL( f1(l), 42 ); // (lap is-a bar)
+  BOOST_CHECK_EQUAL( smp(f),  5 );
+  BOOST_CHECK_EQUAL( smp(r), 42 );
+  BOOST_CHECK_EQUAL( smp(z), 10 );
+  BOOST_CHECK_EQUAL( smp(l), 42 ); // (lap is-a bar)
+
+  f.destroy();
+  r.destroy();
+  z.destroy();
+  l.destroy();
   //]
 }

@@ -5,8 +5,6 @@
 
 //[pr_prefetch
 /*`
-  In the former example, the `DECLARE_MMETHOD` provides only the function object.
-
   [pr_decl]
   [pr_functor]
   [pr_early]
@@ -24,9 +22,12 @@ namespace {
 
 //[pr_decl
 /*`
+  In the former example, the `DECLARE_MMETHOD` provides only the function object.
+
   Cases happen when you also need to access the function object's type.
-  In those cases, the alternate forms `DECLARATION_MMETHOD` and `IMPLEMENTATION_MMETHOD`
-  allow you to define a function object type.
+  In those cases, the alternate forms `DECLARATION_MMETHOD`
+  and `IMPLEMENTATION_MMETHOD`
+  allow to define a function object type.
  */
 using tags::_v;
 DECLARATION_MMETHOD(prefetch_t, int, (_v<foo&>));
@@ -52,12 +53,13 @@ BOOST_AUTO_TEST_CASE(test_prefetch) {
 
   //[pr_early
   /*`
-    Using the function object, you can perform early dispatch with the `fetch` method.
+    Using the function object, you can perform early dispatch
+    with the `fetch` method.
     This method computed the multiple dispatch and returns a function pointer.
     The pointed function will perform the necessary static downcasts,
     and call the right implementation.
     The library guarantees that the return type of `fetch` is a function pointer,
-    with the signature declared in `BOOST_MMETHOD_DECLARATION`.
+    with the signature declared in `DECLARATION_MMETHOD`.
    */
   typedef prefetch_t::function_type func_t;   // function pointer type
   func_t fp = prefetch.fetch(l);              // call dispatch mechanism

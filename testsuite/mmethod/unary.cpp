@@ -20,27 +20,28 @@ namespace {
 //[un_decl
 /*`
   The declaration of a __multimethod__ is done via
-  the `DECLARE_MMETHOD` macro. This macro takes three arguments :
+  the `DECLARE_MMETHOD` macro. This macro takes three arguments:
 
   * the __multimethod__ name
   * the return type
   * the parenthesized parameter type list
 
-  There can be two kinds of parameters : the neutral parameters
+  There can be two kinds of parameters: the neutral parameters
   and the dispatched parameters.
   Neutral parameters are just passed as-is to the called implementation.
   Dispatched parameters are those on which the multiple dispatch is computed.
   In order to differentiate between these, dispatched parameters must be tagged
   using the `tags::_v<>` template.
+
+  Here, the only argument is a dispatched parameter.
  */
 using tags::_v;
 DECLARE_MMETHOD(unary, int, (_v<foo const&>));
 
 /*`
-  Here, the only argument is a dispatched parameter.
-
-  The dependency on __rtti__ appears : all dispatched parameters
-  must have been registered with __rtti__ prior to the declaration.
+  The dependency on __rtti__ appears at this point. All dispatched parameters
+  must have been registered with __rtti__ prior to the declaration of
+  the __multimethod__.
  */
 //]
 
@@ -54,7 +55,13 @@ DECLARE_MMETHOD(unary, int, (_v<foo const&>));
   * the return type
   * the actual parameter list
 
-  Note that unlike the `DECLARE_MMETHOD` macro,
+  The actual parameters are the types expected by the implementation.
+  This set of parameters serves two things:
+  to declare tha arguments of the function,
+  and to register the association between this set of
+  parameter types and the implementation.
+
+  Unlike the `DECLARE_MMETHOD` macro,
   no tagging is required on the parameters.
  */
 IMPLEMENT_MMETHOD(unary, int, (foo const& a)) { return a.f(); }
