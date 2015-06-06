@@ -40,7 +40,7 @@ struct rtti::detail::rtti_node {
     detail::holder_::rtti_node_var<3> self;
   };
 
-  BOOST_DELETED_FUNCTION( rtti_node() );
+  BOOST_DELETED_FUNCTION( rtti_node() )
 };
 
 inline rtti::rtti_type

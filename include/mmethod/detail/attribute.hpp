@@ -15,6 +15,15 @@
 #endif
 #endif
 
+#ifndef MMETHOD_ATTRIBUTE_UNUSED
+#ifdef BOOST_ATTRIBUTE_UNUSED
+#define MMETHOD_ATTRIBUTE_UNUSED BOOST_ATTRIBUTE_UNUSED
+#else
+#include <boost/static_assert.hpp>
+#define MMETHOD_ATTRIBUTE_UNUSED BOOST_STATIC_ASSERT_UNUSED_ATTRIBUTE
+#endif
+#endif
+
 #ifndef MMETHOD_ATTRIBUTE_ALIGNED
 #ifdef __GNUC__
 #define MMETHOD_ATTRIBUTE_ALIGNED __attribute__((aligned(2)))

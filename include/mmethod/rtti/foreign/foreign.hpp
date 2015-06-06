@@ -48,8 +48,7 @@ fetch_mixin_node_holder(Klass const& d) {
 
 #define MMETHOD_FOREIGN_IMPLEMENT(Klass, Supers)                        \
 extern rtti::detail::implement_traits<Klass, Supers>::arity_type        \
-rtti_parents_size_1p(Klass const volatile* k)                           \
-{ return rtti_parents_size_1p(k); }                                     \
+rtti_parents_size_1p(Klass const volatile*) MMETHOD_ATTRIBUTE_UNUSED;   \
 template<typename F>                                                    \
 inline void rtti_parents_foreach(F f, Klass const volatile*) {          \
   boost::mpl::for_each<                                                 \

@@ -86,15 +86,15 @@ BOOST_AUTO_TEST_CASE(test_compute_poles) {
     c5.node->self.__base[0] = c4.node;
 
     { // with c4 a pole
-      //     x
-      //     |
-      //     o
-      //    / \
-      //   x   x
-      //    \ /
-      //     o
-      //     |
-      //     x
+      //     x     //
+      //     |     //
+      //     o     //
+      //    / \    //
+      //   x   x   //
+      //    \ /    //
+      //     o     //
+      //     |     //
+      //     x     //
       std::vector<rtti_hierarchy> cs;
       cs.push_back(c0.node);
       cs.push_back(c2.node);
@@ -116,15 +116,15 @@ BOOST_AUTO_TEST_CASE(test_compute_poles) {
     }
 
     { // without c4 a pole
-      //     x
-      //     |
-      //     o
-      //    / \
-      //   o   x
-      //    \ /
-      //     o
-      //     |
-      //     x
+      //     x     //
+      //     |     //
+      //     o     //
+      //    / \    //
+      //   o   x   //
+      //    \ /    //
+      //     o     //
+      //     |     //
+      //     x     //
       std::vector<rtti_hierarchy> cs;
       cs.push_back(c0.node);
       cs.push_back(c3.node);
@@ -167,19 +167,19 @@ BOOST_AUTO_TEST_CASE(test_compute_poles) {
     c6.node->self.__base[0] = c5.node;
 
     { // with c4 a pole
-      //     x
-      //     |
-      //     o
-      //    / \
-      //   x   x
-      //   |\  |
-      //   | \ |
-      //   |  \|
-      //   \   o
-      //    \ /
-      //     o
-      //     |
-      //     x
+      //     x     //
+      //     |     //
+      //     o     //
+      //    / \    //
+      //   x   x   //
+      //   |\  |   //
+      //   | \ |   //
+      //   |  \|   //
+      //   \   o   //
+      //    \ /    //
+      //     o     //
+      //     |     //
+      //     x     //
       std::vector<rtti_hierarchy> cs;
       cs.push_back(c0.node);
       cs.push_back(c2.node);
@@ -201,19 +201,19 @@ BOOST_AUTO_TEST_CASE(test_compute_poles) {
     }
 
     { // without c4 a pole
-      //     x
-      //     |
-      //     o
-      //    / \
-      //   x   o
-      //   |\  |
-      //   | \ |
-      //   |  \|
-      //   \   o
-      //    \ /
-      //     o
-      //     |
-      //     x
+      //     x     //
+      //     |     //
+      //     o     //
+      //    / \    //
+      //   x   o   //
+      //   |\  |   //
+      //   | \ |   //
+      //   |  \|   //
+      //   \   o   //
+      //    \ /    //
+      //     o     //
+      //     |     //
+      //     x     //
       // This one should trigger the last case in pseudo_closest:
       // several parent poles but they reduce to only one.
       std::vector<rtti_hierarchy> cs;

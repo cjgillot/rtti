@@ -32,7 +32,9 @@ struct implement_rtti
 : public mixin<
   klass, parents
 , boost::false_type
-, BOOST_TYPEOF(rtti_mixin_node_type((typename boost::mpl::at_c<parents, 0>::type*)NULL))
+, BOOST_TYPEOF_TPL(rtti_mixin_node_type(
+      (typename boost::mpl::at_c<parents, 0>::type*)NULL
+  ))
 > {};
 
 } // namespace rtti

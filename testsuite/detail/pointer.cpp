@@ -9,6 +9,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/static_assert.hpp>
 
+#include <boost/preprocessor/empty.hpp>
+
 using namespace rtti;
 
 // {{{ toy classes used here
@@ -38,7 +40,7 @@ using traits_detail::remove_all;
         remove_all<A cvref>::type           \
     >::value ) /*;*/
 
-CHECK_REMOVE_ALL(              );
+CHECK_REMOVE_ALL(BOOST_PP_EMPTY());
 CHECK_REMOVE_ALL(const         );
 CHECK_REMOVE_ALL(volatile      );
 CHECK_REMOVE_ALL(const volatile);

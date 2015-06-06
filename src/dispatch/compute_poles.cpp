@@ -76,6 +76,7 @@ hierarchy_t::pseudo_closest(
 ) {
   BOOST_ASSERT(out_pole);
   BOOST_ASSERT(!poles.count(klass));
+  (void)klass;
 
   // trivial cases
   if(candidates.empty()) {
