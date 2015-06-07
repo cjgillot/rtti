@@ -7,7 +7,7 @@
     typename boost::mpl::at_c< TypeSeq, I >::type
 
 #define MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE(J,I,TypeSeq) \
-    typename boost::call_traits< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,TypeSeq) >::param_type
+    typename rtti::call_traits< MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,TypeSeq) >::param_type
 
 #define MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(TypeSeq) \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_PARM_TYPE, TypeSeq)

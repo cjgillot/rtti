@@ -24,7 +24,7 @@ template<typename In>
 struct other_caster {
   // rely on implicit conversion
   template<typename Out>
-  static Out cast(typename boost::call_traits<Out>::param_type x) {
+  static Out cast(typename rtti::call_traits<Out>::param_type x) {
     return x;
   }
 };

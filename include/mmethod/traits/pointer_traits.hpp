@@ -142,7 +142,7 @@ private:
   };
 
   typedef typename boost::remove_reference<
-    typename boost::call_traits<T>::param_type
+    typename rtti::call_traits<T>::reference
   >::type complete_no_ref_t;
 
 public:

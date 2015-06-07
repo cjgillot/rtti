@@ -9,18 +9,34 @@
 #include "mmethod/config.hpp"
 #include <boost/call_traits.hpp>
 
+namespace rtti {
+
+template<typename T>
+struct call_traits
+: boost::call_traits<T>
+{
+private:
+  typedef boost::call_traits<T> base;
+
+public:
+  using typename base::value_type;
+  using typename base::reference;
+  using typename base::const_reference;
+  using typename base::param_type;
+};
+
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 
-namespace boost {
-  template<typename T>
-  struct call_traits<T&&> {
-    typedef T&& value_type;
-    typedef T& reference;
-    typedef const T& const_reference;
-    typedef T&& param_type;  // hh removed const
-  };
-}
+template<typename T>
+struct call_traits<T&&> {
+  typedef T&& value_type;
+  typedef T& reference;
+  typedef const T& const_reference;
+  typedef T&& param_type;  // hh removed const
+};
 
 #endif
+
+} // namespace rtti
 
 #endif
