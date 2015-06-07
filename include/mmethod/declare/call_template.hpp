@@ -42,25 +42,27 @@ protected:
 
 protected:
 
+#define MMETHOD_TRAMPOLINE_CALL_ARGS \
+    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_CALL_ARG, unwrapped_args)
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
-    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, BOOST_PP_EMPTY)
+    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, unwrapped_args)
 
   // fast path : no check for generate()
   inline func_t fast_fetch(
-    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+    MMETHOD_TRAMPOLINE_CALL_PARMS(unwrapped_args)
   ) const
   {
     typedef boost::fusion::tuple<
-      MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(unwrapped_args)
+      MMETHOD_TRAMPOLINE_CALL_PARM_TYPES(unwrapped_args)
     > tuple_type;
-    invoker_t inv = m_dispatch.fetch( tuple_type(MMETHOD_TRAMPOLINE_FUNC_ARGS) );
+    invoker_t inv = m_dispatch.fetch( tuple_type(MMETHOD_TRAMPOLINE_CALL_ARGS) );
     return reinterpret_cast<func_t>(inv);
   }
   inline Ret fast_call(
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
-    func_t f = this->fast_fetch(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    func_t f = this->fast_fetch(MMETHOD_TRAMPOLINE_CALL_ARGS);
     return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 

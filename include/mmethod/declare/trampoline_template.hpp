@@ -19,16 +19,16 @@ template<typename TAG, typename Ret, typename Types, typename Tags>
 struct callback {
   typedef Ret return_type;
 
-#define MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D)      \
+#define MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D) \
     trampoline_detail::caster<                  \
-      MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Tags)    \
-    , MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types)   \
-    >::template cast<                           \
-      MMETHOD_TRAMPOLINE_FUNC_TYPE(J,I,Types2)  \
-    >( MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,D) )
+      MMETHOD_TRAMPOLINE_TYPE(J,I,Tags)    \
+    , MMETHOD_TRAMPOLINE_TYPE(J,I,Types)   \
+    >::template cast<                      \
+      MMETHOD_TRAMPOLINE_TYPE(J,I,Types2)  \
+    >( MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,Types) )
 
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
-    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_CAST_ARG, BOOST_PP_EMPTY)
+    BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_CAST_ARG, ~)
 
   typedef Ret (*sig_t)(MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(Types));
 
