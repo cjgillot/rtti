@@ -29,13 +29,17 @@
 #ifdef BOOST_NO_CXX11_RVALUE_REFERENCES
 
 #define MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,TypeSeq) \
-    BOOST_JOIN(a,I)
+    boost::move_if_not_lvalue_reference<         \
+        MMETHOD_TRAMPOLINE_TYPE(J,I,TypeSeq)     \
+    >(                                           \
+      BOOST_JOIN(a,I)                            \
+    )
 
 #else
 
-#define MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,TypeSeq)                \
+#define MMETHOD_TRAMPOLINE_FUNC_ARG(J,I,TypeSeq)           \
     std::forward< MMETHOD_TRAMPOLINE_TYPE(J,I,TypeSeq) >(  \
-      BOOST_JOIN(a,I)                                           \
+      BOOST_JOIN(a,I)                                      \
     )
 
 #endif
