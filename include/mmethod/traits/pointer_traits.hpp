@@ -7,10 +7,10 @@
 #define RTTI_TRAITS_HPP
 
 #include "mmethod/config.hpp"
-#include "mmethod/traits/call_traits.hpp"
 
 #include <boost/mpl/if.hpp>
 
+#include <boost/call_traits.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/type_traits/is_virtual_base_of.hpp>
 
@@ -143,7 +143,7 @@ private:
   };
 
   typedef typename boost::remove_reference<
-    typename rtti::call_traits<T>::reference
+    typename boost::call_traits<T>::reference
   >::type complete_no_ref_t;
 
 public:

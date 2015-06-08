@@ -12,7 +12,7 @@
     BOOST_JOIN(a,I)
 
 #define MMETHOD_TRAMPOLINE_CALL_PARM_TYPE(J,I,TypeSeq) \
-    typename rtti::call_traits< MMETHOD_TRAMPOLINE_TYPE(J,I,TypeSeq) >::param_type
+    typename boost::call_traits< MMETHOD_TRAMPOLINE_TYPE(J,I,TypeSeq) >::param_type
 
 #define MMETHOD_TRAMPOLINE_CALL_PARM_TYPES(TypeSeq) \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_CALL_PARM_TYPE, TypeSeq)

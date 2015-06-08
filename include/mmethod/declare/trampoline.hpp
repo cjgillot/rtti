@@ -9,10 +9,10 @@
 #include "mmethod/config.hpp"
 
 #include "mmethod/traits/pointer_traits.hpp"
-#include "mmethod/traits/call_traits.hpp"
 
 #include "mmethod/detail/iterate.hpp"
 
+#include <boost/call_traits.hpp>
 #include <boost/mpl/size.hpp>
 
 namespace rtti {
@@ -24,7 +24,7 @@ template<typename In>
 struct other_caster {
   // rely on implicit conversion
   template<typename Out>
-  static Out cast(typename rtti::call_traits<Out>::param_type x) {
+  static Out cast(typename boost::call_traits<Out>::param_type x) {
     return x;
   }
 };

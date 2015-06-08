@@ -9,7 +9,7 @@
 #include <boost/preprocessor/enum.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 
-#include "mmethod/traits/call_traits.hpp"
+#include <boost/call_traits.hpp>
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 #include <utility>
