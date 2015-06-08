@@ -43,7 +43,11 @@ template<class T>
 inline BOOST_CONSTEXPR rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 static_node() BOOST_NOEXCEPT_OR_NOTHROW {
-  typedef typename rtti::compute_pointer_traits<T>::type traits;
+  // Do not feed `T` directly to compute_pointer_traits,
+  // it causes unwanted instantiation of `traits::get`
+  // with potential abstract class.
+  typedef typename boost::call_traits<T>::param_type SafeT;
+  typedef typename rtti::compute_pointer_traits<SafeT>::type traits;
   return detail::rtti_getter::static_node<typename traits::class_type>();
 }
 

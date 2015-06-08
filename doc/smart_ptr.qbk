@@ -24,4 +24,15 @@ without need to unwrap and reconstruct the smart pointers.
 [import ../testsuite/smart_ptr/smart_ptr.cpp]
 [sm_smart_ptr]
 
+[heading Supported smart pointers]
+
+__mmethod__ comes with some supported smart pointer classes.
+For now, the supported smart pointers are:
+
+[table Supported smart pointers
+    [[ Smart pointer class ][ Included file ]]
+    [[ `boost::shared_ptr` ][ [@../include/mmethod/smart_ptr/boost_shared_ptr.hpp =mmethod/smart_ptr/boost_smart_ptr.hpp=] ]]
+    [[ `std::shared_ptr`   ][ [@../include/mmethod/smart_ptr/stl_shared_ptr.hpp   =mmethod/smart_ptr/stl_shared_ptr.hpp= ] ]]
+]
+
 [endsect]

@@ -3,18 +3,20 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MMETHOD_BOOST_SHARED_PTR_HPP
-#define BOOST_MMETHOD_BOOST_SHARED_PTR_HPP
+#ifndef BOOST_MMETHOD_STL_SHARED_PTR_HPP
+#define BOOST_MMETHOD_STL_SHARED_PTR_HPP
 
 #include "mmethod/traits/pointer_traits.hpp"
 
-#include <boost/shared_ptr.hpp>
+#ifndef BOOST_NO_CXX11_SMART_PTR
+
+#include <memory>
 
 namespace rtti {
 
 template<typename T>
-struct pointer_traits<boost::shared_ptr<T> > {
-  typedef boost::shared_ptr<T> pointer_type;
+struct pointer_traits<std::shared_ptr<T> > {
+  typedef std::shared_ptr<T> pointer_type;
 
   typedef typename boost::remove_cv<T>::type class_type;
 
@@ -36,10 +38,10 @@ public:
 
 template<typename T>
 template<typename U>
-struct pointer_traits<boost::shared_ptr<T> >::
-cast_detail<boost::shared_ptr<U> > {
+struct pointer_traits<std::shared_ptr<T> >::
+cast_detail<std::shared_ptr<U> > {
 
-  typedef boost::shared_ptr<U> OutClass;
+  typedef std::shared_ptr<U> OutClass;
   typedef typename boost::add_pointer<U>::type Uptr;
 
   static OutClass cast(pointer_type const& v) {
@@ -50,5 +52,7 @@ cast_detail<boost::shared_ptr<U> > {
 };
 
 } // namespace rtti
+
+#endif // BOOST_NO_CXX11_SMART_PTR
 
 #endif
