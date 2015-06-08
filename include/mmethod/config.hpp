@@ -13,6 +13,7 @@
 // #define MMETHOD_INLINE_DO_FIND
 
 #define MMETHOD_MAX_ITERATION 10
+#define MMETHOD_NODE_ALIGN    16
 
 #include "mmethod/detail/attribute.hpp"
 

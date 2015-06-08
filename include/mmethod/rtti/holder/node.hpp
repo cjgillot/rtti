@@ -36,7 +36,7 @@ struct rtti::detail::rtti_node {
   struct alignment;
 
   union {
-    boost::type_with_alignment<2> __alignment;
+    boost::type_with_alignment<MMETHOD_NODE_ALIGN>::type __alignment;
     detail::holder_::rtti_node_var<3> self;
   };
 
@@ -62,12 +62,11 @@ rtti::detail::rtti_get_base_arity(rtti_node const* n)
   return n->self.__arity;
 }
 
-struct rtti::detail::rtti_node::alignment
-: boost::alignment_of<holder_::rtti_node_var<0> >
-{};
+struct rtti::detail::rtti_node::alignment {
+  enum { value = boost::alignment_of<rtti_node>::value };
 
-BOOST_STATIC_ASSERT_MSG(rtti::detail::rtti_node::alignment::value >= 2,
-                        "Broken invariant");
+  BOOST_STATIC_ASSERT_MSG(value >= MMETHOD_NODE_ALIGN, "Unsufficient alignment");
+};
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX
