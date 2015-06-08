@@ -6,7 +6,6 @@
 #include "../classes.hpp"
 
 using namespace rtti;
-using boost::mpl::vector;
 
 namespace {
 

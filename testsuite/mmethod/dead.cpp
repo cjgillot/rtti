@@ -3,57 +3,32 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
-#include "mmethod/implement.hpp"
+#include "../classes.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
 using namespace rtti;
-using boost::mpl::vector;
 
-/*!\example diamond.cpp
+/*!\example dead.cpp
  *
  * Test whether do_fetch_pole can handle a dead branch.
  */
 
 namespace {
 
-struct root
-: base_rtti<root, virtual_mixin_node> {
-public:
-  virtual ~root() {}
-};
-
-struct foo1
-: virtual root
-, implement_rtti<foo1, vector<root> >
-{};
-
-struct foo2
-: virtual root
-, implement_rtti<foo2, vector<root> >
-{};
-
-struct baz
-: foo1, foo2
-, implement_rtti<baz, vector<foo1, foo2> >
-{};
-
 using tags::_v;
-DECLARE_MMETHOD(dead, int, (_v<root&>));
+DECLARE_MMETHOD(dead, int, (_v<foo&>));
 
-IMPLEMENT_MMETHOD(dead, int, (foo2&)) { return 5; }
+IMPLEMENT_MMETHOD(dead, int, (bar&)) { return 5; }
 
 } // namespace <>
 
 BOOST_AUTO_TEST_CASE(test_dead) {
-  root r; foo1 f; foo2 g; baz z;
+  foo f; bar r; baz z; lap l;
 
-  BOOST_CHECK_EQUAL( dead(g), 5  );
-  BOOST_CHECK_EQUAL( dead(z), 5  );
+  BOOST_CHECK_EQUAL( dead(r), 5  );
+  BOOST_CHECK_EQUAL( dead(l), 5  );
 
-  BOOST_CHECK_EXCEPTION( dead(r), bad_dispatch, & );
   BOOST_CHECK_EXCEPTION( dead(f), bad_dispatch, & );
+  BOOST_CHECK_EXCEPTION( dead(z), bad_dispatch, & );
 }

@@ -12,11 +12,8 @@
 //]
 
 #include "../classes.hpp"
-#include <boost/type_traits/is_function.hpp>
-#include <iostream>
 
 using namespace rtti;
-using boost::mpl::vector;
 
 namespace {
 
