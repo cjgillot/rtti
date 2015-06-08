@@ -68,21 +68,22 @@ struct unsafe_casting {
   }
 };
 
-template<typename T>
+template<typename T, typename Ref>
 class reference_traits {
   typedef T& reference_type;
 
 public:
   typedef typename boost::remove_cv<T>::type class_type;
 
-  static reference_type get(reference_type v) { return v; }
-  static bool valid(reference_type) { return true; }
+  static reference_type get(Ref v) { return v; }
+  static bool valid(Ref) { return true; }
 
   template<typename U>
-  static U cast(reference_type v)
+  static U cast(Ref v)
   {
     typedef typename boost::add_pointer<U>::type Uptr;
-    return *unsafe_casting<Uptr>::eval(&v);
+    Uptr up = unsafe_casting<Uptr>::eval(&v);
+    return static_cast<U>(*up);
   }
 };
 
@@ -152,7 +153,7 @@ public:
     , typename boost::mpl::if_c<
         !trivial_no_cvref
       , traits_no_cvref
-      , traits_detail::reference_traits<complete_no_ref_t>
+      , traits_detail::reference_traits<complete_no_ref_t, T>
       >::type
     >::type type;
 };
