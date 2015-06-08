@@ -11,9 +11,6 @@
 
 #include "./classes.hpp"
 
-#include "mmethod/rtti.hpp"
-#include "mmethod/mmethod.hpp"
-#include "mmethod/implement.hpp"
 #include "mmethod/policy/noreturn_policy.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -25,18 +22,20 @@ namespace {
 
 //[po_check_policy
 /*`
-  The previous /policy/ class has one disadvantage :
-  it cannot be reused for __multimethods__ with different signatures.
-
-  In this example, we want to write a policy
-  /bad dispatch/ that ignores its arguments and
+  The previous policy class has one disadvantage:
+  its /bad dispatch/ function cannot used
+  for __multimethods__ with different signatures.
+  Although this is fine most of the time,
+  it may be interessant to have more general
+  "catch-all" policy classes.
+  In this example, we want to write a policy class
+  whose /bad dispatch/ function ignores its arguments and
   does not return.
 
-  To do so, we will throw the following exception.
+  To do so, we will throw the following exception:
  */
 struct check_exception
 : public std::runtime_error
-, public boost::exception
 {
   check_exception()
   : std::runtime_error("Ambiguous call")
@@ -55,7 +54,7 @@ struct check_policy
   // optional ambiguity_handler()
 
   static void bad_dispatch() {
-    boost::throw_exception( check_exception() );
+    BOOST_THROW_EXCEPTION( check_exception() );
   }
 };
 
@@ -66,23 +65,23 @@ struct check_policy
 //]
 
 using tags::_v;
-DECLARE_MMETHOD_POLICY(f1, int, (_v<foo1&>, _v<bar1&>), check_policy);
+DECLARE_MMETHOD_POLICY(f1, int, (_v<foo&>, _v<foo&>), check_policy);
 
-IMPLEMENT_MMETHOD(f1, int, (foo1&, bar1&)) { return 0; }
-IMPLEMENT_MMETHOD(f1, int, (foo2&, bar1&)) { return 13; }
-IMPLEMENT_MMETHOD(f1, int, (foo1&, bar2&)) { return 8; }
+IMPLEMENT_MMETHOD(f1, int, (foo&, foo&)) { return 0; }
+IMPLEMENT_MMETHOD(f1, int, (bar&, foo&)) { return 13; }
+IMPLEMENT_MMETHOD(f1, int, (foo&, bar&)) { return 8; }
 
-// foo2-bar2 is ambiguous : foo2-bar1 and foo1-bar2 are equally good matches
+// bar-bar is ambiguous : bar-foo and foo-bar are equally good matches
 
 } // namespace <>
 
 BOOST_AUTO_TEST_CASE(test_policy) {
-  foo1 a; foo2 b;
-  bar1 x; bar2 y;
+  foo a; bar b;
+  foo x; bar y;
 
   BOOST_CHECK_EQUAL( f1(a, x),  0  ); // (1-1 case)
   BOOST_CHECK_EQUAL( f1(a, y),  8  ); // (1-2 case)
   BOOST_CHECK_EQUAL( f1(b, x), 13  ); // (2-1 case)
 
-  BOOST_CHECK_EXCEPTION( f1(b, y), check_exception, & );
+  BOOST_CHECK_THROW( f1(b, y), check_exception );
 }

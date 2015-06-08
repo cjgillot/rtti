@@ -4,6 +4,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "mmethod/rtti.hpp"
+#include "mmethod/mmethod.hpp"
+#include "mmethod/implement.hpp"
 
 #include <boost/mpl/vector.hpp>
 
@@ -14,26 +16,15 @@ namespace policy_test {
 //[po_classes
 using boost::mpl::vector;
 
-struct foo1
-: base_rtti<foo1> {
+struct foo
+: base_rtti<foo> {
 public:
-  virtual ~foo1() {}
+  virtual ~foo() {}
 };
 
-struct foo2
-: foo1
-, implement_rtti<foo2, vector<foo1> >
-{};
-
-struct bar1
-: base_rtti<bar1> {
-public:
-  virtual ~bar1() {}
-};
-
-struct bar2
-: bar1
-, implement_rtti<bar2, vector<bar1> >
+struct bar
+: foo
+, implement_rtti<bar, vector<foo> >
 {};
 //]
 
