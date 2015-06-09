@@ -13,10 +13,7 @@
 
 #include "./classes.hpp"
 
-#include "mmethod/policy/noreturn_policy.hpp"
-
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
 using namespace rtti;
 
@@ -44,7 +41,7 @@ int called_ambiguous = 0;
   * `bad_dispatch` modelling the /bad dispatch/ function.
  */
 struct wildcard_policy {
-  static void ambiguity_handler(std::size_t, rtti_type const*);
+  static bool ambiguity_handler(std::size_t, rtti_type const*);
   static int bad_dispatch(foo&, foo&);
 };
 
@@ -58,7 +55,7 @@ struct wildcard_policy {
   * the arity of the __multimethod__,
   * a C array of __rtti__ type ids.
  */
-void
+bool
 wildcard_policy::ambiguity_handler(std::size_t n, rtti_type const* types) {
   BOOST_CHECK_EQUAL(n, 2u);
   BOOST_CHECK_EQUAL(types[0], static_id<bar>());
@@ -66,6 +63,8 @@ wildcard_policy::ambiguity_handler(std::size_t n, rtti_type const* types) {
 
   ++found_ambiguous;
   //=std::cout << "Ambiguity found !" << std::endl;
+
+  return false;
 }
 
 /*`

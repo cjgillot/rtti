@@ -14,9 +14,6 @@ namespace mmethod {
 namespace ambiguity {
 
 template<typename Policy, typename Ret = void>
-struct noreturn_policy;
-
-template<typename Policy, typename Ret>
 struct noreturn_policy {
 
   template<typename Sig>
@@ -29,26 +26,7 @@ struct noreturn_policy {
   template<BOOST_PP_ENUM_PARAMS_Z(z, I, class T)>               \
   static Ret bad_dispatch(BOOST_PP_ENUM_PARAMS_Z(z, I, T)) {    \
     Policy::bad_dispatch();                                     \
-    return *(typename boost::add_volatile<Ret>::type*)NULL;     \
-  }
-  BOOST_PP_REPEAT_FROM_TO(1, MMETHOD_MAX_ITERATION, MMETHOD_NOOP, ~)
-#undef MMETHOD_NOOP
-
-};
-
-template<typename Policy>
-struct noreturn_policy<Policy, void> {
-
-  template<typename Sig>
-  struct rebind {
-    typedef typename boost::function_types::result_type<Sig>::type R2;
-    typedef noreturn_policy<Policy, R2> other;
-  };
-
-#define MMETHOD_NOOP(z,I,D)                                     \
-  template<BOOST_PP_ENUM_PARAMS_Z(z, I, class T)>               \
-  static void bad_dispatch(BOOST_PP_ENUM_PARAMS_Z(z, I, T)) {   \
-    Policy::bad_dispatch();                                     \
+    std::abort();                                               \
   }
   BOOST_PP_REPEAT_FROM_TO(1, MMETHOD_MAX_ITERATION, MMETHOD_NOOP, ~)
 #undef MMETHOD_NOOP

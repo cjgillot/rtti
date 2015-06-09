@@ -7,7 +7,6 @@
 #define MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
 
 #include "mmethod/export/exception.hpp"
-#include "mmethod/policy/noreturn_policy.hpp"
 
 #include <cstdlib>
 #include <boost/throw_exception.hpp>
@@ -16,13 +15,14 @@ namespace rtti {
 namespace mmethod {
 namespace ambiguity {
 
-struct default_policy
-: noreturn_policy<default_policy>
-{
+struct default_policy {
   static void bad_dispatch() {
     BOOST_THROW_EXCEPTION( rtti::bad_dispatch() );
   }
 
+  static bool ambiguity_handler(size_t, rtti_type*) {
+    return false;
+  }
 };
 
 }}} // namespace rtti::mmethod::ambiguity

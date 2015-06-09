@@ -24,44 +24,40 @@ struct get_fpointers;
 
 namespace detail {
 
-BOOST_TTI_HAS_STATIC_MEMBER_FUNCTION(ambiguity_handler)
 BOOST_TTI_HAS_STATIC_MEMBER_FUNCTION(bad_dispatch)
 
-template<typename Policy, bool Enable>
-struct get_ahndl {
-  static ambiguity_handler_t
-  get() {
-    return &Policy::ambiguity_handler;
+// {{{ get_ahndl
+
+template<typename Policy>
+struct wrap_ahndl {
+  static bool ahndl(size_t n, rtti_type* a) {
+    return Policy::ambiguity_handler(n, a);
   }
 };
 
-template<typename Policy>
-struct get_ahndl<Policy, false> {
-  static ambiguity_handler_t
-  get() {
-    return NULL;
-  }
-};
+// }}}
+// {{{ get_bad
 
 template<typename Policy, bool Enable>
 struct get_bad {
   template<typename Fp>
-  static Fp
+  static invoker_t
   get() {
-    return &Policy::bad_dispatch;
+    Fp fp = &Policy::bad_dispatch;
+    return reinterpret_cast<invoker_t>(fp);
   }
 };
 
 template<typename Policy>
 struct get_bad<Policy, false> {
   template<typename Fp>
-  static Fp
+  static invoker_t
   get() {
-    typedef typename boost::remove_pointer<Fp>::type Sig;
-    typedef typename Policy::template rebind<Sig>::other rebound_policy;
-    return &rebound_policy::bad_dispatch;
+    return &Policy::bad_dispatch;
   }
 };
+
+// }}}
 
 } // namespace detail
 
@@ -70,12 +66,7 @@ struct get_fpointers {
 public:
   static ambiguity_handler_t
   get_ambiguity_handler() {
-    typedef detail::has_static_member_function_ambiguity_handler<
-      Policy
-    , void, boost::mpl::vector<size_t, rtti_type const*>
-    > has_ahndl;
-
-    return detail::get_ahndl<Policy, has_ahndl::value>::get();
+    return &detail::wrap_ahndl<Policy>::ahndl;
   }
 
   template<typename Fp>
@@ -87,8 +78,7 @@ public:
     , typename boost::function_types::parameter_types<Fp>::type
     > has_bd;
 
-    Fp fp = detail::get_bad<Policy, has_bd::value>::template get<Fp>();
-    return reinterpret_cast<invoker_t>(fp);
+    return detail::get_bad<Policy, has_bd::value>::template get<Fp>();
   }
 };
 

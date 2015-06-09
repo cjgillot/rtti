@@ -17,7 +17,7 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
-typedef void (*ambiguity_handler_t)(size_t n, rtti_type const[]);
+typedef bool (*ambiguity_handler_t)(size_t n, rtti_type*);
 
 struct ambiguity_policy_t {
   ambiguity_handler_t   ahndl;

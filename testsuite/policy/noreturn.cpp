@@ -14,7 +14,6 @@
 #include "mmethod/policy/noreturn_policy.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
 using namespace rtti;
 
@@ -49,9 +48,9 @@ struct check_exception
   the policy with any arity and any return type.
  */
 struct check_policy
-: mmethod::ambiguity::noreturn_policy<check_policy>
+: private mmethod::ambiguity::default_policy
 {
-  // optional ambiguity_handler()
+  using mmethod::ambiguity::default_policy::ambiguity_handler;
 
   static void bad_dispatch() {
     BOOST_THROW_EXCEPTION( check_exception() );
