@@ -13,7 +13,6 @@
 
 namespace rtti_dispatch {
 
-
 // from dispatch.cpp
 extern void dispatch(
   dispatch_t &dispatch,

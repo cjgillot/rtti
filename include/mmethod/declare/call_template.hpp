@@ -38,7 +38,7 @@ protected:
   { m_dispatch.template insert<K>(f); }
 
   inline void generate() const
-  { m_dispatch.generate(); }
+  { m_dispatch.template generate<unwrapped_args>(); }
 
 protected:
 

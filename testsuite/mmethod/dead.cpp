@@ -29,6 +29,6 @@ BOOST_AUTO_TEST_CASE(test_dead) {
   BOOST_CHECK_EQUAL( dead(r), 5  );
   BOOST_CHECK_EQUAL( dead(l), 5  );
 
-  BOOST_CHECK_EXCEPTION( dead(f), bad_dispatch, & );
-  BOOST_CHECK_EXCEPTION( dead(z), bad_dispatch, & );
+  BOOST_CHECK_THROW( dead(f), bad_dispatch );
+  BOOST_CHECK_THROW( dead(z), bad_dispatch );
 }

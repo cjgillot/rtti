@@ -25,12 +25,20 @@ dispatch<Tag, Ret>::dispatch() {
 }
 
 template<typename Tag, typename Ret>
+template<typename RootArgs>
 void dispatch<Tag, Ret>::generate() const {
   struct sealer_t {
-    sealer_t() { dispatch::seal(); }
+    explicit sealer_t(dispatch const* self) {
+      // insert defining signature
+      // to avoid incomplete generation
+      // (weird stuff can happen if it is not implemented)
+      const_cast<dispatch*>(self)->template insert<RootArgs, invoker_t>(NULL);
+
+      dispatch::seal();
+    }
     void touch() {}
   }
-  static sealer;
+  static sealer ( this );
   sealer.touch();
 }
 

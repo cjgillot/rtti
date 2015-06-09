@@ -32,7 +32,8 @@ void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_
       signature_type const& h = over.first;
       signature_t sig = make_signature(h, pole_table);
 
-      dispatch_table.insert(std::make_pair(sig, overload_t(sig, over.second)));
+      if(over.second)
+        dispatch_table.insert(std::make_pair(sig, overload_t(sig, over.second)));
     }
   }
   dispatch(dispatch_table, pole_table, output.ambiguity_policy.ahndl);

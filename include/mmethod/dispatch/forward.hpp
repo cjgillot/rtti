@@ -23,6 +23,7 @@ struct dispatch {
   template<typename K, typename F>
   inline void insert(F const& f);
 
+  template<typename K>
   inline void generate() const;
 
 private:
