@@ -34,10 +34,10 @@ private:   // dispatch_type
 
 protected:
   template<typename K, typename F>
-  inline void insert(F const& f)
+  void insert(F const& f)
   { m_dispatch.template insert<K>(f); }
 
-  inline void generate() const
+  void generate() const
   { m_dispatch.template generate<unwrapped_args>(); }
 
 protected:
@@ -48,7 +48,7 @@ protected:
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_ARG, unwrapped_args)
 
   // fast path : no check for generate()
-  inline func_t fast_fetch(
+  BOOST_FORCEINLINE func_t fast_fetch(
     MMETHOD_TRAMPOLINE_CALL_PARMS(unwrapped_args)
   ) const
   {
@@ -58,7 +58,7 @@ protected:
     invoker_t inv = m_dispatch.fetch( tuple_type(MMETHOD_TRAMPOLINE_CALL_ARGS) );
     return reinterpret_cast<func_t>(inv);
   }
-  inline Ret fast_call(
+  BOOST_FORCEINLINE Ret fast_call(
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
