@@ -4,14 +4,12 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "forward.hpp"
+
+#include "max_set.hpp"
 #include "link_table.hpp"
 
 #include "foreach.hpp"
 #include "product.hpp"
-
-#include <boost/variant.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/local_function.hpp>
 
 /* Implementation of pole computation algorithm from [2]
  *
@@ -23,8 +21,6 @@
  * We add support for dynamic rebinding in case of ambiguity
  * by supporting "symbolic links" between overloads.
  */
-
-typedef std::pair<signature_t, invoker_t> overload_t;
 
 static void dispatch_one(
   const pole_table_t &pole_table,
@@ -54,19 +50,6 @@ void rtti_dispatch::dispatch(
   links.resolve();
 }
 
-typedef link_table::link_t link_t;
-typedef std::list<link_t> max_set_type;
-
-static void insert_upcasts(
-  signature_t const& sig0,
-  link_table const& dispatch,
-  max_set_type& max_set
-);
-static void filter_insert(
-  max_set_type& max_set,
-  link_t const& up
-);
-
 static void dispatch_one(
   const pole_table_t &pole_table,
   const signature_t& sig,
@@ -78,11 +61,11 @@ static void dispatch_one(
     return;
 
   // set of candidates
-  max_set_type max_set;
-  insert_upcasts(sig, dispatch, max_set);
+  max_set mset;
+  mset.insert(sig, dispatch);
 
-  if(max_set.size() == 1) {
-    dispatch.insert(sig, max_set.front());
+  if(mset.size() == 1) {
+    dispatch.insert(sig, mset.get());
   }
 
   else {
@@ -113,62 +96,4 @@ static void dispatch_one(
       dispatch.insert_none(sig);
     }
   }
-}
-
-static void insert_upcasts(
-  signature_t const& sig0,
-  link_table const& dispatch,
-  max_set_type& max_set
-) {
-  std::size_t const arity = sig0.array().size();
-
-  for(std::size_t k = 0; k < arity; ++k) {
-    klass_t const* kth = sig0.array()[k];
-
-    foreach(klass_t const* base, kth->get_bases()) {
-      // copy signature and replace
-      signature_t sig = sig0;
-      sig.array_ref()[k] = base;
-
-      // we can safely use [dispatch.at] since all the candidates have been dispatched already
-      link_table::optional_link_t const& bound = dispatch.at(sig);
-
-      // call filter
-      if(bound)
-        filter_insert(max_set, *bound);
-    }
-  }
-}
-
-// poll [max_set] and insert if good match
-static void filter_insert(
-  max_set_type& max_set
-, link_t const& up
-) {
-  signature_t::worse_match worse;
-
-  max_set_type::iterator
-    iter = max_set.begin()
-  , endl = max_set.end();
-
-  while(iter != endl) {
-    link_t const& e = *iter;
-
-    // [up] is better match, remove [e]
-    if( worse(e.first, up.first) ) {
-      iter = max_set.erase(iter);
-      continue;
-    }
-
-    // [e] is better match, don't insert [up]
-    else if( worse(up.first, e.first) ) {
-      return;
-    }
-
-    // poll next overload
-    ++iter;
-  }
-
-  // none of [max_set] is better
-  max_set.push_back(up);
 }
