@@ -8,16 +8,16 @@
 #include "foreach.hpp"
 #include "product.hpp"
 
-typedef std::pair<signature_t, invoker_t> overload_t;
-
 link_table::link_table(dispatch_t& d, const pole_table_t& pt)
 : dispatch(d), pole_table(pt)
 {
   // Initial population
   foreach(overload_t const& p, dispatch)
-    links.insert(std::make_pair(
-      p.first, link_t(p.first, variant_t(p.second))
-    ));
+    insert_overload(p.first, p);
+}
+
+void link_table::insert(const signature_t& s, link_t const& l) {
+  links.insert(std::make_pair(s, l));
 }
 
 void link_table::resolve() {
@@ -29,6 +29,29 @@ void link_table::resolve() {
     resolve_once(sig);
   }
 }
+
+struct link_table::resolve_visitor
+: public boost::static_visitor<invoker_t>
+{
+  explicit
+  resolve_visitor(link_table* t)
+  : self(t) {}
+
+  invoker_t operator()(const signature_t& l2) const {
+    return self->resolve_once(l2);
+  }
+
+  invoker_t operator()(const overload_t& ov) const {
+    return ov.second;
+  }
+
+  invoker_t operator()(boost::none_t) const {
+    return NULL;
+  }
+
+private:
+  link_table* self;
+};
 
 // Need to care about loops
 invoker_t link_table::resolve_once(const signature_t& lnk) {
@@ -44,21 +67,9 @@ invoker_t link_table::resolve_once(const signature_t& lnk) {
   visited.insert(lnk);
 
   BOOST_ASSERT(links.find(lnk) != links.end());
-  optional_link_t const& ol = links.at(lnk);
+  link_t const& ol = links.at(lnk);
 
-  invoker_t ret = NULL;
-  if(ol) {
-    variant_t const& var = ol->second;
-
-    if(signature_t const* l2 = boost::get<signature_t>(&var)) {
-      ret = resolve_once(*l2);
-    }
-    else {
-      ret = boost::get<invoker_t>(var);
-    }
-
-    BOOST_ASSERT(ret);
-  }
+  invoker_t ret = boost::apply_visitor(resolve_visitor(this), ol);
 
   dispatch.insert(std::make_pair(lnk, ret));
   return ret;

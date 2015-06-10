@@ -16,12 +16,12 @@ class max_set
 : private boost::noncopyable
 {
 public:
-  typedef link_table::link_t link_t;
+  typedef link_table::overload_t overload_t;
 
   // We use a list because filter() needs to erase elements
   // while iterating. list is the only non-assiciative container
   // guaranteeing iterators upon erase.
-  typedef std::list<link_t> max_set_t;
+  typedef std::list<overload_t> max_set_t;
 
 private:
   max_set_t set;
@@ -35,13 +35,13 @@ public:
   size_t size() const
   { return set.size(); }
 
-  link_t get() const {
+  overload_t get() const {
     BOOST_ASSERT(size() == 1);
     return set.front();
   }
 
 private:
-  void filter(const link_t& up);
+  void filter(const overload_t& up);
 };
 
 #endif

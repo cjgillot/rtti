@@ -22,7 +22,7 @@ void max_set::insert(const signature_t& sig0, const link_table& links) {
 
       // we can safely use [links.at] since all the candidates
       // have been dispatched already
-      link_table::optional_link_t const& bound = links.at(sig);
+      overload_t const* bound = links.at_overload(sig);
 
       // call filter
       if(bound)
@@ -32,7 +32,7 @@ void max_set::insert(const signature_t& sig0, const link_table& links) {
 }
 
 // poll [set] and insert if good match
-void max_set::filter(link_t const& up) {
+void max_set::filter(overload_t const& up) {
   signature_t::worse_match worse;
 
   max_set_t::iterator
@@ -40,7 +40,7 @@ void max_set::filter(link_t const& up) {
   , endl = set.end();
 
   while(iter != endl) {
-    link_t const& e = *iter;
+    overload_t const& e = *iter;
 
     // [up] is better match, remove [e]
     if( worse(e.first, up.first) ) {

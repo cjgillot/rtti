@@ -65,7 +65,7 @@ static void dispatch_one(
   mset.insert(sig, dispatch);
 
   if(mset.size() == 1) {
-    dispatch.insert(sig, mset.get());
+    dispatch.insert_overload(sig, mset.get());
   }
 
   else {
