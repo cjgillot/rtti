@@ -48,6 +48,10 @@ rtti::detail::rtti_get_id(rtti_node const* n)
 { return static_cast<rtti_type>( static_cast<void const*>(n) ); }
 
 inline rtti::rtti_node const*
+rtti::detail::rtti_get_node(rtti_type n)
+{ return static_cast<rtti_node const*>( static_cast<void const*>(n) ); }
+
+inline rtti::rtti_node const*
 rtti::detail::rtti_get_base(rtti_node const* n, std::size_t k)
 {
   BOOST_ASSERT(n);

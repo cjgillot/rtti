@@ -49,6 +49,9 @@ public:
 
   friend bool operator==(const signature_t& a, const signature_t& b)
   { return a.sig == b.sig; }
+
+  friend bool operator!=(const signature_t& a, const signature_t& b)
+  { return a.sig != b.sig; }
 };
 
 #endif

@@ -59,8 +59,7 @@ void output_device::rerank(
 void output_device::rerank_unary() {
   foreach(pole_table_t::const_reference h, poles) {
     foreach(klass_t const* k, h.range()) {
-      dispatch_t::mapped_type const& target = dispatch.at( signature_t::unary(k) );
-      invoker_t ptr = target.second;
+      invoker_t ptr = dispatch.at( signature_t::unary(k) );
       value_type value = reinterpret_cast<value_type>(ptr);
       if(!value) value = fallback;
 
@@ -132,7 +131,7 @@ void output_device::output_dispatch_table(
 
   // assign dispatch table
   foreach(dispatch_t::const_reference p, dispatch) {
-    invoker_t inv = p.second.second;
+    invoker_t inv = p.second;
     if(inv)
       make_assignment(p.first, inv, table, ht);
   }

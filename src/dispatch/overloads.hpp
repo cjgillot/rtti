@@ -19,10 +19,8 @@
 
 #include "early.hpp"
 
-typedef std::pair<signature_t, invoker_t> overload_t;
-
-// the invoker overload_t::second is null in case of bad dispatch
-typedef boost::unordered_map<signature_t, overload_t> dispatch_t;
+// the invoker is null in case of bad dispatch
+typedef boost::unordered_map<signature_t, invoker_t> dispatch_t;
 
 inline std::size_t hash_value(const signature_t& s)
 {

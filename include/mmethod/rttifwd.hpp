@@ -36,6 +36,7 @@ struct rtti_getter;
 
 // Defined in node.hpp
 inline rtti_type        MMETHOD_ATTRIBUTE_PURE rtti_get_id(rtti_node const* n);
+inline rtti_node const* MMETHOD_ATTRIBUTE_PURE rtti_get_node(rtti_type r);
 inline rtti_node const* MMETHOD_ATTRIBUTE_PURE rtti_get_base(rtti_node const* n, std::size_t k = 0);
 inline std::size_t      MMETHOD_ATTRIBUTE_PURE rtti_get_base_arity(rtti_node const* n);
 
@@ -49,6 +50,7 @@ using detail::rtti_node;
 using detail::rtti_hierarchy;
 
 using detail::rtti_get_id;
+using detail::rtti_get_node;
 using detail::rtti_get_base;
 using detail::rtti_get_base_arity;
 
