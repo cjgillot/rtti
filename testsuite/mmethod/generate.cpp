@@ -55,8 +55,10 @@ BOOST_AUTO_TEST_CASE(test_generate) {
   BOOST_CHECK_EQUAL( shortcut.fast_call(l), 42 ); // (lap is-a bar)
   /*`
     [warning
+      The functions `fast_call` and `fast_fetch` exist for performance.
+      Therefore, there is no runtime check.
       If the table has not been generated,
-      the `fast_call` and `fast_fetch` method will fail miserably,
+      these will fail miserably,
       and most probably crash the program.
     ]
    */
