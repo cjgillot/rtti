@@ -6,9 +6,9 @@
 //[wg_widget
 /*`
   Unary __multimethods__ can be used to extend classes
-  without adding new virtual functions,
-  providing a simple replacement to the visitor pattern,
-  with the further ability to allow open-world dispatch.
+  without adding new virtual functions.
+  This provides a simple replacement to the visitor pattern,
+  with the further ability to open-world dispatch.
 
   [wg_classes]
   [wg_mm_declaration]
@@ -54,7 +54,9 @@ struct WNumber
   explicit WNumber(int n)
   : number(n) {}
 
-  void show() const { std::cout << number << std::endl; }
+  void show() const {
+    std::cout << number << std::endl;
+  }
 
   inline int get_number() const { return number; }
 
@@ -69,7 +71,9 @@ struct WString
   explicit WString(std::string const& l)
   : str(l) {}
 
-  void show() const { std::cout << str << std::endl; }
+  void show() const {
+    std::cout << str << std::endl;
+  }
 
   inline std::string const& get_str() const { return str; }
 
@@ -84,7 +88,9 @@ struct WLetter
   explicit WLetter(char l)
   : WString(std::string(1, l)) {}
 
-  void show() const { WString::show(); }
+  void show() const {
+    WString::show();
+  }
 
   inline char get_letter() const { return get_str()[0]; }
 };
@@ -94,7 +100,7 @@ struct WLetter
 /*`
   It could be useful to be able to count the number of printed characters,
   without having to modify the classes.
-  We then define the `count` __multimethod__.
+  To do this, we define the `count` __multimethod__.
  */
 using tags::_v;
 
@@ -104,7 +110,8 @@ DECLARE_MMETHOD(count, int, (_v<Widget const&>));
 
 //[wg_mm_implement
 /*`
-  We can implement it on the several widgets.
+  We can implement it on the several widgets,
+  with the suited variations.
  */
 IMPLEMENT_MMETHOD(count, int, ( WString const& s ))
 {
@@ -112,8 +119,7 @@ IMPLEMENT_MMETHOD(count, int, ( WString const& s ))
 }
 
 IMPLEMENT_MMETHOD(count, int, ( WLetter const& l ))
-{
-  (void)l; // Silence warning
+{ /*<-*/(void)l;/*->*/
   return 1;
 }
 
@@ -127,6 +133,7 @@ IMPLEMENT_MMETHOD(count, int, ( WNumber const& n ))
 
   int ret = 0;
   if(k < 0) {
+    // count the minus sign
     ret = 1;
     k = -k;
   }
@@ -148,10 +155,10 @@ BOOST_AUTO_TEST_CASE(test_widget)
   WNumber wn ( 150 );
   WNumber wm (  -3 );
   WNumber wz (   0 );
-  WString ws ( "foo" );
+  WString ws ("foo");
   WLetter wl ( 'a' );
 
-  //=std::cout << "Prepare to print " << count(wn) << " characters : ";
+  //=std::cout << "Prepare to print " << count(wn) << " characters: ";
   //=  wn.show();
   //=std::cout << std::endl;
   //]

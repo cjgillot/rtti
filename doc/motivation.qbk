@@ -17,14 +17,18 @@ without modifying the class definition.
 The latter gives a solution to the classical binary method problem
 and its generalizations.
 
-[heading Behavioral patterns with __multimethods__]
+[section Behavioral patterns with __multimethods__]
 
 [import ../testsuite/mmethod/predator_prey.cpp]
 [pp_predator_prey]
 
-[heading Extending a class with unary __multimethods__]
+[endsect]
+
+[section Extending a class with unary __multimethods__]
 
 [import ../testsuite/mmethod/widget.cpp]
 [wg_widget]
+
+[endsect]
 
 [endsect]
