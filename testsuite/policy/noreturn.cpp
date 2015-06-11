@@ -11,8 +11,6 @@
 
 #include "./classes.hpp"
 
-#include "mmethod/policy/noreturn_policy.hpp"
-
 #include <boost/test/unit_test.hpp>
 
 using namespace rtti;
@@ -22,10 +20,10 @@ namespace {
 //[po_check_policy
 /*`
   The previous policy class has one disadvantage:
-  its /bad dispatch/ function cannot used
+  its /bad dispatch/ function cannot be used
   for __multimethods__ with different signatures.
   Although this is fine most of the time,
-  it may be interessant to have more general
+  it may be interessant to have more generic
   "catch-all" policy classes.
   In this example, we want to write a policy class
   whose /bad dispatch/ function ignores its arguments and
@@ -43,28 +41,32 @@ struct check_exception
 
 /*`
   We can now define our policy class.
-  The `noreturn_policy` is a utility class
-  defining the needed overloads to use
-  the policy with any arity and any return type.
+  A special form of the `bad_dispatch` function is used.
+  When the library does not find a `bad_dispatch` function
+  with the right signature,
+  it falls back to the function `bad_dispatch()` taking no argument.
  */
-struct check_policy
-: private mmethod::ambiguity::default_policy
+struct noreturn_policy
 {
-  using mmethod::ambiguity::default_policy::ambiguity_handler;
+  // use default implementation
+  static bool ambiguity_handler(size_t n, rtti_type const* a) {
+    return mmethod::ambiguity::default_policy::ambiguity_handler(n, a);
+  }
 
+  // catch-all implementation
   static void bad_dispatch() {
     BOOST_THROW_EXCEPTION( check_exception() );
   }
 };
 
 /*`
-  Then, `check_policy` is used the same way than
+  Then, `noreturn_policy` is used the same way than
   any other policy class.
  */
 //]
 
 using tags::_v;
-DECLARE_MMETHOD_POLICY(f1, int, (_v<foo&>, _v<foo&>), check_policy);
+DECLARE_MMETHOD_POLICY(f1, int, (_v<foo&>, _v<foo&>), noreturn_policy);
 
 IMPLEMENT_MMETHOD(f1, int, (foo&, foo&)) { return 0; }
 IMPLEMENT_MMETHOD(f1, int, (bar&, foo&)) { return 13; }

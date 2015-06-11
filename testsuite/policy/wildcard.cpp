@@ -21,24 +21,19 @@ namespace {
 
 //[po_wildcard_policy
 /*`
-  In this example, we want to be able
-  to flag any found ambiguity, both
-  at generation time and at call time.
-  Furthermore, we have a default implementation
-  of the __multimethod__ in the ambiguous case.
+  In this example, we want to be able to flag any found ambiguity,
+  both at generation time and at call time.
 
-  To remember the actual state,
-  we will use the following global flags :
+  To remember the ambiguities found
+  we will use the following global flags:
  */
+// set by ambiguity_handler
 int found_ambiguous  = 0;
+// set by bad_dispatch
 int called_ambiguous = 0;
 
 /*`
   We can now define our policy class.
-  It has two static member functions:
-
-  * `ambiguity_handler` (optional) modelling the /ambiguity handler/,
-  * `bad_dispatch` modelling the /bad dispatch/ function.
  */
 struct wildcard_policy {
   static bool ambiguity_handler(std::size_t, rtti_type const*);
@@ -46,9 +41,9 @@ struct wildcard_policy {
 };
 
 /*`
-  `ambiguity_handler` is responsible for the handling of
+  The function `ambiguity_handler` is responsible for the handling of
   ambiguities at table generation time.
-  It is called whenever the table generation algorithms
+  It is called whenever the table generation algorithm
   runs into an ambiguous case.
   The passed parameters are:
 
@@ -56,26 +51,29 @@ struct wildcard_policy {
   * a C array of __rtti__ type ids.
  */
 bool
-wildcard_policy::ambiguity_handler(std::size_t n, rtti_type const* types) {
+wildcard_policy::ambiguity_handler(std::size_t n, rtti_type const types[])
+{
   BOOST_CHECK_EQUAL(n, 2u);
   BOOST_CHECK_EQUAL(types[0], static_id<bar>());
   BOOST_CHECK_EQUAL(types[1], static_id<bar>());
 
   ++found_ambiguous;
-  //=std::cout << "Ambiguity found !" << std::endl;
+  //=std::cout << "Ambiguity found of arity " << n << ": "
+  //=          << types[0] << " and " << types[1] << std::endl;
 
   return false;
 }
 
 /*`
-  `bad_dispatch` will be called whenever the user
+  The function `bad_dispatch` will be called whenever the user
   tries to invoke an ambiguous overload.
   Its job is to provide a default behaviour,
-  when a specialized overload cannot be found.
+  when a suitable implementation cannot be found.
   It is called with the arguments passed to the __multimethod__.
  */
 int
-wildcard_policy::bad_dispatch(foo& arg1, foo& arg2) {
+wildcard_policy::bad_dispatch(foo& arg1, foo& arg2)
+{
   ++called_ambiguous;
   /*<-*/(void)arg1; (void)arg2;/*->*/
   //=std::cout << "Bad dispatch called with arguments: "
@@ -94,17 +92,17 @@ wildcard_policy::bad_dispatch(foo& arg1, foo& arg2) {
   as fourth argument.
  */
 using tags::_v;
-DECLARE_MMETHOD_POLICY(f1, int, (_v<foo&>, _v<foo&>), wildcard_policy);
+DECLARE_MMETHOD_POLICY(wild, int, (_v<foo&>, _v<foo&>), wildcard_policy);
 
 /*`
-  Then, the implementation of the __multimethod__ need
+  Then, the implementations of the __multimethod__ need
   not care about the policy.
   The policy is perfectly transparent to the user
   providing the overloads.
  */
-IMPLEMENT_MMETHOD(f1, int, (foo&, foo&)) { return 0; }
-IMPLEMENT_MMETHOD(f1, int, (bar&, foo&)) { return 13; }
-IMPLEMENT_MMETHOD(f1, int, (foo&, bar&)) { return 8; }
+IMPLEMENT_MMETHOD(wild, int, (foo&, foo&)) { return 0; }
+IMPLEMENT_MMETHOD(wild, int, (bar&, foo&)) { return 13; }
+IMPLEMENT_MMETHOD(wild, int, (foo&, bar&)) { return 8; }
 
 // bar-bar is ambiguous : bar-foo and foo-bar are equally good matches
 //]
@@ -117,22 +115,22 @@ BOOST_AUTO_TEST_CASE(test_wildcard) {
 
   //[po_wildcard_use
   /*`
-    The runtime bahaviour is then the expected one :
+    The runtime behaviour is then the expected one :
    */
   // force generation
-  f1.generate();
+  wild.generate();
 
   // ambiguity_handler has been called
   BOOST_CHECK_EQUAL( found_ambiguous, 1 );
 
   // regular calls
-  BOOST_CHECK_EQUAL( f1(a, x),  0 ); // (1-1 case)
-  BOOST_CHECK_EQUAL( f1(a, y),  8 ); // (1-2 case)
-  BOOST_CHECK_EQUAL( f1(b, x), 13 ); // (2-1 case)
+  BOOST_CHECK_EQUAL( wild(a, x),  0 ); // (1-1 case)
+  BOOST_CHECK_EQUAL( wild(a, y),  8 ); // (1-2 case)
+  BOOST_CHECK_EQUAL( wild(b, x), 13 ); // (2-1 case)
   BOOST_CHECK_EQUAL( called_ambiguous, 0 );
 
   // ambiguous call
-  BOOST_CHECK_EQUAL( f1(b, y), 42 ); // (2-2 case : ambiguous)
+  BOOST_CHECK_EQUAL( wild(b, y), 42 ); // (2-2 case : ambiguous)
   BOOST_CHECK_EQUAL( called_ambiguous, 1 );
   //]
 }

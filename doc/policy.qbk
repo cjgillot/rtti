@@ -8,38 +8,42 @@
 [section:policy Ambiguity resolution]
 
 Unlike usual virtual methods, __multimethods__ are subject to dispatch ambiguity.
-The __multimethod__ mechanism in split in three parts:
+At first call, the dispatch table is generated,
+and it will be used to choose the correct behaviour at each subsequent call.
 
-* table generation
-* dispatch resolution
-* call to the code pointer
-
-When an ambiguity exists, it is flagged first at the table generation stage.
-At this point, an /ambiguity handler/ is called, to register the case, and
+When an ambiguity exists, it is flagged first at this table generation stage.
+At this point, an /ambiguity handler/ is called to resolve it.
+If the problem cannot be resolved,
 a special placeholder is inserted in the dispatch table.
 The placeholder is a pointer to a /bad dispatch/ function.
-At dispatch resolution, the dispatch algorithm does not care about ambiguities,
-thanks to the placeholder.
-At call time, the /bad dispatch/ will be called and a special action will be taken.
+
+Thanks to this placeholder, at dispatch resolution,
+the algorithm need not care about ambiguities.
+Then, if an ambiguous call is made,
+the /bad dispatch/ function is called.
 
 By default, the /ambiguity handler/ does nothing,
 and the /bad dispatch/ action throws `rtti::bad_dispatch`.
 This behaviour can be customized using /policy/ classes,
-passed to the multimethod declaration.
+passed to the __multimethod__ declaration.
 
 [import ../testsuite/policy/classes.hpp]
 
-For this section, we will use the following set of classes:
+In this section, we will use the following set of classes:
 [po_classes]
 
-[heading Customized ambiguity resolution using /policy/ class]
+[section Customized ambiguity resolution using /policy/ class]
 
 [import ../testsuite/policy/wildcard.cpp]
 [po_wildcard]
 
-[heading Reusing policy class]
+[endsect]
+
+[section Reusing policy class]
 
 [import ../testsuite/policy/noreturn.cpp]
 [po_policy]
+
+[endsect]
 
 [endsect]

@@ -20,7 +20,7 @@ struct default_policy {
     BOOST_THROW_EXCEPTION( rtti::bad_dispatch() );
   }
 
-  static bool ambiguity_handler(size_t, rtti_type*) {
+  static bool ambiguity_handler(size_t, rtti_type const*) {
     return false;
   }
 };
