@@ -6,6 +6,7 @@
 // Expected definitions:
 // * PTR(T)
 // * TESTNAME
+// * CALL(f,x)
 
 using namespace rtti::mmethod;
 

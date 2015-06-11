@@ -14,25 +14,42 @@ In order to be able to call a __multimethod__ directly with smart pointers,
 we provide extensible support for pointer-like objects,
 without need to unwrap and reconstruct the smart pointers.
 
-[heading Using __shared_ptr__]
+[section Using __shared_ptr__]
 
 [import ../testsuite/smart_ptr/boost_shared_ptr.cpp]
 [bsp_boost_shared_ptr]
 
-[heading Adding a new smart pointer type]
+[endsect]
+
+[section Supported pointer types]
+
+By default, only raw pointers and references (both lvalue and rvalue)
+can appear inside the virtual tag `_v<>` without further customization.
+Since adding a new pointer type to the library can be cumbersome
+(see [link mmethod_doc.smart_ptr.add next paragraph] for an example),
+the library provides implementations for some current smart pointers.
+The supported classes are:
+
+[table Supported smart pointers
+    [[ Smart pointer class ][ Included file ]]
+    [[ `boost::shared_ptr` ][ [@../include/mmethod/smart_ptr/boost_shared_ptr.hpp =mmethod/smart_ptr/boost_shared_ptr.hpp=] ]]
+    [[ `boost::unique_ptr` (partial)   ][ [@../include/mmethod/smart_ptr/boost_unique_ptr.hpp   =mmethod/smart_ptr/boost_unique_ptr.hpp= ] ]]
+    [[ `boost::intrusive_ptr` ][ [@../include/mmethod/smart_ptr/boost_intrusive_ptr.hpp =mmethod/smart_ptr/boost_intrusive_ptr.hpp=] ]]
+    [[ `std::shared_ptr`   ][ [@../include/mmethod/smart_ptr/stl_shared_ptr.hpp   =mmethod/smart_ptr/stl_shared_ptr.hpp= ] ]]
+    [[ `std::unique_ptr` (partial)   ][ [@../include/mmethod/smart_ptr/stl_unique_ptr.hpp   =mmethod/smart_ptr/stl_unique_ptr.hpp= ] ]]
+]
+
+The `unique_ptr` is only partially supported because of the deleters.
+There is no way to convert a deleter for type /T/ into a deleter
+for a subtype /U/ in general, although the converse is possible.
+
+[endsect]
+
+[section:add Adding a new pointer type]
 
 [import ../testsuite/smart_ptr/smart_ptr.cpp]
 [sm_smart_ptr]
 
-[heading Supported smart pointers]
-
-__mmethod__ comes with some supported smart pointer classes.
-For now, the supported smart pointers are:
-
-[table Supported smart pointers
-    [[ Smart pointer class ][ Included file ]]
-    [[ `boost::shared_ptr` ][ [@../include/mmethod/smart_ptr/boost_shared_ptr.hpp =mmethod/smart_ptr/boost_smart_ptr.hpp=] ]]
-    [[ `std::shared_ptr`   ][ [@../include/mmethod/smart_ptr/stl_shared_ptr.hpp   =mmethod/smart_ptr/stl_shared_ptr.hpp= ] ]]
-]
+[endsect]
 
 [endsect]

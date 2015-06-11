@@ -5,10 +5,6 @@
 
 //[sm_smart_ptr
 /*`
-  In order to demonstrate the use of smart pointers
-  with __mmethod__, here is a example of dispatch through
-  a custom smart pointer.
-
   [sm_pointer]
   [sm_specialize]
   [sm_declare]
@@ -24,18 +20,19 @@ using namespace rtti::mmethod;
 
 //[sm_pointer
 /*`
-  In this section, we will register a toy smart pointer
-  for use with __rtti__.
-  The pointer type is given here:
+  In order to demonstrate the use of smart pointers
+  with __mmethod__, here is a example of dispatch through
+  a custom (dumb) pointer.
+  The toy class we want to use is the following:
  */
+// Do-nothing wrapper around raw pointer
 template<typename T>
 class noop_pointer {
 public:
   // Constructor taking pointer
-  noop_pointer(): px(NULL) {}
-  noop_pointer(T* p): px(p) {}
+  explicit noop_pointer(T* p = NULL): px(p) {/**/}
 
-  // Destructor: do nothing (no-op pointer)
+  // Destructor: no-op
   ~noop_pointer() {/**/}
 
   // Copy
@@ -81,30 +78,46 @@ namespace rtti {
 // begin partial specialization
 template<typename T>
 struct pointer_traits<noop_pointer<T> > {
-  typedef noop_pointer<T> pointer_type;                           // pointer being manipulated
+  // pointer being manipulated
+  typedef noop_pointer<T> pointer_type;
 
-  typedef typename boost::remove_cv<T>::type class_type;          // class being pointed to
+  // class being pointed to
+  typedef typename boost::remove_cv<T>::type class_type;
 
-  static T&     get(pointer_type const& v) { return *v; }         // fetch the pointed value
-  static bool valid(pointer_type const& v) { return v.valid(); }  // check the pointer validity
+  // check the pointer validity
+  static bool valid(pointer_type const& v) { return v.valid(); }
 
-  /*`
-    The following method is used by the __mmethod__ system
-    to downcast the passed pointers.
+  // fetch the pointed value
+  static T& get(pointer_type const& v) { return *v; }
 
-    The template parameter is the target pointer type.
-    The function argument is the source pointer.
-    `cast<U>(p)` must return a pointer of type `U`, with value
-    the downcasted pointer `p`.
-   */
+  // downcast the pointer
   template<typename U>
-  static typename rtti::traits_detail::remove_all<U>::type
-  cast(pointer_type const& v) {
-    typedef typename rtti::traits_detail::remove_all<U>::type Uclass;
-    typedef typename Uclass::element_type O;
-    return Uclass(boost::polymorphic_downcast<O*>(v.get()));
-  }
+  static typename boost::remove_reference<U>::type
+  cast(pointer_type const& v);
 };
+
+/*`
+  The following method is used by the __mmethod__ system
+  to downcast the passed pointers.
+
+  The template parameter is the target pointer type.
+  The function argument is the source pointer.
+  `cast<U>(p)` must return an object convertible to type `U`,
+  with value the pointer `p` casted to the right destination type.
+  The type `U` will be the exact type expected by the
+  __multimethod__ implementation,
+  so it is often a constant reference to `noop_pointer`.
+ */
+template<typename T>
+template<typename U>
+typename boost::remove_reference<U>::type
+pointer_traits<noop_pointer<T> >::cast(pointer_type const& v)
+{
+  typedef typename rtti::traits_detail::remove_all<U>::type Uclass;
+  typedef typename Uclass::element_type O;
+  O* po = boost::polymorphic_downcast<O*>(v.get());
+  return Uclass(po);
+}
 
 } // namespace rtti
 //]
@@ -113,20 +126,21 @@ namespace {
 
 //[sm_declare
 /*`
-  The __shared_ptr__ type can now be used as a dispatched
+  Our `noop_pointer` type can now be used as a dispatched
   parameter, without further alteration of the __multimethod__ syntax.
  */
 using tags::_v;
 DECLARE_MMETHOD(smp, int, (_v<noop_pointer<foo> const&>));
 
 /*`
-  The __shared_ptr__ type can also be used on the specialized function.
-  [note
-    Any type can be passed as a receiving argument in the specializations.
-    The type must be a registered pointer type from __rtti__ point of view.
-    This type will be passed without modification as the `U` template parameter
-    to the `pointer_traits<>::cast<>()` function.
-  ]
+  Our pointer type can now be used on the implementation function.
+  When a call will be performed,
+  the function `pointer_traits<noop_pointer<foo> >::cast<U>`
+  will be called,
+  with `U` the exact type appearing in the implementation definition.
+  Here, the needed instantiations are respectively
+  `U = noop_pointer<foo> const&`, `U = noop_pointer<bar> const&`
+  and `U = noop_pointer<baz> const&`.
  */
 IMPLEMENT_MMETHOD(smp, int, (noop_pointer<foo> const& a)) { return a->f(); }
 IMPLEMENT_MMETHOD(smp, int, (noop_pointer<bar> const& a)) { return a->g(); }
@@ -138,8 +152,10 @@ IMPLEMENT_MMETHOD(smp, int, (noop_pointer<baz> const& a)) { return 2 * a->f(); }
 BOOST_AUTO_TEST_CASE(test_smart_ptr) {
   //[sm_invoke
   /*`
-    Invocation of the __multimethod__ is also transparent
-    for the user.
+    Finally, the invocation of the __multimethod__
+    is transparent for the user,
+    everything behaves as with a native function taking `noop_pointer<foo>`
+    by constant reference.
    */
   noop_pointer<foo> f ( new foo );
   noop_pointer<foo> r ( new bar );

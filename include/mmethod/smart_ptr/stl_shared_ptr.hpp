@@ -45,9 +45,8 @@ cast_detail<std::shared_ptr<U> > {
   typedef typename boost::add_pointer<U>::type Uptr;
 
   static OutClass cast(pointer_type const& v) {
-    return OutClass(
-      v, traits_detail::unsafe_casting<Uptr>::eval(v.get())
-    );
+    Uptr up = traits_detail::unsafe_casting<Uptr>::eval(v.get());
+    return OutClass(v, up);
   }
 };
 

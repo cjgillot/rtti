@@ -3,18 +3,18 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MMETHOD_BOOST_SHARED_PTR_HPP
-#define BOOST_MMETHOD_BOOST_SHARED_PTR_HPP
+#ifndef BOOST_MMETHOD_BOOST_INTRUSIVE_PTR_HPP
+#define BOOST_MMETHOD_BOOST_INTRUSIVE_PTR_HPP
 
 #include "mmethod/traits/pointer_traits.hpp"
 
-#include <boost/shared_ptr.hpp>
+#include <boost/intrusive_ptr.hpp>
 
 namespace rtti {
 
 template<typename T>
-struct pointer_traits<boost::shared_ptr<T> > {
-  typedef boost::shared_ptr<T> pointer_type;
+struct pointer_traits<boost::intrusive_ptr<T> > {
+  typedef boost::intrusive_ptr<T> pointer_type;
 
   typedef typename boost::remove_cv<T>::type class_type;
 
@@ -36,15 +36,15 @@ public:
 
 template<typename T>
 template<typename U>
-struct pointer_traits<boost::shared_ptr<T> >::
-cast_detail<boost::shared_ptr<U> > {
+struct pointer_traits<boost::intrusive_ptr<T> >::
+cast_detail<boost::intrusive_ptr<U> > {
 
-  typedef boost::shared_ptr<U> OutClass;
+  typedef boost::intrusive_ptr<U> OutClass;
   typedef typename boost::add_pointer<U>::type Uptr;
 
   static OutClass cast(pointer_type const& v) {
     Uptr up = traits_detail::unsafe_casting<Uptr>::eval(v.get());
-    return OutClass(v, up);
+    return OutClass(up);
   }
 };
 
