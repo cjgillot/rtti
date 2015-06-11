@@ -29,13 +29,15 @@ namespace {
 
 //[ba_foo
 /*`
+  [heading A new hierarchy]
   In order to declare a new class hierarchy,
   each root class /K/ must derive from [^base_rtti</K/>].
   It creates all the necessary code in order
   to have everything work properly.
  */
-struct foo
-: base_rtti<foo> {
+class foo
+: public base_rtti<foo>
+{
 public:
   virtual ~foo() {}
 };
@@ -43,6 +45,7 @@ public:
 
 //[ba_bar
 /*`
+  [heading Adding classes to the hierarchy]
   After each root class has been declared, you can
   add new classes using `implement_rtti` template.
   To extend with class /T/, it must derive
@@ -52,27 +55,28 @@ public:
  */
 using boost::mpl::vector;
 
-struct bar
-: foo
-, implement_rtti<bar, vector<foo> >
+class bar
+: public foo
+, public implement_rtti<bar, vector<foo> >
 {};
 
-struct baz
-: foo
-, implement_rtti<baz, vector<foo> >
+class baz
+: public foo
+, public implement_rtti<baz, vector<foo> >
 {};
 
-struct lap
-: bar
-, implement_rtti<lap, vector<bar> >
+class lap
+: public bar
+, public implement_rtti<lap, vector<bar> >
 {};
 /*`
-  [important All the classes appearing in /Bases/
-     must appear before `implement_rtti`
-     in the base class list.
-     Base classes that do not appear in /Bases/
-     (for example implementation helpers)
-     can come anywhere in the list.
+  [important All the classes appearing in /Bases/ must
+    be public bases of the class
+    and appear before `implement_rtti` in the base class list.
+
+    Base classes that do not appear in /Bases/
+    (for example implementation helpers and private bases)
+    can come anywhere in the list.
   ]
  */
 //]
@@ -82,6 +86,7 @@ struct lap
 BOOST_AUTO_TEST_CASE(test_basic) {
   //[ba_use
   /*`
+    [heading Runtime identification]
     __rtti__ provides each class an identifier of type
     `rtti_type`. This id can be retrieved :
 
@@ -116,6 +121,7 @@ BOOST_AUTO_TEST_CASE(test_hierarchy) {
 
   //[ba_node
   /*`
+    [heading Walking the hierarchy at runtime]
     More thorough information can be asked
     from __rtti__ using the nodes.
     Each class is associated a node,
@@ -156,5 +162,12 @@ BOOST_AUTO_TEST_CASE(test_hierarchy) {
   h = rtti_get_base(h);
   BOOST_CHECK_EQUAL( h, static_node<foo>() );
   BOOST_REQUIRE_EQUAL( rtti_get_base_arity(h), 0 );
+
+  /*`
+    [note It is possible to go back and forth between
+      the class id and the node value using the functions
+      `rtti_get_id` and `rtti_get_node`.
+    ]
+   */
   //]
 }

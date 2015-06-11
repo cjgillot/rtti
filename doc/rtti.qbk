@@ -12,7 +12,7 @@ runtime reflexion to your C++ classes.
 Namely, it will register to each class
 a unique id and the set of its base classes.
 
-[heading Accessing the library]
+[section Accessing the library]
 
 In order to use the __rtti__ library, you need to include this file :
 
@@ -27,19 +27,27 @@ issued the following using directive :
     using namespace __rtti_ns__;
 ``
 
-[heading Basic usage]
+[endsect]
+
+[section Basic usage]
 
 [import ../testsuite/rtti/basic.cpp]
 [ba_basic]
 
-[heading Multiple inheritance]
+[endsect]
+
+[section Multiple inheritance]
 
 [import ../testsuite/rtti/multiple.cpp]
 [mu_multiple]
 
-[heading Importing existing classes]
+[endsect]
+
+[section Importing existing classes]
 
 [import ../testsuite/rtti/foreign.cpp]
 [fo_foreign]
+
+[endsect]
 
 [endsect]
