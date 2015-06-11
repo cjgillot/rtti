@@ -5,15 +5,15 @@
           http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section:intro Introduction]
+[section:intro Introduction and design]
 
 Multiple dispatch is a technique used in object-oriented programming,
 in which a function can be dynamically dispatched on the type of
-several of its arguments.
+several arguments.
 
-C++ already provides intrusive single dispatch using virtual functions :
+C++ provides intrusive single dispatch using virtual functions:
 any dynamic behavior shall be explicitly allowed with a virtual function declaration
-or using the visitor design pattern.
+or using hand-crafted visitor pattern.
 
 It the rest of this document, we will denote by __multimethod__
 functions using a multiple dispatch scheme.
@@ -21,45 +21,51 @@ functions using a multiple dispatch scheme.
 [heading How it works]
 
 In order to create a correct dispatch scheme, a library needs
-a runtime access to the involved class hierarchy. This is done
-via __rtti__ sub-library.
+a runtime access to the involved class hierarchy.
+This is done via __rtti__ sub-library.
 
-Once the guilty classes are defined, __multimethods__ can be declared at namespace scope,
-using a specially defined macro. Then this multimethod
-can be given several implementations, suited to corresponding argument
-pairs. These implementations can span multiple translation unit.
+Once the guilty classes are defined and registered,
+__multimethods__ can be declared at namespace scope,
+using a specially defined macro.
+Then this __multimethod__ can be given several implementations,
+suited to corresponding argument pairs.
+Since the declaration of these implementations need not be in a single translation unit,
+the __multimethod__ involves open-world dispatch,
+while for example visitor pattern only allows bounded sets of implementation.
 
 At load time, all the implementations register themselves automatically.
-The dispatch table computation is made at the first call to the __multimethod__.
+Then, a dispatch table has to be computed
+before the first call to the __multimethod__.
 
 [heading Caracteristics]
 
-At first call, the runtime stores several helper tables
-used for later function retrieval :
+At first call, the __multimethod__ runtime stores several helper tables
+used for later function retrieval:
 
 * the /invoker table/, storing code pointers
 * the /poles tables/, storing condensed hierarchy
 
-At call time, for each argument, the library looks
-for the closest type in the /poles table/ and uses this
-type for /invoker table/ lookup.
+At call time, for each argument, the library looks for the closest type in the /poles table/,
+theb uses this type as key for a lookup in /invoker table/.
 The generation of the /invoker table/ uses the algorithm described in
 [footnote Peter Pirkelbauer, Yuriy Solodkyy, and Bjarne Stroustrup. 2007. Open multi-methods for c++. In Proceedings of the 6th international conference on Generative programming and component engineering (GPCE '07). ACM, New York, NY, USA, 123-134. DOI=10.1145/1289971.1289993].
 This algorithm provides an efficient method to store the code pointers.
-/Poles table/ is named and computed from
-[footnote Eric Dujardin, Eric Amiel, and Eric Simon. 1998. Fast algorithms for compressed multimethod dispatch table generation. ACM Trans. Program. Lang. Syst. 20, 1 (January 1998), 116-165. DOI=10.1145/271510.271521].
-This model reduce the number of classes involved in the /invoker table/ generation.
+In order to reduce the memory consumption, /poles table/
+[footnote Eric Dujardin, Eric Amiel, and Eric Simon. 1998. Fast algorithms for compressed multimethod dispatch table generation. ACM Trans. Program. Lang. Syst. 20, 1 (January 1998), 116-165. DOI=10.1145/271510.271521]
+are used to reduce duplication in the /invoker table/.
+Thanks to this model, the number of classes involved in the /invoker table/ generation is kept low.
 The table is then stored in a hash table, used to retrieve and memorize class associations.
 
-These technique enables very fast dispatch, though keeping
-stored tabled small. Moreover, this technique handles well introduction
-of new derived classes, without need of any recomputation of the tables.
+These technique enables very fast dispatch, while keeping stored tabled small.
+Moreover, this technique handles well introduction of new classes,
+without need of any recomputation of the tables.
 
 [heading Openness]
 
 The ability to define __multimethods__ for closed classes gives an interesting alternative to usual visitor design pattern.
-First, __multimethods__ can completely replace visitors as a closed extension method,
-but those can also be used to create new out-of-class functions with late binding.
+First, __multimethods__ can completely replace visitors as a closed extension method.
+But those can also be used to create new out-of-class functions with late binding.
+They become kinds of non-intrusive virtual functions.
 
 [heading Limitations]
 
