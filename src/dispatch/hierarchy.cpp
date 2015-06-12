@@ -40,3 +40,32 @@ hierarchy_t::fetch(rtti_hierarchy hh) const {
   BOOST_ASSERT(ret);
   return ret;
 }
+
+klass_t const*
+hierarchy_t::try_fetch_from(rtti_hierarchy hh) const {
+  klass_t const* ret = try_fetch(hh);
+
+  if(ret)
+    return ret;
+
+  // upcast to find something
+  foreach_base(rtti_hierarchy bb, hh) {
+    klass_t const* pole = try_fetch_from(bb);
+
+    if(pole && ret) {
+      BOOST_ASSERT(pole == ret);
+    }
+    else if(!ret) {
+      ret = pole;
+    }
+  }
+
+  return ret;
+}
+
+klass_t const*
+hierarchy_t::fetch_from(rtti_hierarchy hh) const {
+  klass_t const* ret = try_fetch_from(hh);
+  BOOST_ASSERT(ret);
+  return ret;
+}

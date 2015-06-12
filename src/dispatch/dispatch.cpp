@@ -84,7 +84,7 @@ static void dispatch_one(
 
       // generate classes
       for(size_t k = 0; k < arity; ++k)
-        newsig.array_ref()[k] = pole_table[k].fetch(
+        newsig.array_ref()[k] = pole_table[k].fetch_from(
           rtti::rtti_get_node(amb[k])
         );
 

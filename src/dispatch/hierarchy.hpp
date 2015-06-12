@@ -56,6 +56,11 @@ public:
   //!\return NULL is not found
   klass_t const* try_fetch(rtti_hierarchy) const;
 
+  //!\brief Like try_fetch, but upcast until found
+  klass_t const* try_fetch_from(rtti_hierarchy) const;
+  //!\brief Like fetch, but upcast until found
+  klass_t const* fetch_from(rtti_hierarchy) const;
+
 private:
   //!\brief Register new node in hierarchy.
   void add_pole(rtti_hierarchy, klass_t::bases_type&);
