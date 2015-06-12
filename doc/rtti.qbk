@@ -31,21 +31,21 @@ issued the following using directive :
 
 [section Basic usage]
 
-[import ../testsuite/rtti/basic.cpp]
+[import ../test/rtti/basic.cpp]
 [ba_basic]
 
 [endsect]
 
 [section Multiple inheritance]
 
-[import ../testsuite/rtti/multiple.cpp]
+[import ../test/rtti/multiple.cpp]
 [mu_multiple]
 
 [endsect]
 
 [section Importing existing classes]
 
-[import ../testsuite/rtti/foreign.cpp]
+[import ../test/rtti/foreign.cpp]
 [fo_foreign]
 
 [endsect]

@@ -19,14 +19,14 @@ and its generalizations.
 
 [section Behavioral patterns with __multimethods__]
 
-[import ../testsuite/mmethod/predator_prey.cpp]
+[import ../test/mmethod/predator_prey.cpp]
 [pp_predator_prey]
 
 [endsect]
 
 [section Extending a class with unary __multimethods__]
 
-[import ../testsuite/mmethod/widget.cpp]
+[import ../test/mmethod/widget.cpp]
 [wg_widget]
 
 [endsect]

@@ -18,7 +18,7 @@ Using a ISO C++ construct, RTTI provides access to a unique integer per class in
 For each class, its bases' ids are also exposed.
 This feature allows dynamic introspection of the hierarchy.
 
-See *testsuite/rtt/* folder for examples using this library.
+See *test/rtt/* folder for examples using this library.
 
 ## MMETHOD library
 
@@ -34,7 +34,7 @@ and invoke mmethods. *mmethod.hpp*
 *implement.hpp* exports everything needed to implement
 formerly declared mmethods.
 
-See *testsuite/* folder for examples using this library.
+See *test/mmethod/* folder for examples using this library.
 
 ## Supported compilers
 

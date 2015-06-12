@@ -16,7 +16,7 @@ without need to unwrap and reconstruct the smart pointers.
 
 [section Using __shared_ptr__]
 
-[import ../testsuite/smart_ptr/boost_shared_ptr.cpp]
+[import ../test/smart_ptr/boost_shared_ptr.cpp]
 [bsp_boost_shared_ptr]
 
 [endsect]
@@ -47,7 +47,7 @@ for a subtype /U/ in general, although the converse is possible.
 
 [section:add Adding a new pointer type]
 
-[import ../testsuite/smart_ptr/smart_ptr.cpp]
+[import ../test/smart_ptr/smart_ptr.cpp]
 [sm_smart_ptr]
 
 [endsect]

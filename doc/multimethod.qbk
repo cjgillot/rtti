@@ -26,49 +26,49 @@ issued the following using directive :
     using namespace __mmethod_ns__;
 ``
 
-[import ../testsuite/classes.hpp]
+[import ../test/classes.hpp]
 [hi_hier]
 
 [endsect]
 
 [section Declaring __multimethods__]
 
-[import ../testsuite/mmethod/unary.cpp]
+[import ../test/mmethod/unary.cpp]
 [un_unary]
 
 [endsect]
 
 [section:mixed Using neutral parameters]
 
-[import ../testsuite/mmethod/mixed.cpp]
+[import ../test/mmethod/mixed.cpp]
 [mi_mixed]
 
 [endsect]
 
 [section Binary __multimethods__]
 
-[import ../testsuite/mmethod/binary.cpp]
+[import ../test/mmethod/binary.cpp]
 [bi_binary]
 
 [endsect]
 
 [section Using covariant return types]
 
-[import ../testsuite/mmethod/covariant.cpp]
+[import ../test/mmethod/covariant.cpp]
 [cov_covariant]
 
 [endsect]
 
 [section Using __multimethod__ type]
 
-[import ../testsuite/mmethod/prefetch.cpp]
+[import ../test/mmethod/prefetch.cpp]
 [pr_prefetch]
 
 [endsect]
 
 [section Explicit table generation]
 
-[import ../testsuite/mmethod/generate.cpp]
+[import ../test/mmethod/generate.cpp]
 [ge_generate]
 
 [endsect]

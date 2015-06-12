@@ -5,6 +5,10 @@ os:
 
 sudo: required
 
+env:
+  global:
+   - TARGET=test
+
 matrix:
   include:
     - compiler: clang
@@ -31,9 +35,8 @@ install:
   - sudo apt-get install -qq -y valgrind boost1.55
 
 script:
-  - if [ "${VARIANT}" == "" ]; then export VARIANT=debug; fi
-  - if [ "${TOOLSET}" != "" ]; then b2 toolset=${TOOLSET} debug-symbols=off variant=${VARIANT} testsuite; fi
-  - if [ "${VALGRIND}" != "" ]; then find -type f -executable -name testsuite | xargs -i% valgrind --error-exitcode=-1 %; fi
+  - python script.py script
+  - if [ "${VALGRIND}" != "" ]; then find -type f -executable -name test | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success: python script.py after_success
 after_failure: python script.py after_failure

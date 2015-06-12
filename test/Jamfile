@@ -7,7 +7,7 @@ using testing ;
 
 lib unit_test_framework : : <name>boost_unit_test_framework <search>/usr/lib ;
 
-unit-test testsuite
+unit-test test
   : [ glob-tree *.cpp ]
   : <library>/library//rtti
     <library>unit_test_framework

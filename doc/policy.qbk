@@ -27,21 +27,21 @@ and the /bad dispatch/ action throws `rtti::bad_dispatch`.
 This behaviour can be customized using /policy/ classes,
 passed to the __multimethod__ declaration.
 
-[import ../testsuite/policy/classes.hpp]
+[import ../test/policy/classes.hpp]
 
 In this section, we will use the following set of classes:
 [po_classes]
 
 [section Customized ambiguity resolution using /policy/ class]
 
-[import ../testsuite/policy/wildcard.cpp]
+[import ../test/policy/wildcard.cpp]
 [po_wildcard]
 
 [endsect]
 
 [section Reusing policy class]
 
-[import ../testsuite/policy/noreturn.cpp]
+[import ../test/policy/noreturn.cpp]
 [po_policy]
 
 [endsect]

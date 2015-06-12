@@ -29,5 +29,5 @@ build-project src ;
 build-project benchmark ;
 
 explicit doc ;
-explicit testsuite ;
+explicit test ;
 
