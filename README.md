@@ -12,7 +12,7 @@ Implementation of multimethods in C++.
 ## Rtti library
 
 This library is an efficient class hierarchy introspection,
-working as a drop-in replacement to C++ ``` cpp typeid ``` construct.
+working as a drop-in replacement to C++ ``` typeid ``` construct.
 
 Using a ISO C++ construct, RTTI provides access to a unique integer per class in the hierarchy.
 For each class, its bases' ids are also exposed.
