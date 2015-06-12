@@ -18,7 +18,7 @@
 
 #include "../classes.hpp"
 
-#include <boost/move/utility_core.hpp>
+#include <boost/move/utility.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/cast.hpp>
 

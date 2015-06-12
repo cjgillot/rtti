@@ -14,5 +14,5 @@
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 #include <utility>
 #else
-#include <boost/move/utility_core.hpp>
+#include <boost/move/utility.hpp>
 #endif
