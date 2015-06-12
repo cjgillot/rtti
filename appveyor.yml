@@ -24,7 +24,9 @@ build_script: python ../script.py build_script
 after_build: python ../script.py after_build
 
 before_test:
-test_script: "C:\boost-build\bin\b2.exe" testsuite toolset=%TOOLSET%
+test_script:
+  - set PATH=%PATH%;C:\boost-build\bin
+  - b2.exe testsuite toolset=%TOOLSET%
 
 after_test: python ../script.py after_test
 on_success: python ../script.py on_success
