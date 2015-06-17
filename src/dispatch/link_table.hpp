@@ -16,8 +16,7 @@
 class link_table
 : private boost::noncopyable
 {
-public:
-  typedef std::pair<signature_t, invoker_t> overload_t;
+private:
   typedef boost::variant<boost::none_t, overload_t, signature_t> link_t;
   typedef boost::unordered_map<signature_t, link_t> dispatch_link_t;
 

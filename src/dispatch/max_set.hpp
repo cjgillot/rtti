@@ -16,8 +16,6 @@ class max_set
 : private boost::noncopyable
 {
 public:
-  typedef link_table::overload_t overload_t;
-
   // We use a list because filter() needs to erase elements
   // while iterating. list is the only non-assiciative container
   // guaranteeing iterators upon erase.

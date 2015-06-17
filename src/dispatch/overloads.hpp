@@ -21,6 +21,7 @@
 
 // the invoker is null in case of bad dispatch
 typedef boost::unordered_map<signature_t, invoker_t> dispatch_t;
+typedef dispatch_t::value_type overload_t;
 
 inline std::size_t hash_value(const signature_t& s)
 {
