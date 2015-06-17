@@ -16,9 +16,9 @@
 namespace rtti {
 namespace mmethod {
 
-template<typename Tag, typename Ret>
+template<typename Policy, typename Tag, typename Ret>
 BOOST_NOINLINE
-void dispatch<Tag,Ret>::initialize() {
+void dispatch<Policy,Tag,Ret>::initialize() {
   enum { arity = detail::access::traits<Tag>::vsize };
 
   detail::init_table(arity, detail::get_register<Tag>::early());
@@ -47,9 +47,9 @@ struct seal_poles {
 
 } // namespace dispatch_detail
 
-template<typename Tag, typename Ret>
+template<typename Policy, typename Tag, typename Ret>
 BOOST_NOINLINE
-void dispatch<Tag,Ret>::seal() {
+void dispatch<Policy,Tag,Ret>::seal() {
   enum {
     arity = detail::access::traits<Tag>::vsize
   , btset = detail::access::traits<Tag>::type_bitset

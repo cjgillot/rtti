@@ -29,7 +29,7 @@ protected: // trampoline_type
   typedef typename trampoline_type::sig_t func_t;
 
 private:   // dispatch_type
-  typedef dispatch<Tag,Ret> dispatch_type;
+  typedef dispatch<Policy,Tag,Ret> dispatch_type;
   dispatch_type m_dispatch;
 
 protected:

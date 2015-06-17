@@ -40,9 +40,9 @@ struct save_poles {
 
 } // namespace dispatch_detail
 
-template<typename Tag, typename Ret>
+template<typename Policy, typename Tag, typename Ret>
 template<typename K, typename F>
-void dispatch<Tag,Ret>::insert(F const& f) {
+void dispatch<Policy, Tag,Ret>::insert(F const& f) {
   enum {
     arity = detail::access::traits<Tag>::vsize
   , btset = detail::access::traits<Tag>::type_bitset

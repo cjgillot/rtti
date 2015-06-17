@@ -70,9 +70,9 @@ struct fetch_invoker<1, Tag, BTS> {
 } // namespace dispatch_detail
 
 /// main dispatch function
-template<typename Tag, typename Ret>
+template<typename Policy, typename Tag, typename Ret>
 template<typename Tuple>
-invoker_t dispatch<Tag, Ret>::fetch(Tuple const& args) const {
+invoker_t dispatch<Policy, Tag, Ret>::fetch(Tuple const& args) const {
   // verify we have sealed the table
   BOOST_ASSERT(detail::get_register<Tag>::early() == NULL);
 

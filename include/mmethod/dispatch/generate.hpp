@@ -14,8 +14,8 @@ namespace rtti {
 namespace mmethod {
 
 /// main dispatch function
-template<typename Tag, typename Ret>
-dispatch<Tag, Ret>::dispatch() {
+template<typename Policy, typename Tag, typename Ret>
+dispatch<Policy, Tag, Ret>::dispatch() {
   struct initializer_t {
     initializer_t() { dispatch::initialize(); }
     void touch() {}
@@ -24,9 +24,9 @@ dispatch<Tag, Ret>::dispatch() {
   initializer.touch();
 }
 
-template<typename Tag, typename Ret>
+template<typename Policy, typename Tag, typename Ret>
 template<typename RootArgs>
-void dispatch<Tag, Ret>::generate() const {
+void dispatch<Policy, Tag, Ret>::generate() const {
   struct sealer_t {
     explicit sealer_t(dispatch const* self) {
       // insert defining signature
