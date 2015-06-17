@@ -73,27 +73,27 @@ static void dispatch_one(
 
     std::size_t const arity = sig.array().size();
 
-    std::vector<rtti_type> amb; amb.resize(arity);
+    std::vector<rtti_hierarchy> amb; amb.resize(arity);
 
-    for(std::size_t k = 0; k < arity; ++k)
-      amb[k] = sig.array()[k]->get_id();
+    for(std::size_t k = 0; k < arity; ++k) {
+      klass_t const* klass = sig.array()[k];
+      amb[k] = rtti_get_node(klass->get_id());
+    }
 
-    bool rebind = ahndl(arity, amb.data());
-    if(rebind) {
+    try {
+      ahndl(arity, amb.data());
+      dispatch.insert_none(sig);
+    }
+    catch(retry_dispatch&) {
       signature_t newsig ( arity );
 
       // generate classes
       for(size_t k = 0; k < arity; ++k)
-        newsig.array_ref()[k] = pole_table[k].fetch_from(
-          rtti::rtti_get_node(amb[k])
-        );
+        newsig.array_ref()[k] = pole_table[k].fetch_from(amb[k]);
 
       BOOST_ASSERT(newsig != sig);
 
       dispatch.insert_link(sig, newsig);
-    }
-    else {
-      dispatch.insert_none(sig);
     }
   }
 }

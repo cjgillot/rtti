@@ -6,18 +6,18 @@
 #ifndef MMETHOD_AMBIGUITY_UTILS_HPP
 #define MMETHOD_AMBIGUITY_UTILS_HPP
 
-#include "mmethod/export/table.hpp"
-#include "mmethod/detail/iterate.hpp"
+#include "mmethod/config.hpp"
+#include "mmethod/rttifwd.hpp"
 
-#include <boost/tti/has_static_member_function.hpp>
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
+#include <boost/tti/has_static_member_function.hpp>
 
 namespace rtti {
 namespace mmethod {
 namespace ambiguity {
 
-using detail::ambiguity_handler_t;
+typedef void (*ambiguity_handler_t)(size_t, rtti_hierarchy const[]);
 
 template<typename Policy>
 struct get_fpointers;
@@ -30,8 +30,8 @@ BOOST_TTI_HAS_STATIC_MEMBER_FUNCTION(bad_dispatch)
 
 template<typename Policy>
 struct wrap_ahndl {
-  static bool ahndl(size_t n, rtti_type* a) {
-    return Policy::ambiguity_handler(n, a);
+  static void ahndl(size_t n, rtti_hierarchy const* a) {
+    Policy::ambiguity_handler(n, a);
   }
 };
 

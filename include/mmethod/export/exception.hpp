@@ -23,6 +23,12 @@ struct bad_dispatch
   virtual ~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW;
 };
 
+struct retry_dispatch
+: std::exception {
+  retry_dispatch();
+  virtual ~retry_dispatch() BOOST_NOEXCEPT_OR_NOTHROW;
+};
+
 } // namespace rtti
 
 #ifdef BOOST_HAS_ABI_HEADERS

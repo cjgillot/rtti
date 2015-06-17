@@ -12,3 +12,6 @@
 rtti::bad_dispatch::bad_dispatch()
 : std::runtime_error("Unresolved call for mmethod") {}
 rtti::bad_dispatch::~bad_dispatch() BOOST_NOEXCEPT_OR_NOTHROW {}
+
+rtti::retry_dispatch::retry_dispatch() {}
+rtti::retry_dispatch::~retry_dispatch() BOOST_NOEXCEPT_OR_NOTHROW {}

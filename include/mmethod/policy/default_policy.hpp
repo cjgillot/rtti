@@ -7,24 +7,33 @@
 #define MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
 
 #include "mmethod/export/exception.hpp"
+#include "mmethod/policy/duplicator.hpp"
 
-#include <cstdlib>
-#include <boost/throw_exception.hpp>
+#include <boost/shared_ptr.hpp>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 namespace rtti {
 namespace mmethod {
 namespace ambiguity {
 
 struct default_policy {
-  static void bad_dispatch() {
-    BOOST_THROW_EXCEPTION( rtti::bad_dispatch() );
-  }
+  static void bad_dispatch();
+  static void ambiguity_handler(size_t, rtti_hierarchy const*);
 
-  static bool ambiguity_handler(size_t, rtti_type const*) {
-    return false;
-  }
+  static boost::shared_ptr<duplicator> make_duplicate();
 };
 
-}}} // namespace rtti::mmethod::ambiguity
+} // namespace ambiguity
+
+using ambiguity::default_policy;
+
+}} // namespace rtti::mmethod
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif

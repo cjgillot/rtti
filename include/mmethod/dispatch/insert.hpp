@@ -53,7 +53,15 @@ void dispatch<Policy, Tag,Ret>::insert(F const& f) {
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
-  detail::inse_table(arity, dispatch_detail::get_register<Tag>::early(), inv, hiers);
+  boost::shared_ptr<duplicator> dup = Policy::make_duplicate();
+
+  detail::inse_table(
+    arity
+  , dispatch_detail::get_register<Tag>::early()
+  , inv
+  , hiers
+  , dup.get()
+  );
 }
 
 }} // namespace rtti::mmethod

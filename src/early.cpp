@@ -20,6 +20,7 @@ rtti::mmethod::detail::inse_table(
 , early_bindings_type& eb
 , invoker_t inv
 , rtti_hierarchy* hiers
+, duplicator* d
 ) {
   BOOST_ASSERT(eb);
 
@@ -27,7 +28,13 @@ rtti::mmethod::detail::inse_table(
   // no synchronization should be required
   // but seal_table is not protected
 
-  eb->vector.push_back(std::make_pair(signature_type(hiers, hiers+arity), inv));
+  d->load(arity, hiers);
+  do {
+    // signature_type is a vector -> copies the array hiers
+    signature_type sig ( hiers, hiers+arity );
+    eb->vector.push_back(std::make_pair(sig, inv));
+  }
+  while(d->next());
 }
 
 void
@@ -37,7 +44,8 @@ rtti::mmethod::detail::seal_table(
 , seal_table_type& seal
 ) {
   // this function is called exactly once for each [seal]
-  // we assume this function is called strictly after [inse_table] finished on the same [eb]
+  // we assume this function is called strictly after [inse_table]
+  // finished on the same [eb]
   rtti_dispatch::process_declaration(*eb, seal);
   delete eb; eb = NULL;
 }

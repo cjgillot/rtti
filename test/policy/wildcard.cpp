@@ -35,8 +35,10 @@ int called_ambiguous = 0;
 /*`
   We can now define our policy class.
  */
-struct wildcard_policy {
-  static bool ambiguity_handler(std::size_t, rtti_type const*);
+struct wildcard_policy
+: public mmethod::default_policy
+{
+  static bool ambiguity_handler(std::size_t, rtti_hierarchy const*);
   static int bad_dispatch(foo&, foo&);
 };
 
@@ -51,11 +53,11 @@ struct wildcard_policy {
   * a C array of __rtti__ type ids.
  */
 bool
-wildcard_policy::ambiguity_handler(std::size_t n, rtti_type const types[])
+wildcard_policy::ambiguity_handler(std::size_t n, rtti_hierarchy const types[])
 {
   BOOST_CHECK_EQUAL(n, 2u);
-  BOOST_CHECK_EQUAL(types[0], static_id<bar>());
-  BOOST_CHECK_EQUAL(types[1], static_id<bar>());
+  BOOST_CHECK_EQUAL(types[0], static_node<bar>());
+  BOOST_CHECK_EQUAL(types[1], static_node<bar>());
 
   ++found_ambiguous;
   //=std::cout << "Ambiguity found of arity " << n << ": "

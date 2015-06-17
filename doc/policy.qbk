@@ -46,4 +46,11 @@ In this section, we will use the following set of classes:
 
 [endsect]
 
+[section Symmetric function using a policy class]
+
+[import ../test/policy/symmetric.cpp]
+[po_symm]
+
+[endsect]
+
 [endsect]

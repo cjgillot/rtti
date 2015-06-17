@@ -9,6 +9,9 @@
 #include "mmethod/config.hpp"
 #include "mmethod/export/table/table.hpp"
 
+#include "mmethod/policy/utils.hpp"
+#include "mmethod/policy/duplicator.hpp"
+
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
 #endif
@@ -17,7 +20,7 @@ namespace rtti {
 namespace mmethod {
 namespace detail {
 
-typedef bool (*ambiguity_handler_t)(size_t n, rtti_type*);
+using ambiguity::ambiguity_handler_t;
 
 struct ambiguity_policy_t {
   ambiguity_handler_t   ahndl;
@@ -35,7 +38,7 @@ struct seal_table_type {
 };
 
 void init_table(std::size_t arity, early_bindings_type& ebt);
-void inse_table(std::size_t arity, early_bindings_type& ebt, invoker_t inv, rtti_hierarchy* hiers);
+void inse_table(std::size_t arity, early_bindings_type& ebt, invoker_t inv, rtti_hierarchy* hiers, duplicator*);
 void seal_table(std::size_t arity, early_bindings_type& ebt, seal_table_type& seal);
 
 }}} // namespace rtti::mmethod::detail

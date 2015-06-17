@@ -47,11 +47,10 @@ struct check_exception
   it falls back to the function `bad_dispatch()` taking no argument.
  */
 struct noreturn_policy
+: public mmethod::default_policy
 {
   // use default implementation
-  static bool ambiguity_handler(size_t n, rtti_type const* a) {
-    return mmethod::ambiguity::default_policy::ambiguity_handler(n, a);
-  }
+  using mmethod::default_policy::ambiguity_handler;
 
   // catch-all implementation
   static void bad_dispatch() {
