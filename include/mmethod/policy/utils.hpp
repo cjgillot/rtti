@@ -17,7 +17,7 @@ namespace rtti {
 namespace mmethod {
 namespace ambiguity {
 
-typedef void (*ambiguity_handler_t)(size_t, rtti_hierarchy const[]);
+typedef void (*ambiguity_handler_t)(size_t, rtti_hierarchy[]);
 
 template<typename Policy>
 struct get_fpointers;
@@ -30,7 +30,7 @@ BOOST_TTI_HAS_STATIC_MEMBER_FUNCTION(bad_dispatch)
 
 template<typename Policy>
 struct wrap_ahndl {
-  static void ahndl(size_t n, rtti_hierarchy const* a) {
+  static void ahndl(size_t n, rtti_hierarchy* a) {
     Policy::ambiguity_handler(n, a);
   }
 };
