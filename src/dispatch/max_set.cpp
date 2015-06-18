@@ -29,6 +29,29 @@ void max_set::insert(const signature_t& sig0, const link_table& links) {
         filter(*bound);
     }
   }
+
+  // factorize identical overloads
+  // since we are only interested in the size() == 1 case,
+  // and only access set.front(),
+  // we only need to reduce with it
+  if(size() > 1) {
+    invoker_t const& front = set.front().second;
+
+    max_set_t::iterator
+      iter = set.begin()
+    , endl = set.end();
+
+    ++iter; // skip front since it is already counted
+
+    while(iter != endl) {
+      if(front == iter->second) {
+        iter = set.erase(iter);
+        continue;
+      }
+
+      ++iter;
+    }
+  }
 }
 
 // poll [set] and insert if good match

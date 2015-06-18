@@ -137,7 +137,7 @@ IMPLEMENT_MMETHOD(symm, int, (bar&, bar&)) { return 21; }
 // further test
 IMPLEMENT_MMETHOD(symm, int, (foo&, la1&)) { return 32; }
 IMPLEMENT_MMETHOD(symm, int, (bar&, la1&)) { return 65; }
-IMPLEMENT_MMETHOD(symm, int, (la1&, la1&)) { return 11; }
+// no la1-la1 -> fallback on foo-la1
 
 IMPLEMENT_MMETHOD(symm, int, (foo&, la2&)) { return 40; }
 IMPLEMENT_MMETHOD(symm, int, (bar&, la2&)) { return 45; }
@@ -166,15 +166,15 @@ BOOST_AUTO_TEST_CASE(test_symmetric) {
   BOOST_CHECK_EQUAL( symm(c, x), 32 ); // (3-1 case)
   BOOST_CHECK_EQUAL( symm(b, z), 65 ); // (2-3 case)
   BOOST_CHECK_EQUAL( symm(c, y), 65 ); // (3-2 case)
-  BOOST_CHECK_EQUAL( symm(c, z), 11 ); // (3-3 case)
+  BOOST_CHECK_EQUAL( symm(c, z), 32 ); // (3-3 case) - fallback on 1-3
 
   la2 t, d;
   BOOST_CHECK_EQUAL( symm(a, t), 40 ); // (1-4 case)
   BOOST_CHECK_EQUAL( symm(d, x), 40 ); // (4-1 case)
   BOOST_CHECK_EQUAL( symm(b, t), 45 ); // (2-4 case)
   BOOST_CHECK_EQUAL( symm(d, y), 45 ); // (4-2 case)
-  BOOST_CHECK_EQUAL( symm(c, t), 49 ); // (2-4 case)
-  BOOST_CHECK_EQUAL( symm(d, z), 49 ); // (4-2 case)
+  BOOST_CHECK_EQUAL( symm(c, t), 49 ); // (3-4 case)
+  BOOST_CHECK_EQUAL( symm(d, z), 49 ); // (4-3 case)
   BOOST_CHECK_EQUAL( symm(d, t), 12 ); // (4-4 case)
 
   foo* arr1 [] = { &a, &b, &c, &d };
