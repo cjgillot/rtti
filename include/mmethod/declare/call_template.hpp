@@ -33,8 +33,8 @@ private:   // dispatch_type
   dispatch_type m_dispatch;
 
 protected:
-  template<typename K, typename F>
-  void insert(F const& f)
+  template<typename K>
+  void insert(func_t const& f)
   { m_dispatch.template insert<K>(f); }
 
   void generate() const
