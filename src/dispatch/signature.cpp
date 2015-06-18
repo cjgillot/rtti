@@ -31,9 +31,9 @@ bool signature_t::worse_match::operator()(const signature_t& a, const signature_
 
   // return true if [b] is better overload than [a]
   // ie. if :
-  //   \forall i, a_i <: b_i (b generalizes a)
+  //   \forall i, b_i <: a_i (a is more general than b)
   // and
-  //   \exists_i, \not(b_i <: a_i) (a does not generalize b)
+  //   \exists_i, \not(a_i <: b_i) (b is not more general than a)
   klass_t::is_subtype_of f;
   bool notallbase = false;
 
@@ -50,13 +50,13 @@ bool signature_t::worse_match::operator()(const signature_t& a, const signature_
     klass_t const* const klass1 = *it1;
     klass_t const* const klass2 = *it2;
 
-    bool const isder  = f(*klass1, *klass2);
-    bool const isbase = f(*klass2, *klass1);
+    bool const isder  = f(*klass2, *klass1);
+    bool const isbase = f(*klass1, *klass2);
 
-    // \forall_i a_i <: b_i
+    // \forall_i b_i <: a_i
     if(!isder) return false;
 
-    // \exists_i \not(b_i <: a_i)
+    // \exists_i \not(a_i <: b_i)
     notallbase |= !isbase;
   }
 

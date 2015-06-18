@@ -33,7 +33,7 @@ void max_set::insert(const signature_t& sig0, const link_table& links) {
 
 // poll [set] and insert if good match
 void max_set::filter(overload_t const& up) {
-  signature_t::worse_match worse;
+  signature_t::worse_match is_worse_than;
 
   max_set_t::iterator
     iter = set.begin()
@@ -43,13 +43,13 @@ void max_set::filter(overload_t const& up) {
     overload_t const& e = *iter;
 
     // [up] is better match, remove [e]
-    if( worse(e.first, up.first) ) {
+    if( is_worse_than(e.first, up.first) ) {
       iter = set.erase(iter);
       continue;
     }
 
     // [e] is better match, don't insert [up]
-    else if( worse(up.first, e.first) ) {
+    else if( is_worse_than(up.first, e.first) ) {
       return;
     }
 
