@@ -64,6 +64,34 @@ BOOST_AUTO_TEST_CASE(test_compute_poles) {
     BOOST_CHECK_EQUAL(npoles[1], c2.node);
     BOOST_CHECK_EQUAL(npoles[2], c3.node);
     BOOST_CHECK_EQUAL(npoles[3], NULL_node);
+
+    BOOST_CHECK_EQUAL(hier.fetch_from(c1.node), hier.fetch(c0.node));
+    BOOST_CHECK_EQUAL(hier.fetch_from(c4.node), hier.fetch(c3.node));
+  }
+
+  { // linear inheritance without root
+    nodeptr c0 ( 0 );
+
+    nodeptr c1 ( 1 );
+    c1.node->self.__base[0] = c0.node;
+
+    nodeptr c2 ( 1 );
+    c2.node->self.__base[0] = c1.node;
+
+    std::vector<rtti_hierarchy> cs;
+    cs.push_back(c1.node);
+
+    hierarchy_t hier;
+    hier.compute_poles(cs);
+
+    std::vector<rtti_hierarchy> npoles ( 2, NULL_node );
+    order_poles(hier, npoles);
+
+    BOOST_CHECK_EQUAL(npoles[0], c1.node);
+    BOOST_CHECK_EQUAL(npoles[1], NULL_node);
+
+    BOOST_CHECK      (!hier.try_fetch(c0.node));
+    BOOST_CHECK_EQUAL( hier.fetch_from(c2.node), hier.fetch(c1.node));
   }
 
   { // diamond inheritance
