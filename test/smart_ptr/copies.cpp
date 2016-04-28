@@ -105,7 +105,7 @@ IMPLEMENT_MMETHOD(cnt, int, (count_pointer<foo> const& a)) { return a->f(); }
 IMPLEMENT_MMETHOD(cnt, int, (count_pointer<bar> const& a)) { return a->g(); }
 IMPLEMENT_MMETHOD(cnt, int, (count_pointer<baz> const& a)) { return 2 * a->f(); }
 
-} // namespace <>
+} // namespace
 
 #include <iostream>
 

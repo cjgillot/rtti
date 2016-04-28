@@ -21,7 +21,7 @@ DECLARE_MMETHOD(dead, int, (_v<foo&>));
 
 IMPLEMENT_MMETHOD(dead, int, (bar&)) { return 5; }
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_dead) {
   foo f; bar r; baz z; lap l;

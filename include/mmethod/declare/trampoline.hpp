@@ -40,7 +40,10 @@ struct caster
 template<std::size_t Arity>
 struct trampoline_base;
 
-}}}} // namespace rtti::mmethod::detail::trampoline_detail
+} // namespace trampoline_detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #define BOOST_PP_FILENAME_1 "mmethod/declare/trampoline_template.hpp"
 #define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
@@ -60,6 +63,8 @@ struct make_trampoline
     TAG, Ret, Types, Tags
 > {};
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

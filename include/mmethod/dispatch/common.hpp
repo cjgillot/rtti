@@ -25,6 +25,8 @@ using detail::invoker_table_type;
 using detail::poles_map_type;
 using detail::get_register;
 
-}}} // rtti::mmethod::dispatch_detail
+} // namespace dispatch_detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

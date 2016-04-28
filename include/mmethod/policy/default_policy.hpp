@@ -30,7 +30,8 @@ struct default_policy {
 
 using ambiguity::default_policy;
 
-}} // namespace rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

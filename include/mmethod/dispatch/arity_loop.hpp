@@ -43,6 +43,8 @@ struct arity_loop {
   }
 };
 
-}}} // namespace rtti::mmethod::dispatch_detail
+} // namespace dispatch_detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

@@ -37,7 +37,7 @@ DECLARE_MMETHOD(sip, int, (_v<boost::intrusive_ptr<foo> >));
 IMPLEMENT_MMETHOD(sip, int, (boost::intrusive_ptr<foo> a)) { return  5; }
 IMPLEMENT_MMETHOD(sip, int, (boost::intrusive_ptr<bar> a)) { return 42; }
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(TESTNAME) {
   typedef boost::intrusive_ptr<foo> pointer;

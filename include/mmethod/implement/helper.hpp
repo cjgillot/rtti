@@ -45,6 +45,8 @@ public:
   typedef make_implement_helper<Tag, Over, result, args> type;
 };
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

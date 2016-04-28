@@ -50,6 +50,7 @@ private:
   std::type_info const* target;
 };
 
-}} // namespace rtti::foreign_detail
+} // namespace foreign_detail
+} // namespace rtti
 
 #endif

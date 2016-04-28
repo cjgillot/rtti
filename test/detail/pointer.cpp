@@ -27,7 +27,7 @@ struct VB: virtual A {};
 struct VC: virtual A {};
 struct VD: VB, VC {};
 
-} // <anonymous>
+} // namespace
 // }}}
 
 // {{{ test remove_all
@@ -80,7 +80,7 @@ CHECK_REMOVE_ALL(*const volatile&&);
 
 #undef CHECK_REMOVE_ALL
 
-} // <anonymous>
+} // namespace
 // }}}
 
 // {{{ test unsafe_casting

@@ -16,6 +16,7 @@ struct mixin_node_holder {
   rtti::rtti_node const* rtti_node_value;
 };
 
-}} // namespace rtti::detail
+} // namespace detail
+} // namespace rtti
 
 #endif

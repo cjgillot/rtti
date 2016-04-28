@@ -20,7 +20,7 @@ using tags::_v;
 
 DECLARE_MMETHOD(empty, int, (_v<foo const&>));
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_empty) {
   empty.generate();

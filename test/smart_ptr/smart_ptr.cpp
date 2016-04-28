@@ -147,7 +147,7 @@ IMPLEMENT_MMETHOD(smp, int, (noop_pointer<bar> const& a)) { return a->g(); }
 IMPLEMENT_MMETHOD(smp, int, (noop_pointer<baz> const& a)) { return 2 * a->f(); }
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_smart_ptr) {
   //[sm_invoke

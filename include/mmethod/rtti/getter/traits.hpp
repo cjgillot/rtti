@@ -33,6 +33,7 @@ public:
   }
 };
 
-}} // namespace rtti::detail
+} // namespace detail
+} // namespace rtti
 
 #endif

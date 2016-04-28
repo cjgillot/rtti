@@ -34,6 +34,7 @@ ret tag::overload<ret sig>                                      \
 #define IMPLEMENT_MMETHOD(name, ret, sig) \
   IMPLEMENTATION_MMETHOD(MMETHOD_TAG(name), ret, sig)
 
-}} // namespace rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #endif

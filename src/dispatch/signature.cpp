@@ -12,7 +12,7 @@ struct klass_p_order {
   { return klass_t::total_order()(*bb, *aa); }
 };
 
-} // namespace <>
+} // namespace
 
 // total[extended] subtyping order
 bool signature_t::total_order::operator()(const signature_t& a, const signature_t& b) const

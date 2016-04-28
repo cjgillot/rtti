@@ -27,7 +27,7 @@ IMPLEMENT_MMETHOD(shortcut, int, (baz const& a)) { return 2 * a.f(); }
 //` [ge_use]
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_generate) {
   //[ge_use

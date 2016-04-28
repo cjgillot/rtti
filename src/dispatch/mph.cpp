@@ -97,7 +97,7 @@ struct rankhash_adder {
   { return acc + ht.at(k); }
 };
 
-} // namespace <>
+} // namespace
 
 static void
 make_assignment(

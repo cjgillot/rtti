@@ -13,7 +13,9 @@
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 
-namespace rtti { namespace mmethod { namespace detail {
+namespace rtti {
+namespace mmethod {
+namespace detail {
 
 // detail/access.hpp
 struct access;
@@ -59,6 +61,8 @@ public:
   typedef make_declare_helper<Tag, Policy, result, args> type;
 };
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

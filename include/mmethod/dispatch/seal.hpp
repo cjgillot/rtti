@@ -77,6 +77,7 @@ void dispatch<Policy,Tag,Ret>::seal() {
   detail::seal_table(arity, early, seal_table);
 }
 
-}} // namespace rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #endif

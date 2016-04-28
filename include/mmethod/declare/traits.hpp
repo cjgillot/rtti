@@ -41,6 +41,8 @@ struct make_declare_traits
   BOOST_STATIC_ASSERT_MSG( (vsize > 0), "At least one virtual parameter must be provided." );
 };
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

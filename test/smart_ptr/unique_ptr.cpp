@@ -24,7 +24,7 @@ IMPLEMENT_MMETHOD(unique, int, (std::unique_ptr<bar> a)) { return a->g(); }
 IMPLEMENT_MMETHOD(unique, int, (std::unique_ptr<baz> a)) { return 2 * a->f(); }
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_unique_ptr) {
   typedef std::unique_ptr<foo> pointer;

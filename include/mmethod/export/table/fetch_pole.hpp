@@ -41,7 +41,9 @@ fetch_pole(
   return do_fetch_pole(map, rt);
 }
 
-}}} // namespace rtti::hash::detail
+} // namespace detail
+} // namespace hash
+} // namespace rtti
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

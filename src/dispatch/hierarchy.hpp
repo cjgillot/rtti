@@ -95,7 +95,7 @@ namespace hierarchy_detail {
       return ret;
     }
   };
-} // namespace detail
+} // namespace hierarchy_detail
 
 template<typename R0>
 signature_t make_signature(R0 const& r0, pole_table_t& r1) {

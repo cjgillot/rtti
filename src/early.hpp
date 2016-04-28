@@ -29,6 +29,6 @@ using rtti::mmethod::detail::ambiguity_handler_t;
 namespace rtti_dispatch {
   // dispatch/mmethod.cpp
   extern void process_declaration(early_bindings_struct const&, seal_table_type&);
-}
+} // namespace rtti_dispatch
 
 #endif

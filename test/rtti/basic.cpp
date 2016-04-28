@@ -81,7 +81,7 @@ class lap
  */
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_basic) {
   //[ba_use

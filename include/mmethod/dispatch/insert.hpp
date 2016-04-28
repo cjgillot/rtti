@@ -64,6 +64,7 @@ void dispatch<Policy, Tag,Ret>::insert(F const& f) {
   );
 }
 
-}} // namespace rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #endif

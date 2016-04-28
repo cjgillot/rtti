@@ -26,7 +26,10 @@ namespace call_detail {
 template<std::size_t Arity>
 struct make_declare_call_base;
 
-}}}} // namespace rtti::mmethod::detail::call_detail
+} // namespace call_detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #define BOOST_PP_FILENAME_1 "mmethod/declare/call_template.hpp"
 #define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
@@ -46,6 +49,8 @@ struct make_declare_call
   Tag, Policy, Ret, Args
 > {};
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

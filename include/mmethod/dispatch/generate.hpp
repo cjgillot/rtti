@@ -42,6 +42,7 @@ void dispatch<Policy, Tag, Ret>::generate() const {
   sealer.touch();
 }
 
-}} // rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #endif

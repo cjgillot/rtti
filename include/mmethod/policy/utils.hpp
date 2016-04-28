@@ -82,6 +82,8 @@ public:
   }
 };
 
-}}} // namespace rtti::mmethod::ambiguity
+} // namespace ambiguity
+} // namespace mmethod
+} // namespace rtti
 
 #endif

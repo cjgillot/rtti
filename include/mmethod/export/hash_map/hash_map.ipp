@@ -77,7 +77,9 @@ hash_map::do_find(key_type key, iterator ptr) const BOOST_NOEXCEPT_OR_NOTHROW {
 }
 #endif
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

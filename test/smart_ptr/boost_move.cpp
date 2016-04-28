@@ -139,7 +139,7 @@ IMPLEMENT_MMETHOD(bmv, int, (move_pointer<bar> a)) { return a->g(); }
 IMPLEMENT_MMETHOD(bmv, int, (move_pointer<baz> a)) { return 2 * a->f(); }
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_boost_move) {
   //[sm_invoke

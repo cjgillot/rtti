@@ -50,7 +50,7 @@ struct A {
 };
 struct B : A {};
 
-} // <anonymous>
+} // namespace
 // }}}
 
 // {{{ test pointer_traits

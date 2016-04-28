@@ -35,7 +35,7 @@ IMPLEMENT_MMETHOD(covariant, bar const*, (bar const& a)) { return &a; }
 IMPLEMENT_MMETHOD(covariant, baz const*, (baz const& a)) { return &a; }
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_covariant) {
   //[cov_use

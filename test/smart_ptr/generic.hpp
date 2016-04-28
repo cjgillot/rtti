@@ -21,7 +21,7 @@ IMPLEMENT_MMETHOD(smp, int, (PTR(foo) a)) { return a->f(); }
 IMPLEMENT_MMETHOD(smp, int, (PTR(bar) a)) { return a->g(); }
 IMPLEMENT_MMETHOD(smp, int, (PTR(baz) a)) { return 2 * a->f(); }
 
-} // namespace <>
+} // namespace NAMESPACE
 
 BOOST_AUTO_TEST_CASE(TESTNAME) {
   using namespace NAMESPACE;

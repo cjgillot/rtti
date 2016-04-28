@@ -73,7 +73,7 @@ IMPLEMENT_MMETHOD(f1, int, (foo&, bar&)) { return 8; }
 
 // bar-bar is ambiguous : bar-foo and foo-bar are equally good matches
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_policy) {
   foo a; bar b;

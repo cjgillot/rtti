@@ -32,6 +32,7 @@ rtti_getter::get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW {
   return *traits::get_mixin_node(x).rtti_node_value;
 }
 
-}} // namespace rtti::detail
+} // namespace detail
+} // namespace rtti
 
 #endif

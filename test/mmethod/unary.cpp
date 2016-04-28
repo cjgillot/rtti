@@ -69,7 +69,7 @@ IMPLEMENT_MMETHOD(unary, int, (bar const& a)) { return a.g(); }
 IMPLEMENT_MMETHOD(unary, int, (baz const& a)) { return 2 * a.f(); }
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_unary) {
   //[un_use

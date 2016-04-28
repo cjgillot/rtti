@@ -11,7 +11,8 @@
 
 #include "mmethod/policy/default_policy.hpp"
 
-namespace rtti { namespace mmethod {
+namespace rtti {
+namespace mmethod {
 
 template<typename Tag, typename Sig, typename Policy>
 struct mmethod_register
@@ -35,7 +36,8 @@ public:
   using decl_maker::generate;
 };
 
-}} // namespace rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #define MMETHOD_TAG(name) BOOST_JOIN(rtti_mmethod_tags__, name)
 

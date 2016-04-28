@@ -34,7 +34,7 @@ IMPLEMENTATION_MMETHOD(prefetch_t, int, (bar& a)) { return a.g(); }
 IMPLEMENTATION_MMETHOD(prefetch_t, int, (baz& a)) { return 2 * a.f(); }
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_prefetch) {
   //[pr_functor

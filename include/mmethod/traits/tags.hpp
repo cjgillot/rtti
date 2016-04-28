@@ -11,7 +11,8 @@
 #include <boost/mpl/count_if.hpp>
 
 // tag templates -> mark dispatch-guilty types (virtual) and the others
-namespace rtti { namespace tags {
+namespace rtti {
+namespace tags {
 
 template<typename T> struct _v { typedef T type; };
 template<typename T> struct _s { typedef T type; };
@@ -63,6 +64,7 @@ template<typename Types>
 struct virtual_size
 : boost::mpl::count_if<Types, is_virtual> {};
 
-}} // namespace rtti::tags
+} // namespace tags
+} // namespace rtti
 
 #endif

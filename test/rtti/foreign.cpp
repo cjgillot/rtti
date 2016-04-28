@@ -82,7 +82,7 @@ MMETHOD_FOREIGN_IMPLEMENT(lap, vector<bar>)
  */
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_foreign) {
   //[fo_use

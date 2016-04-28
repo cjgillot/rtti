@@ -19,7 +19,7 @@ namespace {
 struct A {};
 struct B {};
 
-} // <anonymous>
+} // namespace
 
 namespace rtti {
 
@@ -30,7 +30,7 @@ struct pointer_traits<A> {
   { return Out(); }
 };
 
-}
+} // namespace rtti
 // }}}
 
 struct tag_type;

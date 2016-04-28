@@ -18,6 +18,6 @@ void make_unique_sort(Cont& cont) {
   cont.erase(std::unique(cont.begin(), cont.end()), cont.end());
 }
 
-} // rtti_dispatch
+} // namespace rtti_dispatch
 
 #endif

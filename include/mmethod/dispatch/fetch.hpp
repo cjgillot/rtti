@@ -88,6 +88,7 @@ invoker_t dispatch<Policy, Tag, Ret>::fetch(Tuple const& args) const {
   return ret;
 }
 
-}} // rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #endif

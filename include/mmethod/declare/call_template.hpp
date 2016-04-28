@@ -96,6 +96,9 @@ protected:
 
 }; // make_declare_call_base
 
-}}}} // namespace rtti::mmethod::detail::call_detail
+} // namespace call_detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #include "mmethod/detail/suffix.hpp"

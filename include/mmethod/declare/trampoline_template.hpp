@@ -58,6 +58,9 @@ Over
   ::apply<Over, Ret2, Types2>
   ::over;
 
-}}}} // namespace rtti::mmethod::detail::trampoline_detail
+} // namespace trampoline_detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #include "mmethod/detail/suffix.hpp"

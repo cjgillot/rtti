@@ -25,7 +25,7 @@ IMPLEMENT_MMETHOD(mixed, int, (long n, baz const& a)) { return n * a.f(); }
 //` [mi_use]
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_mixed) {
   foo f; bar r; baz z; lap l;

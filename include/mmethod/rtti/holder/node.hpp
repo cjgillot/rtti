@@ -30,7 +30,9 @@ struct rtti_node_var<0> {
   std::size_t __arity;
 };
 
-}}} // namespace rtti::detail::holder_
+} // namespace holder_
+} // namespace detail
+} // namespace rtti
 
 struct rtti::detail::rtti_node {
   struct alignment;

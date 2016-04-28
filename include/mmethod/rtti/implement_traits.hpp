@@ -31,6 +31,7 @@ struct implement_traits {
   BOOST_STATIC_ASSERT( sizeof(arity_type) == 1+arity );
 };
 
-}} // namespace rtti::detail
+} // namespace detail
+} // namespace rtti
 
 #endif

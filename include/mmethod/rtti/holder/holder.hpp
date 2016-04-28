@@ -104,6 +104,7 @@ rtti_node_var<holder<T>::Arity>
 
 using holder_::get_holder;
 
-}} // namespace rtti::detail
+} // namespace detail
+} // namespace rtti
 
 #endif

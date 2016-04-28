@@ -41,7 +41,9 @@ void init_table(std::size_t arity, early_bindings_type& ebt);
 void inse_table(std::size_t arity, early_bindings_type& ebt, invoker_t inv, rtti_hierarchy* hiers, duplicator*);
 void seal_table(std::size_t arity, early_bindings_type& ebt, seal_table_type& seal);
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_SUFFIX

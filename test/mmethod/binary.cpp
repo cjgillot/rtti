@@ -40,7 +40,7 @@ IMPLEMENT_MMETHOD(binary, int, (foo&, bar&)) { return 42; }
 //` [bi_use]
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_binary) {
 //[bi_use

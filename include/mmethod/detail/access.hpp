@@ -8,7 +8,9 @@
 
 #include "mmethod/config.hpp"
 
-namespace rtti { namespace mmethod { namespace detail {
+namespace rtti {
+namespace mmethod {
+namespace detail {
 
 struct access {
 
@@ -24,6 +26,8 @@ struct access {
 
 };
 
-}}} // namespace rtti::mmethod::detail
+} // namespace detail
+} // namespace mmethod
+} // namespace rtti
 
 #endif

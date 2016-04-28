@@ -34,6 +34,7 @@ private:
   static void seal();
 };
 
-}} // rtti::mmethod
+} // namespace mmethod
+} // namespace rtti
 
 #endif

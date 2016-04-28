@@ -72,6 +72,7 @@ rtti_get_foreign_map(base const*) {             \
 }                                               \
 MMETHOD_FOREIGN_IMPLEMENT(base, boost::mpl::vector<>)
 
-}} // namespace rtti::foreign_detail
+} // namespace foreign_detail
+} // namespace rtti
 
 #endif

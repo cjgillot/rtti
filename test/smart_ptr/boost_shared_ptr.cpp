@@ -49,7 +49,7 @@ IMPLEMENT_MMETHOD(bsp, int, (boost::shared_ptr<bar> const& a)) { return a->g(); 
 IMPLEMENT_MMETHOD(bsp, int, (boost::shared_ptr<baz> const& a)) { return 2 * a->f(); }
 //]
 
-} // namespace <>
+} // namespace
 
 BOOST_AUTO_TEST_CASE(test_boost_shared_ptr) {
   //[bsp_invoke

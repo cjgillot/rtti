@@ -46,7 +46,7 @@ probe_table(bucket_t* const m_array, index_type index, rtti_type key) BOOST_NOEX
 
   return ptr;
 }
-} // namespace <anonymous>
+} // namespace
 
 //@}
 
