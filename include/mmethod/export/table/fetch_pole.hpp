@@ -35,8 +35,9 @@ fetch_pole(
 
   hash_map::iterator const it0 = map.find(id0);
 
-  if(BOOST_LIKELY( it0->key() == id0 ))
+  if(BOOST_LIKELY( it0->key() == id0 )) {
     return it0->value();
+  }
 
   return do_fetch_pole(map, rt);
 }

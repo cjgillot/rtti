@@ -54,7 +54,7 @@ probe_table(bucket_t* const m_array, index_type index, rtti_type key) BOOST_NOEX
 //@{
 #ifndef MMETHOD_INLINE_DO_FIND
 hash_map::iterator
-hash_map::do_find(rtti_type key, iterator) const BOOST_NOEXCEPT_OR_NOTHROW {
+hash_map::do_find(rtti_type key, iterator /*unused*/) const BOOST_NOEXCEPT_OR_NOTHROW {
   return probe_table(
     m_array.get(), hash(key), key
   );
@@ -70,8 +70,9 @@ void hash_map::insert(key_type key, value_type value) {
   bucket_t* bucket = probe_table(
     m_array.get(), index, key
   );
-  if(bucket != BADBUCKET)
+  if(bucket != BADBUCKET) {
     return bucket->set(key, value);
+  }
 
   insert_need_resize(key, value);
 }
@@ -83,9 +84,11 @@ void hash_map::insert_need_resize(key_type key, value_type value) {
 
   repl.create(new_sz);
 
-  for(std::size_t i = 0; i < old_sz; ++i)
-    if( !m_array[i].empty() )
+  for(std::size_t i = 0; i < old_sz; ++i) {
+    if( !m_array[i].empty() ) {
       repl.insert(m_array[i].key(), m_array[i].value());
+    }
+  }
   repl.insert(key, value);
 
   move(repl);
@@ -97,8 +100,9 @@ void hash_map::insert_need_resize(key_type key, value_type value) {
 inline static std::size_t
 nbits(std::size_t n) {
   std::size_t ret = 0;
-  for(; n; n>>=1)
+  for(; n; n>>=1) {
     ++ret;
+  }
   return ret;
 }
 

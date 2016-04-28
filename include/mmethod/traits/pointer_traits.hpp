@@ -76,7 +76,7 @@ public:
   typedef typename boost::remove_cv<T>::type class_type;
 
   static reference_type get(Ref v) { return v; }
-  static bool valid(Ref) { return true; }
+  static bool valid(Ref /*unused*/) { return true; }
 
   template<typename U>
   static U cast(Ref v)

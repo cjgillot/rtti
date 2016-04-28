@@ -17,8 +17,9 @@ void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_
   std::vector<std::vector<rtti_hierarchy> > hierarchies ( arity );
   foreach(binding_type const& over, decl.vector) {
     signature_type const& s = over.first;
-    for(std::size_t i = 0; i < arity; ++i)
+    for(std::size_t i = 0; i < arity; ++i) {
       hierarchies[i].push_back( s[i] );
+    }
   }
 
   /// order poles
@@ -32,8 +33,9 @@ void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_
       signature_type const& h = over.first;
       signature_t sig = make_signature(h, pole_table);
 
-      if(!over.second)
+      if(!over.second) {
         continue;
+      }
 
       invoker_t& disp = dispatch_table[sig];
       if(!disp) {

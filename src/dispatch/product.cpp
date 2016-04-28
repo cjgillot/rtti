@@ -16,8 +16,9 @@ product_t::product_t(const pole_table_t &pt)
     hier_t const& r = table[k].range();
 
     range[k] = boost::begin(r);
-    if(range[k] == boost::end(r))
+    if(range[k] == boost::end(r)) {
       exhausted = true;
+    }
   }
 }
 
@@ -28,8 +29,9 @@ void product_t::incr()
     hier_t const& r = table[k].range();
 
     ++range[k];
-    if( range[k] != boost::end(r) )
+    if( range[k] != boost::end(r) ) {
       return;
+    }
 
     range[k] = boost::begin(r);
   }

@@ -28,8 +28,9 @@ do_fetch_pole_recursive(
 ) {
   // common case -> we are a pole or a memoized value
   hash_map::iterator it = map.find( rtti_get_id(rt) );
-  if(BOOST_LIKELY( !it->empty() ))
+  if(BOOST_LIKELY( !it->empty() )) {
     return it->value();
+  }
 
   // search recursively
   foreach_base(rtti_hierarchy base, rt) {

@@ -13,10 +13,10 @@ struct nodeptr {
 
   explicit
   nodeptr(size_t arity) {
-    node = (rtti_node*)::operator new(
+    node = static_cast<rtti_node*>(::operator new(
         sizeof(holder_::rtti_node_var<0>)
       + sizeof(rtti_hierarchy) * arity
-    );
+    ));
 
     node->self.__arity = arity;
   }

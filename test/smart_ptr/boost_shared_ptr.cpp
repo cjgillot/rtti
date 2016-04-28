@@ -26,8 +26,8 @@ using namespace rtti::mmethod;
   which will register __shared_ptr__ as a smart pointer
   for use with __mmethod__.
  */
-#include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 #include "mmethod/smart_ptr/boost_shared_ptr.hpp"
 //]
 

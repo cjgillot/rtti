@@ -32,16 +32,18 @@ wanderer_t::pop() {
 
   for(;;) {
     // exit condition
-    if(stack.empty())
+    if(stack.empty()) {
       return NULL;
+    }
 
     // get next element
     rtti_hierarchy top = stack.back();
     stack.pop_back();
 
     // already traversed ?
-    if(visited.count(top))
+    if(visited.count(top)) {
       continue;
+    }
 
     // inject base classes
     bool const need_upcast = reinject_bases(top);

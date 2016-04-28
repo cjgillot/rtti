@@ -21,7 +21,8 @@ namespace ambiguity {
 
 struct default_policy {
   static void bad_dispatch();
-  static void ambiguity_handler(size_t, rtti_hierarchy const*);
+  static void ambiguity_handler(size_t /*arity*/,
+                                rtti_hierarchy const* /*signature*/);
 
   static boost::shared_ptr<duplicator> make_duplicate();
 };

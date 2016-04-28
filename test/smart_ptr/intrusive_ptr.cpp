@@ -6,8 +6,8 @@
 #include "mmethod/mmethod.hpp"
 #include "mmethod/smart_ptr/boost_intrusive_ptr.hpp"
 
-#include <boost/mpl/vector.hpp>
 #include <boost/intrusive_ptr.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 

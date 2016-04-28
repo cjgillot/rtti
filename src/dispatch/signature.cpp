@@ -54,7 +54,9 @@ bool signature_t::worse_match::operator()(const signature_t& a, const signature_
     bool const isbase = f(*klass1, *klass2);
 
     // \forall_i b_i <: a_i
-    if(!isder) return false;
+    if(!isder) {
+      return false;
+    }
 
     // \exists_i \not(a_i <: b_i)
     notallbase |= !isbase;

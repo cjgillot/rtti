@@ -57,8 +57,9 @@ static void dispatch_one(
   ambiguity_handler_t ahndl
 ) {
   // already registered
-  if(dispatch.has(sig))
+  if(dispatch.has(sig)) {
     return;
+  }
 
   // set of candidates
   max_set mset;
@@ -88,8 +89,9 @@ static void dispatch_one(
       signature_t newsig ( arity );
 
       // generate classes
-      for(size_t k = 0; k < arity; ++k)
+      for(size_t k = 0; k < arity; ++k) {
         newsig.array_ref()[k] = pole_table[k].fetch_from(amb[k]);
+      }
 
       BOOST_ASSERT(newsig != sig);
 

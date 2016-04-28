@@ -65,8 +65,9 @@ MMETHOD_ATTRIBUTE_PURE
 get_node(U& x) BOOST_NOEXCEPT_OR_NOTHROW
 {
   typedef typename rtti::compute_pointer_traits<U&>::type traits;
-  if(! traits::valid(x))
+  if(! traits::valid(x)) {
     return NULL;
+  }
 
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }
@@ -78,8 +79,9 @@ MMETHOD_ATTRIBUTE_PURE
 get_node(U const& x) BOOST_NOEXCEPT_OR_NOTHROW
 {
   typedef typename rtti::compute_pointer_traits<U const&>::type traits;
-  if(! traits::valid(x))
+  if(! traits::valid(x)) {
     return NULL;
+  }
 
   return &detail::rtti_getter::get_node_value( traits::get(x) );
 }

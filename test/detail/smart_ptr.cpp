@@ -5,12 +5,12 @@
 
 #include "mmethod/traits/pointer_traits.hpp"
 
-#include <boost/type_traits/is_same.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/cast.hpp>
+#include <boost/shared_ptr.hpp>
 
 using namespace rtti;
 

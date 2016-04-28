@@ -5,10 +5,10 @@
 
 #include "mmethod/declare/trampoline.hpp"
 
-#include <boost/type_traits/is_same.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/static_assert.hpp>
 
 using namespace rtti;
 using boost::mpl::vector;
@@ -26,7 +26,7 @@ namespace rtti {
 template<>
 struct pointer_traits<A> {
   template<typename Out>
-  static Out cast(A)
+  static Out cast(A /*unused*/)
   { return Out(); }
 };
 
@@ -38,26 +38,26 @@ struct ret_type {};
 struct exn_type : std::exception {};
 
 struct unary {
-  ret_type call(B) {
+  ret_type call(B /*unused*/) {
     BOOST_THROW_EXCEPTION( exn_type() );
   }
 };
 
 struct formal {
-  ret_type call(B, int i) {
+  ret_type call(B /*unused*/, int i) {
     BOOST_CHECK_EQUAL(i, 42);
     BOOST_THROW_EXCEPTION( exn_type() );
   }
 };
 
 struct binary {
-  ret_type call(B, B) {
+  ret_type call(B /*unused*/, B /*unused*/) {
     BOOST_THROW_EXCEPTION( exn_type() );
   }
 };
 
 struct vover {
-  void call(B) {
+  void call(B /*unused*/) {
     BOOST_THROW_EXCEPTION( exn_type() );
   }
 };

@@ -31,7 +31,7 @@ struct save_poles_once {
 template<typename Tag, std::size_t BTS>
 struct save_poles {
   template<typename Tuple>
-  static void eval(rtti_hierarchy* h, Tuple*) {
+  static void eval(rtti_hierarchy* h, Tuple* /*unused*/) {
     save_poles_once<Tag, Tuple> fetcher = { h };
 
     arity_loop<BTS>::apply(fetcher);

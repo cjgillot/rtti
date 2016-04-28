@@ -22,12 +22,14 @@ void
 klass_t::set_rank(std::size_t r) {
   this->rank = r;
 
-  if(subtype.size() <= r)
+  if(subtype.size() <= r) {
     subtype.resize(1+r);
+  }
 
   foreach(klass_t const* b, bases) {
-    if(b->subtype.size() <= r)
+    if(b->subtype.size() <= r) {
       const_cast<klass_t*>(b)->subtype.resize(1+r);
+    }
 
     subtype |= b->subtype;
   }

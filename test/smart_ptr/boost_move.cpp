@@ -18,9 +18,9 @@
 
 #include "../classes.hpp"
 
+#include <boost/cast.hpp>
 #include <boost/move/utility.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/cast.hpp>
 
 using namespace rtti::mmethod;
 

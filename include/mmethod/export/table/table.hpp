@@ -10,9 +10,9 @@
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/export/hash_map.hpp"
 
+#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 
 #include <stdint.h>

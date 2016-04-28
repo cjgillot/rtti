@@ -8,8 +8,8 @@
 
 #include "mmethod/config.hpp"
 #include "mmethod/rtti/implement_traits.hpp"
-#include "mmethod/rtti/mixin/mixin_node.hpp"
 #include "mmethod/rtti/getter.hpp"
+#include "mmethod/rtti/mixin/mixin_node.hpp"
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -45,7 +45,7 @@ private:
     return rtti_get_mixin(d);
   }
 
-  friend MixinNode rtti_mixin_node_type(Derived const volatile*) {
+  friend MixinNode rtti_mixin_node_type(Derived const volatile* /*unused*/) {
     return boost::declval<MixinNode>();
   }
 
@@ -54,7 +54,7 @@ public:
   friend arity_type rtti_parents_size_1p(Derived const volatile* k)
   { return rtti_parents_size_1p(k); }
   template<typename F>
-  friend void rtti_parents_foreach(F f, Derived const volatile*) {
+  friend void rtti_parents_foreach(F f, Derived const volatile* /*unused*/) {
     boost::mpl::for_each<
       parents,
       boost::add_pointer<boost::mpl::_>

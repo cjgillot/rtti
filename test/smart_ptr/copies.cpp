@@ -7,8 +7,8 @@
 // of copies of the pointer object are needed for a call.
 #include "../classes.hpp"
 
-#include <boost/test/unit_test.hpp>
 #include <boost/cast.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace rtti::mmethod;
 

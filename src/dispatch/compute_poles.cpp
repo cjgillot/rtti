@@ -62,9 +62,11 @@ hierarchy_t::effective_bases(rtti_hierarchy klass, klass_t::bases_type* bases) {
   std::size_t const arity = rtti_get_base_arity(klass);
 
   bases->reserve(arity);
-  foreach_base(rtti_hierarchy base, klass)
-    if(klass_t const* bk = try_fetch(base))
+  foreach_base(rtti_hierarchy base, klass) {
+    if(klass_t const* bk = try_fetch(base)) {
       bases->push_back(bk);
+    }
+  }
 }
 
 //!\brief Pseudo-closest algorithm (Fig 9)
@@ -98,8 +100,9 @@ hierarchy_t::pseudo_closest(
   klass_t::is_subtype_of sub_cmp;
   foreach(klass_t const* k, candidates) {
     // degenerate case
-    if( !sub_cmp(*maxK, *k) )
+    if( !sub_cmp(*maxK, *k) ) {
       return 2;
+    }
   }
 
   // assign and return

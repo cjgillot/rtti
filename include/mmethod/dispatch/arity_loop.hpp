@@ -32,7 +32,7 @@ struct arity_loop_helper<J, BTS, false> {
 template<std::size_t J>
 struct arity_loop_helper<J, 0, false> {
   template<typename Func>
-  BOOST_FORCEINLINE static void apply(Func&) {}
+  BOOST_FORCEINLINE static void apply(Func& /*unused*/) {}
 };
 
 template<std::size_t BTS>

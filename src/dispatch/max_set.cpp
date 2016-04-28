@@ -25,8 +25,9 @@ void max_set::insert(const signature_t& sig0, const link_table& links) {
       overload_t const* bound = links.at_overload(sig);
 
       // call filter
-      if(bound)
+      if(bound) {
         filter(*bound);
+      }
     }
   }
 

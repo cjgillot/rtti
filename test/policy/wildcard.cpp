@@ -38,8 +38,9 @@ int called_ambiguous = 0;
 struct wildcard_policy
 : public mmethod::default_policy
 {
-  static bool ambiguity_handler(std::size_t, rtti_hierarchy const*);
-  static int bad_dispatch(foo&, foo&);
+  static bool ambiguity_handler(std::size_t /*n*/,
+                                rtti_hierarchy const /*types*/ []);
+  static int bad_dispatch(foo& /*arg1*/, foo& /*arg2*/);
 };
 
 /*`

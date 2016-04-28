@@ -77,7 +77,7 @@ struct holder<T>::initializer_t::register_one {
   mutable std::size_t k;
 
   template<typename P>
-  void operator()(P*) const {
+  void operator()(P* /*unused*/) const {
     typedef typename get_holder<P>::type U;
     holder::node.__base[k] = U::get_node();
     ++k;

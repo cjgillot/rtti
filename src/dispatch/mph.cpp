@@ -61,7 +61,9 @@ void output_device::rerank_unary() {
     foreach(klass_t const* k, h.range()) {
       invoker_t ptr = dispatch.at( signature_t::unary(k) );
       value_type value = reinterpret_cast<value_type>(ptr);
-      if(!value) value = fallback;
+      if(!value) {
+        value = fallback;
+      }
 
       ht.insert(std::make_pair(k, value));
     }
@@ -121,8 +123,9 @@ make_assignment(
 void output_device::output_dispatch_table(
   const early_bindings_struct& decl
 ) {
-  if(decl.arity == 1)
+  if(decl.arity == 1) {
     return;
+  }
 
   invoker_t* const table = new invoker_t [ max_index ];
   output.table = table;
@@ -132,8 +135,9 @@ void output_device::output_dispatch_table(
   // assign dispatch table
   foreach(dispatch_t::const_reference p, dispatch) {
     invoker_t inv = p.second;
-    if(inv)
+    if(inv) {
       make_assignment(p.first, inv, table, ht);
+    }
   }
 }
 

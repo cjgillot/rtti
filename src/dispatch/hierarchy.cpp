@@ -16,15 +16,17 @@ hierarchy_t::hierarchy_t()
 
 hierarchy_t::~hierarchy_t()
 {
-  foreach(klass_t* k, klasses)
+  foreach(klass_t* k, klasses) {
     delete k;
+  }
 }
 
 klass_t const*
 hierarchy_t::try_fetch(rtti_hierarchy hh) const {
   poles_map_t::const_iterator it = poles.find(hh);
-  if( it == poles.end() )
+  if( it == poles.end() ) {
     return NULL;
+  }
 
   klass_t const* k = it->second;
   BOOST_ASSERT(
@@ -45,8 +47,9 @@ klass_t const*
 hierarchy_t::try_fetch_from(rtti_hierarchy hh) const {
   klass_t const* ret = try_fetch(hh);
 
-  if(ret)
+  if(ret) {
     return ret;
+  }
 
   // upcast to find something
   foreach_base(rtti_hierarchy bb, hh) {

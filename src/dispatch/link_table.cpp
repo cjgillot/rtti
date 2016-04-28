@@ -12,8 +12,9 @@ link_table::link_table(dispatch_t& d, const pole_table_t& pt)
 : dispatch(d), pole_table(pt)
 {
   // Initial population
-  foreach(overload_t const& p, dispatch)
+  foreach(overload_t const& p, dispatch) {
     insert_overload(p.first, p);
+  }
 }
 
 void link_table::insert(const signature_t& s, link_t const& l) {
@@ -45,7 +46,7 @@ struct link_table::resolve_visitor
     return ov.second;
   }
 
-  invoker_t operator()(boost::none_t) const {
+  invoker_t operator()(boost::none_t /*unused*/) const {
     return NULL;
   }
 
@@ -56,8 +57,9 @@ private:
 // Need to care about loops
 invoker_t link_table::resolve_once(const signature_t& lnk) {
   dispatch_t::iterator it = dispatch.find(lnk);
-  if(it != dispatch.end())
+  if(it != dispatch.end()) {
     return it->second;
+  }
 
   if(visited.find(lnk) != visited.end()) {
     dispatch.insert(std::make_pair(lnk, invoker_t(NULL)));

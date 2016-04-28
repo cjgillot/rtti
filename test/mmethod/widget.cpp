@@ -128,8 +128,9 @@ IMPLEMENT_MMETHOD(count, int, ( WNumber const& n ))
   int k = n.get_number();
 
   // trivial case
-  if(k == 0)
+  if(k == 0) {
     return 1;
+  }
 
   int ret = 0;
   if(k < 0) {
@@ -139,8 +140,9 @@ IMPLEMENT_MMETHOD(count, int, ( WNumber const& n ))
   }
 
   // count digits
-  for(; k != 0; k /= 10)
+  for(; k != 0; k /= 10) {
     ++ret;
+  }
 
   return ret;
 }

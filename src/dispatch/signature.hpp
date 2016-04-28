@@ -28,7 +28,8 @@ public:
   : sig(boost::begin(v), boost::end(v)) {}
 
   static signature_t unary(klass_t const* k) {
-    return signature_t( std::make_pair(&k, &k+1) );
+    klass_t const* range [ 1 ] = { k };
+    return signature_t( range );
   }
 
 public:
