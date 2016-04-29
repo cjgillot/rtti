@@ -39,11 +39,6 @@ private:
 private:
   std::deque<rtti_hierarchy> stack;
   boost::unordered_set<rtti_hierarchy> visited;
-
-#ifndef NDEBUG
-  // sanity test only in debug mode
-  bool processing;
-#endif
 };
 
 } // namespace rtti_dispatch

@@ -11,7 +11,7 @@
 
 void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_table_type& output)
 {
-  std::size_t arity = decl.arity;
+  std::size_t const arity = decl.arity;
 
   /// hierarchy stuff
   std::vector<std::vector<rtti_hierarchy> > hierarchies ( arity );

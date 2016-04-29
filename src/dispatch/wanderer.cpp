@@ -9,27 +9,18 @@
 
 using namespace rtti_dispatch;
 
-wanderer_t::wanderer_t() {
-#ifndef NDEBUG
-  processing = false;
-#endif
-}
+wanderer_t::wanderer_t() {}
 
 void
 wanderer_t::push_back(rtti_hierarchy k) {
-#ifndef NDEBUG
-  BOOST_ASSERT( !processing );
-#endif
+  //!Check we have not started iterating.
+  BOOST_ASSERT( visited.empty() );
 
   stack.push_back(k);
 }
 
 rtti_hierarchy
 wanderer_t::pop() {
-#ifndef NDEBUG
-  processing = true;
-#endif
-
   for(;;) {
     // exit condition
     if(stack.empty()) {
@@ -56,9 +47,11 @@ wanderer_t::pop() {
 
     // mark as traversed
     visited.insert(top);
+#ifndef NDEBUG
     foreach_base(rtti_hierarchy b, top) {
-      BOOST_ASSERT(visited.count(b)); (void)b;
+      BOOST_ASSERT(visited.count(b));
     }
+#endif
 
     return top;
   }

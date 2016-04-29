@@ -55,12 +55,19 @@ hierarchy_t::try_fetch_from(rtti_hierarchy hh) const {
   foreach_base(rtti_hierarchy bb, hh) {
     klass_t const* pole = try_fetch_from(bb);
 
+#ifdef NDEBUG
+    if(pole)
+      return pole;
+#else
+    // 'ret' is used to store the various answers we get.
+    // If there are differences, something is wrong.
     if(pole && ret) {
       BOOST_ASSERT(pole == ret);
     }
     else if(!ret) {
       ret = pole;
     }
+#endif
   }
 
   return ret;

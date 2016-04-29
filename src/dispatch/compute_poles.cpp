@@ -9,6 +9,7 @@
 #include "wanderer.hpp"
 
 #include <boost/range/algorithm/max_element.hpp>
+#include <boost/range/algorithm_ext/is_sorted.hpp>
 
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
@@ -114,7 +115,7 @@ typedef std::vector<rtti_hierarchy> input_type;
 
 void hierarchy_t::compute_poles(input_type const& input) {
   // primary poles
-  boost::unordered_set<rtti_hierarchy> primary_poles (
+  boost::unordered_set<rtti_hierarchy> const primary_poles (
     boost::begin(input), boost::end(input)
   );
 
@@ -133,15 +134,13 @@ void hierarchy_t::compute_poles(input_type const& input) {
 
     if(primary_poles.count(top)) {
       // primary pole case
-      BOOST_ASSERT(std::find(input.begin(), input.end(), top) != input.end());
-
       add_pole(top, bases);
     }
     else {
       // non-primary pole
 
       // compute
-      klass_t const* pole;
+      klass_t const* pole = NULL;
       std::size_t const sz = pseudo_closest(top, bases, &pole);
 
       if(sz == 0) {
@@ -160,6 +159,10 @@ void hierarchy_t::compute_poles(input_type const& input) {
     }
   }
 
-  // sort
-  std::sort(klasses.begin(), klasses.end(), rank_compare());
+  //!Check the classes are sorted in rank order.
+  // The ranks correspond to the visitation
+  // order in topological sort.
+  BOOST_ASSERT(boost::is_sorted(
+    klasses, rank_compare()
+  ));
 }
