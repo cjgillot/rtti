@@ -3,7 +3,12 @@ language: cpp
 os:
   - linux
 
-sudo: required
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - valgrind
 
 env:
   global:
@@ -26,13 +31,19 @@ matrix:
     - compiler: gcc
       env: TOOLSET=gcc-5.1 VALGRIND=1
 
-before_install: wget "https://raw.githubusercontent.com/boostorg/regression/develop/ci/src/script.py"
+before_install:
+  - wget "https://raw.githubusercontent.com/boostorg/regression/develop/ci/src/script.py"
+  - wget "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" -O /tmp/boost-1.60.tbz2
 
 install:
-  - python script.py install
-  - sudo add-apt-repository ppa:boost-latest/ppa -y
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq -y --force-yes valgrind boost1.55
+  - tar xjf /tmp/boost-1.60.tbz2
+  - BOOST_PREFIX="$(pwd)/boost-prefix/"
+  - mkdir -p $BOOST_PREFIX
+  - pushd boost_1_60_0
+  -     ./bootstrap.sh --prefix=$BOOST_PREFIX --with-libraries=test
+  -     ./b2 install -j4
+  - popd
+  - export PATH="$BOOST_PREFIX/bin:$PATH"
 
 script:
   - python script.py script
