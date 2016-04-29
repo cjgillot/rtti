@@ -73,6 +73,8 @@ class symmetric_duplicator
 : public mmethod::duplicator
 {
 public:
+  // ctor
+  symmetric_duplicator();
   // load an initial overload (n,t) as a C array
   void load(size_t n, rtti_hierarchy* t);
   // generate permutations in turn
@@ -83,6 +85,10 @@ private:
   size_t m_arity;
   rtti_hierarchy* m_array;
 };
+
+symmetric_duplicator::symmetric_duplicator()
+: m_arity(0), m_array(NULL)
+{}
 
 /*`
   When a new overload is encountered,
@@ -97,7 +103,7 @@ private:
   the permutations of the signature array.
  */
 void symmetric_duplicator::load(size_t n, rtti_hierarchy* t)
-{
+{ /*<-*/BOOST_ASSERT(!m_arity && !m_array);/*->*/
   m_arity = n;
   m_array = t;
 
@@ -106,7 +112,7 @@ void symmetric_duplicator::load(size_t n, rtti_hierarchy* t)
 }
 
 bool symmetric_duplicator::next()
-{
+{ /*<-*/BOOST_ASSERT(m_arity && m_array);/*->*/
   // permute, and return false is exhausted
   return std::next_permutation(m_array, m_array+m_arity);
 }
