@@ -32,7 +32,7 @@ install:
   - python script.py install
   - sudo add-apt-repository ppa:boost-latest/ppa -y
   - sudo apt-get update -qq
-  - sudo apt-get install -qq -y valgrind boost1.55
+  - sudo apt-get install -qq -y --force-yes valgrind boost1.55
 
 script:
   - python script.py script
