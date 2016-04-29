@@ -31,7 +31,7 @@ rtti::mmethod::detail::inse_table(
   d->load(arity, hiers);
   do {
     // signature_type is a vector -> copies the array hiers
-    signature_type sig ( hiers, hiers+arity );
+    rtti_signature sig ( hiers, hiers+arity );
     eb->vector.push_back(std::make_pair(sig, inv));
   }
   while(d->next());

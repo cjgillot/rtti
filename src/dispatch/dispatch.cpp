@@ -85,7 +85,7 @@ static void dispatch_one(
       ahndl(arity, amb.data());
       dispatch.insert_none(sig);
     }
-    catch(retry_dispatch&) {
+    catch(rtti::retry_dispatch&) {
       signature_t newsig ( arity );
 
       // generate classes

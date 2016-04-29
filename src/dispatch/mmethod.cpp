@@ -15,8 +15,8 @@ void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_
 
   /// hierarchy stuff
   std::vector<std::vector<rtti_hierarchy> > hierarchies ( arity );
-  foreach(binding_type const& over, decl.vector) {
-    signature_type const& s = over.first;
+  foreach(rtti_binding const& over, decl.vector) {
+    rtti_signature const& s = over.first;
     for(std::size_t i = 0; i < arity; ++i) {
       hierarchies[i].push_back( s[i] );
     }
@@ -29,8 +29,8 @@ void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_
   /// fill up dispatch table
   dispatch_t dispatch_table; {
     // declared overloads
-    foreach(binding_type const& over, decl.vector) {
-      signature_type const& h = over.first;
+    foreach(rtti_binding const& over, decl.vector) {
+      rtti_signature const& h = over.first;
       signature_t sig = make_signature(h, pole_table);
 
       if(!over.second) {
