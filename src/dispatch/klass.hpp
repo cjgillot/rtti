@@ -15,6 +15,16 @@
 
 class hierarchy_t;
 class signature_t;
+
+/*!\brief Metadata-augmented hierarchy node.
+ *
+ * This class represents rtti nodes,
+ * with adjunction of metadata:
+ * - effective bases
+ * - bitset for fast subtyping check
+ *
+ * This class may only be created inside a hierarchy_t object.
+ */
 struct klass_t
 : private boost::noncopyable
 {
@@ -24,9 +34,16 @@ public:
 private:
   friend class hierarchy_t;
 
+  //!\brief Class we are referring to.
   rtti_hierarchy const rtti;
+
+  //!\brief Effective base classes.
+  //! These effective bases are
+  //! cleaned of all the classes that dont
+  //! play a role in the dispatch process.
   bases_type bases;
 
+  //!\brief Fast subtyping check.
   /// \invariant : subtype[o.rank] = 1 - iff [this] derives from [o]
   /// \invariant : subtype[rank] = 1 - consequence
   std::size_t rank;

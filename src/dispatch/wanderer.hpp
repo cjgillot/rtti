@@ -13,8 +13,8 @@
 
 namespace rtti_dispatch {
 
-//!\brief Topological sort traversal functor
-//! klass objects are popped from the most general
+//!\brief Topological sort traversal object.
+//! \c klass_t objects are popped from the most general
 //! to the most derived type.
 struct wanderer_t {
   wanderer_t();

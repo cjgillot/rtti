@@ -25,7 +25,9 @@
 
 /*!\brief Class hierarchy object
  *
- * This class acts as a factory for \c klass objects.
+ * This class acts as a factory for \c klass_t objects.
+ * It is meant to be used as a wrapper for these,
+ * and is constucted using \c compute_poles method.
  */
 class hierarchy_t
 {
@@ -36,13 +38,8 @@ public:
   ~hierarchy_t();
 
 public:
-  //!\brief Compute poles for \c *this
-  //!\arg input The static arguments of mmethods
-  //!\c *this is filled with the poles
-  void compute_poles(std::vector<rtti_hierarchy> const& input);
-
-  //!poles are sorted in reverse subtyping order :
-  //!base classes first
+  //! Classes are sorted in reverse subtyping order:
+  //! base classes first
   //@{
   typedef std::vector<klass_t* > range_type;
   range_type const& range() const {
@@ -50,6 +47,14 @@ public:
   }
   //@}
 
+  //! Fetch utilities to retrieve \c klass_t objects
+  //! from \c rtti_hierarchy references.
+  //!
+  //! The try_* variants return \c NULL if not found,
+  //! the other \c ASSERT.
+  //!
+  //! The *_from variants upcast until a class is found.
+  //@{
   //!\brief Fetch klass from rtti_hierarchy
   klass_t const* fetch(rtti_hierarchy) const;
   //!\brief Like fetch
@@ -60,6 +65,15 @@ public:
   klass_t const* try_fetch_from(rtti_hierarchy) const;
   //!\brief Like fetch, but upcast until found
   klass_t const* fetch_from(rtti_hierarchy) const;
+  //@}
+
+  //! Pseudo-closest algorithm implementation
+  //@{
+public:
+  //!\brief Compute poles for \c *this
+  //!\arg input The static arguments of mmethods
+  //!\c *this is filled with the poles
+  void compute_poles(std::vector<rtti_hierarchy> const& input);
 
 private:
   //!\brief Register new node in hierarchy.
@@ -72,6 +86,7 @@ private:
   , klass_t::bases_type const&
   , klass_t const**
   );
+  //@}
 
 private:
   std::vector<klass_t*> klasses;

@@ -9,7 +9,8 @@
 
 #include <vector>
 
-void rtti_dispatch::process_declaration(early_bindings_struct const& decl, seal_table_type& output)
+void rtti_dispatch::process_declaration(early_bindings_struct const& decl,
+                                        seal_table_type& output)
 {
   std::size_t const arity = decl.arity;
 

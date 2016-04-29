@@ -21,31 +21,42 @@ wanderer_t::push_back(rtti_hierarchy k) {
 
 rtti_hierarchy
 wanderer_t::pop() {
+  //!Main loop.
+  // 'stack' works like a call stack:
+  // for each visited class,
+  // we check its bases.
+  // If a base needs visiting,
+  // we push the current class,
+  // and iterate among the bases.
   for(;;) {
-    // exit condition
+    // Exit condition
     if(stack.empty()) {
       return NULL;
     }
 
-    // get next element
+    // Next element
     rtti_hierarchy top = stack.back();
     stack.pop_back();
 
-    // already traversed ?
+    // If we have already traversed it,
+    // just ignore it.
     if(visited.count(top)) {
       continue;
     }
 
-    // inject base classes
+    // Check the base classes.
     bool const need_upcast = reinject_bases(top);
 
-    // retry if a base has been injected
+    // At least ont base has been added.
+    // Push ourself at the bottom of the stack
+    // and retry.
     if(need_upcast) {
       stack.push_front(top);
       continue;
     }
 
-    // mark as traversed
+    // We have a traversable candidate,
+    // mark it as seen and return it.
     visited.insert(top);
 #ifndef NDEBUG
     foreach_base(rtti_hierarchy b, top) {
@@ -64,8 +75,8 @@ bool
 wanderer_t::reinject_bases(rtti_hierarchy top_pole) {
   bool need_upcast = false;
 
+  // Add all unvisited bases to the stack.
   foreach_base(rtti_hierarchy next, top_pole) {
-    // not visited yet
     if(!visited.count(next)) {
       stack.push_back(next);
       need_upcast = true;
