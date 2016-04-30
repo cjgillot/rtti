@@ -4,7 +4,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-tar xjf /tmp/boost-1.60.tbz2
+tar xjf /tmp/boost.tbz2
 
 BOOST_PREFIX="$(pwd)/boost-prefix/"
 mkdir -p $BOOST_PREFIX
@@ -18,16 +18,7 @@ pushd boost_1_60_0/tools/build
     ./b2 install -d0 -j4 --prefix=$BOOST_PREFIX
 popd
 
-export PATH="$BOOST_PREFIX/bin:$PATH"
-
-cat > user-config.jam <<EOF
-
-project
-  :
-  : requirements <include>$BOOST_PREFIX/include
-  ;
-
-lib unit_test_framework : : <name>boost_unit_test_framework <search>$BOOST_PREFIX ;
-
-EOF
-
+export BOOST_ROOT=$BOOST_PREFIX
+export BOOST_INCLUDEDIR=$BOOST_PREFIX/include
+export BOOST_LIBRARYDIR=$BOOST_PREFIX/lib
+export Boost_NO_SYSTEM_PATHS=ON

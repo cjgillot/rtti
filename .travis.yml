@@ -7,41 +7,37 @@ sudo: false
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise
     packages:
+      - gcc-4.9
+      - gcc-5
+      - clang-3.6
+      - clang-3.8
       - valgrind
 
-env:
-  global:
-   - TARGET=test
+compiler:
+  - gcc-4.9
+  - gcc-5
+  - clang-3.6
+  - clang-3.8
 
-matrix:
-  include:
-    - compiler: clang
-      env: TOOLSET=clang-3.4 VALGRIND=1
-    - compiler: clang
-      env: TOOLSET=clang-3.5 VALGRIND=1
-    - compiler: clang
-      env: TOOLSET=clang-3.6 VALGRIND=1
-    - compiler: gcc
-      env: TOOLSET=gcc-4.7 VALGRIND=1
-    - compiler: gcc
-      env: TOOLSET=gcc-4.8 VALGRIND=1
-    - compiler: gcc
-      env: TOOLSET=gcc-4.9 VALGRIND=1
-    - compiler: gcc
-      env: TOOLSET=gcc-5.1 VALGRIND=1
+env:
+  - CXXFLAGS="-std=c++03"
+  - CXXFLAGS="-std=c++11"
 
 before_install:
-  - wget "https://raw.githubusercontent.com/boostorg/regression/develop/ci/src/script.py"
-  - wget "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" -O /tmp/boost-1.60.tbz2
+  - $CC --version
+  - $CXX --version
+  - env
+  - wget "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" -O /tmp/boost.tbz2
 
 install:
   - . ./install-boost.sh
 
 script:
-  - python script.py script
-  - if [ "${VALGRIND}" != "" ]; then find -type f -executable -name test | xargs -i% valgrind --error-exitcode=-1 %; fi
-
-after_success: python script.py after_success
-after_failure: python script.py after_failure
-after_script: python script.py after_script
+  - mkdir build; cd build
+  - cmake ..
+  - make all test
+  - find -type f -executable -name 'test-*' | xargs -i% valgrind --error-exitcode=-1 %
