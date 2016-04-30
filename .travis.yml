@@ -36,14 +36,7 @@ before_install:
   - wget "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" -O /tmp/boost-1.60.tbz2
 
 install:
-  - tar xjf /tmp/boost-1.60.tbz2
-  - BOOST_PREFIX="$(pwd)/boost-prefix/"
-  - mkdir -p $BOOST_PREFIX
-  - pushd boost_1_60_0
-  -     ./bootstrap.sh --prefix=$BOOST_PREFIX --with-libraries=test
-  -     ./b2 install -j4
-  - popd
-  - export PATH="$BOOST_PREFIX/bin:$PATH"
+  - . ./install-boost.sh
 
 script:
   - python script.py script

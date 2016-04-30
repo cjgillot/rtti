@@ -5,8 +5,6 @@
 
 using testing ;
 
-lib unit_test_framework : : <name>boost_unit_test_framework <search>/usr/lib ;
-
 unit-test test
   : [ glob-tree *.cpp ]
   : <library>/library//rtti
