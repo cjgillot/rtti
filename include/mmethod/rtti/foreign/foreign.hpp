@@ -11,8 +11,8 @@
 #include "mmethod/rtti/mixin/mixin_node.hpp"
 #include "mmethod/rtti/holder/holder.hpp"
 
-#include "mmethod/rtti/implement_traits.hpp"
 #include "mmethod/rtti/foreign/type_index.hpp"
+#include "mmethod/rtti/mixin/implement_traits.hpp"
 
 #include <map>
 
@@ -51,10 +51,9 @@ extern rtti::detail::implement_traits<Klass, Supers>::arity_type        \
 rtti_parents_size_1p(Klass const volatile*) MMETHOD_ATTRIBUTE_UNUSED;   \
 template<typename F>                                                    \
 inline void rtti_parents_foreach(F f, Klass const volatile*) {          \
-  boost::mpl::for_each<                                                 \
-    rtti::detail::implement_traits<Klass, Supers>::parents,             \
-    boost::add_pointer<boost::mpl::_>                                   \
-  >(f);                                                                 \
+  typedef rtti::detail::implement_traits<Klass, Supers>::parents        \
+    parents;                                                            \
+  boost::mpl::for_each<parents>(f);                                     \
 }                                                                       \
 static rtti::foreign_detail::foreign_node_holder_initalizer<Klass>      \
   BOOST_JOIN(__rtti_mmethod_foreign_initializer_, __LINE__);            \

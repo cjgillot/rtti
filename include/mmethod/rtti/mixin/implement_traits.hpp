@@ -7,12 +7,11 @@
 #define RTTI_IMPLEMENT_TRAITS_HPP
 
 #include "mmethod/config.hpp"
-#include "mmethod/rtti/mixin/mixin_node.hpp"
-#include "mmethod/rtti/foreign/type_index.hpp"
 
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/type_traits/add_cv.hpp>
+#include <boost/type_traits/add_pointer.hpp>
 
 namespace rtti {
 namespace detail {
@@ -22,7 +21,9 @@ struct implement_traits {
   // parent classes manipulation
   typedef typename boost::mpl::transform<
     Parents
-  , boost::add_cv<boost::mpl::_>
+  , boost::add_pointer<
+      boost::add_cv<boost::mpl::_>
+    >
   >::type parents;
 
   BOOST_STATIC_CONSTANT(std::size_t, arity = boost::mpl::size<parents>::value);
