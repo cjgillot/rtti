@@ -14,7 +14,7 @@
 #include "./classes.hpp"
 #include "foreach.hpp"
 
-#include <boost/make_shared.hpp>
+#include <boost/move/unique_ptr.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
@@ -60,7 +60,8 @@ struct symmetric_policy
 : mmethod::default_policy
 {
   // generator of permutations
-  static boost::shared_ptr<mmethod::duplicator> make_duplicate();
+  typedef boost::movelib::unique_ptr<mmethod::duplicator> dup_ptr_t;
+  static dup_ptr_t make_duplicate();
 };
 
 /*`
@@ -117,8 +118,9 @@ bool symmetric_duplicator::next()
   return std::next_permutation(m_array, m_array+m_arity);
 }
 
-boost::shared_ptr<mmethod::duplicator> symmetric_policy::make_duplicate() {
-  return boost::make_shared<symmetric_duplicator>();
+symmetric_policy::dup_ptr_t symmetric_policy::make_duplicate() {
+  dup_ptr_t ret ( new symmetric_duplicator );
+  return BOOST_MOVE_RET(dup_ptr_t, ret);
 }
 //]
 

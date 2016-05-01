@@ -9,7 +9,7 @@
 #include "mmethod/export/exception.hpp"
 #include "mmethod/policy/duplicator.hpp"
 
-#include <boost/shared_ptr.hpp>
+#include <boost/move/unique_ptr.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -24,7 +24,7 @@ struct default_policy {
   static void ambiguity_handler(size_t /*arity*/,
                                 rtti_hierarchy const* /*signature*/);
 
-  static boost::shared_ptr<duplicator> make_duplicate();
+  static boost::movelib::unique_ptr<duplicator> make_duplicate();
 };
 
 } // namespace ambiguity

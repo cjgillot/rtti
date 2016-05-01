@@ -5,12 +5,13 @@
 
 #include "mmethod/policy/default_policy.hpp"
 
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <boost/move/unique_ptr.hpp>
 #include <boost/throw_exception.hpp>
 
 using namespace rtti;
 using namespace rtti::mmethod::ambiguity;
+
+typedef boost::movelib::unique_ptr<duplicator> dup_ptr;
 
 class default_duplicator
 : public duplicator
@@ -20,12 +21,10 @@ public:
   bool next() { return false; }
 };
 
-boost::shared_ptr<duplicator>
+dup_ptr
 default_policy::make_duplicate() {
-  static boost::shared_ptr<duplicator> ret =
-      boost::make_shared<default_duplicator>();
-
-  return ret;
+  dup_ptr ret ( new default_duplicator );
+  return BOOST_MOVE_RET(dup_ptr, ret);
 }
 
 void default_policy::bad_dispatch() {

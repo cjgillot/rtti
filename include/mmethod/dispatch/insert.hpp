@@ -10,6 +10,7 @@
 #include "mmethod/dispatch/common.hpp"
 
 #include <boost/mpl/at.hpp>
+#include <boost/move/unique_ptr.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -53,7 +54,7 @@ void dispatch<Policy, Tag, Ret>::insert(F const& f) {
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
-  boost::shared_ptr<duplicator> dup = Policy::make_duplicate();
+  boost::movelib::unique_ptr<duplicator> dup = Policy::make_duplicate();
 
   detail::inse_table(
     arity
