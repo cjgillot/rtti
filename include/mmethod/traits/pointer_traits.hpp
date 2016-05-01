@@ -11,7 +11,11 @@
 #include <boost/mpl/if.hpp>
 
 #include <boost/call_traits.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/add_pointer.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_virtual_base_of.hpp>
 
 namespace rtti {
@@ -90,13 +94,11 @@ public:
 template<typename T>
 class raw_ptr_traits {
 
-  typedef typename boost::remove_pointer<T>::type& reference_type;
+  typedef typename boost::remove_pointer<T>::type nonpointer_type;
+  typedef nonpointer_type&                        reference_type;
 
 public:
-  typedef typename boost::remove_cv<
-          typename boost::remove_reference<
-          reference_type
-  >::type>::type class_type;
+  typedef typename boost::remove_cv<nonpointer_type>::type class_type;
 
   static reference_type get(T* v) { return *v; }
   static bool valid(T* v) { return bool(v); }

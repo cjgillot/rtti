@@ -22,9 +22,6 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-#ifndef BOOST_NO_CXX11_SMART_PTR
-BOOST_CONSTEXPR
-#endif
 inline
 hash_map::hash_map()               BOOST_NOEXCEPT_OR_NOTHROW
 : m_mask(0), m_size(0), m_fallback(0) {}

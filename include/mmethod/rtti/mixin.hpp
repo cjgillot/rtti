@@ -12,7 +12,7 @@
 #include "mmethod/rtti/mixin/single_node.hpp"
 #include "mmethod/rtti/mixin/virtual_node.hpp"
 
-#include <boost/mpl/at.hpp>
+#include <boost/mpl/front.hpp>
 #include <boost/mpl/vector.hpp>
 
 namespace rtti {
@@ -50,7 +50,7 @@ namespace detail {
 template<typename parents>
 struct get_mixin_node_type {
 private:
-  typedef typename boost::mpl::at_c<parents, 0>::type parent0;
+  typedef typename boost::mpl::front<parents>::type parent0;
 
   // Recover type thanks to ADL-found rtti_mixin_node_type.
   BOOST_TYPEOF_NESTED_TYPEDEF_TPL(nested,

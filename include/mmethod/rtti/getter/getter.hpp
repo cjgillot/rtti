@@ -10,12 +10,6 @@
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/traits/pointer_traits.hpp"
 
-#include "mmethod/export/exception.hpp"
-
-#include <boost/throw_exception.hpp>
-
-#include <utility>
-
 namespace rtti {
 namespace detail {
 

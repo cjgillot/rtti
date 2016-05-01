@@ -10,7 +10,7 @@
 #include "mmethod/rtti/mixin/mixin_node.hpp"
 #include "mmethod/rtti/mixin/implement_traits.hpp"
 
-#include <boost/mpl/for_each.hpp>
+#include "mmethod/detail/for_each.hpp"
 
 #include <boost/utility/declval.hpp>
 
@@ -58,7 +58,7 @@ private:
   { return rtti_parents_size_1p(k); }
   template<typename F>
   friend void rtti_parents_foreach(F f, Derived const volatile* /*unused*/) {
-    boost::mpl::for_each<parents>(f);
+    rtti::mmethod::detail::for_each<parents>(f);
   }
   //@}
 
