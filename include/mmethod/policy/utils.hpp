@@ -9,8 +9,9 @@
 #include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
 
-#include <boost/function_types/result_type.hpp>
-#include <boost/function_types/parameter_types.hpp>
+#include <boost/mpl/front.hpp>
+#include <boost/mpl/pop_front.hpp>
+#include <boost/function_types/components.hpp>
 #include <boost/tti/has_static_member_function.hpp>
 
 namespace rtti {
@@ -72,10 +73,12 @@ public:
   template<typename Fp>
   static invoker_t
   get_bad_dispatch() {
+    typedef typename boost::function_types::components<Fp>::type  components;
+    typedef typename boost::mpl::front<components>::type          result;
+    typedef typename boost::mpl::pop_front<components>::type      args;
+
     typedef detail::has_static_member_function_bad_dispatch<
-      Policy
-    , typename boost::function_types::result_type<Fp>::type
-    , typename boost::function_types::parameter_types<Fp>::type
+      Policy, result, args
     > has_bd;
 
     return detail::get_bad<Policy, has_bd::value>::template get<Fp>();
