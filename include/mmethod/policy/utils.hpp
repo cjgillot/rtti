@@ -8,6 +8,7 @@
 
 #include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
+#include "mmethod/policy/forward.hpp"
 
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/pop_front.hpp>
@@ -17,8 +18,6 @@
 namespace rtti {
 namespace mmethod {
 namespace ambiguity {
-
-typedef void (*ambiguity_handler_t)(size_t, rtti_hierarchy[]);
 
 template<typename Policy>
 struct get_fpointers;
@@ -43,8 +42,8 @@ public:
 
 template<typename Policy>
 struct wrap_ahndl {
-  static void ahndl(size_t n, rtti_hierarchy* a) {
-    Policy::ambiguity_handler(n, a);
+  static action_t ahndl(size_t n, rtti_hierarchy* a) {
+    return Policy::ambiguity_handler(n, a);
   }
 };
 

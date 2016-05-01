@@ -14,27 +14,28 @@ using namespace rtti;
 namespace {
 
 using boost::mpl::vector;
+using rtti::mmethod::ambiguity::action_t;
 
 struct first_policy
 : public mmethod::default_policy
 {
-  static void ambiguity_handler(std::size_t, rtti_hierarchy*);
+  static action_t ambiguity_handler(std::size_t, rtti_hierarchy*);
 };
 
-void
+action_t
 first_policy::ambiguity_handler(std::size_t n, rtti_hierarchy* types) {
   BOOST_CHECK_EQUAL(n, 2u);
 
   if(rtti_get_base_arity(types[0])) {
     types[0] = rtti_get_base(types[0]);
-    BOOST_THROW_EXCEPTION(rtti::retry_dispatch());
+    return action_t::RETRY;
   }
   else if(rtti_get_base_arity(types[1])) {
     types[1] = rtti_get_base(types[1]);
-    BOOST_THROW_EXCEPTION(rtti::retry_dispatch());
+    return action_t::RETRY;
   }
   else
-    return;
+    return action_t::NOTHING;
 }
 
 struct lap

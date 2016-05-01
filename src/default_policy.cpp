@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "mmethod/policy/default_policy.hpp"
+#include "mmethod/policy.hpp"
 
 #include <boost/move/unique_ptr.hpp>
 #include <boost/throw_exception.hpp>
@@ -31,6 +31,8 @@ void default_policy::bad_dispatch() {
   BOOST_THROW_EXCEPTION( rtti::bad_dispatch() );
 }
 
-void default_policy::ambiguity_handler(size_t, rtti_hierarchy const*)
-{}
+action_t
+default_policy::ambiguity_handler(size_t, rtti_hierarchy const*) {
+  return action_t::NOTHING;
+}
 

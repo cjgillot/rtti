@@ -6,6 +6,7 @@
 #include "mmethod/rtti.hpp"
 #include "mmethod/mmethod.hpp"
 #include "mmethod/implement.hpp"
+#include "mmethod/policy.hpp"
 
 #include <boost/mpl/vector.hpp>
 

@@ -7,7 +7,7 @@
 #define MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
 
 #include "mmethod/export/exception.hpp"
-#include "mmethod/policy/duplicator.hpp"
+#include "mmethod/policy/forward.hpp"
 
 #include <boost/move/unique_ptr.hpp>
 
@@ -21,8 +21,8 @@ namespace ambiguity {
 
 struct default_policy {
   static void bad_dispatch();
-  static void ambiguity_handler(size_t /*arity*/,
-                                rtti_hierarchy const* /*signature*/);
+  static action_t ambiguity_handler(size_t /*arity*/,
+                                    rtti_hierarchy const* /*signature*/);
 
   static boost::movelib::unique_ptr<duplicator> make_duplicate();
 };

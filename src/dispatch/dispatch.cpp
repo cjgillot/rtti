@@ -66,25 +66,29 @@ static void dispatch_one(
 
   if(mset.size() == 1) {
     dispatch.insert_overload(sig, mset.get());
+    return;
   }
 
-  else {
-    BOOST_ASSERT(ahndl);
+  BOOST_ASSERT(ahndl);
 
-    std::size_t const arity = sig.array().size();
+  std::size_t const arity = sig.array().size();
 
-    std::vector<rtti_hierarchy> amb; amb.resize(arity);
+  std::vector<rtti_hierarchy> amb; amb.resize(arity);
 
-    for(std::size_t k = 0; k < arity; ++k) {
-      klass_t const* klass = sig.array()[k];
-      amb[k] = rtti_get_node(klass->get_id());
-    }
+  for(std::size_t k = 0; k < arity; ++k) {
+    klass_t const* klass = sig.array()[k];
+    amb[k] = rtti_get_node(klass->get_id());
+  }
 
-    try {
-      ahndl(arity, amb.data());
+  using rtti::mmethod::ambiguity::action_t;
+
+  action_t const action = ahndl(arity, amb.data());
+  switch(action) {
+    case action_t::NOTHING:
       dispatch.insert_none(sig);
-    }
-    catch(rtti::retry_dispatch&) {
+      return;
+
+    case action_t::RETRY: {
       signature_t newsig ( arity );
 
       // generate classes
