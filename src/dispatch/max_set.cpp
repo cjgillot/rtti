@@ -9,6 +9,17 @@
 
 //@{ max_set constructor
 
+namespace {
+
+struct same_invoker {
+  bool operator()(overload_t const& a,
+                  overload_t const& b) const {
+    return a.second == b.second;
+  }
+};
+
+} // namespace
+
 max_set::max_set(const signature_t& sig0,
                  const link_table& links)
 {
@@ -34,28 +45,11 @@ max_set::max_set(const signature_t& sig0,
     }
   }
 
-  // factorize identical overloads
-  // since we are only interested in the size() == 1 case,
-  // and only access set.front(),
-  // we only need to reduce with it
-  if(size() > 1) {
-    invoker_t const& front = set.front().second;
-
-    max_set_t::iterator
-      iter = set.begin()
-    , endl = set.end();
-
-    ++iter; // skip front since it is already counted
-
-    while(iter != endl) {
-      if(front == iter->second) {
-        iter = set.erase(iter);
-        continue;
-      }
-
-      ++iter;
-    }
-  }
+  // Factorize identical overloads:
+  // if there is several signatures which
+  // resolve to the same function,
+  // delete them.
+  set.unique(same_invoker());
 }
 
 //@}
