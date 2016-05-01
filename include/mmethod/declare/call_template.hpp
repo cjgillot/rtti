@@ -50,7 +50,7 @@ protected:
     MMETHOD_TRAMPOLINE_CALL_PARMS(unwrapped_args)
   ) const
   {
-    typedef boost::fusion::tuple<
+    typedef boost::tuple<
       MMETHOD_TRAMPOLINE_CALL_PARM_TYPES(unwrapped_args)
     > tuple_type;
     invoker_t inv = m_common.fetch(

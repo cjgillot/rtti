@@ -9,8 +9,7 @@
 #include "mmethod/config.hpp"
 #include "mmethod/dispatch/common.hpp"
 
-#include <functional>
-#include <boost/fusion/include/at_c.hpp>
+#include <boost/tuple/tuple.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -35,7 +34,7 @@ struct fetch_poles_once {
     poles_map_type& map = get_register<Tag>::template poles<J>();
 
     rtti_hierarchy const h  = ::rtti::get_node(
-      boost::fusion::at_c<J>(tuple)
+      tuple.template get<J>()
     );
 
     m += hash::detail::fetch_pole(map, h);
