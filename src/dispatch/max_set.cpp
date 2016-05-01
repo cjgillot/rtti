@@ -7,11 +7,14 @@
 
 #include "foreach.hpp"
 
-max_set::max_set() {}
+//@{ max_set constructor
 
-void max_set::insert(const signature_t& sig0, const link_table& links) {
+max_set::max_set(const signature_t& sig0,
+                 const link_table& links)
+{
   std::size_t const arity = sig0.array().size();
 
+  // Test all the base signatures we can build.
   for(std::size_t k = 0; k < arity; ++k) {
     klass_t const* kth = sig0.array()[k];
 
@@ -55,6 +58,9 @@ void max_set::insert(const signature_t& sig0, const link_table& links) {
   }
 }
 
+//@}
+//@{ filter
+
 // poll [set] and insert if good match
 void max_set::filter(overload_t const& up) {
   signature_t::worse_match is_worse_than;
@@ -84,3 +90,5 @@ void max_set::filter(overload_t const& up) {
   // none of [set] is better
   set.push_back(up);
 }
+
+//@}

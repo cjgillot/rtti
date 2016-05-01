@@ -62,8 +62,7 @@ static void dispatch_one(
   }
 
   // set of candidates
-  max_set mset;
-  mset.insert(sig, dispatch);
+  max_set mset (sig, dispatch);
 
   if(mset.size() == 1) {
     dispatch.insert_overload(sig, mset.get());
