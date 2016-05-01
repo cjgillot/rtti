@@ -26,20 +26,20 @@ void dispatch<Policy,Tag,Ret>::initialize() {
 
 namespace dispatch_detail {
 
-template<typename Tag>
+template<typename Register>
 struct seal_poles_once {
   poles_map_type** p;
 
   template<std::size_t J>
   void apply() {
-    *p = &get_register<Tag>::template poles<J>();
+    *p = &Register::template poles<J>();
     ++p;
   }
 };
-template<typename Tag, std::size_t BTS>
+template<typename Register, std::size_t BTS>
 struct seal_poles {
   static void eval(poles_map_type** h) {
-    seal_poles_once<Tag> fetcher = { h };
+    seal_poles_once<Register> fetcher = { h };
 
     arity_loop<BTS>::apply(fetcher);
   }
@@ -54,10 +54,11 @@ void dispatch<Policy,Tag,Ret>::seal() {
     arity = detail::access::traits<Tag>::vsize
   , btset = detail::access::traits<Tag>::type_bitset
   };
+  typedef detail::get_register<Tag> register_type;
 
   detail::poles_map_type* poles [ arity ];
-  detail::invoker_table_type&  table = detail::get_register<Tag>::table();
-  detail::early_bindings_type& early = detail::get_register<Tag>::early();
+  detail::invoker_table_type&  table = register_type::table();
+  detail::early_bindings_type& early = register_type::early();
 
   typedef typename detail::access::traits<Tag>::policy policy_type;
   typedef typename detail::access::trampoline<Tag>::sig_t fp_t;
@@ -72,7 +73,7 @@ void dispatch<Policy,Tag,Ret>::seal() {
   , policy
   };
 
-  dispatch_detail::seal_poles<Tag, btset>::eval( poles );
+  dispatch_detail::seal_poles<register_type, btset>::eval( poles );
 
   detail::seal_table(arity, early, seal_table);
 }
