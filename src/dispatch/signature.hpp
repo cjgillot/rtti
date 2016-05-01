@@ -55,4 +55,35 @@ public:
   { return a.sig != b.sig; }
 };
 
+#include "hierarchy.hpp"
+
+namespace detail {
+
+struct hierarchy_adder {
+  klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
+  {
+    klass_t const* ret = a1.fetch(a0);
+    BOOST_ASSERT(ret);
+    return ret;
+  }
+};
+
+} // namespace detail
+
+template<typename R0>
+signature_t make_signature(R0 const& r0, pole_table_t& r1) {
+  signature_t ret ( r1.size() );
+
+  std::transform(
+    r0.begin(), r0.end(),
+    r1.begin(),
+
+    ret.array_ref().begin(),
+
+    detail::hierarchy_adder()
+  );
+
+  return ret;
+}
+
 #endif
