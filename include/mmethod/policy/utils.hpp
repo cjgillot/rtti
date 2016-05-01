@@ -12,7 +12,7 @@
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/function_types/components.hpp>
-#include <boost/tti/has_static_member_function.hpp>
+#include <boost/type_traits/detail/yes_no_type.hpp>
 
 namespace rtti {
 namespace mmethod {
@@ -25,7 +25,19 @@ struct get_fpointers;
 
 namespace detail {
 
-BOOST_TTI_HAS_STATIC_MEMBER_FUNCTION(bad_dispatch)
+template<class T, typename Fp>
+struct has_static_member_function_bad_dispatch {
+private:
+  template<Fp> struct helper;
+
+  template<typename U> static boost::type_traits::yes_type check(helper<&U::bad_dispatch>*);
+  template<typename U> static boost::type_traits::no_type  check(...);
+
+public:
+  enum {
+    value = sizeof(check<T>(NULL)) == sizeof(boost::type_traits::yes_type)
+  };
+};
 
 // {{{ get_ahndl
 
@@ -73,12 +85,8 @@ public:
   template<typename Fp>
   static invoker_t
   get_bad_dispatch() {
-    typedef typename boost::function_types::components<Fp>::type  components;
-    typedef typename boost::mpl::front<components>::type          result;
-    typedef typename boost::mpl::pop_front<components>::type      args;
-
     typedef detail::has_static_member_function_bad_dispatch<
-      Policy, result, args
+      Policy, Fp
     > has_bd;
 
     return detail::get_bad<Policy, has_bd::value>::template get<Fp>();
