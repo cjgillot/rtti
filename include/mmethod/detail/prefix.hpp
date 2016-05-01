@@ -4,7 +4,14 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #define MMETHOD_TRAMPOLINE_TYPE(J,I,TypeSeq) \
-    typename boost::mpl::at_c< TypeSeq, I >::type
+  BOOST_JOIN(BOOST_JOIN(__mmethod_, TypeSeq), BOOST_JOIN(__, I))
+
+#define MMETHOD_TRAMPOLINE_DECLARE_TYPE(J,I,TypeSeq) \
+  typedef typename boost::mpl::at_c< TypeSeq, I >::type \
+    MMETHOD_TRAMPOLINE_TYPE(J,I,TypeSeq);
+
+#define MMETHOD_TRAMPOLINE_DECLARE_TYPES(TypeSeq) \
+  BOOST_PP_REPEAT(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_DECLARE_TYPE, TypeSeq)
 
 // {{{ Macros used in call.hpp
 

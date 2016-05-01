@@ -36,6 +36,9 @@ protected:
   void generate() const
   { m_common.generate(); }
 
+private:
+  MMETHOD_TRAMPOLINE_DECLARE_TYPES(unwrapped_args)
+
 protected:
 #define MMETHOD_TRAMPOLINE_CALL_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_CALL_ARG, unwrapped_args)
@@ -88,6 +91,7 @@ protected:
   }
 
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
+#undef MMETHOD_TRAMPOLINE_CALL_ARGS
 
 }; // apply
 
