@@ -63,6 +63,8 @@ void max_set::filter(overload_t const& up) {
     iter = set.begin()
   , endl = set.end();
 
+  bool found_better = false;
+
   while(iter != endl) {
     overload_t const& e = *iter;
 
@@ -74,7 +76,7 @@ void max_set::filter(overload_t const& up) {
 
     // [e] is better match, don't insert [up]
     else if( is_worse_than(up.first, e.first) ) {
-      return;
+      found_better = true;
     }
 
     // poll next overload
@@ -82,7 +84,9 @@ void max_set::filter(overload_t const& up) {
   }
 
   // none of [set] is better
-  set.push_back(up);
+  if(! found_better) {
+    set.push_back(up);
+  }
 }
 
 //@}
