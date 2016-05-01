@@ -27,10 +27,6 @@ struct make_declare_helper
 private:
   typedef make_declare_call<Tag, Policy, Ret, Args> call_helper;
 
-protected:
-  typedef typename call_helper::traits_type traits_type;
-  typedef typename call_helper::trampoline_type trampoline_type;
-
 private:
   friend struct rtti::mmethod::detail::access;
 

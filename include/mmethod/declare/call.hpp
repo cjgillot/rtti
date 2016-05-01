@@ -26,6 +26,40 @@ namespace call_detail {
 template<std::size_t Arity>
 struct make_declare_call_base;
 
+template<typename Tag,
+         typename Policy,
+         typename Ret,
+         typename Args>
+struct make_declare_call_common {
+public:
+  // traits_type
+  typedef make_declare_traits<Ret, Policy, Args> traits_type;
+
+  typedef typename traits_type::unwrapped_args unwrapped_args;
+  typedef typename traits_type::type_tags      type_tags;
+
+  // trampoline_type
+  typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;
+  typedef typename trampoline_type::sig_t func_t;
+
+  // dispatch_type
+  typedef dispatch<Policy,Tag,Ret> dispatch_type;
+
+  template<typename Tuple>
+  invoker_t fetch(Tuple const& a) const
+  { return m_dispatch.fetch(a); }
+
+  template<typename K>
+  void insert(func_t const& f)
+  { m_dispatch.template insert<K>(f); }
+
+  void generate() const
+  { m_dispatch.template generate<unwrapped_args>(); }
+
+private: // dispatch member variable
+  dispatch_type m_dispatch;
+};
+
 } // namespace call_detail
 } // namespace detail
 } // namespace mmethod
