@@ -66,14 +66,6 @@ public:
 private:
   //!\brief Register new node in hierarchy.
   void add_pole(rtti_hierarchy, klass_t::bases_type&);
-  //!\brief Compute that bases that are also poles.
-  void effective_bases(rtti_hierarchy, klass_t::bases_type*);
-  //!\brief pseudo_closest algorithm to find upwards poles.
-  std::size_t pseudo_closest(
-    rtti_hierarchy
-  , klass_t::bases_type const&
-  , klass_t const**
-  );
   //@}
 
 private:

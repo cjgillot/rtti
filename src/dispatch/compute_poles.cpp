@@ -66,13 +66,19 @@ hierarchy_t::add_pole(rtti_hierarchy vec, klass_t::bases_type& bases) {
 //@{ effective_bases
 
 //!\brief Compute registered bases
-void
-hierarchy_t::effective_bases(rtti_hierarchy klass, klass_t::bases_type* bases) {
+//! We only keep here the bases that are also poles.
+static void
+effective_bases(hierarchy_t const& hh,
+                rtti_hierarchy klass,
+                klass_t::bases_type* bases)
+{
   std::size_t const arity = rtti_get_base_arity(klass);
 
   bases->reserve(arity);
   foreach_base(rtti_hierarchy base, klass) {
-    if(klass_t const* bk = try_fetch(base)) {
+    klass_t const* bk = hh.try_fetch(base);
+
+    if(bk) {
       bases->push_back(bk);
     }
   }
@@ -82,15 +88,12 @@ hierarchy_t::effective_bases(rtti_hierarchy klass, klass_t::bases_type* bases) {
 //@{ pseudo_closest
 
 //!\brief Pseudo-closest algorithm (Fig 9)
-std::size_t
-hierarchy_t::pseudo_closest(
-  rtti_hierarchy klass
-, klass_t::bases_type const& candidates
+static std::size_t
+pseudo_closest(
+  klass_t::bases_type const& candidates
 , const klass_t* *out_pole
 ) {
   BOOST_ASSERT(out_pole);
-  BOOST_ASSERT(!poles.count(klass));
-  (void)klass;
 
   // trivial cases
   if(candidates.empty()) {
@@ -153,7 +156,7 @@ void hierarchy_t::compute_poles(input_type const& input) {
   while(rtti_hierarchy top = wanderer.pop()) {
     // Candidate base classes
     klass_t::bases_type bases;
-    effective_bases(top, &bases);
+    effective_bases(*this, top, &bases);
 
     if(primary_poles.count(top)) {
       //!If we have a primary pole.
@@ -173,7 +176,7 @@ void hierarchy_t::compute_poles(input_type const& input) {
       //   mark as a secondary pole.
 
       klass_t const* pole = NULL;
-      std::size_t const sz = pseudo_closest(top, bases, &pole);
+      std::size_t const sz = pseudo_closest(bases, &pole);
 
       if(sz == 0) {
         // We have nothing,
