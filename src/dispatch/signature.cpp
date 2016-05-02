@@ -6,25 +6,6 @@
 #include "signature.hpp"
 #include "hierarchy.hpp"
 
-namespace {
-
-struct klass_p_order {
-  bool operator()(const klass_t* aa, const klass_t* bb) const
-  { return klass_t::total_order()(*bb, *aa); }
-};
-
-} // namespace
-
-// total[extended] subtyping order
-bool signature_t::total_order::operator()(const signature_t& a, const signature_t& b) const
-{
-  return std::lexicographical_compare(
-    a.sig.begin(), a.sig.end(),
-    b.sig.begin(), b.sig.end(),
-    klass_p_order()
-  );
-}
-
 // worse_match order
 bool signature_t::worse_match::operator()(const signature_t& a, const signature_t& b) const
 {

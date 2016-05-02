@@ -59,12 +59,6 @@ public:
   std::size_t       get_rank()   const { return rank;                   }
 
 public:
-  // total hashing order
-  struct hash_order
-  {
-    bool operator()(const klass_t& a, const klass_t& b) const
-    { return a.rtti < b.rtti; }
-  };
   // total[extended] subtyping order - small is subtype
   struct total_order
   {

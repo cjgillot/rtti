@@ -37,11 +37,6 @@ public:
   sig_type const& array() const { return sig; }
 
 public:
-  // total[extended] subtyping order
-  struct total_order
-  {
-    bool operator()(const signature_t& a, const signature_t& b) const;
-  };
   // worse match order
   struct worse_match
   {
