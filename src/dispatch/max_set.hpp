@@ -7,7 +7,7 @@
 #define RTTI_MPH_MAX_SET_HPP
 
 #include "forward.hpp"
-#include "link_table.hpp"
+#include "signature.hpp"
 
 #include <list>
 #include <boost/noncopyable.hpp>
@@ -28,7 +28,7 @@ public:
   //! for the resolution of \c sig.
   //! It recursively filters for non-best overloads,
   //! only leaving the maximal overload.
-  max_set(const signature_t& sig, const link_table& links);
+  max_set(const signature_t& sig, const link_table_t& links);
 
 public:
   //!\brief Get the size of the \c max_set.

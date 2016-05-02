@@ -6,15 +6,10 @@
 #ifndef RTTI_MPH_KLASS_HPP
 #define RTTI_MPH_KLASS_HPP
 
-#include <cstddef>
+#include "forward.hpp"
 
 #include <boost/noncopyable.hpp>
 #include <boost/dynamic_bitset.hpp>
-
-#include "early.hpp"
-
-class hierarchy_t;
-class signature_t;
 
 /*!\brief Metadata-augmented hierarchy node.
  *

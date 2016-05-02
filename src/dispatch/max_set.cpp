@@ -4,6 +4,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "max_set.hpp"
+#include "signature.hpp"
+#include "link_table.hpp"
 
 #include "foreach.hpp"
 
@@ -21,7 +23,7 @@ struct same_invoker {
 } // namespace
 
 max_set::max_set(const signature_t& sig0,
-                 const link_table& links)
+                 const link_table_t& links)
 {
   std::size_t const arity = sig0.array().size();
 

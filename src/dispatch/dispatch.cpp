@@ -5,6 +5,8 @@
 
 #include "forward.hpp"
 
+#include "signature.hpp"
+
 #include "max_set.hpp"
 #include "link_table.hpp"
 
@@ -25,7 +27,7 @@
 static void dispatch_one(
   const pole_table_t &pole_table,
   const signature_t& sig,
-  link_table& dispatch,
+  link_table_t& dispatch,
   ambiguity_handler_t ahndl
 );
 
@@ -34,7 +36,7 @@ void rtti_dispatch::dispatch(
   const pole_table_t &pole_table,
   ambiguity_handler_t ahndl
 ) {
-  link_table links (dispatch, pole_table);
+  link_table_t links (dispatch, pole_table);
 
   // the order given by product_incr is
   // a topological order for signature_t::worse_match,
@@ -53,7 +55,7 @@ void rtti_dispatch::dispatch(
 static void dispatch_one(
   const pole_table_t &pole_table,
   const signature_t& sig,
-  link_table& dispatch,
+  link_table_t& dispatch,
   ambiguity_handler_t ahndl
 ) {
   // already registered

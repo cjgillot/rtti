@@ -4,6 +4,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "forward.hpp"
+#include "hierarchy.hpp"
+#include "signature.hpp"
 
 #include "foreach.hpp"
 

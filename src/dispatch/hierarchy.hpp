@@ -6,22 +6,10 @@
 #ifndef RTTI_MPH_HIERARCHY_HPP
 #define RTTI_MPH_HIERARCHY_HPP
 
-#include <cstddef>
-#include <map>
-
-#include "early.hpp"
-
+#include "forward.hpp"
 #include "klass.hpp"
 
 #include <boost/unordered_map.hpp>
-
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/member.hpp>
-
-#include <boost/range/adaptor/transformed.hpp>
 
 /*!\brief Class hierarchy object
  *
@@ -96,7 +84,5 @@ private:
 
   std::size_t current_rank;
 };
-
-typedef std::vector<hierarchy_t> pole_table_t;
 
 #endif

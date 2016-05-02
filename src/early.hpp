@@ -7,7 +7,6 @@
 #define EARLY_HPP
 
 #include "mmethod/export/table.hpp"
-#include "mmethod/export/exception.hpp"
 
 #include <vector>
 

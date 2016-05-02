@@ -47,43 +47,21 @@ public:
   {
     bool operator()(const signature_t& a, const signature_t& b) const;
   };
-
-  friend bool operator==(const signature_t& a, const signature_t& b)
-  { return a.sig == b.sig; }
-
-  friend bool operator!=(const signature_t& a, const signature_t& b)
-  { return a.sig != b.sig; }
 };
 
-#include "hierarchy.hpp"
+signature_t make_signature(rtti_signature const& r0,
+                           pole_table_t& r1);
 
-namespace detail {
+inline bool operator==(const signature_t& a,
+                       const signature_t& b)
+{ return a.array() == b.array(); }
 
-struct hierarchy_adder {
-  klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
-  {
-    klass_t const* ret = a1.fetch(a0);
-    BOOST_ASSERT(ret);
-    return ret;
-  }
-};
+inline bool operator!=(const signature_t& a,
+                       const signature_t& b)
+{ return a.array() != b.array(); }
 
-} // namespace detail
-
-template<typename R0>
-signature_t make_signature(R0 const& r0, pole_table_t& r1) {
-  signature_t ret ( r1.size() );
-
-  std::transform(
-    r0.begin(), r0.end(),
-    r1.begin(),
-
-    ret.array_ref().begin(),
-
-    detail::hierarchy_adder()
-  );
-
-  return ret;
+inline std::size_t hash_value(const signature_t& s) {
+  return boost::hash_range(s.array().begin(), s.array().end());
 }
 
 #endif

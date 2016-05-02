@@ -8,8 +8,21 @@
 
 #include "early.hpp"
 
-#include "dispatch/hierarchy.hpp"
-#include "dispatch/overloads.hpp"
+#include <vector>
+
+#include <boost/unordered_map.hpp>
+
+class klass_t;
+class hierarchy_t;
+class signature_t;
+
+typedef std::vector<hierarchy_t> pole_table_t;
+
+// the invoker is null in case of bad dispatch
+typedef boost::unordered_map<signature_t, invoker_t> dispatch_t;
+typedef dispatch_t::value_type overload_t;
+
+class link_table_t;
 
 namespace rtti_dispatch {
 

@@ -8,9 +8,6 @@
 #include <vector>
 
 #include "hierarchy.hpp"
-#include "overloads.hpp"
-
-#include "early.hpp"
 
 void rtti_dispatch::order_poles(
   pole_table_t& pole_table
