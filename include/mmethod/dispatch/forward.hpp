@@ -13,7 +13,7 @@ namespace rtti {
 namespace mmethod {
 
 /// main dispatch function
-template<typename Policy, typename Tag, typename Ret>
+template<typename Tag>
 struct dispatch {
   inline dispatch();
 

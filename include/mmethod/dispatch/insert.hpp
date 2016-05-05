@@ -41,12 +41,14 @@ struct save_poles {
 
 } // namespace dispatch_detail
 
-template<typename Policy, typename Tag, typename Ret>
+template<typename Tag>
 template<typename K, typename F>
-void dispatch<Policy, Tag, Ret>::insert(F const& f) {
+void dispatch<Tag>::insert(F const& f) {
+  typedef detail::access::traits<Tag> traits_type;
+
   enum {
-    arity = detail::access::traits<Tag>::vsize
-  , btset = detail::access::traits<Tag>::type_bitset
+    arity = traits_type::vsize
+  , btset = traits_type::type_bitset
   };
   rtti_hierarchy hiers [ arity ];
 
@@ -54,14 +56,11 @@ void dispatch<Policy, Tag, Ret>::insert(F const& f) {
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
-  boost::movelib::unique_ptr<duplicator> dup = Policy::make_duplicate();
-
   detail::inse_table(
     arity
   , dispatch_detail::get_register<Tag>::early()
   , inv
   , hiers
-  , dup.get()
   );
 }
 

@@ -20,21 +20,14 @@ rtti::mmethod::detail::inse_table(
 , early_bindings_type& eb
 , invoker_t inv
 , rtti_hierarchy* hiers
-, duplicator* d
 ) {
   BOOST_ASSERT(eb);
 
   // this function is called at global initialization
   // no synchronization should be required
   // but seal_table is not protected
-
-  d->load(arity, hiers);
-  do {
-    // signature_type is a vector -> copies the array hiers
-    rtti_signature sig ( hiers, hiers+arity );
-    eb->vector.push_back(std::make_pair(sig, inv));
-  }
-  while(d->next());
+  rtti_signature sig ( hiers, hiers+arity );
+  eb->vector.push_back(std::make_pair(sig, inv));
 }
 
 void

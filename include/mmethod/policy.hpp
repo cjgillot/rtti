@@ -8,7 +8,8 @@
 
 #include "mmethod/config.hpp"
 #include "mmethod/policy/forward.hpp"
-#include "mmethod/policy/duplicator.hpp"
+
+#include "mmethod/policy/utils.hpp"
 #include "mmethod/policy/default_policy.hpp"
 
 #endif
