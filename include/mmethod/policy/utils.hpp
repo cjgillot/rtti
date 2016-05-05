@@ -24,6 +24,18 @@ struct policy_traits;
 
 namespace detail {
 
+// {{{ get_ahndl
+
+template<typename Policy>
+struct wrap_ahndl {
+  static action_t ahndl(size_t n, rtti_hierarchy* a) {
+    return Policy::ambiguity_handler(n, a);
+  }
+};
+
+// }}}
+// {{{ get_bad
+
 template<class T, typename Fp>
 struct has_static_member_function_bad_dispatch {
 private:
@@ -38,21 +50,12 @@ public:
   };
 };
 
-// {{{ get_ahndl
-
-template<typename Policy>
-struct wrap_ahndl {
-  static action_t ahndl(size_t n, rtti_hierarchy* a) {
-    return Policy::ambiguity_handler(n, a);
-  }
-};
-
-// }}}
-// {{{ get_bad
-
-template<typename Policy, bool Enable>
+template<
+    typename Policy,
+    typename Fp,
+    bool Enable = detail::has_static_member_function_bad_dispatch<Policy, Fp>::value
+>
 struct get_bad {
-  template<typename Fp>
   static invoker_t
   get() {
     Fp fp = &Policy::bad_dispatch;
@@ -60,9 +63,8 @@ struct get_bad {
   }
 };
 
-template<typename Policy>
-struct get_bad<Policy, false> {
-  template<typename Fp>
+template<typename Policy, typename Fp>
+struct get_bad<Policy, Fp, false> {
   static invoker_t
   get() {
     return &Policy::bad_dispatch;
@@ -84,11 +86,7 @@ public:
   template<typename Fp>
   static invoker_t
   get_bad_dispatch() {
-    typedef detail::has_static_member_function_bad_dispatch<
-      Policy, Fp
-    > has_bd;
-
-    return detail::get_bad<Policy, has_bd::value>::template get<Fp>();
+    return detail::get_bad<Policy, Fp>::get();
   }
 };
 
