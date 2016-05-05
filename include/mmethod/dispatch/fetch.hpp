@@ -69,15 +69,16 @@ struct fetch_invoker<1, Tag, BTS> {
 } // namespace dispatch_detail
 
 /// main dispatch function
-template<typename Policy, typename Tag, typename Ret>
+template<typename Tag>
 template<typename Tuple>
-invoker_t dispatch<Policy, Tag, Ret>::fetch(Tuple const& args) const {
+invoker_t dispatch<Tag>::fetch(Tuple const& args) const {
   // verify we have sealed the table
   BOOST_ASSERT(detail::get_register<Tag>::early() == NULL);
+  typedef detail::access::traits<Tag> traits_type;
 
   enum {
-    arity = detail::access::traits<Tag>::vsize,
-    btset = detail::access::traits<Tag>::type_bitset
+    arity = traits_type::vsize,
+    btset = traits_type::type_bitset
   };
 
   uintptr_t spec = dispatch_detail::fetch_poles  <arity, Tag, btset>::eval( args );

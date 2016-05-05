@@ -41,12 +41,14 @@ struct save_poles {
 
 } // namespace dispatch_detail
 
-template<typename Policy, typename Tag, typename Ret>
+template<typename Tag>
 template<typename K, typename F>
-void dispatch<Policy, Tag, Ret>::insert(F const& f) {
+void dispatch<Tag>::insert(F const& f) {
+  typedef detail::access::traits<Tag> traits_type;
+
   enum {
-    arity = detail::access::traits<Tag>::vsize
-  , btset = detail::access::traits<Tag>::type_bitset
+    arity = traits_type::vsize
+  , btset = traits_type::type_bitset
   };
   rtti_hierarchy hiers [ arity ];
 

@@ -16,10 +16,12 @@
 namespace rtti {
 namespace mmethod {
 
-template<typename Policy, typename Tag, typename Ret>
+template<typename Tag>
 BOOST_NOINLINE
-void dispatch<Policy,Tag,Ret>::initialize() {
-  enum { arity = detail::access::traits<Tag>::vsize };
+void dispatch<Tag>::initialize() {
+  typedef detail::access::traits<Tag> traits_type;
+
+  enum { arity = traits_type::vsize };
 
   detail::init_table(arity, detail::get_register<Tag>::early());
 }
@@ -47,12 +49,14 @@ struct seal_poles {
 
 } // namespace dispatch_detail
 
-template<typename Policy, typename Tag, typename Ret>
+template<typename Tag>
 BOOST_NOINLINE
-void dispatch<Policy,Tag,Ret>::seal() {
+void dispatch<Tag>::seal() {
+  typedef detail::access::traits<Tag> traits_type;
+
   enum {
-    arity = detail::access::traits<Tag>::vsize
-  , btset = detail::access::traits<Tag>::type_bitset
+    arity = traits_type::vsize
+  , btset = traits_type::type_bitset
   };
   typedef detail::get_register<Tag> register_type;
 
@@ -60,7 +64,7 @@ void dispatch<Policy,Tag,Ret>::seal() {
   detail::invoker_table_type&  table = register_type::table();
   detail::early_bindings_type& early = register_type::early();
 
-  typedef typename detail::access::traits<Tag>::policy policy_type;
+  typedef typename traits_type::policy policy_type;
   typedef typename detail::access::trampoline<Tag>::sig_t fp_t;
   detail::ambiguity_policy_t policy = {
     ambiguity::get_fpointers<policy_type>::get_ambiguity_handler()

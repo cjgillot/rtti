@@ -43,7 +43,7 @@ public:
   typedef typename trampoline_type::sig_t func_t;
 
   // dispatch_type
-  typedef dispatch<Policy,Tag,Ret> dispatch_type;
+  typedef dispatch<Tag> dispatch_type;
 
   template<typename Tuple>
   invoker_t fetch(Tuple const& a) const
