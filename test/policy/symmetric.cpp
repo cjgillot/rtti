@@ -92,43 +92,30 @@ private:
   typedef typename boost::mpl::at_c<Args, 0>::type el0_type;
   typedef typename boost::mpl::at_c<Args, 1>::type el1_type;
 
-  typedef boost::is_same<el0_type, el1_type> is_same;
-
-private:
-  struct swapped {
-  private:
-    typedef boost::mpl::vector<el1_type, el0_type> swapped_args;
-
-    struct swapped_callback {
-      static return_type call(foo& a, foo& b) {
-        return Callback::call(b, a);
-      }
-    };
-
-  public:
-    typedef boost::mpl::vector<
-      swapped_args,
-      swapped_callback
-    > type;
-
-    typedef void next;
+  typedef boost::mpl::vector<el1_type, el0_type> swapped_args;
+  struct swapped_callback {
+    static return_type call(foo& a, foo& b) {
+      return Callback::call(b, a);
+    }
   };
 
-public:
-  // MPL Forward iterator
+  typedef boost::is_same<el0_type, el1_type> is_same;
+
   typedef boost::mpl::vector<
     Args, Callback
-  > type;
-  typedef typename boost::mpl::if_<
-    is_same,
-    void,
-    swapped
-  >::type next;
+  > first;
+  typedef boost::mpl::vector<
+    swapped_args, swapped_callback
+  > second;
 
 public:
-  // MPL Sequence
-  typedef duplicates begin;
-  typedef void end;
+  typedef typename boost::mpl::if_<
+    is_same,
+    boost::mpl::vector<first>,
+    boost::mpl::vector<first, second>
+  >::type type;
+
+  BOOST_STATIC_ASSERT(! boost::mpl::empty<type>::value);
 };
 
 /*`
@@ -142,7 +129,7 @@ public:
  */
 action_t
 symmetric_policy::ambiguity_handler(std::size_t n, rtti_hierarchy* types)
-{ /*<-*/BOOST_CHECK_EQUAL(n, 2u);/*->*/
+{ /*<-*/BOOST_ASSERT(n == 2);/*->*/
   if( types[0] != types[1] ) {
     // This is a real ambiguity, report it as such
     return action_t::NOTHING;
@@ -173,21 +160,20 @@ DECLARE_MMETHOD_POLICY(symm, int, (_v<foo&>, _v<foo&>), symmetric_policy);
 
 IMPLEMENT_MMETHOD(symm, int, (foo&, foo&)) { return  0; }
 IMPLEMENT_MMETHOD(symm, int, (bar&, foo&)) { return 13; }
-//IMPLEMENT_MMETHOD(symm, int, (bar&, bar&)) { return 21; }
 
 // foo-bar is not defined, but the policy resolves it to bar-foo
 // bar-bar is not defined, but the policy resolves it to foo-bar
 //]
 
 // further test
-IMPLEMENT_MMETHOD(symm, int, (foo&, la1&)) { return 32; }
-IMPLEMENT_MMETHOD(symm, int, (bar&, la1&)) { return 65; }
+IMPLEMENT_MMETHOD(symm, int, (foo& a, la1& b)) { return 32; }
+IMPLEMENT_MMETHOD(symm, int, (bar& a, la1& b)) { return 65; }
 // no la1-la1 -> fallback on foo-la1
 
-IMPLEMENT_MMETHOD(symm, int, (foo&, la2&)) { return 40; }
-IMPLEMENT_MMETHOD(symm, int, (bar&, la2&)) { return 45; }
-IMPLEMENT_MMETHOD(symm, int, (la1&, la2&)) { return 49; }
-IMPLEMENT_MMETHOD(symm, int, (la2&, la2&)) { return 12; }
+IMPLEMENT_MMETHOD(symm, int, (foo& a, la2& b)) { return 40; }
+IMPLEMENT_MMETHOD(symm, int, (bar& a, la2& b)) { return 45; }
+IMPLEMENT_MMETHOD(symm, int, (la1& a, la2& b)) { return 49; }
+IMPLEMENT_MMETHOD(symm, int, (la2& a, la2& b)) { return 12; }
 
 } // namespace <>
 

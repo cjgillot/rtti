@@ -15,6 +15,7 @@
 
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/back.hpp>
+#include <boost/mpl/empty.hpp>
 #include <boost/function_types/components.hpp>
 
 namespace rtti {
@@ -47,7 +48,8 @@ protected:
 
     typedef typename policy_traits::template get_duplicates<
       Tag, Args, callback
-    > duplicates_type;
+    >::type duplicates_type;
+    BOOST_STATIC_ASSERT(! boost::mpl::empty<duplicates_type>::value);
 
     detail::for_each<duplicates_type>(tag_insert());
   }
