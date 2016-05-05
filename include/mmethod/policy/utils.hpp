@@ -10,9 +10,7 @@
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/policy/forward.hpp"
 
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/function_types/components.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
 
 namespace rtti {
@@ -72,6 +70,44 @@ struct get_bad<Policy, Fp, false> {
 };
 
 // }}}
+// {{{ get_duplicates
+
+template<class T>
+struct has_type_member_duplicates {
+private:
+  template<template<typename,typename,typename> class> struct helper;
+
+  template<typename U> static boost::type_traits::yes_type check(helper<U::template duplicates>*);
+  template<typename U> static boost::type_traits::no_type  check(...);
+
+public:
+  enum {
+    value = sizeof(check<T>(NULL)) == sizeof(boost::type_traits::yes_type)
+  };
+};
+
+template<
+    typename Policy,
+    bool Enable = has_type_member_duplicates<Policy>::value
+>
+struct get_duplicates {
+  template<typename Tag, typename Args, typename Trampoline>
+  struct duplicates
+  : Policy::template duplicates<Tag, Args, Trampoline>
+  {};
+};
+
+template<typename Policy>
+struct get_duplicates<Policy, false> {
+  template<typename Tag, typename Args, typename Trampoline>
+  struct duplicates
+  : boost::mpl::vector<
+      boost::mpl::vector<Args, Trampoline>
+    >
+  {};
+};
+
+// }}}
 
 } // namespace detail
 
@@ -88,6 +124,11 @@ public:
   get_bad_dispatch() {
     return detail::get_bad<Policy, Fp>::get();
   }
+
+  template<typename Tag, typename Args, typename Tramp>
+  struct get_duplicates
+  : detail::get_duplicates<Policy>::template duplicates<Tag, Args, Tramp>
+  {};
 };
 
 } // namespace ambiguity

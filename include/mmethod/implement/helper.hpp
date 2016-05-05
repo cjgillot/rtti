@@ -10,8 +10,11 @@
 #include "mmethod/detail/access.hpp"
 #include "mmethod/declare/trampoline.hpp"
 
+#include "mmethod/policy/utils.hpp"
+#include "mmethod/detail/for_each.hpp"
+
 #include <boost/mpl/front.hpp>
-#include <boost/mpl/pop_front.hpp>
+#include <boost/mpl/back.hpp>
 #include <boost/function_types/components.hpp>
 
 namespace rtti {
@@ -23,16 +26,30 @@ struct make_implement_helper {
 private:
   typedef access::trampoline<Tag> trampoline;
   typedef access::traits<Tag> traits;
-
-  enum { vsize = traits::vsize };
-
-protected:
   typedef typename trampoline::template apply<Over, Ret, Args> callback;
 
+  struct tag_insert {
+    template<typename T>
+    void operator()(T*) const {
+      typedef typename boost::mpl::front<T>::type args_type;
+      typedef typename boost::mpl::back<T>::type  call_type;
+
+      Tag().template insert<args_type>(&call_type::call);
+    }
+  };
+
+protected:
   typedef make_implement_helper impl_maker;
 
   make_implement_helper() BOOST_NOEXCEPT_OR_NOTHROW {
-    Tag().template insert<Args>( &callback::call );
+    typedef typename traits::policy policy_type;
+    typedef ambiguity::policy_traits<policy_type> policy_traits;
+
+    typedef typename policy_traits::template get_duplicates<
+      Tag, Args, callback
+    > duplicates_type;
+
+    detail::for_each<duplicates_type>(tag_insert());
   }
 };
 
