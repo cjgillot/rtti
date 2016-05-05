@@ -65,10 +65,12 @@ void dispatch<Tag>::seal() {
   detail::early_bindings_type& early = register_type::early();
 
   typedef typename traits_type::policy policy_type;
+  typedef ambiguity::policy_traits<policy_type> policy_traits_type;
+
   typedef typename detail::access::trampoline<Tag>::sig_t fp_t;
   detail::ambiguity_policy_t policy = {
-    ambiguity::get_fpointers<policy_type>::get_ambiguity_handler()
-  , ambiguity::get_fpointers<policy_type>::template get_bad_dispatch<fp_t>()
+    policy_traits_type::get_ambiguity_handler()
+  , policy_traits_type::template get_bad_dispatch<fp_t>()
   };
 
   detail::seal_table_type seal_table = {

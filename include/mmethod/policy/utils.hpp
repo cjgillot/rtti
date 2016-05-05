@@ -20,7 +20,7 @@ namespace mmethod {
 namespace ambiguity {
 
 template<typename Policy>
-struct get_fpointers;
+struct policy_traits;
 
 namespace detail {
 
@@ -74,7 +74,7 @@ struct get_bad<Policy, false> {
 } // namespace detail
 
 template<typename Policy>
-struct get_fpointers {
+struct policy_traits {
 public:
   static ambiguity_handler_t
   get_ambiguity_handler() {
