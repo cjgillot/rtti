@@ -21,12 +21,12 @@ struct rtti_getter {
 
   //! \brief Get static node
   template<class T>
-  inline static BOOST_CONSTEXPR rtti_node const*
+  inline static rtti_node const* MMETHOD_ATTRIBUTE_PURE
   static_node();
 
   //! \brief Get object node
   template<class T>
-  inline static rtti_node const&
+  inline static rtti_node const& MMETHOD_ATTRIBUTE_PURE
   get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW;
 };
 
@@ -34,7 +34,7 @@ struct rtti_getter {
 
 //! \brief Get static node
 template<class T>
-inline BOOST_CONSTEXPR rtti_node const*
+inline rtti_node const*
 MMETHOD_ATTRIBUTE_PURE
 static_node() BOOST_NOEXCEPT_OR_NOTHROW {
   // Do not feed `T` directly to compute_pointer_traits,
@@ -47,7 +47,7 @@ static_node() BOOST_NOEXCEPT_OR_NOTHROW {
 
 //! \brief Get static id
 template<class T>
-inline BOOST_CONSTEXPR rtti_type
+inline rtti_type
 MMETHOD_ATTRIBUTE_PURE
 static_id() BOOST_NOEXCEPT_OR_NOTHROW
 { return detail::rtti_get_id( rtti::static_node<T>() ); }

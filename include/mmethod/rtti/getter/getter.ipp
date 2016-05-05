@@ -12,13 +12,12 @@
 #include "mmethod/rtti/getter/traits.hpp"
 
 #include "mmethod/rtti/holder/holder.hpp"
-#include "mmethod/rtti/mixin/mixin_node.hpp"
 
 namespace rtti {
 namespace detail {
 
 template<class T>
-BOOST_CONSTEXPR rtti_node const*
+rtti_node const* MMETHOD_ATTRIBUTE_PURE
 rtti_getter::static_node() {
   BOOST_STATIC_ASSERT( boost::is_class<T>::value );
   typedef typename get_holder<T>::type h;
@@ -26,7 +25,7 @@ rtti_getter::static_node() {
 }
 
 template<class T>
-inline rtti_node const&
+inline rtti_node const& MMETHOD_ATTRIBUTE_PURE
 rtti_getter::get_node_value(T const& x) BOOST_NOEXCEPT_OR_NOTHROW {
   typedef rtti_getter::traits<T> traits;
   return *traits::get_mixin_node(x).rtti_node_value;
