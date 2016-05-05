@@ -24,7 +24,10 @@ struct for_each_impl {
 
   template<typename F>
   static void apply(F const& f) {
-    f(front_t());
+    {
+      front_t* param = NULL;
+      f(param);
+    }
 
     for_each_impl<next_t, End>::apply(f);
   }
