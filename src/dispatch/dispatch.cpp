@@ -85,7 +85,7 @@ static void dispatch_one(
   using rtti::mmethod::ambiguity::action_t;
 
   action_t const action = ahndl(arity, amb.data());
-  switch(action) {
+  switch(boost::native_value(action)) {
     case action_t::NOTHING:
       dispatch.insert_none(sig);
       return;
