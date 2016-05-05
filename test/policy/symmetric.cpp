@@ -14,8 +14,8 @@
 #include "./classes.hpp"
 #include "foreach.hpp"
 
-#include <boost/move/unique_ptr.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <iostream>
 
@@ -24,6 +24,7 @@ using namespace rtti;
 namespace {
 
 using boost::mpl::vector;
+using rtti::mmethod::ambiguity::action_t;
 
 // supplementary class
 struct la1
@@ -60,68 +61,103 @@ struct symmetric_policy
 : mmethod::default_policy
 {
   // generator of permutations
-  typedef boost::movelib::unique_ptr<mmethod::duplicator> dup_ptr_t;
-  static dup_ptr_t make_duplicate();
+  template<typename Tag, typename Args, typename Callback>
+  struct duplicates;
+
+  // resolve ambiguities
+  static action_t ambiguity_handler(std::size_t, rtti_hierarchy*);
 };
 
 /*`
   Each time an overload is registered to the __multimethod__,
   we need a way to register the symmetric overload too.
-  The `duplicator` object we want to use has the following
-  signature:
+  The `duplicates` template is used for that.
+  The template parameters are:
+  - the tag of the __mmethod__,
+  - the argument types of the overload,
+  - a class containing the callback to the code of hte overload.
+
+  The `duplicates` class must model a __sequence__
+  of __sequence__s of two elements:
+  each element in `duplicates<...>` is of the form
+  `vector< args, callback >`.
+  In this case, `args` is the permuted argument type list,
+  and `callback` is the class containing the code.
  */
-class symmetric_duplicator
-: public mmethod::duplicator
+template<typename Tag, typename Args, typename Callback>
+class symmetric_policy::duplicates
 {
-public:
-  // ctor
-  symmetric_duplicator();
-  // load an initial overload (n,t) as a C array
-  void load(size_t n, rtti_hierarchy* t);
-  // generate permutations in turn
-  bool next();
+private:
+  typedef typename Tag::result_type                return_type;
+  typedef typename boost::mpl::at_c<Args, 0>::type el0_type;
+  typedef typename boost::mpl::at_c<Args, 1>::type el1_type;
+
+  typedef boost::is_same<el0_type, el1_type> is_same;
 
 private:
-  // member data
-  size_t m_arity;
-  rtti_hierarchy* m_array;
+  struct swapped {
+  private:
+    typedef boost::mpl::vector<el1_type, el0_type> swapped_args;
+
+    struct swapped_callback {
+      static return_type call(foo& a, foo& b) {
+        return Callback::call(b, a);
+      }
+    };
+
+  public:
+    typedef boost::mpl::vector<
+      swapped_args,
+      swapped_callback
+    > type;
+
+    typedef void next;
+  };
+
+public:
+  // MPL Forward iterator
+  typedef boost::mpl::vector<
+    Args, Callback
+  > type;
+  typedef typename boost::mpl::if_<
+    is_same,
+    void,
+    swapped
+  >::type next;
+
+public:
+  // MPL Sequence
+  typedef duplicates begin;
+  typedef void end;
 };
 
-symmetric_duplicator::symmetric_duplicator()
-: m_arity(0), m_array(NULL)
-{}
-
 /*`
-  When a new overload is encountered,
-  the registration algorithm loads it into the `duplicator`
-  by the way of the `load()` method.
-  The overload is represented by the C array
-  of the rtti nodes of its arguments.
-
-  Then, it inserts the overload, calls `next()`
-  and repeats until `next()` returns false.
-  In our case, we can use that to generate all
-  the permutations of the signature array.
+  The idea of injecting missing implementations is appealing,
+  but suffers one flaw: it generates ambiguities.
+  For example, take a call with two identical arguments.
+  If we don't the symmetric overload,
+  it is correctly resolved by upcasting one argument.
+  But if we add the symmetric overload,
+  the upcast becomes ambiguous.
  */
-void symmetric_duplicator::load(size_t n, rtti_hierarchy* t)
-{ /*<-*/BOOST_ASSERT(!m_arity && !m_array);/*->*/
-  m_arity = n;
-  m_array = t;
+action_t
+symmetric_policy::ambiguity_handler(std::size_t n, rtti_hierarchy* types)
+{ /*<-*/BOOST_CHECK_EQUAL(n, 2u);/*->*/
+  if( types[0] != types[1] ) {
+    // This is a real ambiguity, report it as such
+    return action_t::NOTHING;
+  }
 
-  // prepare first permutation
-  std::sort(m_array, m_array+m_arity);
+  // Can we force the upcast of the argument ?
+  if(rtti_get_base_arity(types[0])) {
+    types[0] = rtti_get_base(types[0]);
+    return action_t::RETRY;
+  }
+
+  // This is a root-root ambiguity
+  return action_t::NOTHING;
 }
 
-bool symmetric_duplicator::next()
-{ /*<-*/BOOST_ASSERT(m_arity && m_array);/*->*/
-  // permute, and return false is exhausted
-  return std::next_permutation(m_array, m_array+m_arity);
-}
-
-symmetric_policy::dup_ptr_t symmetric_policy::make_duplicate() {
-  dup_ptr_t ret ( new symmetric_duplicator );
-  return BOOST_MOVE_RET(dup_ptr_t, ret);
-}
 //]
 
 //[po_symm_decl
@@ -137,9 +173,10 @@ DECLARE_MMETHOD_POLICY(symm, int, (_v<foo&>, _v<foo&>), symmetric_policy);
 
 IMPLEMENT_MMETHOD(symm, int, (foo&, foo&)) { return  0; }
 IMPLEMENT_MMETHOD(symm, int, (bar&, foo&)) { return 13; }
-IMPLEMENT_MMETHOD(symm, int, (bar&, bar&)) { return 21; }
+//IMPLEMENT_MMETHOD(symm, int, (bar&, bar&)) { return 21; }
 
 // foo-bar is not defined, but the policy resolves it to bar-foo
+// bar-bar is not defined, but the policy resolves it to foo-bar
 //]
 
 // further test
@@ -166,7 +203,7 @@ BOOST_AUTO_TEST_CASE(test_symmetric) {
   BOOST_CHECK_EQUAL( symm(a, x),  0 ); // (1-1 case)
   BOOST_CHECK_EQUAL( symm(a, y), 13 ); // (1-2 case)
   BOOST_CHECK_EQUAL( symm(b, x), 13 ); // (2-1 case)
-  BOOST_CHECK_EQUAL( symm(b, y), 21 ); // (2-2 case)
+  BOOST_CHECK_EQUAL( symm(b, y), 13 ); // (2-2 case)
   //]
 
   la1 z, c;
