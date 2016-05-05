@@ -23,8 +23,6 @@ struct default_policy {
   static void bad_dispatch();
   static action_t ambiguity_handler(size_t /*arity*/,
                                     rtti_hierarchy const* /*signature*/);
-
-  static boost::movelib::unique_ptr<duplicator> make_duplicate();
 };
 
 } // namespace ambiguity

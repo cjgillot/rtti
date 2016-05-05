@@ -28,8 +28,6 @@ BOOST_SCOPED_ENUM_DECLARE_END(action_t)
 
 typedef action_t (*ambiguity_handler_t)(size_t, rtti_hierarchy[]);
 
-class duplicator;
-
 } // namespace ambiguity
 } // namespace mmethod
 } // namespace rtti

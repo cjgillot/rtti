@@ -54,14 +54,11 @@ void dispatch<Policy, Tag, Ret>::insert(F const& f) {
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
 
-  boost::movelib::unique_ptr<duplicator> dup = Policy::make_duplicate();
-
   detail::inse_table(
     arity
   , dispatch_detail::get_register<Tag>::early()
   , inv
   , hiers
-  , dup.get()
   );
 }
 
