@@ -13,7 +13,6 @@
 #include "mmethod/detail/iterate.hpp"
 
 #include <boost/call_traits.hpp>
-#include <boost/mpl/size.hpp>
 
 namespace rtti {
 namespace mmethod {

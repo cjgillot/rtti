@@ -4,8 +4,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "mmethod/config.hpp"
+#include "mmethod/detail/mpl.hpp"
 
-#include <boost/mpl/at.hpp>
 #include <boost/preprocessor/enum.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 

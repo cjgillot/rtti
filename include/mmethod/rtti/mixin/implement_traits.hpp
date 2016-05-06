@@ -7,9 +7,8 @@
 #define RTTI_IMPLEMENT_TRAITS_HPP
 
 #include "mmethod/config.hpp"
+#include "mmethod/detail/mpl.hpp"
 
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/transform.hpp>
 #include <boost/type_traits/add_cv.hpp>
 
 namespace rtti {

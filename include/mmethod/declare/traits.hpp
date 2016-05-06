@@ -8,12 +8,7 @@
 
 #include "mmethod/config.hpp"
 #include "mmethod/traits/tags.hpp"
-
-#include <boost/mpl/next.hpp>
-#include <boost/mpl/times.hpp>
-#include <boost/mpl/size_t.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/reverse_fold.hpp>
+#include "mmethod/detail/mpl.hpp"
 
 namespace rtti {
 namespace mmethod {

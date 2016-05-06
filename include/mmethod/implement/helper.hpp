@@ -8,14 +8,12 @@
 
 #include "mmethod/config.hpp"
 #include "mmethod/detail/access.hpp"
-#include "mmethod/declare/trampoline.hpp"
 
 #include "mmethod/policy/utils.hpp"
+
+#include "mmethod/detail/mpl.hpp"
 #include "mmethod/detail/for_each.hpp"
 
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/back.hpp>
-#include <boost/mpl/empty.hpp>
 #include <boost/function_types/components.hpp>
 
 namespace rtti {
@@ -34,8 +32,8 @@ private:
   struct tag_insert {
     template<typename T>
     void operator()(T*) const {
-      typedef typename boost::mpl::front<T>::type args_type;
-      typedef typename boost::mpl::back<T>::type  call_type;
+      typedef typename T::first  args_type;
+      typedef typename T::second call_type;
 
       Tag().template insert<args_type>(&call_type::call);
     }

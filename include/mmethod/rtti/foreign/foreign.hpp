@@ -14,6 +14,7 @@
 #include "mmethod/rtti/foreign/type_index.hpp"
 #include "mmethod/rtti/mixin/implement_traits.hpp"
 #include "mmethod/detail/for_each.hpp"
+#include "mmethod/detail/mpl.hpp"
 
 #include <map>
 
@@ -70,7 +71,7 @@ rtti_get_foreign_map(base const*) {             \
   static rtti::foreign_detail::map_type map;    \
   return map;                                   \
 }                                               \
-MMETHOD_FOREIGN_IMPLEMENT(base, boost::mpl::vector<>)
+MMETHOD_FOREIGN_IMPLEMENT(base, boost::mpl::empty_sequence)
 
 } // namespace foreign_detail
 } // namespace rtti

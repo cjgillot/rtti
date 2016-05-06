@@ -7,8 +7,7 @@
 #define RTTI_TRAITS_HPP
 
 #include "mmethod/config.hpp"
-
-#include <boost/mpl/if.hpp>
+#include "mmethod/detail/mpl.hpp"
 
 #include <boost/call_traits.hpp>
 #include <boost/type_traits/add_pointer.hpp>

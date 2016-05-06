@@ -101,10 +101,10 @@ private:
 
   typedef boost::is_same<el0_type, el1_type> is_same;
 
-  typedef boost::mpl::vector<
+  typedef boost::mpl::pair<
     Args, Callback
   > first;
-  typedef boost::mpl::vector<
+  typedef boost::mpl::pair<
     swapped_args, swapped_callback
   > second;
 

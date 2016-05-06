@@ -9,9 +9,8 @@
 #include "mmethod/config.hpp"
 #include "mmethod/declare/call.hpp"
 #include "mmethod/declare/traits.hpp"
+#include "mmethod/detail/mpl.hpp"
 
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/pop_front.hpp>
 #include <boost/function_types/components.hpp>
 
 namespace rtti {

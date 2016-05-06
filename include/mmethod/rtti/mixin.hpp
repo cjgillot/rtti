@@ -12,8 +12,7 @@
 #include "mmethod/rtti/mixin/single_node.hpp"
 #include "mmethod/rtti/mixin/virtual_node.hpp"
 
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/vector.hpp>
+#include "mmethod/detail/mpl.hpp"
 
 namespace rtti {
 
@@ -39,7 +38,7 @@ namespace rtti {
 template<typename klass, class MixinNode = single_mixin_node>
 struct base_rtti
 : public mixin<
-  klass, boost::mpl::vector<>
+  klass, boost::mpl::empty_sequence
 , true // Declare
 , MixinNode
 > {};

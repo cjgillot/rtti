@@ -9,7 +9,8 @@
 #include "mmethod/config.hpp"
 #include "mmethod/dispatch/common.hpp"
 
-#include <boost/mpl/at.hpp>
+#include "mmethod/detail/mpl.hpp"
+
 #include <boost/move/unique_ptr.hpp>
 
 namespace rtti {

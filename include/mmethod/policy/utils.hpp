@@ -10,7 +10,8 @@
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/policy/forward.hpp"
 
-#include <boost/mpl/vector.hpp>
+#include "mmethod/detail/mpl.hpp"
+
 #include <boost/type_traits/detail/yes_no_type.hpp>
 
 namespace rtti {
@@ -101,8 +102,8 @@ template<typename Policy>
 struct get_duplicates<Policy, false> {
   template<typename Tag, typename Args, typename Trampoline>
   struct duplicates
-  : boost::mpl::vector<
-      boost::mpl::vector<Args, Trampoline>
+  : boost::mpl::single_view<
+      boost::mpl::pair<Args, Trampoline>
     >
   {};
 };

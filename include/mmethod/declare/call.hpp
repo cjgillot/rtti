@@ -15,7 +15,6 @@
 
 #include "mmethod/detail/iterate.hpp"
 
-#include <boost/mpl/size.hpp>
 #include <boost/tuple/tuple.hpp>
 
 namespace rtti {

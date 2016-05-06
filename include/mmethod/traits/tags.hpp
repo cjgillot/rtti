@@ -7,8 +7,7 @@
 #define RTTI_SHARED_TAGS_HPP
 
 #include "mmethod/config.hpp"
-
-#include <boost/mpl/count_if.hpp>
+#include "mmethod/detail/mpl.hpp"
 
 // tag templates -> mark dispatch-guilty types (virtual) and the others
 namespace rtti {
