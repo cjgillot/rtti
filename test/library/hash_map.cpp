@@ -11,7 +11,11 @@
 using namespace rtti;
 using namespace rtti::hash::detail;
 
-#define EVEN_MASK (~(uintptr_t(1)))
+#define ALIGN_MASK (uintptr_t(rtti::rtti_node::alignment::value - 1))
+
+BOOST_STATIC_ASSERT((ALIGN_MASK & (ALIGN_MASK+1)) == 0);
+
+#define EVEN_MASK (~ALIGN_MASK)
 
 BOOST_AUTO_TEST_CASE(test_hash_map) {
   typedef hash_map::iterator iter_t;

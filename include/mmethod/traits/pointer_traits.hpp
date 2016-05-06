@@ -62,12 +62,19 @@ struct unsafe_casting {
 
   template<typename In>
   static Out eval(In* in) {
+#ifndef NDEBUG
     typedef typename remove_all<Out>::type out_class;
     typedef typename remove_all<In >::type  in_class;
 
     typedef boost::is_virtual_base_of<in_class, out_class> dyn;
     typedef typename boost::mpl::if_<dyn, dynamic, nonvirtual>::type impl;
-    return impl::template eval<In>(in);
+    return impl::eval(in);
+#else
+    // always use dynamic cast in debug mode
+    Out ret = dynamic::eval(in);
+    BOOST_ASSERT(ret);
+    return ret;
+#endif
   }
 };
 
