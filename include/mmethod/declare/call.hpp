@@ -35,8 +35,8 @@ public:
   // traits_type
   typedef make_declare_traits<Ret, Policy, Args> traits_type;
 
-  typedef typename traits_type::unwrapped_args unwrapped_args;
-  typedef typename traits_type::type_tags      type_tags;
+  typedef typename traits_type::unwrapped_argument_types unwrapped_args;
+  typedef typename traits_type::argument_tags            type_tags;
 
   // trampoline_type
   typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;

@@ -25,8 +25,10 @@ namespace detail {
 template<typename Tag, typename Over, typename Ret, typename Args>
 struct make_implement_helper {
 private:
-  typedef access::trampoline<Tag> trampoline;
   typedef access::traits<Tag> traits;
+  typedef typename traits::policy_type policy_type;
+
+  typedef access::trampoline<Tag> trampoline;
   typedef typename trampoline::template apply<Over, Ret, Args> callback;
 
   struct tag_insert {
@@ -43,7 +45,6 @@ protected:
   typedef make_implement_helper impl_maker;
 
   make_implement_helper() BOOST_NOEXCEPT_OR_NOTHROW {
-    typedef typename traits::policy policy_type;
     typedef ambiguity::policy_traits<policy_type> policy_traits;
 
     typedef typename policy_traits::template get_duplicates<

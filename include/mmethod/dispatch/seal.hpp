@@ -21,7 +21,7 @@ BOOST_NOINLINE
 void dispatch<Tag>::initialize() {
   typedef detail::access::traits<Tag> traits_type;
 
-  enum { arity = traits_type::vsize };
+  enum { arity = traits_type::virtual_size };
 
   detail::init_table(arity, detail::get_register<Tag>::early());
 }
@@ -55,8 +55,8 @@ void dispatch<Tag>::seal() {
   typedef detail::access::traits<Tag> traits_type;
 
   enum {
-    arity = traits_type::vsize
-  , btset = traits_type::type_bitset
+    arity = traits_type::virtual_size
+  , btset = traits_type::tags_bitset
   };
   typedef detail::get_register<Tag> register_type;
 
@@ -64,7 +64,7 @@ void dispatch<Tag>::seal() {
   detail::invoker_table_type&  table = register_type::table();
   detail::early_bindings_type& early = register_type::early();
 
-  typedef typename traits_type::policy policy_type;
+  typedef typename traits_type::policy_type policy_type;
   typedef ambiguity::policy_traits<policy_type> policy_traits_type;
 
   typedef typename detail::access::trampoline<Tag>::sig_t fp_t;

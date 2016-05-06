@@ -47,8 +47,8 @@ void dispatch<Tag>::insert(F const& f) {
   typedef detail::access::traits<Tag> traits_type;
 
   enum {
-    arity = traits_type::vsize
-  , btset = traits_type::type_bitset
+    arity = traits_type::virtual_size
+  , btset = traits_type::tags_bitset
   };
   rtti_hierarchy hiers [ arity ];
 

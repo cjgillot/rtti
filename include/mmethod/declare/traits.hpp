@@ -23,15 +23,15 @@ template<typename Ret, typename Policy, typename Args>
 struct make_declare_traits
 {
   typedef Ret    return_type;
-  typedef Args   raw_args;
-  typedef Policy policy;
+  typedef Args   argument_types;
+  typedef Policy policy_type;
 
-  typedef typename boost::mpl::transform<Args, tags::unwrap>::type unwrapped_args;
-  typedef typename boost::mpl::transform<Args, tags::is_virtual>::type type_tags;
+  typedef typename boost::mpl::transform<Args, tags::unwrap>::type unwrapped_argument_types;
+  typedef typename boost::mpl::transform<Args, tags::is_virtual>::type argument_tags;
 
-  BOOST_STATIC_CONSTANT(std::size_t, vsize = tags::virtual_size<Args>::value);
-  BOOST_STATIC_CONSTANT(std::size_t, type_bitset = (boost::mpl::reverse_fold<
-      type_tags,
+  BOOST_STATIC_CONSTANT(std::size_t, virtual_size = tags::virtual_size<Args>::value);
+  BOOST_STATIC_CONSTANT(std::size_t, tags_bitset = (boost::mpl::reverse_fold<
+      argument_tags,
       boost::mpl::size_t<0>,
       boost::mpl::if_<mpl_::_2
       , boost::mpl::next<boost::mpl::times<mpl_::_1, boost::mpl::size_t<2> > >
@@ -40,7 +40,7 @@ struct make_declare_traits
     >::type::value
   ));
 
-  BOOST_STATIC_ASSERT_MSG( (vsize > 0), "At least one virtual parameter must be provided." );
+  BOOST_STATIC_ASSERT_MSG( (virtual_size > 0), "At least one virtual parameter must be provided." );
 };
 
 } // namespace detail

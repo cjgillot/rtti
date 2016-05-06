@@ -77,8 +77,8 @@ invoker_t dispatch<Tag>::fetch(Tuple const& args) const {
   typedef detail::access::traits<Tag> traits_type;
 
   enum {
-    arity = traits_type::vsize,
-    btset = traits_type::type_bitset
+    arity = traits_type::virtual_size,
+    btset = traits_type::tags_bitset
   };
 
   uintptr_t spec = dispatch_detail::fetch_poles  <arity, Tag, btset>::eval( args );
