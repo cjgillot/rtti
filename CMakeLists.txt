@@ -6,14 +6,14 @@
 cmake_minimum_required(VERSION 2.8)
 project(rtti)
 
-set(CMAKE_BUILD_TYPE Release)
-
 find_package(Boost
   1.55
   REQUIRED
   COMPONENTS
     unit_test_framework
 )
+
+enable_testing()
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(include)
