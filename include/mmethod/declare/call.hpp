@@ -65,7 +65,7 @@ private: // dispatch member variable
 } // namespace rtti
 
 #define BOOST_PP_FILENAME_1 "mmethod/declare/call_template.hpp"
-#define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
+#define BOOST_PP_ITERATION_LIMITS (1, MMETHOD_MAX_ITERATION)
 #include BOOST_PP_ITERATE()
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS
