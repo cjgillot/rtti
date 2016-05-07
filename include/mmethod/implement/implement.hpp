@@ -13,7 +13,7 @@ namespace rtti {
 namespace mmethod {
 
 template<typename Tag, typename Sig>
-struct mmethod_implementation
+class mmethod_implementation
 : detail::make_implement<Tag, typename Tag::template overload<Sig>, Sig>::type {
   typedef typename mmethod_implementation::impl_maker impl_maker;
 
