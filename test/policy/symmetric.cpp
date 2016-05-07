@@ -166,14 +166,14 @@ IMPLEMENT_MMETHOD(symm, int, (bar&, foo&)) { return 13; }
 //]
 
 // further test
-IMPLEMENT_MMETHOD(symm, int, (foo& a, la1& b)) { return 32; }
-IMPLEMENT_MMETHOD(symm, int, (bar& a, la1& b)) { return 65; }
+IMPLEMENT_MMETHOD(symm, int, (foo&, la1&)) { return 32; }
+IMPLEMENT_MMETHOD(symm, int, (bar&, la1&)) { return 65; }
 // no la1-la1 -> fallback on foo-la1
 
-IMPLEMENT_MMETHOD(symm, int, (foo& a, la2& b)) { return 40; }
-IMPLEMENT_MMETHOD(symm, int, (bar& a, la2& b)) { return 45; }
-IMPLEMENT_MMETHOD(symm, int, (la1& a, la2& b)) { return 49; }
-IMPLEMENT_MMETHOD(symm, int, (la2& a, la2& b)) { return 12; }
+IMPLEMENT_MMETHOD(symm, int, (foo&, la2&)) { return 40; }
+IMPLEMENT_MMETHOD(symm, int, (bar&, la2&)) { return 45; }
+IMPLEMENT_MMETHOD(symm, int, (la1&, la2&)) { return 49; }
+IMPLEMENT_MMETHOD(symm, int, (la2&, la2&)) { return 12; }
 
 } // namespace <>
 

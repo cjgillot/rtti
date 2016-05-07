@@ -31,14 +31,6 @@ public:
   : px(p.px), ncalls(p.ncalls) { ++ncalls; }
   BOOST_DELETED_FUNCTION(count_pointer& operator=(count_pointer const&))
 
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-public:
-  // Move
-  count_pointer(count_pointer&& p)
-  : px(p.px), ncalls(p.ncalls) { p.px = NULL; }
-  BOOST_DELETED_FUNCTION(count_pointer& operator=(count_pointer&&))
-#endif
-
 public:
   // Access
   typedef T element_type;
