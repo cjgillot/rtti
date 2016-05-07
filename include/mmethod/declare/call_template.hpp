@@ -68,18 +68,19 @@ protected:
 
   // safe path : generate() first
   inline func_t fetch(
-    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+    MMETHOD_TRAMPOLINE_CALL_PARMS(unwrapped_args)
   ) const
   {
     this->generate();
-    return this->fast_fetch( MMETHOD_TRAMPOLINE_FUNC_ARGS );
+    return this->fast_fetch(MMETHOD_TRAMPOLINE_CALL_ARGS);
   }
   inline Ret call(
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
     this->generate();
-    return (Ret) this->fast_call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    func_t f = this->fast_fetch(MMETHOD_TRAMPOLINE_CALL_ARGS);
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
   // cosmetic
@@ -87,7 +88,9 @@ protected:
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
-    return (Ret) this->call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    this->generate();
+    func_t f = this->fast_fetch(MMETHOD_TRAMPOLINE_CALL_ARGS);
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
