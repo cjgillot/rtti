@@ -48,6 +48,10 @@ public:
   invoker_t fetch(Tuple const& a) const
   { return m_dispatch.fetch(a); }
 
+  template<typename S>
+  invoker_t super() const
+  { return m_dispatch.template super<S>(); }
+
   template<typename K>
   void insert(func_t const& f)
   { m_dispatch.template insert<K>(f); }

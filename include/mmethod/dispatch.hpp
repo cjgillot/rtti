@@ -12,6 +12,7 @@
 #include "mmethod/dispatch/generate.hpp"
 #include "mmethod/dispatch/insert.hpp"
 #include "mmethod/dispatch/fetch.hpp"
+#include "mmethod/dispatch/super.hpp"
 #include "mmethod/dispatch/seal.hpp"
 
 #endif

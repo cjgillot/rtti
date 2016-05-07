@@ -53,6 +53,11 @@ BOOST_AUTO_TEST_CASE(test_generate) {
   BOOST_CHECK_EQUAL( shortcut.fast_call(r), 42 );
   BOOST_CHECK_EQUAL( shortcut.fast_call(z), 10 );
   BOOST_CHECK_EQUAL( shortcut.fast_call(l), 42 ); // (lap is-a bar)
+
+  BOOST_CHECK_EQUAL( shortcut.fast_super<vector<foo> >(f), 5 );
+  BOOST_CHECK_EQUAL( shortcut.fast_super<vector<foo> >(r), 5 );
+  BOOST_CHECK_EQUAL( shortcut.fast_super<vector<foo> >(z), 5 );
+  BOOST_CHECK_EQUAL( shortcut.fast_super<vector<foo> >(l), 5 ); // (lap is-a bar)
   /*`
     [warning
       The functions `fast_call` and `fast_fetch` exist for performance.

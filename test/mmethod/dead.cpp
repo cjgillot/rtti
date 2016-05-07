@@ -31,4 +31,9 @@ BOOST_AUTO_TEST_CASE(test_dead) {
 
   BOOST_CHECK_THROW( dead(f), bad_dispatch );
   BOOST_CHECK_THROW( dead(z), bad_dispatch );
+
+  BOOST_CHECK_THROW( dead.super<vector<foo> >(l), bad_dispatch );
+  BOOST_CHECK_EQUAL( dead.super<vector<bar> >(l), 5 );
+  BOOST_CHECK_THROW( dead.super<vector<baz> >(z), bad_dispatch );
+  BOOST_CHECK_EQUAL( dead.super<vector<lap> >(l), 5 );
 }

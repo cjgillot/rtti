@@ -93,6 +93,39 @@ protected:
     return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
+  // super
+  template<typename SuperTypes>
+  BOOST_FORCEINLINE func_t fast_super_fetch() const
+  {
+    invoker_t inv = m_common.template super<SuperTypes>();
+    return reinterpret_cast<func_t>(inv);
+  }
+  template<typename SuperTypes>
+  BOOST_FORCEINLINE Ret fast_super(
+    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+  ) const
+  {
+    func_t f = this->template fast_super_fetch<SuperTypes>();
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+  }
+
+  // safe path : generate() first
+  template<typename SuperTypes>
+  inline func_t super_fetch() const
+  {
+    this->generate();
+    return this->template fast_super_fetch<SuperTypes>();
+  }
+  template<typename SuperTypes>
+  inline Ret super(
+    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+  ) const
+  {
+    this->generate();
+    func_t f = this->template fast_super_fetch<SuperTypes>();
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+  }
+
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
 #undef MMETHOD_TRAMPOLINE_CALL_ARGS
 

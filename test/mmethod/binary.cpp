@@ -59,5 +59,9 @@ BOOST_AUTO_TEST_CASE(test_binary) {
 
   // ambiguous call throws
   BOOST_CHECK_THROW( binary(c, y), bad_dispatch );
+
+  // we can specify a version with 'super' method
+  typedef vector<foo, foo> super_t;
+  BOOST_CHECK_EQUAL( binary.super<super_t>(c, z), 0 );
 //]
 }
