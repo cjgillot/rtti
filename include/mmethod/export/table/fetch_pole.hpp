@@ -31,7 +31,7 @@ fetch_pole(
 , rtti_hierarchy rt
 ) BOOST_NOEXCEPT_OR_NOTHROW {
 
-  const rtti_type id0 = rtti_get_id(rt);
+  rtti_type const id0 = rtti_get_id(rt);
 
   hash_map::iterator const it0 = map.find(id0);
 

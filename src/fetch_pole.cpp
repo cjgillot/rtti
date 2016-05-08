@@ -26,15 +26,16 @@ do_fetch_pole_recursive(
   hash_map const& map
 , rtti_hierarchy const rt
 ) {
-  // common case -> we are a pole or a memoized value
-  hash_map::iterator it = map.find( rtti_get_id(rt) );
-  if(BOOST_LIKELY( !it->empty() )) {
-    return it->value();
+  { // common case -> we are a pole or a memoized value
+    hash_map::iterator const it = map.find( rtti_get_id(rt) );
+    if(BOOST_LIKELY( !it->empty() )) {
+      return it->value();
+    }
   }
 
   // search recursively
   foreach_base(rtti_hierarchy base, rt) {
-    boost::optional<value_type> ret =
+    boost::optional<value_type> const ret =
       do_fetch_pole_recursive(map, base);
 
     // propagate
@@ -46,7 +47,7 @@ do_fetch_pole_recursive(
 #ifndef NDEBUG
       // check for inconsistency
       foreach_base(rtti_hierarchy base, rt) {
-        boost::optional<value_type> r2 =
+        boost::optional<value_type> const r2 =
           do_fetch_pole_recursive(map, base);
         BOOST_ASSERT(!r2 || *r2 == *ret);
       }
@@ -68,10 +69,19 @@ rtti::hash::detail::do_fetch_pole(
   rtti_type const id0 = rtti_get_id(rt0);
 
   foreach_base(rtti_hierarchy base, rt0) {
-    boost::optional<value_type> ret =
+    boost::optional<value_type> const ret =
       do_fetch_pole_recursive(map, base);
 
     if(ret) {
+#ifndef NDEBUG
+      // check for inconsistency
+      foreach_base(rtti_hierarchy base, rt0) {
+        boost::optional<value_type> const r2 =
+          do_fetch_pole_recursive(map, base);
+        BOOST_ASSERT(!r2 || *r2 == *ret);
+      }
+#endif
+
       // memoize
 #ifndef MMETHOD_USE_DEEP_CACHE
       const_cast<hash_map&>(map).insert( id0, *ret );
