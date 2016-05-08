@@ -83,5 +83,10 @@ BOOST_AUTO_TEST_CASE(test_unary) {
   BOOST_CHECK_EQUAL( unary(r), 42 );
   BOOST_CHECK_EQUAL( unary(z), 10 );
   BOOST_CHECK_EQUAL( unary(l), 42 ); // (lap is-a bar)
+
+  BOOST_CHECK_EQUAL( unary.super<vector<foo> >(f), 5 );
+  BOOST_CHECK_EQUAL( unary.super<vector<foo> >(r), 5 );
+  BOOST_CHECK_EQUAL( unary.super<vector<foo> >(z), 5 );
+  BOOST_CHECK_EQUAL( unary.super<vector<foo> >(l), 5 ); // (lap is-a bar)
   //]
 }

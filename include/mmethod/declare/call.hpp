@@ -48,6 +48,10 @@ public:
   invoker_t fetch(Tuple const& a) const
   { return m_dispatch.fetch(a); }
 
+  template<typename S>
+  invoker_t super() const
+  { return m_dispatch.template super<S>(); }
+
   template<typename K>
   void insert(func_t const& f)
   { m_dispatch.template insert<K>(f); }
@@ -65,7 +69,7 @@ private: // dispatch member variable
 } // namespace rtti
 
 #define BOOST_PP_FILENAME_1 "mmethod/declare/call_template.hpp"
-#define BOOST_PP_ITERATION_LIMITS (0, MMETHOD_MAX_ITERATION)
+#define BOOST_PP_ITERATION_LIMITS (1, MMETHOD_MAX_ITERATION)
 #include BOOST_PP_ITERATE()
 #undef BOOST_PP_FILENAME_1
 #undef BOOST_PP_ITERATION_LIMITS

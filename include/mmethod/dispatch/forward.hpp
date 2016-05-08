@@ -20,6 +20,9 @@ struct dispatch {
   template<typename Tuple>
   inline invoker_t MMETHOD_ATTRIBUTE_PURE fetch(Tuple const& args) const;
 
+  template<typename Super>
+  inline invoker_t MMETHOD_ATTRIBUTE_PURE super() const;
+
   template<typename K, typename F>
   inline void insert(F const& f);
 
