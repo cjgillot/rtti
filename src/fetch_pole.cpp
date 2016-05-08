@@ -83,9 +83,7 @@ rtti::hash::detail::do_fetch_pole(
 #endif
 
       // memoize
-#ifndef MMETHOD_USE_DEEP_CACHE
       const_cast<hash_map&>(map).insert( id0, *ret );
-#endif
 
       return *ret;
     }
