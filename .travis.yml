@@ -9,10 +9,11 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise
+      - llvm-toolchain-precise-3.6
+      - llvm-toolchain-precise-3.8
     packages:
-      - gcc-4.9
-      - gcc-5
+      - g++-4.9
+      - g++-5
       - clang-3.6
       - clang-3.8
       - valgrind
@@ -28,8 +29,8 @@ env:
   - TOOLSET="clang++-3.8" CXXFLAGS="-std=c++11"
 
 before_install:
-  - $CC --version
-  - $CXX --version
+  - $TOOLSET --version
+  - export TOOLSET=$(which $TOOLSET)
   - env
   - wget "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" -O /tmp/boost.tbz2
 

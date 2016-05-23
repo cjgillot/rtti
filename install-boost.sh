@@ -9,25 +9,25 @@ tar xjf /tmp/boost.tbz2
 cat >> ~/user-config.jam <<EOF
 using gcc
     : 4.9
-    : "/usr/bin/g++-4.9"
+    : "$(which g++-4.9)"
     : <cxxflags>"$CXXFLAGS"
     ;
 
 using gcc
     : 5
-    : "/usr/bin/g++-5"
+    : "$(which g++-5)"
     : <cxxflags>"$CXXFLAGS"
     ;
 
 using clang
     : 3.6
-    : "/usr/bin/clang++-3.6"
+    : "$(which clang++-3.6)"
     : <cxxflags>"$CXXFLAGS"
     ;
 
 using clang
     : 3.8
-    : "/usr/bin/clang++-3.8"
+    : "$(which clang++-3.8)"
     : <cxxflags>"$CXXFLAGS"
     ;
 EOF
