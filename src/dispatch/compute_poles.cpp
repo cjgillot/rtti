@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 #include "wanderer.hpp"
 
 #include <boost/range/algorithm/max_element.hpp>
+#include <boost/range/algorithm_ext/is_sorted.hpp>
 
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
@@ -24,7 +25,8 @@ using namespace rtti_dispatch;
  *     Dispatch Tables Generation.
  */
 
-// utils
+//@{ Utils
+
 namespace {
 
 // reverse subtyping order - small is base
@@ -35,50 +37,63 @@ struct rank_compare {
 
 } // namespace
 
-//!\brief Create klass_t instance, with rank and subtypes bitset
+//@}
+//@{ add_pole
+
+//!\brief Create klass_t instance,
+//! with rank and subtypes bitset.
 void
 hierarchy_t::add_pole(rtti_hierarchy vec, klass_t::bases_type& bases) {
   BOOST_ASSERT(vec);
   BOOST_ASSERT(!poles.count(vec));
 
-  // create object
-  klasses.push_back( new klass_t( vec ) );
-  klass_t* k = klasses.back();
+  //!Create object
+  klasses.push_back( NULL );
+  klass_t* k = klasses.back() = new klass_t( vec );
 
-  // fill base classes
+  //!Fill base classes
   k->bases.swap(bases);
 
-  // register created class
+  //!Register created class
   poles.insert(std::make_pair(vec, k));
 
-  // initialize rank
+  //!Initialize rank
   std::size_t r = current_rank++;
   k->set_rank(r);
 }
 
+//@}
+//@{ effective_bases
+
 //!\brief Compute registered bases
-void
-hierarchy_t::effective_bases(rtti_hierarchy klass, klass_t::bases_type* bases) {
+//! We only keep here the bases that are also poles.
+static void
+effective_bases(hierarchy_t const& hh,
+                rtti_hierarchy klass,
+                klass_t::bases_type* bases)
+{
   std::size_t const arity = rtti_get_base_arity(klass);
 
   bases->reserve(arity);
   foreach_base(rtti_hierarchy base, klass) {
-    if(klass_t const* bk = try_fetch(base)) {
+    klass_t const* bk = hh.try_fetch(base);
+
+    if(bk) {
       bases->push_back(bk);
     }
   }
 }
 
+//@}
+//@{ pseudo_closest
+
 //!\brief Pseudo-closest algorithm (Fig 9)
-std::size_t
-hierarchy_t::pseudo_closest(
-  rtti_hierarchy klass
-, klass_t::bases_type const& candidates
+static std::size_t
+pseudo_closest(
+  klass_t::bases_type const& candidates
 , const klass_t* *out_pole
 ) {
   BOOST_ASSERT(out_pole);
-  BOOST_ASSERT(!poles.count(klass));
-  (void)klass;
 
   // trivial cases
   if(candidates.empty()) {
@@ -110,56 +125,82 @@ hierarchy_t::pseudo_closest(
   return 1;
 }
 
+//@}
+//@{ compute_poles
+
 typedef std::vector<rtti_hierarchy> input_type;
 
 void hierarchy_t::compute_poles(input_type const& input) {
-  // primary poles
-  boost::unordered_set<rtti_hierarchy> primary_poles (
+  //!Primary poles:
+  // All the classes that appear in 'input'
+  // appear as arguments of the mmethods.
+  // Therefore, they all must be kept for
+  // dispatch generation.
+  boost::unordered_set<rtti_hierarchy> const primary_poles (
     boost::begin(input), boost::end(input)
   );
 
-  // prepare traversal structure
+  //!Prepare traversal structure:
+  // We iterate from primary poles
+  // in topological order.
+  // Any classes' bases must have
+  // been processed before the class
+  // itself is processed.
   wanderer_t wanderer;
   std::copy(
     input.begin(), input.end(),
     std::back_inserter(wanderer)
   );
 
-  // traverse
+  //!Traverse the tree in order.
   while(rtti_hierarchy top = wanderer.pop()) {
-    // candidate base classes
+    // Candidate base classes
     klass_t::bases_type bases;
-    effective_bases(top, &bases);
+    effective_bases(*this, top, &bases);
 
     if(primary_poles.count(top)) {
-      // primary pole case
-      BOOST_ASSERT(std::find(input.begin(), input.end(), top) != input.end());
-
+      //!If we have a primary pole.
+      // We just need to declare it as such.
       add_pole(top, bases);
     }
     else {
-      // non-primary pole
+      //!We don't have primary pole.
+      // We investigate bases' poles
+      // to decide on its status.
+      // There are three cases:
+      // - no pole in bases, just drop.
+      // - a single pole among basis,
+      //   we can alias the class to the pole
+      //   since it represents no new information.
+      // - multiple poles appear among basis,
+      //   mark as a secondary pole.
 
-      // compute
-      klass_t const* pole;
-      std::size_t const sz = pseudo_closest(top, bases, &pole);
+      klass_t const* pole = NULL;
+      std::size_t const sz = pseudo_closest(bases, &pole);
 
       if(sz == 0) {
-        // we have nothing
+        // We have nothing,
+        // drop it.
       }
       else if(sz == 1) {
-        // save the pole
+        // Save the pole alias.
         BOOST_ASSERT(pole);
         BOOST_ASSERT(pole->get_rtti() != top);
         poles.insert(std::make_pair(top, pole));
       }
       else if(sz > 1) {
-        // effective pole found
+        // Secondary pole found.
         add_pole(top, bases);
       }
     }
   }
 
-  // sort
-  std::sort(klasses.begin(), klasses.end(), rank_compare());
+  //!Check the classes are sorted in rank order.
+  // The ranks correspond to the visitation
+  // order in topological sort.
+  BOOST_ASSERT(boost::is_sorted(
+    klasses, rank_compare()
+  ));
 }
+
+//@}

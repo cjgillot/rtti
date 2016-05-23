@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -38,5 +38,11 @@ BOOST_AUTO_TEST_CASE(test_mixed) {
   BOOST_CHECK_EQUAL( mixed(2, r), 44 );
   BOOST_CHECK_EQUAL( mixed(3, z), 15 );
   BOOST_CHECK_EQUAL( mixed(9, l), 51 ); // (lap is-a bar)
+
+  typedef vector<void, foo> super_t;
+  BOOST_CHECK_EQUAL( mixed.super<super_t>(1, f),  6 );
+  BOOST_CHECK_EQUAL( mixed.super<super_t>(2, r),  7 );
+  BOOST_CHECK_EQUAL( mixed.super<super_t>(3, z),  8 );
+  BOOST_CHECK_EQUAL( mixed.super<super_t>(9, l), 14 ); // (lap is-a bar)
   //]
 }

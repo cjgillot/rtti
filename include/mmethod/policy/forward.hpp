@@ -3,13 +3,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
-#define MMETHOD_AMBIGUITY_NULL_HANDLER_HPP
+#ifndef MMETHOD_AMBIGUITY_FORWARD_HPP
+#define MMETHOD_AMBIGUITY_FORWARD_HPP
 
-#include "mmethod/export/exception.hpp"
-#include "mmethod/policy/forward.hpp"
+#include "mmethod/config.hpp"
+#include "mmethod/rttifwd.hpp"
 
-#include <boost/move/unique_ptr.hpp>
+#include <boost/core/scoped_enum.hpp>
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -19,16 +19,16 @@ namespace rtti {
 namespace mmethod {
 namespace ambiguity {
 
-struct default_policy {
-  static void bad_dispatch();
-  static action_t ambiguity_handler(size_t /*arity*/,
-                                    rtti_hierarchy const* /*signature*/);
-};
+BOOST_SCOPED_ENUM_DECLARE_BEGIN(action_t)
+{
+  NOTHING,
+  RETRY
+}
+BOOST_SCOPED_ENUM_DECLARE_END(action_t)
+
+typedef action_t (*ambiguity_handler_t)(size_t, rtti_hierarchy[]);
 
 } // namespace ambiguity
-
-using ambiguity::default_policy;
-
 } // namespace mmethod
 } // namespace rtti
 

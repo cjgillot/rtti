@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -10,7 +10,6 @@
 #include "mmethod/rttifwd.hpp"
 #include "mmethod/rtti/holder/node.hpp"
 
-#include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_volatile.hpp>
@@ -42,26 +41,20 @@ private:
   };
   static initializer_t initializer;
 
-public:
   static rtti_node_var<Arity> node;
 
+public:
   static inline
   const rtti_node*
   MMETHOD_ATTRIBUTE_PURE
   get_node() BOOST_NOEXCEPT_OR_NOTHROW
   { initializer.touch(); return reinterpret_cast<rtti_node*>(&node); }
-
-  static inline
-  rtti_type
-  MMETHOD_ATTRIBUTE_PURE
-  get_id() BOOST_NOEXCEPT_OR_NOTHROW
-  { return rtti_get_id( get_node() ); }
 };
 
 //! \brief Grant access to the holder
 template<typename T>
 struct get_holder {
-  typedef holder<typename boost::add_cv<T>::type> type;
+  typedef holder<T const volatile> type;
 };
 
 //! \brief Placeholder struct used for hierarchy base

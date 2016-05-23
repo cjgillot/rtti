@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -17,7 +17,9 @@ struct trampoline_base<
 
 template<typename TAG, typename Ret, typename Types, typename Tags>
 struct callback {
-  typedef Ret return_type;
+ private:
+  MMETHOD_TRAMPOLINE_DECLARE_TYPES(Tags)
+  MMETHOD_TRAMPOLINE_DECLARE_TYPES(Types)
 
 #define MMETHOD_TRAMPOLINE_FUNC_CAST_ARG(J,I,D) \
     trampoline_detail::caster<                  \
@@ -30,11 +32,17 @@ struct callback {
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_FUNC_CAST_ARG, ~)
 
+public:
+  typedef Ret return_type;
   typedef Ret (*sig_t)(MMETHOD_TRAMPOLINE_FUNC_PARM_TYPES(Types));
 
   template<typename Over, typename Ret2, typename Types2>
   struct apply {
+  private:
+    MMETHOD_TRAMPOLINE_DECLARE_TYPES(Types2)
     static Over over;
+
+  public:
     static Ret call(
       MMETHOD_TRAMPOLINE_FUNC_PARMS(Types)
     ) MMETHOD_ATTRIBUTE_ALIGNED

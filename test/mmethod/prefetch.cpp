@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -64,4 +64,7 @@ BOOST_AUTO_TEST_CASE(test_prefetch) {
   BOOST_STATIC_ASSERT( boost::is_same<func_t, int(*)(foo&)>::value );
   BOOST_CHECK_EQUAL( fp(l), 42 );             // downcast l and call second implementation
   //]
+
+  fp = prefetch.super_fetch<vector<foo> >();
+  BOOST_CHECK_EQUAL( fp(l), 5 );
 }

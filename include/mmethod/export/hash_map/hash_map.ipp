@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -22,9 +22,6 @@ namespace rtti {
 namespace hash {
 namespace detail {
 
-#ifndef BOOST_NO_CXX11_SMART_PTR
-BOOST_CONSTEXPR
-#endif
 inline
 hash_map::hash_map()               BOOST_NOEXCEPT_OR_NOTHROW
 : m_mask(0), m_size(0), m_fallback(0) {}
@@ -32,6 +29,7 @@ hash_map::hash_map()               BOOST_NOEXCEPT_OR_NOTHROW
 inline index_type
 hash_map::hash(key_type a)   const BOOST_NOEXCEPT_OR_NOTHROW {
   uintptr_t v = uintptr_t(a);
+  BOOST_ASSERT((v % rtti::rtti_node::alignment::value) == 0);
   v /= rtti::rtti_node::alignment::value;
   return index_type( v & m_mask );
 }

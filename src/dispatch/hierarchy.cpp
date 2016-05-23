@@ -1,14 +1,14 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "forward.hpp"
+#include "hierarchy.hpp"
 
 #include "foreach.hpp"
-#include "util.hpp"
 
 // ----- hierarchy ----- //
+//@{
 
 hierarchy_t::hierarchy_t()
 : current_rank(0)
@@ -20,6 +20,10 @@ hierarchy_t::~hierarchy_t()
     delete k;
   }
 }
+
+//@}
+// ----- hierarchy_t::*fetch* ----- //
+//@{
 
 klass_t const*
 hierarchy_t::try_fetch(rtti_hierarchy hh) const {
@@ -51,16 +55,23 @@ hierarchy_t::try_fetch_from(rtti_hierarchy hh) const {
     return ret;
   }
 
-  // upcast to find something
+  // Upcast to find something
   foreach_base(rtti_hierarchy bb, hh) {
     klass_t const* pole = try_fetch_from(bb);
 
+#ifdef NDEBUG
+    if(pole)
+      return pole;
+#else
+    // 'ret' is used to store the various answers we get.
+    // If there are differences, something is wrong.
     if(pole && ret) {
       BOOST_ASSERT(pole == ret);
     }
     else if(!ret) {
       ret = pole;
     }
+#endif
   }
 
   return ret;
@@ -72,3 +83,5 @@ hierarchy_t::fetch_from(rtti_hierarchy hh) const {
   BOOST_ASSERT(ret);
   return ret;
 }
+
+//@}

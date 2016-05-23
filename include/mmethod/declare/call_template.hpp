@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -16,32 +16,30 @@ struct make_declare_call_base<
 > {
 
 template<typename Tag, typename Policy, typename Ret, typename Args>
-struct apply {
-protected: // traits_type
-  typedef make_declare_traits<Ret, Policy, Args> traits_type;
-
+struct apply
+{
 private:
-  typedef typename traits_type::unwrapped_args unwrapped_args;
-  typedef typename traits_type::type_tags      type_tags;
+  typedef make_declare_call_common<Tag, Policy, Ret, Args> common_type;
+  common_type m_common;
 
-protected: // trampoline_type
-  typedef make_trampoline<Tag, Ret, unwrapped_args, type_tags> trampoline_type;
-  typedef typename trampoline_type::sig_t func_t;
-
-private:   // dispatch_type
-  typedef dispatch<Policy,Tag,Ret> dispatch_type;
-  dispatch_type m_dispatch;
+protected:
+  typedef typename common_type::traits_type     traits_type;
+  typedef typename common_type::unwrapped_args  unwrapped_args;
+  typedef typename common_type::trampoline_type trampoline_type;
+  typedef typename common_type::func_t          func_t;
 
 protected:
   template<typename K>
   void insert(func_t const& f)
-  { m_dispatch.template insert<K>(f); }
+  { m_common.template insert<K>(f); }
 
   void generate() const
-  { m_dispatch.template generate<unwrapped_args>(); }
+  { m_common.generate(); }
+
+private:
+  MMETHOD_TRAMPOLINE_DECLARE_TYPES(unwrapped_args)
 
 protected:
-
 #define MMETHOD_TRAMPOLINE_CALL_ARGS \
     BOOST_PP_ENUM(BOOST_PP_ITERATION(), MMETHOD_TRAMPOLINE_CALL_ARG, unwrapped_args)
 #define MMETHOD_TRAMPOLINE_FUNC_ARGS \
@@ -52,10 +50,12 @@ protected:
     MMETHOD_TRAMPOLINE_CALL_PARMS(unwrapped_args)
   ) const
   {
-    typedef boost::fusion::tuple<
+    typedef boost::tuple<
       MMETHOD_TRAMPOLINE_CALL_PARM_TYPES(unwrapped_args)
     > tuple_type;
-    invoker_t inv = m_dispatch.fetch( tuple_type(MMETHOD_TRAMPOLINE_CALL_ARGS) );
+    invoker_t inv = m_common.fetch(
+      tuple_type(MMETHOD_TRAMPOLINE_CALL_ARGS)
+    );
     return reinterpret_cast<func_t>(inv);
   }
   BOOST_FORCEINLINE Ret fast_call(
@@ -68,18 +68,19 @@ protected:
 
   // safe path : generate() first
   inline func_t fetch(
-    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+    MMETHOD_TRAMPOLINE_CALL_PARMS(unwrapped_args)
   ) const
   {
     this->generate();
-    return this->fast_fetch( MMETHOD_TRAMPOLINE_FUNC_ARGS );
+    return this->fast_fetch(MMETHOD_TRAMPOLINE_CALL_ARGS);
   }
   inline Ret call(
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
     this->generate();
-    return (Ret) this->fast_call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    func_t f = this->fast_fetch(MMETHOD_TRAMPOLINE_CALL_ARGS);
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
   // cosmetic
@@ -87,10 +88,46 @@ protected:
     MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
   ) const
   {
-    return (Ret) this->call(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+    this->generate();
+    func_t f = this->fast_fetch(MMETHOD_TRAMPOLINE_CALL_ARGS);
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+  }
+
+  // super
+  template<typename SuperTypes>
+  BOOST_FORCEINLINE func_t fast_super_fetch() const
+  {
+    invoker_t inv = m_common.template super<SuperTypes>();
+    return reinterpret_cast<func_t>(inv);
+  }
+  template<typename SuperTypes>
+  BOOST_FORCEINLINE Ret fast_super(
+    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+  ) const
+  {
+    func_t f = this->template fast_super_fetch<SuperTypes>();
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
+  }
+
+  // safe path : generate() first
+  template<typename SuperTypes>
+  inline func_t super_fetch() const
+  {
+    this->generate();
+    return this->template fast_super_fetch<SuperTypes>();
+  }
+  template<typename SuperTypes>
+  inline Ret super(
+    MMETHOD_TRAMPOLINE_FUNC_PARMS(unwrapped_args)
+  ) const
+  {
+    this->generate();
+    func_t f = this->template fast_super_fetch<SuperTypes>();
+    return (Ret) (*f)(MMETHOD_TRAMPOLINE_FUNC_ARGS);
   }
 
 #undef MMETHOD_TRAMPOLINE_FUNC_ARGS
+#undef MMETHOD_TRAMPOLINE_CALL_ARGS
 
 }; // apply
 

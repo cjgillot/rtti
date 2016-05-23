@@ -1,17 +1,33 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "max_set.hpp"
+#include "signature.hpp"
+#include "link_table.hpp"
 
 #include "foreach.hpp"
 
-max_set::max_set() {}
+//@{ max_set constructor
 
-void max_set::insert(const signature_t& sig0, const link_table& links) {
+namespace {
+
+struct same_invoker {
+  bool operator()(overload_t const& a,
+                  overload_t const& b) const {
+    return a.second == b.second;
+  }
+};
+
+} // namespace
+
+max_set::max_set(const signature_t& sig0,
+                 const link_table_t& links)
+{
   std::size_t const arity = sig0.array().size();
 
+  // Test all the base signatures we can build.
   for(std::size_t k = 0; k < arity; ++k) {
     klass_t const* kth = sig0.array()[k];
 
@@ -31,29 +47,15 @@ void max_set::insert(const signature_t& sig0, const link_table& links) {
     }
   }
 
-  // factorize identical overloads
-  // since we are only interested in the size() == 1 case,
-  // and only access set.front(),
-  // we only need to reduce with it
-  if(size() > 1) {
-    invoker_t const& front = set.front().second;
-
-    max_set_t::iterator
-      iter = set.begin()
-    , endl = set.end();
-
-    ++iter; // skip front since it is already counted
-
-    while(iter != endl) {
-      if(front == iter->second) {
-        iter = set.erase(iter);
-        continue;
-      }
-
-      ++iter;
-    }
-  }
+  // Factorize identical overloads:
+  // if there is several signatures which
+  // resolve to the same function,
+  // delete them.
+  set.unique(same_invoker());
 }
+
+//@}
+//@{ filter
 
 // poll [set] and insert if good match
 void max_set::filter(overload_t const& up) {
@@ -62,6 +64,8 @@ void max_set::filter(overload_t const& up) {
   max_set_t::iterator
     iter = set.begin()
   , endl = set.end();
+
+  bool found_better = false;
 
   while(iter != endl) {
     overload_t const& e = *iter;
@@ -74,7 +78,7 @@ void max_set::filter(overload_t const& up) {
 
     // [e] is better match, don't insert [up]
     else if( is_worse_than(up.first, e.first) ) {
-      return;
+      found_better = true;
     }
 
     // poll next overload
@@ -82,5 +86,9 @@ void max_set::filter(overload_t const& up) {
   }
 
   // none of [set] is better
-  set.push_back(up);
+  if(! found_better) {
+    set.push_back(up);
+  }
 }
+
+//@}

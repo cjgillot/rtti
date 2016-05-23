@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -6,15 +6,20 @@
 #ifndef RTTI_MPH_KLASS_HPP
 #define RTTI_MPH_KLASS_HPP
 
-#include <cstddef>
+#include "forward.hpp"
 
 #include <boost/noncopyable.hpp>
 #include <boost/dynamic_bitset.hpp>
 
-#include "early.hpp"
-
-class hierarchy_t;
-class signature_t;
+/*!\brief Metadata-augmented hierarchy node.
+ *
+ * This class represents rtti nodes,
+ * with adjunction of metadata:
+ * - effective bases
+ * - bitset for fast subtyping check
+ *
+ * This class may only be created inside a hierarchy_t object.
+ */
 struct klass_t
 : private boost::noncopyable
 {
@@ -24,9 +29,16 @@ public:
 private:
   friend class hierarchy_t;
 
+  //!\brief Class we are referring to.
   rtti_hierarchy const rtti;
+
+  //!\brief Effective base classes.
+  //! These effective bases are
+  //! cleaned of all the classes that dont
+  //! play a role in the dispatch process.
   bases_type bases;
 
+  //!\brief Fast subtyping check.
   /// \invariant : subtype[o.rank] = 1 - iff [this] derives from [o]
   /// \invariant : subtype[rank] = 1 - consequence
   std::size_t rank;
@@ -47,12 +59,6 @@ public:
   std::size_t       get_rank()   const { return rank;                   }
 
 public:
-  // total hashing order
-  struct hash_order
-  {
-    bool operator()(const klass_t& a, const klass_t& b) const
-    { return a.rtti < b.rtti; }
-  };
   // total[extended] subtyping order - small is subtype
   struct total_order
   {

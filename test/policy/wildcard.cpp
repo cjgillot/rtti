@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -32,14 +32,17 @@ int found_ambiguous  = 0;
 // set by bad_dispatch
 int called_ambiguous = 0;
 
+using rtti::mmethod::ambiguity::action_t;
+
 /*`
   We can now define our policy class.
  */
 struct wildcard_policy
 : public mmethod::default_policy
 {
-  static bool ambiguity_handler(std::size_t /*n*/,
-                                rtti_hierarchy const /*types*/ []);
+  static action_t
+  ambiguity_handler(std::size_t /*n*/,
+                    rtti_hierarchy const /*types*/ []);
   static int bad_dispatch(foo& /*arg1*/, foo& /*arg2*/);
 };
 
@@ -52,8 +55,12 @@ struct wildcard_policy
 
   * the arity of the __multimethod__,
   * a C array of __rtti__ type ids.
+
+  It returns a value of the `rtti::mmethod::ambiguity::action_t` enum:
+  * NOTHING to let the ambiguity as is
+  * RETRY to use the modified signature
  */
-bool
+action_t
 wildcard_policy::ambiguity_handler(std::size_t n, rtti_hierarchy const types[])
 {
   BOOST_CHECK_EQUAL(n, 2u);
@@ -64,7 +71,7 @@ wildcard_policy::ambiguity_handler(std::size_t n, rtti_hierarchy const types[])
   //=std::cout << "Ambiguity found of arity " << n << ": "
   //=          << types[0] << " and " << types[1] << std::endl;
 
-  return false;
+  return action_t::NOTHING;
 }
 
 /*`

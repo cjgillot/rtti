@@ -3,20 +3,22 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MMETHOD_DISPATCH_FETCH_HPP
-#define RTTI_MMETHOD_DISPATCH_FETCH_HPP
+#ifndef RTTI_MMETHOD_DISPATCH_SUPER_HPP
+#define RTTI_MMETHOD_DISPATCH_SUPER_HPP
 
 #include "mmethod/config.hpp"
 #include "mmethod/dispatch/common.hpp"
 
-#include <boost/tuple/tuple.hpp>
+#include "mmethod/detail/mpl.hpp"
+
+#include "mmethod/dispatch/fetch.hpp"
 
 namespace rtti {
 namespace mmethod {
 
 namespace dispatch_detail {
 
-/// fetch_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data
+/// super_poles<>::eval(spec,_,args) loops over args and returns the sum of pole-data
 /// equivalent pseudo-code :
 /// \code
 /// i = 0
@@ -24,45 +26,30 @@ namespace dispatch_detail {
 ///   if arg is virtual
 ///     i += arg->pole->data
 /// \endcode
-template<typename Tag, typename Tuple>
-struct fetch_poles_once {
+template<typename Tag, typename Super>
+struct super_poles_once {
   uintptr_t& m;
-  Tuple const& tuple;
 
   template<std::size_t J>
   void apply() const {
     poles_map_type& map = get_register<Tag>::template poles<J>();
 
-    rtti_hierarchy const h  = ::rtti::get_node(
-      tuple.template get<J>()
-    );
+    typedef typename boost::mpl::at_c<Super, J>::type SuperJ;
+    rtti_hierarchy const h  = ::rtti::static_node<SuperJ>();
 
     m += hash::detail::fetch_pole(map, h);
   }
 };
 template<std::size_t Arity, typename Tag, std::size_t BTS>
-struct fetch_poles {
-  template<typename Tuple>
-  static uintptr_t eval(Tuple const& args) {
+struct super_poles {
+  template<typename Super>
+  static uintptr_t eval() {
     uintptr_t result = 0;
 
-    fetch_poles_once<Tag, Tuple> fetcher = { result, args };
-    arity_loop<BTS>::apply(fetcher);
+    super_poles_once<Tag, Super> superer = { result };
+    arity_loop<BTS>::apply(superer);
 
     return result;
-  }
-};
-
-template<std::size_t Arity, typename Tag, std::size_t BTS>
-struct fetch_invoker {
-  static invoker_t eval(uintptr_t spec) {
-    return get_register<Tag>::table()[spec];
-  }
-};
-template<typename Tag, std::size_t BTS>
-struct fetch_invoker<1, Tag, BTS> {
-  static invoker_t eval(uintptr_t spec) {
-    return (invoker_t)spec;
   }
 };
 
@@ -70,8 +57,8 @@ struct fetch_invoker<1, Tag, BTS> {
 
 /// main dispatch function
 template<typename Tag>
-template<typename Tuple>
-invoker_t dispatch<Tag>::fetch(Tuple const& args) const {
+template<typename Super>
+invoker_t dispatch<Tag>::super() const {
   // verify we have sealed the table
   BOOST_ASSERT(detail::get_register<Tag>::early() == NULL);
   typedef detail::access::traits<Tag> traits_type;
@@ -81,7 +68,7 @@ invoker_t dispatch<Tag>::fetch(Tuple const& args) const {
     btset = traits_type::tags_bitset
   };
 
-  uintptr_t spec = dispatch_detail::fetch_poles  <arity, Tag, btset>::eval( args );
+  uintptr_t spec = dispatch_detail::super_poles  <arity, Tag, btset>::template eval<Super>();
   invoker_t ret  = dispatch_detail::fetch_invoker<arity, Tag, btset>::eval( spec );
   BOOST_ASSERT(ret);
 

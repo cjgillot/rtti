@@ -1,28 +1,10 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "forward.hpp"
-
-namespace {
-
-struct klass_p_order {
-  bool operator()(const klass_t* aa, const klass_t* bb) const
-  { return klass_t::total_order()(*bb, *aa); }
-};
-
-} // namespace
-
-// total[extended] subtyping order
-bool signature_t::total_order::operator()(const signature_t& a, const signature_t& b) const
-{
-  return std::lexicographical_compare(
-    a.sig.begin(), a.sig.end(),
-    b.sig.begin(), b.sig.end(),
-    klass_p_order()
-  );
-}
+#include "signature.hpp"
+#include "hierarchy.hpp"
 
 // worse_match order
 bool signature_t::worse_match::operator()(const signature_t& a, const signature_t& b) const
@@ -63,4 +45,34 @@ bool signature_t::worse_match::operator()(const signature_t& a, const signature_
   }
 
   return notallbase;
+}
+
+namespace {
+
+struct hierarchy_adder {
+  klass_t const* operator()(rtti_hierarchy a0, hierarchy_t& a1) const
+  {
+    klass_t const* ret = a1.fetch(a0);
+    BOOST_ASSERT(ret);
+    return ret;
+  }
+};
+
+} // namespace
+
+signature_t make_signature(rtti_signature const& r0,
+                           pole_table_t& r1)
+{
+  signature_t ret ( r1.size() );
+
+  std::transform(
+    r0.begin(), r0.end(),
+    r1.begin(),
+
+    ret.array_ref().begin(),
+
+    hierarchy_adder()
+  );
+
+  return ret;
 }

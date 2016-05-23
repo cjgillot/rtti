@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -37,22 +37,26 @@ public:
   sig_type const& array() const { return sig; }
 
 public:
-  // total[extended] subtyping order
-  struct total_order
-  {
-    bool operator()(const signature_t& a, const signature_t& b) const;
-  };
   // worse match order
   struct worse_match
   {
     bool operator()(const signature_t& a, const signature_t& b) const;
   };
-
-  friend bool operator==(const signature_t& a, const signature_t& b)
-  { return a.sig == b.sig; }
-
-  friend bool operator!=(const signature_t& a, const signature_t& b)
-  { return a.sig != b.sig; }
 };
+
+signature_t make_signature(rtti_signature const& r0,
+                           pole_table_t& r1);
+
+inline bool operator==(const signature_t& a,
+                       const signature_t& b)
+{ return a.array() == b.array(); }
+
+inline bool operator!=(const signature_t& a,
+                       const signature_t& b)
+{ return a.array() != b.array(); }
+
+inline std::size_t hash_value(const signature_t& s) {
+  return boost::hash_range(s.array().begin(), s.array().end());
+}
 
 #endif

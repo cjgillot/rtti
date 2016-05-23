@@ -1,9 +1,13 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #undef MMETHOD_TRAMPOLINE_TYPE
+
+#undef MMETHOD_TRAMPOLINE_DECLARE_TYPE
+
+#undef MMETHOD_TRAMPOLINE_DECLARE_TYPES
 
 #undef MMETHOD_TRAMPOLINE_CALL_ARG
 #undef MMETHOD_TRAMPOLINE_CALL_PARM_TYPE

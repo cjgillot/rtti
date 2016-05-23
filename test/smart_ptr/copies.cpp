@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -30,14 +30,6 @@ public:
   count_pointer(count_pointer const& p)
   : px(p.px), ncalls(p.ncalls) { ++ncalls; }
   BOOST_DELETED_FUNCTION(count_pointer& operator=(count_pointer const&))
-
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-public:
-  // Move
-  count_pointer(count_pointer&& p)
-  : px(p.px), ncalls(p.ncalls) { p.px = NULL; }
-  BOOST_DELETED_FUNCTION(count_pointer& operator=(count_pointer&&))
-#endif
 
 public:
   // Access

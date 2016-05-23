@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -28,9 +28,13 @@ public:
 
   using decl_maker::call;
   using decl_maker::fetch;
-
   using decl_maker::fast_call;
   using decl_maker::fast_fetch;
+
+  using decl_maker::super;
+  using decl_maker::super_fetch;
+  using decl_maker::fast_super;
+  using decl_maker::fast_super_fetch;
 
   using decl_maker::insert;
   using decl_maker::generate;

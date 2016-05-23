@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,19 +7,22 @@
 #define EARLY_HPP
 
 #include "mmethod/export/table.hpp"
-#include "mmethod/export/exception.hpp"
 
 #include <vector>
 
-using namespace rtti;
+using rtti::rtti_type;
+using rtti::rtti_hierarchy;
+using rtti::rtti_get_base;
+using rtti::rtti_get_base_arity;
+
 using rtti::mmethod::detail::invoker_t;
 using rtti::mmethod::detail::early_bindings_struct;
 
-typedef std::vector<rtti_hierarchy> signature_type;
-typedef std::pair<signature_type, invoker_t> binding_type;
+typedef std::vector<rtti_hierarchy>          rtti_signature;
+typedef std::pair<rtti_signature, invoker_t> rtti_binding;
 struct rtti::mmethod::detail::early_bindings_struct {
   std::size_t arity;
-  std::vector<binding_type> vector;
+  std::vector<rtti_binding> vector;
 };
 
 using rtti::mmethod::detail::poles_map_type;

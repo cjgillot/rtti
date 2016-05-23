@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -9,14 +9,16 @@
 #include "mmethod/config.hpp"
 #include "mmethod/dispatch/common.hpp"
 
-#include <boost/mpl/at.hpp>
+#include "mmethod/detail/mpl.hpp"
+
+#include <boost/move/unique_ptr.hpp>
 
 namespace rtti {
 namespace mmethod {
 
 namespace dispatch_detail {
 
-template<typename Tag, typename Tuple>
+template<typename Tuple>
 struct save_poles_once {
   rtti_hierarchy* h;
 
@@ -28,11 +30,11 @@ struct save_poles_once {
     ++h;
   }
 };
-template<typename Tag, std::size_t BTS>
+template<std::size_t BTS>
 struct save_poles {
   template<typename Tuple>
   static void eval(rtti_hierarchy* h, Tuple* /*unused*/) {
-    save_poles_once<Tag, Tuple> fetcher = { h };
+    save_poles_once<Tuple> fetcher = { h };
 
     arity_loop<BTS>::apply(fetcher);
   }
@@ -40,27 +42,26 @@ struct save_poles {
 
 } // namespace dispatch_detail
 
-template<typename Policy, typename Tag, typename Ret>
+template<typename Tag>
 template<typename K, typename F>
-void dispatch<Policy, Tag,Ret>::insert(F const& f) {
+void dispatch<Tag>::insert(F const& f) {
+  typedef detail::access::traits<Tag> traits_type;
+
   enum {
-    arity = detail::access::traits<Tag>::vsize
-  , btset = detail::access::traits<Tag>::type_bitset
+    arity = traits_type::virtual_size
+  , btset = traits_type::tags_bitset
   };
   rtti_hierarchy hiers [ arity ];
 
-  dispatch_detail::save_poles<Tag, btset>::eval( hiers, static_cast<K*>(NULL) );
+  dispatch_detail::save_poles<btset>::eval( hiers, static_cast<K*>(NULL) );
 
   invoker_t inv = reinterpret_cast<invoker_t>(f);
-
-  boost::shared_ptr<duplicator> dup = Policy::make_duplicate();
 
   detail::inse_table(
     arity
   , dispatch_detail::get_register<Tag>::early()
   , inv
   , hiers
-  , dup.get()
   );
 }
 

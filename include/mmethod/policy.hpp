@@ -3,20 +3,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RTTI_MIXIN_NODE_HPP
-#define RTTI_MIXIN_NODE_HPP
+#ifndef RTTI_POLICY_HPP
+#define RTTI_POLICY_HPP
 
 #include "mmethod/config.hpp"
-#include "mmethod/rttifwd.hpp"
+#include "mmethod/policy/forward.hpp"
 
-namespace rtti {
-namespace detail {
-
-struct mixin_node_holder {
-  rtti::rtti_node const* rtti_node_value;
-};
-
-} // namespace detail
-} // namespace rtti
+#include "mmethod/policy/utils.hpp"
+#include "mmethod/policy/default_policy.hpp"
 
 #endif

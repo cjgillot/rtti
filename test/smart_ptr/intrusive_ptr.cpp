@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -34,8 +34,8 @@ class bar
 using tags::_v;
 DECLARE_MMETHOD(sip, int, (_v<boost::intrusive_ptr<foo> >));
 
-IMPLEMENT_MMETHOD(sip, int, (boost::intrusive_ptr<foo> a)) { return  5; }
-IMPLEMENT_MMETHOD(sip, int, (boost::intrusive_ptr<bar> a)) { return 42; }
+IMPLEMENT_MMETHOD(sip, int, (boost::intrusive_ptr<foo>)) { return  5; }
+IMPLEMENT_MMETHOD(sip, int, (boost::intrusive_ptr<bar>)) { return 42; }
 
 } // namespace
 

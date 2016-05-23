@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -9,7 +9,6 @@
 #include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
 
-#include <memory>
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_array.hpp>
 
@@ -36,9 +35,6 @@ private:
   index_type hash(key_type a) const BOOST_NOEXCEPT_OR_NOTHROW;
 
 public:
-#ifndef BOOST_NO_CXX11_SMART_PTR
-  BOOST_CONSTEXPR
-#endif
   inline hash_map() BOOST_NOEXCEPT_OR_NOTHROW;
 
   // delayed creation
@@ -81,11 +77,7 @@ private:
   //@}
 
 private:
-#ifdef BOOST_NO_CXX11_SMART_PTR
   typedef boost::scoped_array<bucket_t> array_type;
-#else
-  typedef std::unique_ptr<bucket_t[]> array_type;
-#endif
 
   std::size_t m_mask; // == m_size - 1
   array_type  m_array;

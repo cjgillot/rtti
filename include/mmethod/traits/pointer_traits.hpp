@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,11 +7,14 @@
 #define RTTI_TRAITS_HPP
 
 #include "mmethod/config.hpp"
-
-#include <boost/mpl/if.hpp>
+#include "mmethod/detail/mpl.hpp"
 
 #include <boost/call_traits.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/add_pointer.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_virtual_base_of.hpp>
 
 namespace rtti {
@@ -59,12 +62,19 @@ struct unsafe_casting {
 
   template<typename In>
   static Out eval(In* in) {
+#ifndef NDEBUG
     typedef typename remove_all<Out>::type out_class;
     typedef typename remove_all<In >::type  in_class;
 
     typedef boost::is_virtual_base_of<in_class, out_class> dyn;
     typedef typename boost::mpl::if_<dyn, dynamic, nonvirtual>::type impl;
-    return impl::template eval<In>(in);
+    return impl::eval(in);
+#else
+    // always use dynamic cast in debug mode
+    Out ret = dynamic::eval(in);
+    BOOST_ASSERT(ret);
+    return ret;
+#endif
   }
 };
 
@@ -90,13 +100,11 @@ public:
 template<typename T>
 class raw_ptr_traits {
 
-  typedef typename boost::remove_pointer<T>::type& reference_type;
+  typedef typename boost::remove_pointer<T>::type nonpointer_type;
+  typedef nonpointer_type&                        reference_type;
 
 public:
-  typedef typename boost::remove_cv<
-          typename boost::remove_reference<
-          reference_type
-  >::type>::type class_type;
+  typedef typename boost::remove_cv<nonpointer_type>::type class_type;
 
   static reference_type get(T* v) { return *v; }
   static bool valid(T* v) { return bool(v); }

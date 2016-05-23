@@ -1,9 +1,11 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "forward.hpp"
+
+#include "signature.hpp"
 
 #include "max_set.hpp"
 #include "link_table.hpp"
@@ -25,7 +27,7 @@
 static void dispatch_one(
   const pole_table_t &pole_table,
   const signature_t& sig,
-  link_table& dispatch,
+  link_table_t& dispatch,
   ambiguity_handler_t ahndl
 );
 
@@ -34,7 +36,7 @@ void rtti_dispatch::dispatch(
   const pole_table_t &pole_table,
   ambiguity_handler_t ahndl
 ) {
-  link_table links (dispatch, pole_table);
+  link_table_t links (dispatch, pole_table);
 
   // the order given by product_incr is
   // a topological order for signature_t::worse_match,
@@ -53,7 +55,7 @@ void rtti_dispatch::dispatch(
 static void dispatch_one(
   const pole_table_t &pole_table,
   const signature_t& sig,
-  link_table& dispatch,
+  link_table_t& dispatch,
   ambiguity_handler_t ahndl
 ) {
   // already registered
@@ -62,30 +64,33 @@ static void dispatch_one(
   }
 
   // set of candidates
-  max_set mset;
-  mset.insert(sig, dispatch);
+  max_set mset (sig, dispatch);
 
   if(mset.size() == 1) {
     dispatch.insert_overload(sig, mset.get());
+    return;
   }
 
-  else {
-    BOOST_ASSERT(ahndl);
+  BOOST_ASSERT(ahndl);
 
-    std::size_t const arity = sig.array().size();
+  std::size_t const arity = sig.array().size();
 
-    std::vector<rtti_hierarchy> amb; amb.resize(arity);
+  std::vector<rtti_hierarchy> amb; amb.resize(arity);
 
-    for(std::size_t k = 0; k < arity; ++k) {
-      klass_t const* klass = sig.array()[k];
-      amb[k] = rtti_get_node(klass->get_id());
-    }
+  for(std::size_t k = 0; k < arity; ++k) {
+    klass_t const* klass = sig.array()[k];
+    amb[k] = rtti_get_node(klass->get_id());
+  }
 
-    try {
-      ahndl(arity, amb.data());
+  using rtti::mmethod::ambiguity::action_t;
+
+  action_t const action = ahndl(arity, amb.data());
+  switch(boost::native_value(action)) {
+    case action_t::NOTHING:
       dispatch.insert_none(sig);
-    }
-    catch(retry_dispatch&) {
+      return;
+
+    case action_t::RETRY: {
       signature_t newsig ( arity );
 
       // generate classes

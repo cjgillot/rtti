@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -8,39 +8,53 @@
 
 #include "mmethod/config.hpp"
 #include "mmethod/rttifwd.hpp"
+#include "mmethod/policy/forward.hpp"
 
-#include <boost/function_types/result_type.hpp>
-#include <boost/function_types/parameter_types.hpp>
-#include <boost/tti/has_static_member_function.hpp>
+#include "mmethod/detail/mpl.hpp"
+
+#include <boost/type_traits/detail/yes_no_type.hpp>
 
 namespace rtti {
 namespace mmethod {
 namespace ambiguity {
 
-typedef void (*ambiguity_handler_t)(size_t, rtti_hierarchy[]);
-
 template<typename Policy>
-struct get_fpointers;
+struct policy_traits;
 
 namespace detail {
-
-BOOST_TTI_HAS_STATIC_MEMBER_FUNCTION(bad_dispatch)
 
 // {{{ get_ahndl
 
 template<typename Policy>
 struct wrap_ahndl {
-  static void ahndl(size_t n, rtti_hierarchy* a) {
-    Policy::ambiguity_handler(n, a);
+  static action_t ahndl(size_t n, rtti_hierarchy* a) {
+    return Policy::ambiguity_handler(n, a);
   }
 };
 
 // }}}
 // {{{ get_bad
 
-template<typename Policy, bool Enable>
+template<class T, typename Fp>
+struct has_static_member_function_bad_dispatch {
+private:
+  template<Fp> struct helper;
+
+  template<typename U> static boost::type_traits::yes_type check(helper<&U::bad_dispatch>*);
+  template<typename U> static boost::type_traits::no_type  check(...);
+
+public:
+  enum {
+    value = sizeof(check<T>(NULL)) == sizeof(boost::type_traits::yes_type)
+  };
+};
+
+template<
+    typename Policy,
+    typename Fp,
+    bool Enable = detail::has_static_member_function_bad_dispatch<Policy, Fp>::value
+>
 struct get_bad {
-  template<typename Fp>
   static invoker_t
   get() {
     Fp fp = &Policy::bad_dispatch;
@@ -48,9 +62,8 @@ struct get_bad {
   }
 };
 
-template<typename Policy>
-struct get_bad<Policy, false> {
-  template<typename Fp>
+template<typename Policy, typename Fp>
+struct get_bad<Policy, Fp, false> {
   static invoker_t
   get() {
     return &Policy::bad_dispatch;
@@ -58,11 +71,49 @@ struct get_bad<Policy, false> {
 };
 
 // }}}
+// {{{ get_duplicates
+
+template<class T>
+struct has_type_member_duplicates {
+private:
+  template<template<typename,typename,typename> class> struct helper;
+
+  template<typename U> static boost::type_traits::yes_type check(helper<U::template duplicates>*);
+  template<typename U> static boost::type_traits::no_type  check(...);
+
+public:
+  enum {
+    value = sizeof(check<T>(NULL)) == sizeof(boost::type_traits::yes_type)
+  };
+};
+
+template<
+    typename Policy,
+    bool Enable = has_type_member_duplicates<Policy>::value
+>
+struct get_duplicates {
+  template<typename Tag, typename Args, typename Trampoline>
+  struct duplicates
+  : Policy::template duplicates<Tag, Args, Trampoline>
+  {};
+};
+
+template<typename Policy>
+struct get_duplicates<Policy, false> {
+  template<typename Tag, typename Args, typename Trampoline>
+  struct duplicates
+  : boost::mpl::single_view<
+      boost::mpl::pair<Args, Trampoline>
+    >
+  {};
+};
+
+// }}}
 
 } // namespace detail
 
 template<typename Policy>
-struct get_fpointers {
+struct policy_traits {
 public:
   static ambiguity_handler_t
   get_ambiguity_handler() {
@@ -72,14 +123,13 @@ public:
   template<typename Fp>
   static invoker_t
   get_bad_dispatch() {
-    typedef detail::has_static_member_function_bad_dispatch<
-      Policy
-    , typename boost::function_types::result_type<Fp>::type
-    , typename boost::function_types::parameter_types<Fp>::type
-    > has_bd;
-
-    return detail::get_bad<Policy, has_bd::value>::template get<Fp>();
+    return detail::get_bad<Policy, Fp>::get();
   }
+
+  template<typename Tag, typename Args, typename Tramp>
+  struct get_duplicates
+  : detail::get_duplicates<Policy>::template duplicates<Tag, Args, Tramp>
+  {};
 };
 
 } // namespace ambiguity

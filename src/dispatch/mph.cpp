@@ -1,13 +1,17 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include "forward.hpp"
+#include "hierarchy.hpp"
+#include "signature.hpp"
 
 #include "foreach.hpp"
 
 #include <numeric>
+
+#include <boost/unordered_map.hpp>
 
 using rtti::hash::detail::value_type;
 
@@ -101,15 +105,11 @@ struct rankhash_adder {
 
 } // namespace
 
-static void
-make_assignment(
+static size_t
+make_assignment_index(
   signature_t const& sig
-, invoker_t  inv
-, invoker_t* table
 , hash_table_type const& ht
 ) {
-  BOOST_ASSERT(inv);
-
   rankhash_adder adder = { ht };
 
   std::size_t const index = std::accumulate(
@@ -117,7 +117,7 @@ make_assignment(
     adder
   );
 
-  table[index] = inv;
+  return index;
 }
 
 void output_device::output_dispatch_table(
@@ -134,9 +134,14 @@ void output_device::output_dispatch_table(
 
   // assign dispatch table
   foreach(dispatch_t::const_reference p, dispatch) {
-    invoker_t inv = p.second;
+    invoker_t const inv = p.second;
     if(inv) {
-      make_assignment(p.first, inv, table, ht);
+      size_t const index = make_assignment_index(p.first, ht);
+
+      BOOST_ASSERT(index < max_index);
+      BOOST_ASSERT(table[index] == output.ambiguity_policy.bad_dispatch);
+
+      table[index] = inv;
     }
   }
 }

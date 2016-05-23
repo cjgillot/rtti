@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -13,7 +13,7 @@
 // #define MMETHOD_INLINE_DO_FIND
 
 #define MMETHOD_MAX_ITERATION 10
-#define MMETHOD_NODE_ALIGN    16
+#define MMETHOD_NODE_ALIGN     8
 
 #include "mmethod/detail/attribute.hpp"
 

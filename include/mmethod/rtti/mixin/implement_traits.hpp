@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,11 +7,8 @@
 #define RTTI_IMPLEMENT_TRAITS_HPP
 
 #include "mmethod/config.hpp"
-#include "mmethod/rtti/mixin/mixin_node.hpp"
-#include "mmethod/rtti/foreign/type_index.hpp"
+#include "mmethod/detail/mpl.hpp"
 
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/transform.hpp>
 #include <boost/type_traits/add_cv.hpp>
 
 namespace rtti {

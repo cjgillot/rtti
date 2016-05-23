@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -9,8 +9,7 @@
 #include "mmethod/config.hpp"
 #include "mmethod/export/table/table.hpp"
 
-#include "mmethod/policy/utils.hpp"
-#include "mmethod/policy/duplicator.hpp"
+#include "mmethod/policy/forward.hpp"
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -38,7 +37,7 @@ struct seal_table_type {
 };
 
 void init_table(std::size_t arity, early_bindings_type& ebt);
-void inse_table(std::size_t arity, early_bindings_type& ebt, invoker_t inv, rtti_hierarchy* hiers, duplicator*);
+void inse_table(std::size_t arity, early_bindings_type& ebt, invoker_t inv, rtti_hierarchy* hiers);
 void seal_table(std::size_t arity, early_bindings_type& ebt, seal_table_type& seal);
 
 } // namespace detail

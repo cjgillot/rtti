@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -8,7 +8,7 @@
 #include "foreach.hpp"
 #include "product.hpp"
 
-link_table::link_table(dispatch_t& d, const pole_table_t& pt)
+link_table_t::link_table_t(dispatch_t& d, const pole_table_t& pt)
 : dispatch(d), pole_table(pt)
 {
   // Initial population
@@ -17,11 +17,11 @@ link_table::link_table(dispatch_t& d, const pole_table_t& pt)
   }
 }
 
-void link_table::insert(const signature_t& s, link_t const& l) {
+void link_table_t::insert(const signature_t& s, link_t const& l) {
   links.insert(std::make_pair(s, l));
 }
 
-void link_table::resolve() {
+void link_table_t::resolve() {
   for(product_t p (pole_table);
       p.valid();
       p.incr()
@@ -31,11 +31,11 @@ void link_table::resolve() {
   }
 }
 
-struct link_table::resolve_visitor
+struct link_table_t::resolve_visitor
 : public boost::static_visitor<invoker_t>
 {
   explicit
-  resolve_visitor(link_table* t)
+  resolve_visitor(link_table_t* t)
   : self(t) {}
 
   invoker_t operator()(const signature_t& l2) const {
@@ -51,11 +51,11 @@ struct link_table::resolve_visitor
   }
 
 private:
-  link_table* self;
+  link_table_t* self;
 };
 
 // Need to care about loops
-invoker_t link_table::resolve_once(const signature_t& lnk) {
+invoker_t link_table_t::resolve_once(const signature_t& lnk) {
   dispatch_t::iterator it = dispatch.find(lnk);
   if(it != dispatch.end()) {
     return it->second;

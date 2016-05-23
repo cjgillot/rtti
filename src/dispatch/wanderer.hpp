@@ -1,4 +1,4 @@
-//          Copyright Camille Gillot 2012 - 2015.
+//          Copyright Camille Gillot 2012 - 2016.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -13,8 +13,8 @@
 
 namespace rtti_dispatch {
 
-//!\brief Topological sort traversal functor
-//! klass objects are popped from the most general
+//!\brief Topological sort traversal object.
+//! \c klass_t objects are popped from the most general
 //! to the most derived type.
 struct wanderer_t {
   wanderer_t();
@@ -39,11 +39,6 @@ private:
 private:
   std::deque<rtti_hierarchy> stack;
   boost::unordered_set<rtti_hierarchy> visited;
-
-#ifndef NDEBUG
-  // sanity test only in debug mode
-  bool processing;
-#endif
 };
 
 } // namespace rtti_dispatch
