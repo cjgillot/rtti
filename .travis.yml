@@ -18,14 +18,14 @@ addons:
       - valgrind
 
 env:
-  - CXX="g++-4.9" CXXFLAGS="-std=c++03"
-  - CXX="g++-5"   CXXFLAGS="-std=c++03"
-  - CXX="g++-4.9" CXXFLAGS="-std=c++11"
-  - CXX="g++-5"   CXXFLAGS="-std=c++11"
-  - CXX="clang++-3.6" CXXFLAGS="-std=c++03"
-  - CXX="clang++-3.8" CXXFLAGS="-std=c++03"
-  - CXX="clang++-3.6" CXXFLAGS="-std=c++11"
-  - CXX="clang++-3.8" CXXFLAGS="-std=c++11"
+  - TOOLSET="g++-4.9" CXXFLAGS="-std=c++03"
+  - TOOLSET="g++-5"   CXXFLAGS="-std=c++03"
+  - TOOLSET="g++-4.9" CXXFLAGS="-std=c++11"
+  - TOOLSET="g++-5"   CXXFLAGS="-std=c++11"
+  - TOOLSET="clang++-3.6" CXXFLAGS="-std=c++03"
+  - TOOLSET="clang++-3.8" CXXFLAGS="-std=c++03"
+  - TOOLSET="clang++-3.6" CXXFLAGS="-std=c++11"
+  - TOOLSET="clang++-3.8" CXXFLAGS="-std=c++11"
 
 before_install:
   - $CC --version
@@ -38,6 +38,6 @@ install:
 
 script:
   - mkdir build; cd build
-  - cmake ..
+  - CXX=$TOOLSET CC=$TOOLSET cmake ..
   - make all test
   - find -type f -executable -name 'test-*' | xargs -i% valgrind --error-exitcode=-1 %

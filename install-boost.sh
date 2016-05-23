@@ -6,16 +6,42 @@
 
 tar xjf /tmp/boost.tbz2
 
+cat >> ~/user-config.jam <<EOF
+using gcc
+    : 4.9
+    : "/usr/bin/g++-4.9"
+    : <cxxflags>"$CXXFLAGS"
+    ;
+
+using gcc
+    : 5
+    : "/usr/bin/g++-5"
+    : <cxxflags>"$CXXFLAGS"
+    ;
+
+using clang
+    : 3.6
+    : "/usr/bin/clang++-3.6"
+    : <cxxflags>"$CXXFLAGS"
+    ;
+
+using clang
+    : 3.8
+    : "/usr/bin/clang++-3.8"
+    : <cxxflags>"$CXXFLAGS"
+    ;
+EOF
+
 BOOST_PREFIX="$(pwd)/boost-prefix/"
 mkdir -p $BOOST_PREFIX
 
 pushd boost_1_60_0
     ./bootstrap.sh --prefix=$BOOST_PREFIX --with-libraries=test
-    ./b2 install -d0 -j4
+    ./b2 install -d0 -j4 toolset=$TOOLSET
 popd
 pushd boost_1_60_0/tools/build
     ./bootstrap.sh
-    ./b2 install -d0 -j4 --prefix=$BOOST_PREFIX
+    ./b2 install -d0 -j4 --prefix=$BOOST_PREFIX toolset=$TOOLSET
 popd
 
 export BOOST_ROOT=$BOOST_PREFIX
