@@ -39,6 +39,6 @@ install:
 
 script:
   - mkdir build; cd build
-  - CXX=$TOOLSET CC=$TOOLSET cmake ..
+  - CXX=$TOOLSET cmake ..
   - make all test
   - find -type f -executable -name 'test-*' | xargs -i% valgrind --error-exitcode=-1 %
