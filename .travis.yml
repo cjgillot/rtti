@@ -30,7 +30,6 @@ env:
 
 before_install:
   - $TOOLSET --version
-  - export TOOLSET=$(which $TOOLSET)
   - env
   - wget "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" -O /tmp/boost.tbz2
 
@@ -39,6 +38,6 @@ install:
 
 script:
   - mkdir build; cd build
-  - CXX=$TOOLSET cmake ..
+  - CXX=$(which $TOOLSET) cmake ..
   - make all test
   - find -type f -executable -name 'test-*' | xargs -i% valgrind --error-exitcode=-1 %
